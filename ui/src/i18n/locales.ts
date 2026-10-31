@@ -1,6 +1,8 @@
 import type { Resource } from "i18next";
 
 import { assertValidLocaleMessages } from "./locale-validation";
+import workspaceEn from "./workspace/en.json";
+import workspaceVi from "./workspace/vi.json";
 
 export const DEFAULT_LOCALE = "en" as const;
 
@@ -33,9 +35,13 @@ for (const [locale, messages] of Object.entries(localeMessages)) {
 }
 
 export const supportedLocales = Object.keys(localeMessages);
+assertValidLocaleMessages(workspaceVi, workspaceEn);
 
 export const i18nextResources: Resource = Object.fromEntries(
-  Object.entries(localeMessages).map(([locale, messages]) => [locale, { translation: messages }]),
+  Object.entries(localeMessages).map(([locale, messages]) => [locale, {
+    translation: messages,
+    ...(locale === "en" ? { workspace: workspaceEn } : locale === "vi" ? { workspace: workspaceVi } : {}),
+  }]),
 ) as Resource;
 
 export type SupportedLocale = keyof typeof localeMessages;

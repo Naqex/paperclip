@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { useShowAgentCreatedTasks } from "../hooks/useShowAgentCreatedTasks";
 import { useCoordinatorWorkspaceEnabled } from "../hooks/useCoordinatorWorkspaceEnabled";
 import { CoordinatorTasks } from "./CoordinatorTasks";
@@ -117,6 +118,7 @@ export function Issues() {
 }
 
 function StreamlinedTasks() {
+  const { t } = useTranslation("workspace");
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { selectedCompanyId } = useCompany();
@@ -160,13 +162,13 @@ function StreamlinedTasks() {
     return (
       <Inbox
         tab={definition.inboxTab}
-        surfaceLabel="Tasks"
+        surfaceLabel={t("nav.tasks")}
         toolbarContext={(
           <div className="flex min-w-0 items-center gap-2">
             {viewsMenu}
-            <Button size="sm" variant="outline" aria-label="New Task" onClick={() => openNewIssue()}>
+            <Button size="sm" variant="outline" aria-label={t("nav.newTask")} onClick={() => openNewIssue()}>
               <Plus className="h-4 w-4 sm:mr-1" />
-              <span className="hidden sm:inline">New Task</span>
+              <span className="hidden sm:inline">{t("nav.newTask")}</span>
             </Button>
           </div>
         )}
@@ -182,6 +184,7 @@ function OrganizationIssues({
   initialStatuses,
 }: { toolbarContext?: ReactNode; initialStatuses?: string[] } = {}) {
   const { enabled: streamlinedUiEnabled } = useStreamlinedUiEnabled();
+  const { t } = useTranslation("workspace");
   const issuesPresentation = resolveIssuesPresentation(streamlinedUiEnabled);
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -265,8 +268,8 @@ function OrganizationIssues({
   );
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Tasks" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: t("nav.tasks") }]);
+  }, [setBreadcrumbs, t]);
 
   const issuePageSize = workspaceIdFilter ? WORKSPACE_FILTER_ISSUE_LIMIT : ISSUES_PAGE_SIZE;
 
