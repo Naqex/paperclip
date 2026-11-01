@@ -2,7 +2,6 @@ import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { PrimaryAgentIndicator } from "@/components/primary-agent/PrimaryAgentPresentation";
 import { AgentBulkRoster } from "@/components/agents/AgentBulkRoster";
 import { AgentAvatar } from "@/components/AgentAvatar";
-import { ResearchTeamPreview } from "@/components/ResearchTeamPreview";
 import { useAgentChatEnabled } from "../hooks/useAgentChatEnabled";
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { Link, useNavigate, useLocation } from "@/lib/router";
@@ -419,8 +418,6 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
     )}>
       <AgentsToolbar query={query} onQueryChange={setQuery} view={effectiveView} onViewChange={setView}
         hideViewToggle={forceListView} onNewAgent={openNewAgent} />
-
-      {import.meta.env.VITE_NAQEX_WORKSPACE_ORIGIN && <ResearchTeamPreview />}
 
       <div className={cn("min-h-0 space-y-4", effectiveView === "org" && "flex flex-1 flex-col")}>
       {error && <p className="text-sm text-destructive">{error.message}</p>}

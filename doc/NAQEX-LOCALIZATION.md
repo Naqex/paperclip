@@ -47,10 +47,10 @@ details remain unchanged. Translation extraction is not proof that every
 data-dependent page, experimental surface or external plugin has been accepted
 in Vietnamese. Review new upstream copy and translated prose during upgrades.
 
-The Agents page includes a workspace-only research-team preview behind
-`VITE_NAQEX_WORKSPACE_ORIGIN`. Its native dialog shows three proposed roles and
-one sample task; it has local open/close state and no provisioning API. Reviewing
-this proposal neither creates agents nor starts a job or automation.
+The fork adds no research-team preview or provisioning UI. Organization, agent,
+connection and task setup use upstream Paperclip screens. The temporary team
+preview and pilot adapter changes were removed on 2026-11-01; Vietnamese copy
+and the embedding preference bridge remain.
 
 For an upstream update, retain these namespaces/bridge, reconcile translated call
 sites and new hardcoded display copy. Keep source changes in the fork rather

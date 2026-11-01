@@ -2,7 +2,6 @@ import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { PrimaryAgentIndicator } from "@/components/primary-agent/PrimaryAgentPresentation";
 import { AgentBulkRoster } from "@/components/agents/AgentBulkRoster";
 import { AgentAvatar } from "@/components/AgentAvatar";
-import { ResearchTeamPreview } from "@/components/ResearchTeamPreview";
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { Link, useNavigate, useLocation } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
@@ -406,7 +405,6 @@ export function Agents() {
 
   return (
     <div className="space-y-4">
-      {import.meta.env.VITE_NAQEX_WORKSPACE_ORIGIN && <ResearchTeamPreview />}
       <div className="flex justify-end">
         <div className="flex items-center gap-2">
           {/* View toggle */}

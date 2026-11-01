@@ -1,16 +1,6 @@
 import { expect, it } from "vitest";
 import { codexShellEnvironmentKeys } from "./codex-shell-environment.js";
 
-it("retains Windows shell bootstrap variables without admitting ambient credentials", () => {
-  const names = codexShellEnvironmentKeys({}, {}, false);
-  if (process.platform === "win32") {
-    expect(names).toEqual(expect.arrayContaining(["SystemRoot", "WINDIR", "ComSpec"]));
-  } else {
-    expect(names).not.toContain("SystemRoot");
-  }
-  expect(names).not.toContain("OPENAI_API_KEY");
-});
-
 it("admits assigned service secrets by name while retaining unassigned secret exclusions", () => {
   const assigned = { SLACK_BOT_TOKEN: "slack-canary", SERVICE_API_KEY: "key-canary", APP_SECRET: "secret-canary" };
   const names = codexShellEnvironmentKeys({ ...assigned, HOST_API_TOKEN: "host-canary" }, assigned, false);

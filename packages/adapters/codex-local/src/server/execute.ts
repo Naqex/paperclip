@@ -543,7 +543,7 @@ export async function ensureCodexSkillsInjected(
           if (linkSkill) {
             await linkSkill(entry.source, target);
           } else {
-            await fs.symlink(entry.source, target, process.platform === "win32" ? "junction" : "dir");
+            await fs.symlink(entry.source, target);
           }
           await onLog(
             "stdout",

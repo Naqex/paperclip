@@ -77,42 +77,6 @@
     "noProjects": "Không tìm thấy dự án.",
     "privateProject": "Dự án riêng tư"
   },
-  "teamPreview": {
-    "steps": {
-      "experiment": "Phát triển chiến lược trên phần dữ liệu nghiên cứu được cấp.",
-      "prepare": "Kiểm tra dữ liệu; cố định mốc so sánh, cách chia dữ liệu, chi phí và giới hạn thử.",
-      "evaluate": "Đóng băng phiên bản, chạy bộ đánh giá và kiểm chứng độc lập.",
-      "report": "Báo kết quả và đề xuất bước tiếp. Chuyển sang demo là quyết định riêng."
-    },
-    "researcher": {
-      "work": "Xây chiến lược với RD-Agent. Gọi TradingAgents khi cần phân tích thị trường cụ thể.",
-      "output": "Bàn giao: code có phiên bản và nhật ký mọi lượt thử.",
-      "name": "Nghiên cứu chiến lược"
-    },
-    "title": "Đội nghiên cứu giao dịch",
-    "draft": "Đề xuất",
-    "orgLabel": "Sơ đồ đội đề xuất",
-    "owner": "Bạn · Chủ sản phẩm",
-    "lead": {
-      "work": "Chốt câu hỏi, giao việc và tổng hợp bằng chứng để bạn xem.",
-      "output": "Bàn giao: kế hoạch thử có giới hạn và báo cáo dễ hiểu.",
-      "name": "Điều phối nghiên cứu"
-    },
-    "reviewer": {
-      "work": "Kiểm tra thời điểm dữ liệu, rò rỉ thông tin, chi phí và kết quả đánh giá. Có quyền chặn chuyển bước.",
-      "output": "Bàn giao: đạt, không đạt, thiếu bằng chứng hoặc lỗi lượt chạy, kèm lý do.",
-      "name": "Kiểm chứng độc lập"
-    },
-    "approval": "Duyệt chuyển bước",
-    "open": "Xem đội và nhiệm vụ mẫu",
-    "description": "Ba vai trò, có kiểm chứng độc lập. Bản xem trước không tạo agent hay công việc có thể chạy.",
-    "task": "Bộ lọc biến động có cải thiện chiến lược theo xu hướng đơn giản sau khi tính phí không?",
-    "close": "Đóng",
-    "boundary": "Chưa bật kết nối model, quyền chạy agent hoặc lịch tự động. Dùng tiền thật cần được duyệt riêng.",
-    "scope": "Câu hỏi minh họa. Thị trường, khung thời gian, dữ liệu và tiêu chí đạt vẫn cần thống nhất.",
-    "notStarted": "Chưa chạy",
-    "example": "Nhiệm vụ nghiên cứu mẫu"
-  },
   "states": {
     "backlog": "Chưa lên lịch",
     "todo": "Cần làm",

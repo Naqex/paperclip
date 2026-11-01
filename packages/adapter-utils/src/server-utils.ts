@@ -4366,7 +4366,7 @@ export async function ensurePaperclipSkillSymlink(
   linkSkill: (source: string, target: string) => Promise<void> = (
     linkSource,
     linkTarget,
-  ) => fs.symlink(linkSource, linkTarget, process.platform === "win32" ? "junction" : "dir"),
+  ) => fs.symlink(linkSource, linkTarget),
 ): Promise<"created" | "repaired" | "skipped"> {
   const existing = await fs.lstat(target).catch(() => null);
   if (!existing) {
