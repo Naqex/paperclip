@@ -143,6 +143,7 @@ export function Dashboard() {
     agentsLoaded: agents !== undefined,
     agentsRefreshing,
     agentCount: agents?.length ?? 0,
+    embedded: Boolean(import.meta.env.VITE_NAQEX_WORKSPACE_ORIGIN && window.parent !== window),
   });
   // Auto-open once per company. Every input to the effect sits behind a query,
   // so a refetch re-runs it, and the customer can also navigate away and come

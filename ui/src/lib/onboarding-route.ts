@@ -150,7 +150,11 @@ export function shouldRouteAgentlessCompanyToOnboarding(params: {
   agentsLoaded: boolean;
   agentsRefreshing?: boolean;
   agentCount: number;
+  embedded?: boolean;
 }): boolean {
+  // Workspace navigation must stay usable before the first agent is configured.
+  // The dashboard's explicit setup action still opens the native wizard.
+  if (params.embedded) return false;
   if (!params.agentsLoaded) return false;
   if (params.agentsRefreshing) return false;
   if (params.agentCount > 0) return false;

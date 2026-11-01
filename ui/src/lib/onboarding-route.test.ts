@@ -192,6 +192,17 @@ describe("navigating away from a company's onboarding route", () => {
 });
 
 describe("shouldRouteAgentlessCompanyToOnboarding", () => {
+  it("keeps an embedded workspace on the requested page before agents are configured", () => {
+    expect(
+      shouldRouteAgentlessCompanyToOnboarding({
+        pathname: "/PC1/dashboard",
+        agentsLoaded: true,
+        agentCount: 0,
+        embedded: true,
+      }),
+    ).toBe(false);
+  });
+
   it("sends a company with no agents to onboarding", () => {
     expect(
       shouldRouteAgentlessCompanyToOnboarding({
