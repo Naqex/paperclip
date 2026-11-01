@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentIdentity } from "@/components/AgentIdentity";
 import { useMemo, useState } from "react";
 import { Link } from "@/lib/router";
@@ -186,6 +187,7 @@ function KanbanColumn({
   revealIncrement: number;
   onShowMore: () => void;
 }) {
+  useInterfaceLanguage();
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
   const isEmpty = issues.length === 0;
@@ -256,13 +258,10 @@ function KanbanColumn({
             type="button"
             className="mt-1 flex w-full items-center justify-center rounded-md border border-dashed border-border bg-background/70 px-2 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
             onClick={onShowMore}
-          >
-            Show {nextRevealCount} more
-          </button>
+          >{interfaceText("m_dd0fcd29c826be")}{nextRevealCount}{interfaceText("m_226ba18bbcdb75")}</button>
         ) : null}
         {issues.length > 0 && (hiddenCount > 0 || issues.length >= visibleCount) ? (
-          <p className="px-1 pt-1 text-(length:--text-micro) text-muted-foreground">
-            Showing {visibleIssues.length} of {issues.length}
+          <p className="px-1 pt-1 text-(length:--text-micro) text-muted-foreground">{interfaceText("m_7282e1fbb2c6d3")}{visibleIssues.length}{interfaceText("m_a4282e4b2298b9")}{issues.length}
           </p>
         ) : null}
       </div>
@@ -289,6 +288,7 @@ function KanbanCard({
   compact?: boolean;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const {
     attributes,
     listeners,
@@ -339,12 +339,10 @@ function KanbanCard({
           {isSuccessfulRunHandoffRequired(issue) ? (
             <Badge variant="outline"
               className="border-amber-400/45 bg-amber-50/60 px-1.5 text-(length:--text-nano) text-amber-700 dark:border-amber-300/35 dark:bg-amber-400/10 dark:text-amber-300"
-              title="This task needs a next step"
-              aria-label="Needs next step"
+              title={interfaceText("m_aa4b55368cd202")}
+              aria-label={interfaceText("m_e45a2c0f61e009")}
             >
-              <AlertTriangle className="h-3 w-3" />
-              Next step
-            </Badge>
+              <AlertTriangle className="h-3 w-3" />{interfaceText("m_298a9207a732a1")}</Badge>
           ) : null}
           {isLive && (
             <span className="inline-flex shrink-0 items-center gap-1 text-(length:--text-nano) font-medium text-blue-600 dark:text-blue-400">
@@ -352,17 +350,16 @@ function KanbanCard({
                 <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
               </span>
-              {compact ? "Live" : null}
+              {compact ? interfaceText("m_b64ac05f17e64d") : null}
             </span>
           )}
           {!isLive && subtreeLiveCount > 0 && (
             <Badge variant="outline"
               className="border-border px-1.5 text-(length:--text-nano) text-muted-foreground"
-              title={`${subtreeLiveCount} sub-task${subtreeLiveCount === 1 ? "" : "s"} running below`}
+              title={interfaceText("m_93bd2fe03c6091", { value0: (subtreeLiveCount), value1: (subtreeLiveCount === 1 ? "" : interfaceText("m_043a718774c572")) })}
             >
               <span className="h-2 w-2 shrink-0 rounded-full border border-muted-foreground/60" aria-hidden="true" />
-              {subtreeLiveCount} live below
-            </Badge>
+              {subtreeLiveCount}{interfaceText("m_5618c53e03a04b")}</Badge>
           )}
         </div>
         <p className={`${compact ? "mb-1.5 text-xs" : "mb-2 text-sm"} leading-snug line-clamp-2`}>{issue.title}</p>
@@ -398,6 +395,7 @@ export function KanbanBoard({
   showOverflowFades = false,
   onUpdateIssue,
 }: KanbanBoardProps) {
+  useInterfaceLanguage();
   const [activeId, setActiveId] = useState<string | null>(null);
   const paginationKey = `${initialVisibleCount}:${revealIncrement}`;
   const [visibleState, setVisibleState] = useState<{
@@ -490,7 +488,7 @@ export function KanbanBoard({
       onDragEnd={handleDragEnd}
     >
       {showOverflowFades
-        ? <HorizontalScrollViewport label="Task board columns" contentClassName="flex gap-3 pb-4 px-2">{columns}</HorizontalScrollViewport>
+        ? <HorizontalScrollViewport label={interfaceText("m_b05d379afbabf1")} contentClassName="flex gap-3 pb-4 px-2">{columns}</HorizontalScrollViewport>
         : <div className="flex gap-3 overflow-x-auto pb-4 -mx-2 px-2">{columns}</div>}
       <DragOverlay>
         {activeIssue ? (

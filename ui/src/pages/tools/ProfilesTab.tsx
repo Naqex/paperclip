@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Layers, Plus, Pencil, Trash2, Link2, ShieldCheck } from "lucide-react";
@@ -60,19 +61,19 @@ import {
 } from "./shared";
 
 const SELECTOR_TYPES: Array<{ value: ToolProfileEntrySelectorType; label: string }> = [
-  { value: "tool_name", label: "Tool name" },
-  { value: "risk_level", label: "Risk level" },
-  { value: "application", label: "Application" },
-  { value: "connection", label: "Connection" },
-  { value: "catalog_entry", label: "Catalog entry ID" },
+  { value: "tool_name", get label() { return interfaceText("m_c506c98fabda7b"); } },
+  { value: "risk_level", get label() { return interfaceText("m_d4419ea33b84fa"); } },
+  { value: "application", get label() { return interfaceText("m_e7ad522ea327e5"); } },
+  { value: "connection", get label() { return interfaceText("m_639a40e82b9a96"); } },
+  { value: "catalog_entry", get label() { return interfaceText("m_0927802d4b161f"); } },
 ];
 
 const TARGET_TYPES: Array<{ value: ToolProfileBindingTargetType; label: string }> = [
-  { value: "company", label: "Company" },
+  { value: "company", get label() { return interfaceText("m_de4743c879734d"); } },
   { value: "agent", label: "Agent" },
-  { value: "project", label: "Project" },
-  { value: "routine", label: "Routine" },
-  { value: "issue", label: "Issue ID" },
+  { value: "project", get label() { return interfaceText("m_98595978531974"); } },
+  { value: "routine", get label() { return interfaceText("m_0b5baf309897ec"); } },
+  { value: "issue", get label() { return interfaceText("m_63e467f44aec16"); } },
 ];
 
 const RISK_LEVELS: ToolRiskLevel[] = ["read", "write", "destructive", "low", "medium", "high", "critical"];
@@ -139,11 +140,11 @@ function entryLabel(
   applicationsById: Map<string, string>,
   connectionsById: Map<string, string>,
 ) {
-  if (entry.selectorType === "application") return applicationsById.get(entry.applicationId ?? "") ?? entry.applicationId ?? "application";
-  if (entry.selectorType === "connection") return connectionsById.get(entry.connectionId ?? "") ?? entry.connectionId ?? "connection";
-  if (entry.selectorType === "catalog_entry") return entry.catalogEntryId ?? "catalog entry";
-  if (entry.selectorType === "risk_level") return entry.riskLevel ?? "risk level";
-  return entry.toolName ?? "tool";
+  if (entry.selectorType === "application") return applicationsById.get(entry.applicationId ?? "") ?? entry.applicationId ?? interfaceText("m_1fe289205936c3");
+  if (entry.selectorType === "connection") return connectionsById.get(entry.connectionId ?? "") ?? entry.connectionId ?? interfaceText("m_b38d9d168c3aed");
+  if (entry.selectorType === "catalog_entry") return entry.catalogEntryId ?? interfaceText("m_14b9a65685c1b3");
+  if (entry.selectorType === "risk_level") return entry.riskLevel ?? interfaceText("m_7ca39fffa06a6b");
+  return entry.toolName ?? interfaceText("m_7c9bbe5ec9b3fb");
 }
 
 function bindingLabel(
@@ -156,7 +157,7 @@ function bindingLabel(
     routinesById: Map<string, string>;
   },
 ) {
-  if (targetType === "company") return targetId === labels.companyId ? "Company" : targetId;
+  if (targetType === "company") return targetId === labels.companyId ? interfaceText("m_de4743c879734d") : targetId;
   if (targetType === "agent") return labels.agentsById.get(targetId) ?? targetId;
   if (targetType === "project") return labels.projectsById.get(targetId) ?? targetId;
   if (targetType === "routine") return labels.routinesById.get(targetId) ?? targetId;
@@ -375,10 +376,11 @@ function EntryFields({
   applications: Array<{ id: string; name: string }>;
   connections: Array<{ id: string; name: string }>;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="grid gap-3 sm:grid-cols-(--gtc-60)">
       <div className="space-y-1.5">
-        <Label>Selector</Label>
+        <Label>{interfaceText("m_f02a172a35354c")}</Label>
         <Select value={selectorType} onValueChange={(value) => setSelectorType(value as ToolProfileEntrySelectorType)}>
           <SelectTrigger>
             <SelectValue />
@@ -393,23 +395,23 @@ function EntryFields({
         </Select>
       </div>
       <div className="space-y-1.5">
-        <Label>Effect</Label>
+        <Label>{interfaceText("m_2252d5cf93767a")}</Label>
         <Select value={effect} onValueChange={(value) => setEffect(value as ToolProfileEntryEffect)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="include">Include</SelectItem>
-            <SelectItem value="exclude">Exclude</SelectItem>
+            <SelectItem value="include">{interfaceText("m_7285576bdacf86")}</SelectItem>
+            <SelectItem value="exclude">{interfaceText("m_5b76f62e1ba040")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
       {selectorType === "application" ? (
         <div className="space-y-1.5 sm:col-span-2">
-          <Label>Application</Label>
+          <Label>{interfaceText("m_e7ad522ea327e5")}</Label>
           <Select value={applicationId} onValueChange={setApplicationId}>
             <SelectTrigger>
-              <SelectValue placeholder="Select an application" />
+              <SelectValue placeholder={interfaceText("m_0633c481c5e2c9")} />
             </SelectTrigger>
             <SelectContent>
               {applications.map((app) => (
@@ -423,10 +425,10 @@ function EntryFields({
       ) : null}
       {selectorType === "connection" ? (
         <div className="space-y-1.5 sm:col-span-2">
-          <Label>Connection</Label>
+          <Label>{interfaceText("m_639a40e82b9a96")}</Label>
           <Select value={connectionId} onValueChange={setConnectionId}>
             <SelectTrigger>
-              <SelectValue placeholder="Select a connection" />
+              <SelectValue placeholder={interfaceText("m_7c87405a47b9ad")} />
             </SelectTrigger>
             <SelectContent>
               {connections.map((conn) => (
@@ -440,19 +442,19 @@ function EntryFields({
       ) : null}
       {selectorType === "catalog_entry" ? (
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="catalog-entry-id">Catalog entry ID</Label>
+          <Label htmlFor="catalog-entry-id">{interfaceText("m_0927802d4b161f")}</Label>
           <Input id="catalog-entry-id" value={catalogEntryId} onChange={(event) => setCatalogEntryId(event.target.value)} />
         </div>
       ) : null}
       {selectorType === "tool_name" ? (
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="tool-name">Tool name</Label>
-          <Input id="tool-name" value={toolName} onChange={(event) => setToolName(event.target.value)} placeholder="e.g. send_email or slack.list_*" />
+          <Label htmlFor="tool-name">{interfaceText("m_c506c98fabda7b")}</Label>
+          <Input id="tool-name" value={toolName} onChange={(event) => setToolName(event.target.value)} placeholder={interfaceText("m_150aa7f6b0eca4")} />
         </div>
       ) : null}
       {selectorType === "risk_level" ? (
         <div className="space-y-1.5 sm:col-span-2">
-          <Label>Risk level</Label>
+          <Label>{interfaceText("m_d4419ea33b84fa")}</Label>
           <Select value={riskLevel} onValueChange={(value) => setRiskLevel(value as ToolRiskLevel)}>
             <SelectTrigger>
               <SelectValue />
@@ -472,6 +474,7 @@ function EntryFields({
 }
 
 export function EffectiveAgentPanel({ companyId, agentOptions }: { companyId: string; agentOptions: Array<{ id: string; name: string }> }) {
+  useInterfaceLanguage();
   const [agentId, setAgentId] = useState("");
   const effective = useQuery({
     queryKey: agentId
@@ -488,26 +491,21 @@ export function EffectiveAgentPanel({ companyId, agentOptions }: { companyId: st
         <AgentSelect agents={agentOptions} value={agentId} onChange={setAgentId} />
       </div>
       {!agentId ? (
-        <div className="rounded-lg border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">
-          Pick an agent to see what it can use right now.
-        </div>
+        <div className="rounded-lg border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">{interfaceText("m_720bc8f43675dd")}</div>
       ) : effective.isLoading ? (
-        <LoadingState label="Checking access..." />
+        <LoadingState label={interfaceText("m_705975faaaf54e")} />
       ) : effective.error ? (
         <ErrorState error={effective.error} onRetry={() => effective.refetch()} />
       ) : (
         <div className="min-h-0 space-y-5 overflow-y-auto pr-1">
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-sm font-semibold text-foreground">Can use</h3>
+              <h3 className="text-sm font-semibold text-foreground">{interfaceText("m_a0dea0bfdb5e80")}</h3>
               <span className="text-xs text-muted-foreground tabular-nums">
-                {(effective.data?.allowedToolNames ?? []).length} tools
-              </span>
+                {(effective.data?.allowedToolNames ?? []).length}{interfaceText("m_b3842f35c7fd86")}</span>
             </div>
             {(effective.data?.allowedToolNames ?? []).length === 0 ? (
-              <div className="rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
-                This agent cannot use any app tools right now.
-              </div>
+              <div className="rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">{interfaceText("m_6ece50d6515dde")}</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {(effective.data?.allowedToolNames ?? []).slice(0, 80).map((tool) => (
@@ -517,18 +515,16 @@ export function EffectiveAgentPanel({ companyId, agentOptions }: { companyId: st
             )}
           </div>
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">Access profiles</h3>
+            <h3 className="text-sm font-semibold text-foreground">{interfaceText("m_2471292ff715cc")}</h3>
             {(effective.data?.profiles ?? []).length === 0 ? (
-              <div className="rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
-                No active profile applies to this agent.
-              </div>
+              <div className="rounded-lg border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">{interfaceText("m_e3affc179327f0")}</div>
             ) : (
               <div className="divide-y divide-border rounded-lg border border-border">
                 {(effective.data?.profiles ?? []).map((profile) => (
                   <div key={profile.id} className="flex items-center justify-between gap-3 px-3 py-2.5">
                     <span className="min-w-0 truncate text-sm font-medium text-foreground">{profile.name}</span>
                     {profile.summary.isCompanyDefault ? (
-                      <Badge variant="secondary">Organization default</Badge>
+                      <Badge variant="secondary">{interfaceText("m_804a1f086aecaf")}</Badge>
                     ) : null}
                   </div>
                 ))}
@@ -543,21 +539,23 @@ export function EffectiveAgentPanel({ companyId, agentOptions }: { companyId: st
 
 /** The Source column — the key v2 addition. Patterns are flagged as a foot-gun. */
 function SourceBadge({ source }: { source: AllowSource }) {
+  useInterfaceLanguage();
   if (source.kind === "explicit") {
-    return <Badge variant="secondary">explicit</Badge>;
+    return <Badge variant="secondary">{interfaceText("m_3b283e93debf03")}</Badge>;
   }
   if (source.kind === "default") {
-    return <Badge variant="outline">default allow</Badge>;
+    return <Badge variant="outline">{interfaceText("m_9e8805af8efb03")}</Badge>;
   }
   return (
     <Badge variant="outline" className="gap-1 border-amber-500/50 text-amber-700 dark:text-amber-400">
       <AlertTriangle className="h-3 w-3" />
-      <span className="font-mono text-(length:--text-micro)">pattern {source.label}</span>
+      <span className="font-mono text-(length:--text-micro)">{interfaceText("m_2f9270be07f6f0")}{source.label}</span>
     </Badge>
   );
 }
 
 function AllowList({ rows, catalogLoading }: { rows: AllowListRow[]; catalogLoading: boolean }) {
+  useInterfaceLanguage();
   const patternCount = rows.filter((r) => r.source.kind === "pattern").length;
   const explicitCount = rows.filter((r) => r.source.kind === "explicit").length;
   const defaultCount = rows.filter((r) => r.source.kind === "default").length;
@@ -565,19 +563,19 @@ function AllowList({ rows, catalogLoading }: { rows: AllowListRow[]; catalogLoad
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="text-sm font-semibold text-foreground">Allow list</h4>
+        <h4 className="text-sm font-semibold text-foreground">{interfaceText("m_f1eb6f7f3511fc")}</h4>
         <p className="text-xs text-muted-foreground">
-          {rows.length} tool{rows.length === 1 ? "" : "s"}
-          {explicitCount > 0 ? ` · ${explicitCount} explicit` : ""}
-          {patternCount > 0 ? ` · ${patternCount} via pattern` : ""}
-          {defaultCount > 0 ? ` · ${defaultCount} via default` : ""}
+          {rows.length}{interfaceText("m_c3c2dcf22644c1")}{rows.length === 1 ? "" : interfaceText("m_043a718774c572")}
+          {explicitCount > 0 ? interfaceText("m_7fd7e97f80e060", { value0: (explicitCount) }) : ""}
+          {patternCount > 0 ? interfaceText("m_25b6e92e51ed57", { value0: (patternCount) }) : ""}
+          {defaultCount > 0 ? interfaceText("m_56bccccd24de57", { value0: (defaultCount) }) : ""}
         </p>
       </div>
       {rows.length === 0 ? (
         <div className="rounded-md border border-dashed border-border px-3 py-6 text-center text-sm text-muted-foreground">
           {catalogLoading
-            ? "Resolving allowed tools…"
-            : "No tools resolved for this profile. Add an include selector or refresh the tool catalog."}
+            ? interfaceText("m_19c7849df8c123")
+            : interfaceText("m_0d026e82fe3e91")}
         </div>
       ) : (
         <Card>
@@ -585,11 +583,11 @@ function AllowList({ rows, catalogLoading }: { rows: AllowListRow[]; catalogLoad
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                  <th className="px-3 py-2.5 font-medium">Tool</th>
-                  <th className="px-3 py-2.5 font-medium">Application</th>
-                  <th className="px-3 py-2.5 font-medium">Capabilities</th>
-                  <th className="px-3 py-2.5 font-medium">Risk</th>
-                  <th className="px-3 py-2.5 font-medium">Source</th>
+                  <th className="px-3 py-2.5 font-medium">{interfaceText("m_2e53bdcd074086")}</th>
+                  <th className="px-3 py-2.5 font-medium">{interfaceText("m_e7ad522ea327e5")}</th>
+                  <th className="px-3 py-2.5 font-medium">{interfaceText("m_9460f16ac9b517")}</th>
+                  <th className="px-3 py-2.5 font-medium">{interfaceText("m_0711a8d636e4c0")}</th>
+                  <th className="px-3 py-2.5 font-medium">{interfaceText("m_0e570ca6fabe24")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -627,16 +625,14 @@ function AllowList({ rows, catalogLoading }: { rows: AllowListRow[]; catalogLoad
       )}
       {patternCount > 0 ? (
         <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
-          <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
-          Tools marked <span className="font-medium">pattern</span> were pulled in by a wildcard, application,
-          connection, or risk selector rather than named explicitly — review them when the catalog changes.
-        </p>
+          <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />{interfaceText("m_b075cc86abd463")}<span className="font-medium">{interfaceText("m_1fd38d5cbd2a99")}</span>{interfaceText("m_5ddd3bc6db46ba")}</p>
       ) : null}
     </div>
   );
 }
 
 export function ProfilesTab({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const qc = useQueryClient();
   const { pushToast } = useToast();
   const [createOpen, setCreateOpen] = useState(false);
@@ -727,10 +723,10 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       setSelectedId(created.id);
       resetProfileForm();
       resetEntryForm();
-      pushToast({ title: "Profile created", tone: "success" });
+      pushToast({ title: interfaceText("m_9bb4a8d57a821b"), tone: "success" });
     },
     onError: (error) => pushToast({
-      title: "Could not create profile",
+      title: interfaceText("m_6156b912543419"),
       body: error instanceof ApiError ? error.message : String(error),
       tone: "error",
     }),
@@ -743,10 +739,10 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       invalidateProfiles();
       setEditProfile(null);
       resetProfileForm();
-      pushToast({ title: "Profile updated", tone: "success" });
+      pushToast({ title: interfaceText("m_9c5551e87cb733"), tone: "success" });
     },
     onError: (error) => pushToast({
-      title: "Could not update profile",
+      title: interfaceText("m_275119d28a0042"),
       body: error instanceof ApiError ? error.message : String(error),
       tone: "error",
     }),
@@ -759,10 +755,10 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       invalidateProfiles();
       setEntryProfile(null);
       resetEntryForm();
-      pushToast({ title: "Entry added", tone: "success" });
+      pushToast({ title: interfaceText("m_f7c321788ef45b"), tone: "success" });
     },
     onError: (error) => pushToast({
-      title: "Could not add entry",
+      title: interfaceText("m_5dfe3395a6a579"),
       body: error instanceof ApiError ? error.message : String(error),
       tone: "error",
     }),
@@ -772,10 +768,10 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
     mutationFn: (entryId: string) => toolsApi.deleteProfileEntry(entryId),
     onSuccess: () => {
       invalidateProfiles();
-      pushToast({ title: "Entry removed", tone: "success" });
+      pushToast({ title: interfaceText("m_05b9420d9acb2b"), tone: "success" });
     },
     onError: (error) => pushToast({
-      title: "Could not remove entry",
+      title: interfaceText("m_18b1c00e3bf8af"),
       body: error instanceof ApiError ? error.message : String(error),
       tone: "error",
     }),
@@ -789,10 +785,10 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       setBindProfileFor(null);
       setTargetType("agent");
       setPriority("100");
-      pushToast({ title: "Profile bound", tone: "success" });
+      pushToast({ title: interfaceText("m_0b1808d5b86071"), tone: "success" });
     },
     onError: (error) => pushToast({
-      title: "Could not bind profile",
+      title: interfaceText("m_b20f66d99ed5ec"),
       body: error instanceof ApiError ? error.message : String(error),
       tone: "error",
     }),
@@ -806,10 +802,10 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
     }) => toolsApi.unbindProfile(companyId, profileId, { targetType, targetId }),
     onSuccess: () => {
       invalidateProfiles();
-      pushToast({ title: "Binding removed", tone: "success" });
+      pushToast({ title: interfaceText("m_16b79af9a74eda"), tone: "success" });
     },
     onError: (error) => pushToast({
-      title: "Could not remove binding",
+      title: interfaceText("m_49e5073fe1127a"),
       body: error instanceof ApiError ? error.message : String(error),
       tone: "error",
     }),
@@ -877,7 +873,7 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       riskLevel,
     });
     if (!entry) {
-      pushToast({ title: "Entry target required", tone: "error" });
+      pushToast({ title: interfaceText("m_3ce7de71f986b7"), tone: "error" });
       return;
     }
     addEntry.mutate({ profileId: entryProfile.id, input: entry });
@@ -894,7 +890,7 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       issueId: targetIssueId,
     });
     if (!targetId) {
-      pushToast({ title: "Binding target required", tone: "error" });
+      pushToast({ title: interfaceText("m_6db17eecb6c8b7"), tone: "error" });
       return;
     }
     bind.mutate({
@@ -910,13 +906,11 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-4">
       <ToolsPageHeader
-        title="Access profiles"
-        description="Reusable bundles of allowed applications, connections, and tools, assignable to agents, projects, routines, or issues."
+        title={interfaceText("m_2471292ff715cc")}
+        description={interfaceText("m_0a513750e0ff20")}
         actions={
           <Button size="sm" onClick={() => setCreateOpen(true)}>
-            <Plus className="mr-1 h-4 w-4" />
-            New profile
-          </Button>
+            <Plus className="mr-1 h-4 w-4" />{interfaceText("m_fcf4f3f4d5f73e")}</Button>
         }
       />
 
@@ -925,9 +919,9 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       {list.length === 0 ? (
         <EmptyState
           icon={Layers}
-          message="No access profiles yet"
-          description="Create a profile to group tool selectors, then bind it to the organization or a specific agent."
-          action="New profile"
+          message={interfaceText("m_cc24f5fff2491a")}
+          description={interfaceText("m_61e7d38403897c")}
+          action={interfaceText("m_fcf4f3f4d5f73e")}
           onAction={() => setCreateOpen(true)}
         />
       ) : (
@@ -963,7 +957,7 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
                           ) : null}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {toolCount} tool{toolCount === 1 ? "" : "s"} · {bindingsSubtitle(profile.bindings)}
+                          {toolCount}{interfaceText("m_c3c2dcf22644c1")}{toolCount === 1 ? "" : interfaceText("m_043a718774c572")} · {bindingsSubtitle(profile.bindings)}
                         </span>
                       </button>
                     </li>
@@ -1010,15 +1004,13 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editProfile ? "Edit profile" : "New profile"}</DialogTitle>
-            <DialogDescription>
-              Profile rules are enforced by the tool gateway policy service.
-            </DialogDescription>
+            <DialogTitle>{editProfile ? interfaceText("m_15c4aa13037eaf") : interfaceText("m_fcf4f3f4d5f73e")}</DialogTitle>
+            <DialogDescription>{interfaceText("m_1ade40e3d4130a")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <Label htmlFor="profile-name">Name</Label>
+                <Label htmlFor="profile-name">{interfaceText("m_dcd1d5223f73b3")}</Label>
                 <Input
                   id="profile-name"
                   value={name}
@@ -1026,46 +1018,46 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
                     setName(event.target.value);
                     if (!editProfile && !profileKey.trim()) setProfileKey(slugifyProfileKey(event.target.value));
                   }}
-                  placeholder="Engineering write tools"
+                  placeholder={interfaceText("m_0d0246f8ae5f51")}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="profile-key">Key</Label>
+                <Label htmlFor="profile-key">{interfaceText("m_99a52df3ff3d49")}</Label>
                 <Input id="profile-key" value={profileKey} onChange={(event) => setProfileKey(event.target.value)} />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="profile-description">Description</Label>
+              <Label htmlFor="profile-description">{interfaceText("m_526e0087cc3f25")}</Label>
               <Textarea
                 id="profile-description"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Optional context for reviewers."
+                placeholder={interfaceText("m_490a34adf82fb1")}
               />
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <Label>Default action</Label>
+                <Label>{interfaceText("m_e02292552b559d")}</Label>
                 <Select value={defaultAction} onValueChange={(value) => setDefaultAction(value as ToolProfileDefaultAction)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="deny">Deny unless included</SelectItem>
-                    <SelectItem value="allow">Allow unless excluded</SelectItem>
+                    <SelectItem value="deny">{interfaceText("m_ad1d4da87a93f0")}</SelectItem>
+                    <SelectItem value="allow">{interfaceText("m_58d05d139b9ba4")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Status</Label>
+                <Label>{interfaceText("m_920e413c7d411b")}</Label>
                 <Select value={status} onValueChange={(value) => setStatus(value as ToolProfileStatus)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="disabled">Disabled</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
+                    <SelectItem value="active">{interfaceText("m_92340695899bd2")}</SelectItem>
+                    <SelectItem value="disabled">{interfaceText("m_75081b593d15cf")}</SelectItem>
+                    <SelectItem value="archived">{interfaceText("m_bdb86505f8062d")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1097,11 +1089,9 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
               setEditProfile(null);
               resetProfileForm();
               resetEntryForm();
-            }}>
-              Cancel
-            </Button>
+            }}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button disabled={!name.trim() || createProfile.isPending || updateProfile.isPending} onClick={saveProfile}>
-              {editProfile ? "Save" : createProfile.isPending ? "Creating..." : "Create"}
+              {editProfile ? interfaceText("m_1509f561f24165") : createProfile.isPending ? interfaceText("m_def70944c9bb9c") : interfaceText("m_4759498ac2a719")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1115,7 +1105,7 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Add entry</DialogTitle>
+            <DialogTitle>{interfaceText("m_dd3db6ac0dfbcf")}</DialogTitle>
             <DialogDescription>{entryProfile?.name}</DialogDescription>
           </DialogHeader>
           <EntryFields
@@ -1137,10 +1127,8 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
             connections={connectionOptions}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEntryProfile(null)}>Cancel</Button>
-            <Button disabled={addEntry.isPending} onClick={saveEntry}>
-              Add entry
-            </Button>
+            <Button variant="outline" onClick={() => setEntryProfile(null)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+            <Button disabled={addEntry.isPending} onClick={saveEntry}>{interfaceText("m_dd3db6ac0dfbcf")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1150,12 +1138,12 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Bind profile</DialogTitle>
+            <DialogTitle>{interfaceText("m_65d75b8ac70cea")}</DialogTitle>
             <DialogDescription>{bindProfileFor?.name}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1.5">
-              <Label>Target type</Label>
+              <Label>{interfaceText("m_8a1c2fd5939df2")}</Label>
               <Select value={targetType} onValueChange={(value) => setTargetType(value as ToolProfileBindingTargetType)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -1177,9 +1165,9 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
             ) : null}
             {targetType === "project" ? (
               <div className="space-y-1.5">
-                <Label>Project</Label>
+                <Label>{interfaceText("m_98595978531974")}</Label>
                 <Select value={targetProjectId} onValueChange={setTargetProjectId}>
-                  <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={interfaceText("m_dd18e6f08d5e0e")} /></SelectTrigger>
                   <SelectContent>
                     {projectOptions.map((project) => <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>)}
                   </SelectContent>
@@ -1188,9 +1176,9 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
             ) : null}
             {targetType === "routine" ? (
               <div className="space-y-1.5">
-                <Label>Routine</Label>
+                <Label>{interfaceText("m_0b5baf309897ec")}</Label>
                 <Select value={targetRoutineId} onValueChange={setTargetRoutineId}>
-                  <SelectTrigger><SelectValue placeholder="Select a routine" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={interfaceText("m_29f3689a4ece46")} /></SelectTrigger>
                   <SelectContent>
                     {routineOptions.map((routine) => <SelectItem key={routine.id} value={routine.id}>{routine.title}</SelectItem>)}
                   </SelectContent>
@@ -1199,20 +1187,18 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
             ) : null}
             {targetType === "issue" ? (
               <div className="space-y-1.5">
-                <Label htmlFor="target-issue-id">Issue ID</Label>
+                <Label htmlFor="target-issue-id">{interfaceText("m_63e467f44aec16")}</Label>
                 <Input id="target-issue-id" value={targetIssueId} onChange={(event) => setTargetIssueId(event.target.value)} />
               </div>
             ) : null}
             <div className="space-y-1.5">
-              <Label htmlFor="profile-priority">Priority</Label>
+              <Label htmlFor="profile-priority">{interfaceText("m_d60dbba0792232")}</Label>
               <Input id="profile-priority" type="number" min={0} max={10000} value={priority} onChange={(event) => setPriority(event.target.value)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBindProfileFor(null)}>Cancel</Button>
-            <Button disabled={bind.isPending} onClick={saveBinding}>
-              Bind
-            </Button>
+            <Button variant="outline" onClick={() => setBindProfileFor(null)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+            <Button disabled={bind.isPending} onClick={saveBinding}>{interfaceText("m_56b9b63d283180")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1250,6 +1236,7 @@ function ProfileDetail({
   onDeleteEntry: (entryId: string) => void;
   onUnbind: (binding: ToolProfileBinding) => void;
 }) {
+  useInterfaceLanguage();
   const rows = useMemo(
     () => resolveAllowList(profile, catalog, maps.applicationsById, maps.connectionsById),
     [profile, catalog, maps.applicationsById, maps.connectionsById],
@@ -1268,39 +1255,31 @@ function ProfileDetail({
               <span className="font-medium text-foreground">{profile.name}</span>
               <Badge variant="outline">{profile.profileKey}</Badge>
               <Badge variant={statusVariant(profile.status)}>{profile.status}</Badge>
-              <Badge variant={profile.defaultAction === "allow" ? "secondary" : "outline"}>
-                default {profile.defaultAction}
+              <Badge variant={profile.defaultAction === "allow" ? "secondary" : "outline"}>{interfaceText("m_01d093272c22d0")}{profile.defaultAction}
               </Badge>
             </div>
             {profile.description ? (
               <p className="mt-1 text-sm text-muted-foreground">{profile.description}</p>
             ) : null}
-            <p className="mt-1 text-xs text-muted-foreground">
-              updated <RelativeTime value={profile.updatedAt} />
+            <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_53961930ab4482")}<RelativeTime value={profile.updatedAt} />
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-1.5">
             <Button size="sm" variant="outline" onClick={onEdit}>
-              <Pencil className="mr-1 h-3.5 w-3.5" />
-              Edit
-            </Button>
+              <Pencil className="mr-1 h-3.5 w-3.5" />{interfaceText("m_464c4ffd019e1e")}</Button>
             <Button size="sm" variant="outline" onClick={onAddEntry}>
-              <Plus className="mr-1 h-3.5 w-3.5" />
-              Entry
-            </Button>
+              <Plus className="mr-1 h-3.5 w-3.5" />{interfaceText("m_2649e082d9a2ba")}</Button>
             <Button size="sm" variant="outline" onClick={onBind}>
-              <Link2 className="mr-1 h-3.5 w-3.5" />
-              Bind
-            </Button>
+              <Link2 className="mr-1 h-3.5 w-3.5" />{interfaceText("m_56b9b63d283180")}</Button>
           </div>
         </div>
 
         {/* Targets */}
         <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-foreground">Targets</h4>
+          <h4 className="text-sm font-semibold text-foreground">{interfaceText("m_27445f6ab61d9a")}</h4>
           <div className="flex flex-wrap gap-2">
             {profile.bindings.length === 0 ? (
-              <span className="text-sm text-muted-foreground">No targets bound.</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_0fc5bce7d935cf")}</span>
             ) : profile.bindings.map((binding) => (
               <span key={binding.id} className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs">
                 <Badge variant="outline">{binding.targetType}</Badge>
@@ -1310,7 +1289,7 @@ function ProfileDetail({
                   type="button"
                   className="rounded p-0.5 text-muted-foreground hover:text-destructive"
                   onClick={() => onUnbind(binding)}
-                  aria-label={`Remove ${binding.targetType} binding`}
+                  aria-label={interfaceText("m_4d6650a83f7e8d", { value0: (binding.targetType) })}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -1321,27 +1300,24 @@ function ProfileDetail({
 
         {/* Effective scope summary */}
         <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-foreground">Effective scope</h4>
+          <h4 className="text-sm font-semibold text-foreground">{interfaceText("m_55ac5f6ef38669")}</h4>
           <div className="flex flex-wrap gap-2 text-xs">
-            <span className="rounded-md border border-border px-2 py-1 text-muted-foreground">
-              Default <span className="font-medium text-foreground">{profile.defaultAction}</span>
+            <span className="rounded-md border border-border px-2 py-1 text-muted-foreground">{interfaceText("m_f12bc6eadcd3ed")}<span className="font-medium text-foreground">{profile.defaultAction}</span>
             </span>
             <span className="rounded-md border border-border px-2 py-1 text-muted-foreground">
-              <span className="font-medium text-foreground">{rows.length}</span> tools allowed
-            </span>
+              <span className="font-medium text-foreground">{rows.length}</span>{interfaceText("m_47d3df9f43922e")}</span>
             <span className="rounded-md border border-border px-2 py-1 text-muted-foreground">
-              <span className="font-medium text-foreground">{includeCount}</span> include /{" "}
-              <span className="font-medium text-foreground">{excludeCount}</span> exclude
-            </span>
+              <span className="font-medium text-foreground">{includeCount}</span>{interfaceText("m_27ab941f3c650c")}{" "}
+              <span className="font-medium text-foreground">{excludeCount}</span>{interfaceText("m_1d5b10f20b89c7")}</span>
           </div>
         </div>
 
         {/* Selectors (entry management) */}
         <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-foreground">Selectors</h4>
+          <h4 className="text-sm font-semibold text-foreground">{interfaceText("m_d27e6f722c90c3")}</h4>
           <div className="flex flex-wrap gap-2">
             {profile.entries.length === 0 ? (
-              <span className="text-sm text-muted-foreground">No selectors.</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_b68ffa758fe7e4")}</span>
             ) : profile.entries.map((entry) => (
               <span key={entry.id} className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs">
                 <Badge variant={entry.effect === "include" ? "secondary" : "destructive"}>{entry.effect}</Badge>
@@ -1353,7 +1329,7 @@ function ProfileDetail({
                   type="button"
                   className="rounded p-0.5 text-muted-foreground hover:text-destructive"
                   onClick={() => onDeleteEntry(entry.id)}
-                  aria-label={`Delete ${entry.selectorType} entry`}
+                  aria-label={interfaceText("m_da5fdb31bb95f3", { value0: (entry.selectorType) })}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

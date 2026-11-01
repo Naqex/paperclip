@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { AgentAppearance } from "@paperclipai/shared";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import type { ReactNode } from "react";
@@ -98,6 +99,7 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
   onToggleEnabled: (routine: TRoutine, enabled: boolean) => void;
   onToggleArchived?: (routine: TRoutine) => void;
 }) {
+  useInterfaceLanguage();
   const enabled = routine.status === "active";
   const isArchived = routine.status === "archived";
   const isStatusPending = statusMutationRoutineId === routine.id;
@@ -125,7 +127,7 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
             type="checkbox"
             className="h-4 w-4 rounded border-border"
             checked={selected}
-            aria-label={`Select ${routine.title}`}
+            aria-label={interfaceText("m_33de0e8b35aac1", { value0: (routine.title) })}
             onChange={(event) => onSelectChange?.(routine, event.target.checked)}
           />
         </div>
@@ -135,7 +137,7 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
           <span className="truncate text-sm font-medium">{routine.title}</span>
           {(isArchived || routine.status === "paused" || isDraft) ? (
             <span className="text-xs text-muted-foreground">
-              {isArchived ? "archived" : isDraft ? "draft" : "paused"}
+              {isArchived ? interfaceText("m_dd9e881230ebf6") : isDraft ? interfaceText("m_7743ce348d9284") : interfaceText("m_a7a9dc5bcf71ad")}
             </span>
           ) : null}
           {managedByLabel ? (
@@ -148,11 +150,11 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
               className="h-2.5 w-2.5 shrink-0 rounded-sm"
               style={{ backgroundColor: project?.color ?? "var(--project-none)" }}
             />
-            <span>{routine.projectId ? (project?.name ?? "Unknown project") : "No project"}</span>
+            <span>{routine.projectId ? (project?.name ?? interfaceText("m_ed51cfeff0d969")) : interfaceText("m_f34c2be0d1c5f5")}</span>
           </span>
           <span className="flex items-center gap-2">
             {routine.assigneeAgentId ? <AgentAvatar agent={{ ...agent, id: routine.assigneeAgentId }} size={16} className="h-3.5 w-3.5 shrink-0"/> : null}
-            <span>{routine.assigneeAgentId ? (agent?.name ?? "Unknown agent") : "No default agent"}</span>
+            <span>{routine.assigneeAgentId ? (agent?.name ?? interfaceText("m_342b4ab21e2eb3")) : interfaceText("m_178492b7649622")}</span>
           </span>
           <span>
             {formatLastRunTimestamp(routine.lastRun?.triggeredAt)}
@@ -173,7 +175,7 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
             onClick={() => onRunNow(routine)}
           >
             <Play className="h-3.5 w-3.5" />
-            {runningRoutineId === routine.id ? "Running..." : "Run now"}
+            {runningRoutineId === routine.id ? interfaceText("m_4977a7e5bb3675") : interfaceText("m_0991397702fabb")}
           </Button>
         ) : null}
 
@@ -183,16 +185,16 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
             checked={enabled}
             onCheckedChange={() => onToggleEnabled(routine, enabled)}
             disabled={isStatusPending || isArchived || disableToggle}
-            aria-label={enabled ? `Disable ${routine.title}` : `Enable ${routine.title}`}
+            aria-label={enabled ? interfaceText("m_f226a4c0cacec0", { value0: (routine.title) }) : interfaceText("m_3a49e0606a28b0", { value0: (routine.title) })}
           />
           <span className="w-12 text-xs text-muted-foreground">
-            {isArchived ? "Archived" : isDraft ? "Draft" : enabled ? "On" : "Off"}
+            {isArchived ? interfaceText("m_bdb86505f8062d") : isDraft ? interfaceText("m_ebf12ef47cf575") : enabled ? interfaceText("m_13001175612531") : interfaceText("m_ca7981b46ecf2c")}
           </span>
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm" aria-label={`More actions for ${routine.title}`}>
+            <Button variant="ghost" size="icon-sm" aria-label={interfaceText("m_7025f2de2cf460", { value0: (routine.title) })}>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -204,7 +206,7 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
               disabled={runDisabled}
               onClick={() => onRunNow(routine)}
             >
-              {runningRoutineId === routine.id ? "Running..." : "Run now"}
+              {runningRoutineId === routine.id ? interfaceText("m_4977a7e5bb3675") : interfaceText("m_0991397702fabb")}
             </DropdownMenuItem>
             {extraMenuItems ? (
               <>
@@ -217,14 +219,14 @@ export function RoutineListRow<TRoutine extends RoutineListRowItem>({
               onClick={() => onToggleEnabled(routine, enabled)}
               disabled={isStatusPending || isArchived || disableToggle}
             >
-              {enabled ? "Pause" : "Enable"}
+              {enabled ? interfaceText("m_858e4ba7a29fd3") : interfaceText("m_5342e09f2729fb")}
             </DropdownMenuItem>
             {!hideArchiveAction && onToggleArchived ? (
               <DropdownMenuItem
                 onClick={() => onToggleArchived(routine)}
                 disabled={isStatusPending}
               >
-                {routine.status === "archived" ? "Restore" : "Archive"}
+                {routine.status === "archived" ? interfaceText("m_a76e13b9839270") : interfaceText("m_66f4804ee23ddc")}
               </DropdownMenuItem>
             ) : null}
           </DropdownMenuContent>

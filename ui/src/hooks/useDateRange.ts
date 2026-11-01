@@ -1,14 +1,15 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export type DatePreset = "mtd" | "7d" | "30d" | "ytd" | "all" | "custom";
 
 export const PRESET_LABELS: Record<DatePreset, string> = {
-  mtd: "Month to Date",
-  "7d": "7 Days",
-  "30d": "30 Days",
-  ytd: "Year to Date",
-  all: "All Time",
-  custom: "Custom",
+  get mtd() { return interfaceText("m_951ce1b0aa8f5c"); },
+  get "7d"() { return interfaceText("m_a9ad9dc1405e67"); },
+  get "30d"() { return interfaceText("m_4ae21a9bc8175e"); },
+  get ytd() { return interfaceText("m_92176dd3a3c938"); },
+  get all() { return interfaceText("m_476adfac4cd949"); },
+  get custom() { return interfaceText("m_494ca78f7374e4"); },
 };
 
 export const PRESET_KEYS: DatePreset[] = ["mtd", "7d", "30d", "ytd", "all", "custom"];
@@ -65,6 +66,7 @@ export interface UseDateRangeResult {
 }
 
 export function useDateRange(): UseDateRangeResult {
+  useInterfaceLanguage();
   const [preset, setPreset] = useState<DatePreset>("mtd");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");

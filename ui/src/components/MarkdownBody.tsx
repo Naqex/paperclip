@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { MarkdownWordStreaming, rehypeStreamingWords } from "./MarkdownWordStreaming";
 import { isValidElement, memo, useContext, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -154,6 +155,7 @@ function MarkdownIssueLink({
   children: ReactNode;
   documentLink?: boolean;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const chatReference = useCoordinatorChatReference(issuePathId);
   const [engaged, setEngaged] = useState(false);
@@ -193,7 +195,7 @@ function MarkdownIssueLink({
   const identifier = data?.identifier ?? issuePathId;
   const title = data?.title ?? identifier;
   const status = data?.status;
-  const issueLabel = title !== identifier ? `Issue ${identifier}: ${title}` : `Issue ${identifier}`;
+  const issueLabel = title !== identifier ? interfaceText("m_888fd00fb12ac1", { value0: (identifier), value1: (title) }) : interfaceText("m_a28ea733240c00", { value0: (identifier) });
 
   // Until the fetch settles we don't yet know whether this viewer can read the
   // issue. Keep the mention a plain link (clickable, styled as today) but hold
@@ -237,6 +239,7 @@ function MarkdownCaseLink({
   identifier: string;
   children: ReactNode;
 }) {
+  useInterfaceLanguage();
   // Cases resolve via the get-by-identifier route; navigate there on click.
   // Kept boxless/underlined to match the issue mention treatment.
   const caseHref = useCaseHref();
@@ -245,7 +248,7 @@ function MarkdownCaseLink({
       to={caseHref(identifier)}
       data-mention-kind="case"
       className={cn("paperclip-markdown-case-ref", "font-normal underline")}
-      aria-label={`Case ${identifier}`}
+      aria-label={interfaceText("m_6687a05a33a630", { value0: (identifier) })}
     >
       {children}
     </Link>
@@ -651,6 +654,7 @@ function CodeBlock({
   children: ReactNode;
   preProps: React.HTMLAttributes<HTMLPreElement>;
 }) {
+  useInterfaceLanguage();
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
   const [wrapLines, setWrapLines] = useState(false);
@@ -676,8 +680,8 @@ function CodeBlock({
     }, 1500);
   }, [children]);
 
-  const copyLabel = failed ? "Copy failed" : copied ? "Copied!" : "Copy";
-  const wrapLabel = wrapLines ? "Unwrap lines" : "Wrap lines";
+  const copyLabel = failed ? interfaceText("m_5b50e7a693fee9") : copied ? interfaceText("m_ea61bc15688d1e") : interfaceText("m_e21f935f11d7e9");
+  const wrapLabel = wrapLines ? interfaceText("m_6de95a89b8eef1") : interfaceText("m_6727132ac799a2");
 
   return (
     <div className="paperclip-markdown-codeblock" data-wrap-lines={wrapLines || undefined}>
@@ -724,7 +728,7 @@ function CodeBlock({
         <button
           type="button"
           onClick={handleCopy}
-          aria-label="Copy code"
+          aria-label={interfaceText("m_49a0053f3b0d50")}
           title={copyLabel}
           className="paperclip-markdown-codeblock-action paperclip-markdown-codeblock-copy"
           style={codeBlockActionStyle}
@@ -744,6 +748,7 @@ function CodeBlock({
 }
 
 function MermaidDiagramBlock({ source, darkMode }: { source: string; darkMode: boolean }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const renderId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -771,14 +776,14 @@ function MermaidDiagramBlock({ source, darkMode }: { source: string; darkMode: b
         const message =
           err instanceof Error && err.message
             ? err.message
-            : "Failed to render Mermaid diagram.";
+            : interfaceText("m_ce8bc46c0433e6");
         setError(message);
       });
 
     return () => {
       active = false;
     };
-  }, [darkMode, renderId, source]);
+  }, [darkMode, renderId, source, interfaceLanguage]);
 
   return (
     <div className="paperclip-mermaid">
@@ -787,7 +792,7 @@ function MermaidDiagramBlock({ source, darkMode }: { source: string; darkMode: b
       ) : (
         <>
           <p className={cn("paperclip-mermaid-status", error && "paperclip-mermaid-status-error")}>
-            {error ? `Unable to render Mermaid diagram: ${error}` : "Rendering Mermaid diagram..."}
+            {error ? interfaceText("m_38d7078d3f9258", { value0: (error) }) : interfaceText("m_1cecfea4dd3c4a")}
           </p>
           <pre className="paperclip-mermaid-source">
             <code className="language-mermaid">{source}</code>
@@ -815,6 +820,7 @@ function MarkdownBodyImpl({
   mediaMode = "render",
   resolveWorkspaceFileRef,
 }: MarkdownBodyProps) {
+  const interfaceLanguage = useInterfaceLanguage();
   const { theme } = useTheme();
   const coordinator = useCoordinatorPresentation();
   const streamWords = useContext(MarkdownWordStreaming);
@@ -881,7 +887,7 @@ function MarkdownBodyImpl({
       </blockquote>
     ),
     table: ({ node: _node, style: tableStyle, children: tableChildren, ...tableProps }) => (
-      <div className="paperclip-markdown-table-scroll" role="region" aria-label="Scrollable table" tabIndex={0}>
+      <div className="paperclip-markdown-table-scroll" role="region" aria-label={interfaceText("m_92d78d88918e2a")} tabIndex={0}>
         <table {...tableProps} style={tableStyle as React.CSSProperties | undefined}>
           {tableChildren}
         </table>
@@ -1032,8 +1038,7 @@ function MarkdownBodyImpl({
     };
     if (mediaMode === "reference") {
       map.img = ({ src, alt, title }) => (
-        <span data-markdown-image-reference title={title}>
-          Image: {alt || "Untitled image"}{src ? ` (${src})` : ""}
+        <span data-markdown-image-reference title={title}>{interfaceText("m_6230bfe71a62b0")}{alt || interfaceText("m_f0b95d1b59c022")}{src ? ` (${src})` : ""}
         </span>
       );
     } else if (resolveImageSrc || onImageClick) {
@@ -1047,7 +1052,7 @@ function MarkdownBodyImpl({
             alt={alt ?? ""}
             role={onImageClick && finalSrc ? "button" : undefined}
             tabIndex={onImageClick && finalSrc ? 0 : undefined}
-            aria-label={onImageClick && finalSrc ? `Open image: ${alt || "Untitled image"}` : undefined}
+            aria-label={onImageClick && finalSrc ? interfaceText("m_ec591587ad6980", { value0: (alt || "Untitled image") }) : undefined}
             onClick={onImageClick && finalSrc ? (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -1065,7 +1070,7 @@ function MarkdownBodyImpl({
       };
     }
     return map;
-  }, [theme, coordinator, linkIssueReferences, linkCaseReferences, externalReferenceLookup, resolveImageSrc, resolveLinkHref, onImageClick, mediaMode]);
+  }, [theme, coordinator, linkIssueReferences, linkCaseReferences, externalReferenceLookup, resolveImageSrc, resolveLinkHref, onImageClick, mediaMode, interfaceLanguage]);
 
   return (
     <div

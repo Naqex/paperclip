@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -31,26 +32,26 @@ const ALL = "__all";
 
 /** Action-domain prefixes offered in the filter (server does a prefix match). */
 const ACTION_DOMAINS: { value: string; label: string }[] = [
-  { value: ALL, label: "All actions" },
-  { value: "issue.", label: "Tasks" },
-  { value: "agent.", label: "Agents" },
-  { value: "heartbeat.", label: "Runs" },
-  { value: "approval.", label: "Approvals" },
-  { value: "project.", label: "Projects" },
-  { value: "goal.", label: "Goals" },
-  { value: "tool_gateway.", label: "Tools" },
-  { value: "cost.", label: "Costs" },
-  { value: "company.", label: "Company" },
+  { value: ALL, get label() { return interfaceText("m_83140cf1308a72"); } },
+  { value: "issue.", get label() { return interfaceText("m_b3a60e61a5233d"); } },
+  { value: "agent.", get label() { return interfaceText("m_279b44d2ab4b40"); } },
+  { value: "heartbeat.", get label() { return interfaceText("m_848f54e89660ce"); } },
+  { value: "approval.", get label() { return interfaceText("m_2bfc3471571e5c"); } },
+  { value: "project.", get label() { return interfaceText("m_04e2a9728af758"); } },
+  { value: "goal.", get label() { return interfaceText("m_116cd3982a9bc4"); } },
+  { value: "tool_gateway.", get label() { return interfaceText("m_ea93d6a262ecb8"); } },
+  { value: "cost.", get label() { return interfaceText("m_b88fc5fc476514"); } },
+  { value: "company.", get label() { return interfaceText("m_de4743c879734d"); } },
 ];
 
 /** Entity types offered in the filter (server does an exact match). */
 const ENTITY_TYPES: { value: string; label: string }[] = [
-  { value: ALL, label: "All entities" },
-  { value: "issue", label: "Task" },
+  { value: ALL, get label() { return interfaceText("m_15414070792295"); } },
+  { value: "issue", get label() { return interfaceText("m_4bc74b21357c6c"); } },
   { value: "agent", label: "Agent" },
-  { value: "project", label: "Project" },
-  { value: "goal", label: "Goal" },
-  { value: "company", label: "Company" },
+  { value: "project", get label() { return interfaceText("m_98595978531974"); } },
+  { value: "goal", get label() { return interfaceText("m_cdbf6975e8a35b"); } },
+  { value: "company", get label() { return interfaceText("m_de4743c879734d"); } },
 ];
 
 /**
@@ -100,6 +101,7 @@ function AuditActor({
   agentMap: Map<string, Agent>;
   userProfileMap: Map<string, CompanyUserProfile>;
 }) {
+  useInterfaceLanguage();
   // Agent names are company-readable through the same authorization-filtered
   // directory used by this page. The basic audit tier strips privileged
   // attribution (`agentId`) but retains the acting principal (`actorId`), so
@@ -137,8 +139,8 @@ function AuditActor({
       : record.actorType === "agent"
         ? "Agent"
         : record.actorType === "user"
-          ? "User"
-          : "System";
+          ? interfaceText("m_b512d97e7cbf97")
+          : interfaceText("m_6725e7bbcd28f3");
   return <Identity name={label} size="sm" className="font-medium text-foreground" />;
 }
 
@@ -150,13 +152,14 @@ function AuditActor({
  * that would duplicate the verb.
  */
 function AuditEntityNode({ record }: { record: AuditActionRecord }) {
+  useInterfaceLanguage();
   const { issue, document } = record.entity;
   const issueRef = issue?.identifier ?? issue?.id ?? null;
 
   if (issueRef) {
     return (
       <Link to={`/issues/${issueRef}`} className="font-medium text-primary hover:underline">
-        {issue?.identifier ? `${issue.identifier}${issue.title ? ` · ${issue.title}` : ""}` : "the task"}
+        {issue?.identifier ? `${issue.identifier}${issue.title ? ` · ${issue.title}` : ""}` : interfaceText("m_fd27a43ca87fa5")}
       </Link>
     );
   }
@@ -176,6 +179,7 @@ function AuditRow({
   agentMap: Map<string, Agent>;
   userProfileMap: Map<string, CompanyUserProfile>;
 }) {
+  useInterfaceLanguage();
   const verb = formatActivityVerb(record.action, record.details, { agentMap, userProfileMap });
   const responsible = record.responsibleUserId ? userProfileMap.get(record.responsibleUserId) : null;
   // Suppress the "on behalf of" chip when the human actor *is* the responsible user.
@@ -183,7 +187,7 @@ function AuditRow({
     record.responsibleUserId
       && !(record.actorType === "user" && record.actorId === record.responsibleUserId),
   );
-  const responsibleLabel = responsible?.label ?? (record.responsibleUserId ? "a user" : null);
+  const responsibleLabel = responsible?.label ?? (record.responsibleUserId ? interfaceText("m_38649849c77ed7") : null);
   const excerpt = record.entity.comment?.excerpt?.trim();
   // Show the document key only when it isn't already the linked entity node.
   const documentKey = record.entity.issue && record.entity.document ? record.entity.document.key : null;
@@ -203,23 +207,19 @@ function AuditRow({
             </p>
           ) : null}
           {documentKey ? (
-            <p className="text-xs text-muted-foreground">
-              Document <span className="font-mono text-(length:--text-micro)">{documentKey}</span>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_48c6577e6c55e5")}<span className="font-mono text-(length:--text-micro)">{documentKey}</span>
             </p>
           ) : null}
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {showOnBehalf && responsibleLabel ? (
-              <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5">
-                on behalf of {responsibleLabel}
+              <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5">{interfaceText("m_54cedc9dcf2ab9")}{responsibleLabel}
               </span>
             ) : null}
             {record.runId && record.agentId ? (
               <Link
                 to={`/agents/${record.agentId}/runs/${record.runId}`}
                 className="text-primary hover:underline"
-              >
-                View run
-              </Link>
+              >{interfaceText("m_aaf7fccc7d1315")}</Link>
             ) : null}
             <span className="font-mono text-(length:--text-micro) opacity-70">{record.action}</span>
           </div>
@@ -238,19 +238,15 @@ function AuditRow({
 
 /** The permission-denied / upsell state shown when the caller lacks the grant. */
 function AuditUpsell() {
+  useInterfaceLanguage();
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
         <ShieldAlert className="h-10 w-10 text-muted-foreground/50" />
         <div>
-          <p className="text-sm font-medium text-foreground">Agent audit is a Paperclip Enterprise view</p>
-          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-            The agent audit log gives you a searchable, exportable record of everything your agents
-            did — every comment, task change, approval, and run — with the responsible person for
-            each action. Ask an administrator to grant you the{" "}
-            <span className="font-mono text-(length:--text-micro)">audit:view_agent_actions</span>{" "}
-            permission to view it.
-          </p>
+          <p className="text-sm font-medium text-foreground">{interfaceText("m_0f33f93b0cf2f2")}</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">{interfaceText("m_795b34a7abcdd3")}{" "}
+            <span className="font-mono text-(length:--text-micro)">audit:view_agent_actions</span>{" "}{interfaceText("m_03d2059c416daf")}</p>
         </div>
       </CardContent>
     </Card>
@@ -264,6 +260,7 @@ export function AuditFeed({
   mode,
   onModeChange,
 }: AuditFeedProps) {
+  useInterfaceLanguage();
   const { pushToast } = useToastActions();
   const [agent, setAgent] = useState<string>(ALL);
   const [responsibleUser, setResponsibleUser] = useState<string>(ALL);
@@ -444,11 +441,11 @@ export function AuditFeed({
       // Browsers may read blob URLs lazily after click(), so keep the URL alive
       // long enough for the download to start.
       window.setTimeout(() => URL.revokeObjectURL(url), 5_000);
-      pushToast({ title: "Audit exported", body: "Your CSV download has started.", tone: "success" });
+      pushToast({ title: interfaceText("m_92ca28898ae7a5"), body: interfaceText("m_0ab920d4f8b3a1"), tone: "success" });
     } catch (error) {
       pushToast({
-        title: "Export failed",
-        body: error instanceof Error ? error.message : "Could not export the audit log.",
+        title: interfaceText("m_e94d3ee06ecf6a"),
+        body: error instanceof Error ? error.message : interfaceText("m_a5a8eccb59309c"),
         tone: "error",
       });
     } finally {
@@ -465,11 +462,11 @@ export function AuditFeed({
       {!hideHeader ? (
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-lg font-semibold text-foreground">Activity</h1>
+            <h1 className="text-lg font-semibold text-foreground">{interfaceText("m_38da1505ca8373")}</h1>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
               {resolvedMode === "agents"
-                ? "Every recorded agent action, newest first — with the responsible person and run behind each one."
-                : "Everything happening in your company, newest first — people, agents, and the system. Each line is one recorded action."}
+                ? interfaceText("m_693aedcd30240a")
+                : interfaceText("m_455266f7758638")}
             </p>
           </div>
         </div>
@@ -477,9 +474,9 @@ export function AuditFeed({
 
       {showModeToggle ? (
         <Tabs value={resolvedMode} onValueChange={(value) => onModeChange?.(value as AuditFeedMode)}>
-          <TabsList aria-label="Activity scope">
-            <TabsTrigger value="all">All activity</TabsTrigger>
-            <TabsTrigger value="agents">Agent actions</TabsTrigger>
+          <TabsList aria-label={interfaceText("m_98a37b44fa795f")}>
+            <TabsTrigger value="all">{interfaceText("m_29ebb2ef2da630")}</TabsTrigger>
+            <TabsTrigger value="agents">{interfaceText("m_a21eef047f65f5")}</TabsTrigger>
           </TabsList>
         </Tabs>
       ) : null}
@@ -492,7 +489,7 @@ export function AuditFeed({
                 <SelectValue placeholder="Agent" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>All agents</SelectItem>
+                <SelectItem value={ALL}>{interfaceText("m_54c32d3e2cfa1c")}</SelectItem>
                 {(agents.data ?? []).map((a) => (
                   <SelectItem key={a.id} value={a.id}>
                     {a.name}
@@ -504,10 +501,10 @@ export function AuditFeed({
           <Select value={responsibleUser} onValueChange={setResponsibleUser}>
             {/* Wide enough for "All responsible users" — w-44 truncated it. */}
             <SelectTrigger className="w-52">
-              <SelectValue placeholder="Responsible user" />
+              <SelectValue placeholder={interfaceText("m_aafb0485738090")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL}>All responsible users</SelectItem>
+              <SelectItem value={ALL}>{interfaceText("m_efee37a555813b")}</SelectItem>
               {(userDirectory.data?.users ?? []).map((u) => (
                 <SelectItem key={u.principalId} value={u.principalId}>
                   {u.user?.name ?? u.user?.email ?? u.principalId.slice(0, 8)}
@@ -517,7 +514,7 @@ export function AuditFeed({
           </Select>
           <Select value={actionDomain} onValueChange={setActionDomain}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="Action" />
+              <SelectValue placeholder={interfaceText("m_64cff1319d2fd2")} />
             </SelectTrigger>
             <SelectContent>
               {ACTION_DOMAINS.map((d) => (
@@ -529,7 +526,7 @@ export function AuditFeed({
           </Select>
           <Select value={entityType} onValueChange={setEntityType}>
             <SelectTrigger className="w-36">
-              <SelectValue placeholder="Entity" />
+              <SelectValue placeholder={interfaceText("m_2ed3bb60c9af04")} />
             </SelectTrigger>
             <SelectContent>
               {ENTITY_TYPES.map((e) => (
@@ -541,7 +538,7 @@ export function AuditFeed({
           </Select>
           <Input
             type="date"
-            aria-label="From date"
+            aria-label={interfaceText("m_3813fd079009b9")}
             value={dateFrom}
             max={dateTo || undefined}
             onChange={(e) => setDateFrom(e.target.value)}
@@ -549,16 +546,14 @@ export function AuditFeed({
           />
           <Input
             type="date"
-            aria-label="To date"
+            aria-label={interfaceText("m_485348889fedcc")}
             value={dateTo}
             min={dateFrom || undefined}
             onChange={(e) => setDateTo(e.target.value)}
             className="w-36"
           />
           {hasActiveFilters ? (
-            <Button variant="ghost" size="sm" onClick={clearFilters}>
-              Clear filters
-            </Button>
+            <Button variant="ghost" size="sm" onClick={clearFilters}>{interfaceText("m_7179ea0035fca7")}</Button>
           ) : null}
           <Button
             variant="outline"
@@ -568,30 +563,26 @@ export function AuditFeed({
             disabled={exporting || feed.isLoading || items.length === 0}
           >
             <Download className="mr-1.5 h-4 w-4" />
-            {exporting ? "Exporting…" : "Export CSV"}
+            {exporting ? interfaceText("m_a2dd9cbb7013bb") : interfaceText("m_91f71c14c8d6cc")}
           </Button>
         </div>
       ) : null}
 
       {recoveringFromAccessDowngrade || fallingBackToAllActivity ? (
         <Card>
-          <CardContent className="py-14 text-center text-sm text-muted-foreground">
-            Refreshing audit access…
-          </CardContent>
+          <CardContent className="py-14 text-center text-sm text-muted-foreground">{interfaceText("m_1e133c2d9c7521")}</CardContent>
         </Card>
       ) : feed.isLoading ? (
         <Card>
-          <CardContent className="py-14 text-center text-sm text-muted-foreground">Loading…</CardContent>
+          <CardContent className="py-14 text-center text-sm text-muted-foreground">{interfaceText("m_ba3bbbe10d8bef")}</CardContent>
         </Card>
       ) : feed.error ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
             <p className="text-sm text-muted-foreground">
-              {feed.error instanceof Error ? feed.error.message : "Failed to load the audit log."}
+              {feed.error instanceof Error ? feed.error.message : interfaceText("m_304388ac5e130b")}
             </p>
-            <Button variant="outline" size="sm" onClick={() => feed.refetch()}>
-              Try again
-            </Button>
+            <Button variant="outline" size="sm" onClick={() => feed.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>
           </CardContent>
         </Card>
       ) : items.length === 0 ? (
@@ -600,20 +591,18 @@ export function AuditFeed({
             <ScrollText className="h-10 w-10 text-muted-foreground/40" />
             <div>
               <p className="text-sm font-medium text-foreground">
-                {hasActiveFilters ? "No actions match these filters" : "Nothing here yet"}
+                {hasActiveFilters ? interfaceText("m_ba222548c3c5d9") : interfaceText("m_49abaf804ab38c")}
               </p>
               <p className="mt-1 max-w-md text-sm text-muted-foreground">
                 {hasActiveFilters
-                  ? "Try a wider date range or different filters."
+                  ? interfaceText("m_b070431d045a73")
                   : resolvedMode === "agents"
-                    ? "As soon as your agents start doing things, their actions show up here."
-                    : "As soon as anyone in your company does something, it shows up here."}
+                    ? interfaceText("m_7280b68ca16922")
+                    : interfaceText("m_29840ec0b75c5b")}
               </p>
             </div>
             {hasActiveFilters ? (
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                Clear filters
-              </Button>
+              <Button variant="outline" size="sm" onClick={clearFilters}>{interfaceText("m_7179ea0035fca7")}</Button>
             ) : null}
           </CardContent>
         </Card>
@@ -642,14 +631,12 @@ export function AuditFeed({
             onClick={() => feed.fetchNextPage()}
             disabled={feed.isFetchingNextPage}
           >
-            {feed.isFetchingNextPage ? "Loading…" : "Load more"}
+            {feed.isFetchingNextPage ? interfaceText("m_ba3bbbe10d8bef") : interfaceText("m_ac8991ef01019c")}
           </Button>
         </div>
       ) : null}
 
-      <p className="text-xs text-muted-foreground">
-        Recorded by Paperclip — entries can't be edited. Sensitive values are never stored.
-      </p>
+      <p className="text-xs text-muted-foreground">{interfaceText("m_f95bb996afcd3e")}</p>
     </div>
   );
 }

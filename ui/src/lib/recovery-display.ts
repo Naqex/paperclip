@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { IssueRecoveryAction, IssueRecoveryActionKind } from "@paperclipai/shared";
 import { Eye, OctagonAlert, RefreshCw, TriangleAlert } from "lucide-react";
 import {
@@ -23,23 +24,23 @@ export const RECOVERY_CHIP_DEFAULT_TONE: Record<
     className:
       "border-amber-500/60 bg-amber-500/15 text-amber-700 dark:text-amber-300",
     icon: TriangleAlert,
-    label: "Recovery needed",
+    get label() { return interfaceText("m_1ffe056fff955d"); },
   },
   in_progress: {
     className:
       "border-sky-500/60 bg-sky-500/15 text-sky-700 dark:text-sky-300",
     icon: RefreshCw,
-    label: "Recovery in progress",
+    get label() { return interfaceText("m_93d357e36b842f"); },
   },
   observe_only: {
     className: "border-border bg-muted text-muted-foreground",
     icon: Eye,
-    label: "Observing active run",
+    get label() { return interfaceText("m_e8ad00fb2f8865"); },
   },
   escalated: {
     className: "border-red-500/60 bg-red-500/15 text-red-700 dark:text-red-300",
     icon: OctagonAlert,
-    label: "Recovery escalated",
+    get label() { return interfaceText("m_b976b9c412db53"); },
   },
 };
 
@@ -122,7 +123,7 @@ export function recoveryChipLabel(
   lineage?: RecoveryRetryLineage | null,
 ): string {
   if (kind === "workspace_validation" && state === "needed") {
-    return "Workspace recovery needed";
+    return interfaceText("m_d374a51847ff3f");
   }
   if (
     state === "in_progress" &&
@@ -130,7 +131,7 @@ export function recoveryChipLabel(
     lineage.maxAttempts !== null &&
     lineage.attempt > 0
   ) {
-    return `Recovery in progress · ${Math.min(lineage.attempt, lineage.maxAttempts)}/${lineage.maxAttempts}`;
+    return interfaceText("m_157862a44af402", { value0: (Math.min(lineage.attempt, lineage.maxAttempts)), value1: (lineage.maxAttempts) });
   }
   return RECOVERY_CHIP_DEFAULT_TONE[state].label;
 }

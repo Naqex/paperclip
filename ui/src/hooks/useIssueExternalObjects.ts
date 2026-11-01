@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { queryViewKind } from "../components/QueryView";
@@ -35,19 +36,19 @@ export async function fetchIssueExternalObjectSummariesInBatches(
 function formatMentionSourceLabel(mention: ExternalObjectMention): string {
   switch (mention.sourceKind) {
     case "title":
-      return "Title";
+      return interfaceText("m_7e8cd2056da73a");
     case "description":
-      return "Description";
+      return interfaceText("m_526e0087cc3f25");
     case "comment":
-      return "Comment";
+      return interfaceText("m_44f5e3fbec57be");
     case "document":
-      return mention.documentKey ? `Document: ${mention.documentKey}` : "Document";
+      return mention.documentKey ? interfaceText("m_d82db83849da34", { value0: (mention.documentKey) }) : interfaceText("m_d6bd8c0aeee80f");
     case "property":
-      return mention.propertyKey ? `Property: ${mention.propertyKey}` : "Property";
+      return mention.propertyKey ? interfaceText("m_02d7baf31aa4f1", { value0: (mention.propertyKey) }) : interfaceText("m_40040cb181f7f0");
     case "plugin":
       return "Plugin";
     default:
-      return "Source";
+      return interfaceText("m_0e570ca6fabe24");
   }
 }
 

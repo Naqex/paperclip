@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { IssueRelatedWorkItem, IssueRelatedWorkSummary } from "@paperclipai/shared";
 import { IssueReferencePill } from "./IssueReferencePill";
 import { ExternalObjectPill } from "./ExternalObjectPill";
@@ -98,6 +99,7 @@ function ExternalObjectsSection({
   isError: boolean;
   onRetry?: () => void;
 }) {
+  useInterfaceLanguage();
   // Severity-first sort with most-recently-changed as the secondary sort.
   const sorted = [...groups].sort((a, b) => {
     const aTone = externalObjectToneSeverity(a.pill.statusCategory ? a.group.object?.statusTone ?? null : null);
@@ -111,31 +113,24 @@ function ExternalObjectsSection({
   return (
     <section className="space-y-3 rounded-lg border border-border p-3">
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold">External objects</h3>
-        <p className="text-xs text-muted-foreground">
-          Remote work referenced from this issue — pull requests, deployments, tickets in other systems, and more.
-        </p>
+        <h3 className="text-sm font-semibold">{interfaceText("m_9279c11de25294")}</h3>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_3c65ef5ce44eaf")}</p>
       </div>
 
       {isError ? ( // query-error-ok: set only for a real failure (useIssueExternalObjects keeps data through outages)
-        <p className="text-xs text-muted-foreground">
-          Couldn't load external objects.{" "}
+        <p className="text-xs text-muted-foreground">{interfaceText("m_42d33ac2522ca0")}{" "}
           {onRetry ? (
             <button
               type="button"
               onClick={onRetry}
               className="text-primary underline-offset-2 hover:underline"
-            >
-              Retry
-            </button>
+            >{interfaceText("m_942087cc2d41e0")}</button>
           ) : null}
         </p>
       ) : isLoading ? (
-        <p className="text-xs text-muted-foreground">Loading external objects…</p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_d80d5f6cd3b1f5")}</p>
       ) : sorted.length === 0 ? (
-        <p className="text-xs text-muted-foreground">
-          This issue does not reference any external objects yet.
-        </p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_e44c5d10ee56aa")}</p>
       ) : (
         <ul className="-mx-1 flex flex-col">
           {sorted.map(({ pill, mentionCount, sourceLabels, group }) => {
@@ -185,16 +180,17 @@ export function IssueRelatedWorkPanel({
   externalObjectsError?: boolean;
   onRetryExternalObjects?: () => void;
 }) {
+  useInterfaceLanguage();
   const outbound = relatedWork?.outbound ?? [];
   const inbound = relatedWork?.inbound ?? [];
 
   return (
     <div className="space-y-3">
       <Section
-        title="References"
-        description="Other tasks this task currently points at in its title, description, comments, or documents."
+        title={interfaceText("m_69824d3b0e70ca")}
+        description={interfaceText("m_2fd8c15a7e7414")}
         items={outbound}
-        emptyLabel="This task does not reference any other tasks yet."
+        emptyLabel={interfaceText("m_4bb2fcaa1494b7")}
       />
       {externalObjectsEnabled ? (
         <ExternalObjectsSection
@@ -205,10 +201,10 @@ export function IssueRelatedWorkPanel({
         />
       ) : null}
       <Section
-        title="Referenced by"
-        description="Other tasks that currently point at this task."
+        title={interfaceText("m_b65181bd6bc27f")}
+        description={interfaceText("m_b7a48cc851aec9")}
         items={inbound}
-        emptyLabel="No other tasks reference this task yet."
+        emptyLabel={interfaceText("m_e46da1d85ab577")}
       />
     </div>
   );

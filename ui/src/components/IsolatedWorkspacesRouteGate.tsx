@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, Outlet } from "@/lib/router";
 import { instanceSettingsApi } from "@/api/instanceSettings";
@@ -21,6 +22,7 @@ import { queryKeys } from "@/lib/queryKeys";
  * there is no flag to redirect on.
  */
 export function IsolatedWorkspacesRouteGate() {
+  useInterfaceLanguage();
   const query = useQuery({
     queryKey: queryKeys.instance.experimentalSettings,
     queryFn: () => instanceSettingsApi.getExperimental(),
@@ -33,7 +35,7 @@ export function IsolatedWorkspacesRouteGate() {
         <QueryErrorState
           size="page"
           error={view.error}
-          action="load workspaces"
+          action={interfaceText("m_71cd4154697ec7")}
           onRetry={view.retry}
           retrying={view.isFetching}
         />

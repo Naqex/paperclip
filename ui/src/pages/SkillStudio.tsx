@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { SkillsPageNavigation } from "@/components/skill-studio/SkillsNavigationTabs";
 import { interactionReadinessRefetchInterval } from "@/lib/issue-thread-interactions";
 import { SkillBinaryFile } from "../components/SkillBinaryFile";
@@ -275,6 +276,7 @@ function useIsMobile() {
 // ---------------------------------------------------------------------------
 
 export function SkillStudio() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { skillId = "" } = useParams<{ skillId: string }>();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -312,22 +314,22 @@ export function SkillStudio() {
     setBreadcrumbs(
       isCreateMode
         ? [
-            { label: "Skills", href: "/skills" },
+            { label: interfaceText("m_66d0f523a379b2"), href: "/skills" },
             { label: "Studio", href: "/skills/studio" },
-            { label: "New skill" },
+            { label: interfaceText("m_9bf06a86c934b7") },
           ]
         : skill
         ? [
-            { label: "Skills", href: "/skills" },
+            { label: interfaceText("m_66d0f523a379b2"), href: "/skills" },
             { label: "Studio", href: "/skills/studio" },
             { label: skill.name },
           ]
         : [
-            { label: "Skills", href: "/skills" },
+            { label: interfaceText("m_66d0f523a379b2"), href: "/skills" },
             { label: "Studio" },
           ],
     );
-  }, [isCreateMode, setBreadcrumbs, skill]);
+  }, [isCreateMode, setBreadcrumbs, skill, interfaceLanguage]);
 
   // Record a per-browser visit whenever a skill successfully opens, powering the
   // landing's "Recently visited" section (PAP-13150).
@@ -336,7 +338,7 @@ export function SkillStudio() {
   }, [skill?.id]);
 
   if (!companyId) {
-    return <StudioMessage message="Select an organization to open Skill Studio." />;
+    return <StudioMessage message={interfaceText("m_5722dd9d9f8b47")} />;
   }
   if (isCreateMode) {
     return (
@@ -365,7 +367,7 @@ export function SkillStudio() {
     );
   }
   if (detailQuery.isLoading || detailView.kind === "reconnecting") {
-    return <StudioMessage message="Loading skill…" />;
+    return <StudioMessage message={interfaceText("m_5c57e60fe4ca90")} />;
   }
   // "Not found" only for a real 404; an outage never looks like a missing skill.
   if (detailView.kind === "error" && detailView.errorKind !== "not_found") {
@@ -373,14 +375,14 @@ export function SkillStudio() {
       <QueryErrorState
         size="page"
         error={detailQuery.error}
-        action="load this skill"
+        action={interfaceText("m_7797bc2ca387cd")}
         onRetry={detailView.retry}
         retrying={detailView.isFetching}
       />
     );
   }
   if (detailView.kind === "error" || !detailQuery.data) {
-    return <StudioMessage message="Skill not found." />;
+    return <StudioMessage message={interfaceText("m_97cd06e1a48e2a")} />;
   }
 
   return (
@@ -414,6 +416,7 @@ function StudioCreateMode({
   forkError: boolean;
   onSelectSkill: (skillId: string) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex h-full min-h-0 flex-col">
@@ -423,7 +426,7 @@ function StudioCreateMode({
             skills={skills}
             loading={skillsLoading}
             onSelectSkill={onSelectSkill}
-            emptyLabel="New skill"
+            emptyLabel={interfaceText("m_9bf06a86c934b7")}
           />
         </header>
         <SkillsPageNavigation activeView="authored" />
@@ -457,6 +460,7 @@ function StudioNewSkillPanel({
   forkLoading: boolean;
   forkError: boolean;
 }) {
+  useInterfaceLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const toast = useOptionalToastActions();
@@ -492,22 +496,22 @@ function StudioNewSkillPanel({
       await queryClient.invalidateQueries({ queryKey: queryKeys.companySkills.list(companyId) });
       toast?.pushToast({
         tone: "success",
-        title: skill.forkedFromSkillId ? "Skill fork created" : "Skill created",
-        body: `${skill.name} is now editable in the Paperclip workspace.`,
+        title: skill.forkedFromSkillId ? interfaceText("m_7806f0fc7194ca") : interfaceText("m_b25ab5d5e2a5af"),
+        body: interfaceText("m_8b6689492579a7", { value0: (skill.name) }),
       });
       navigate(skillStudioRoute(skill.id));
     },
     onError: (error) => {
       toast?.pushToast({
         tone: "error",
-        title: "Skill creation failed",
-        body: error instanceof Error ? error.message : "Failed to create skill.",
+        title: interfaceText("m_bb3edc7034fe7d"),
+        body: error instanceof Error ? error.message : interfaceText("m_993d12daccdd2d"),
       });
     },
   });
 
   if (forkFromSkillId && forkLoading) {
-    return <StudioMessage message="Loading fork source..." />;
+    return <StudioMessage message={interfaceText("m_1604c13e4409da")} />;
   }
 
   const previewCard: DiscoveryCard = {
@@ -536,33 +540,28 @@ function StudioNewSkillPanel({
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-6">
       <div className="space-y-1">
         <h1 className="text-lg font-semibold text-foreground">
-          {draft.forkedFromSkillId ? "Fork skill" : "Create a new skill"}
+          {draft.forkedFromSkillId ? interfaceText("m_fa941eb0ebcedd") : interfaceText("m_334c7dd95ab433")}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Create an editable organization skill and open it directly in Studio.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_deec896561ffdb")}</p>
       </div>
 
       {draft.forkedFromName ? (
         <div className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
-          <GitFork className="h-4 w-4" />
-          Forking {draft.forkedFromName}
+          <GitFork className="h-4 w-4" />{interfaceText("m_f22a16ea5fcbb1")}{draft.forkedFromName}
         </div>
       ) : forkError ? (
         <div className="flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          <AlertTriangle className="h-4 w-4" />
-          Fork source not found. You can still create a blank skill.
-        </div>
+          <AlertTriangle className="h-4 w-4" />{interfaceText("m_e993a0331e068b")}</div>
       ) : null}
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-sm font-medium text-foreground">Basics</h2>
-          <p className="text-xs text-muted-foreground">Name the skill and set the route-safe slug.</p>
+          <h2 className="text-sm font-medium text-foreground">{interfaceText("m_8fdd2ee8475e29")}</h2>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_0701145e12e7a3")}</p>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="skill-name">Name</Label>
+            <Label htmlFor="skill-name">{interfaceText("m_dcd1d5223f73b3")}</Label>
             <Input
               id="skill-name"
               value={draft.name}
@@ -576,11 +575,11 @@ function StudioNewSkillPanel({
                     : draft.markdown,
                 });
               }}
-              placeholder="Code review"
+              placeholder={interfaceText("m_3d2006711d4cf0")}
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="skill-slug">Slug</Label>
+            <Label htmlFor="skill-slug">{interfaceText("m_d15387ecc6c5e2")}</Label>
             <Input
               id="skill-slug"
               value={draft.slug}
@@ -595,7 +594,7 @@ function StudioNewSkillPanel({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="skill-tagline">Tagline</Label>
+          <Label htmlFor="skill-tagline">{interfaceText("m_fdab2c2f2be28e")}</Label>
           <Textarea
             id="skill-tagline"
             value={draft.tagline}
@@ -609,7 +608,7 @@ function StudioNewSkillPanel({
                   : draft.markdown,
               });
             }}
-            placeholder="Review repository changes for correctness, tests, and maintainability."
+            placeholder={interfaceText("m_1ca7c5025827d1")}
             className="min-h-20"
           />
         </div>
@@ -617,18 +616,18 @@ function StudioNewSkillPanel({
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-sm font-medium text-foreground">Appearance</h2>
-          <p className="text-xs text-muted-foreground">Tune how the skill appears in the store and Studio switcher.</p>
+          <h2 className="text-sm font-medium text-foreground">{interfaceText("m_3907fa7f80722a")}</h2>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_b87e0c2d950f3d")}</p>
         </div>
         <div className="flex items-center gap-3">
           <SkillCardIcon card={previewCard} size={48} />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium">{previewCard.name}</div>
-            <div className="truncate text-xs text-muted-foreground">{draft.tagline || "No tagline yet."}</div>
+            <div className="truncate text-xs text-muted-foreground">{draft.tagline || interfaceText("m_8e4cf121c0a339")}</div>
           </div>
         </div>
         <div className="space-y-2">
-          <Label>Color</Label>
+          <Label>{interfaceText("m_6b73191a0a4b67")}</Label>
           <div className="flex flex-wrap items-center gap-2">
             {SKILL_CREATE_ACCENTS.map((color) => (
               <button
@@ -640,11 +639,11 @@ function StudioNewSkillPanel({
                   draft.color === color ? "border-foreground" : "border-border",
                 )}
                 style={{ backgroundColor: color }}
-                aria-label={`Use ${color}`}
+                aria-label={interfaceText("m_58f72e4aa68c93", { value0: (color) })}
               />
             ))}
             <Input
-              aria-label="Hex color"
+              aria-label={interfaceText("m_91f4e4b13e5701")}
               value={draft.color}
               onChange={(event) => patchDraft({ color: event.target.value })}
               className="h-7 w-28 font-mono text-xs"
@@ -652,20 +651,20 @@ function StudioNewSkillPanel({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="skill-categories">Categories</Label>
+          <Label htmlFor="skill-categories">{interfaceText("m_b8b1d894c68372")}</Label>
           <Input
             id="skill-categories"
             value={categoryDraft}
             onChange={(event) => setCategoryDraft(event.target.value)}
-            placeholder="engineering, review, memory"
+            placeholder={interfaceText("m_60bdd3ca934986")}
           />
         </div>
       </section>
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-sm font-medium text-foreground">Sharing</h2>
-          <p className="text-xs text-muted-foreground">Choose who can discover this skill inside Paperclip.</p>
+          <h2 className="text-sm font-medium text-foreground">{interfaceText("m_bbedc70e985fe0")}</h2>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_4522d7745d48ef")}</p>
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           {(["company", "private"] as const).map((scope) => (
@@ -678,9 +677,9 @@ function StudioNewSkillPanel({
                 draft.sharingScope === scope ? "border-foreground bg-accent/50" : "border-border",
               )}
             >
-              <span className="block font-medium">{scope === "company" ? "Organization" : "Private"}</span>
+              <span className="block font-medium">{scope === "company" ? interfaceText("m_d764d42592fc96") : interfaceText("m_c63eb6720c6e88")}</span>
               <span className="mt-1 block text-xs text-muted-foreground">
-                {scope === "company" ? "Visible inside this organization." : "Only visible in your library."}
+                {scope === "company" ? interfaceText("m_07a1e6d8eaf2c1") : interfaceText("m_efbca2276ff1f7")}
               </span>
             </button>
           ))}
@@ -689,14 +688,14 @@ function StudioNewSkillPanel({
             disabled
             className="rounded-md border border-dashed border-border px-3 py-2 text-left text-sm text-muted-foreground"
           >
-            <span className="block font-medium">Public</span>
-            <span className="mt-1 block text-xs">Coming later.</span>
+            <span className="block font-medium">{interfaceText("m_591935b15b1c88")}</span>
+            <span className="mt-1 block text-xs">{interfaceText("m_3ff09ef158dc5f")}</span>
           </button>
         </div>
       </section>
 
       <details className="rounded-md border border-border px-3 py-2">
-        <summary className="cursor-pointer text-sm font-medium text-foreground">Starter content</summary>
+        <summary className="cursor-pointer text-sm font-medium text-foreground">{interfaceText("m_237b19788583e3")}</summary>
         <Textarea
           value={draft.markdown}
           onChange={(event) => patchDraft({ markdown: event.target.value })}
@@ -705,12 +704,10 @@ function StudioNewSkillPanel({
       </details>
 
       <div className="flex items-center justify-end gap-2 border-t border-border pt-4">
-        <Button variant="ghost" onClick={() => navigate("/skills/studio")} disabled={createSkill.isPending}>
-          Cancel
-        </Button>
+        <Button variant="ghost" onClick={() => navigate("/skills/studio")} disabled={createSkill.isPending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
         <Button onClick={() => createSkill.mutate()} disabled={createSkill.isPending || !nameValid}>
           <FilePlus className="h-4 w-4" />
-          {createSkill.isPending ? "Creating..." : draft.forkedFromSkillId ? "Create fork" : "Create skill"}
+          {createSkill.isPending ? interfaceText("m_def70944c9bb9c") : draft.forkedFromSkillId ? interfaceText("m_d217b73b9ff2c7") : interfaceText("m_1a9030082a20b6")}
         </Button>
       </div>
     </div>
@@ -736,6 +733,7 @@ function StudioEmptyState({
   onSelectSkill: (skillId: string) => void;
   onCreateNew: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex h-full min-h-0 flex-col">
@@ -745,15 +743,15 @@ function StudioEmptyState({
             skills={skills}
             loading={skillsLoading}
             onSelectSkill={onSelectSkill}
-            emptyLabel="Select skill"
+            emptyLabel={interfaceText("m_4511ad1cfc1d13")}
           />
         </header>
         <SkillsPageNavigation activeView="authored" />
         <div className="flex flex-1 items-center justify-center">
           <EmptyState
             icon={FileCode}
-            message={skillsLoading ? "Loading skills..." : "Select a skill to open Studio."}
-            action="Create a new skill"
+            message={skillsLoading ? interfaceText("m_7cf5fa27969286") : interfaceText("m_4173f6cd118861")}
+            action={interfaceText("m_334c7dd95ab433")}
             onAction={onCreateNew}
           />
         </div>
@@ -779,6 +777,7 @@ function StudioLanding({
   onSelectSkill: (skillId: string) => void;
   onCreateNew: () => void;
 }) {
+  useInterfaceLanguage();
   // Recency-sorted list, enriched with the last human editor (PAP-13149) — the
   // source for both landing sections. Kept separate from the alphabetical
   // switcher list so each cache stays sorted the way its consumer expects.
@@ -819,25 +818,23 @@ function StudioLanding({
             skills={skills}
             loading={skillsLoading}
             onSelectSkill={onSelectSkill}
-            emptyLabel="Select skill"
+            emptyLabel={interfaceText("m_4511ad1cfc1d13")}
           />
           <Button variant="ghost" size="sm" className="ml-auto" onClick={onCreateNew}>
-            <Plus className="mr-1.5 h-3.5 w-3.5" />
-            New skill
-          </Button>
+            <Plus className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_9bf06a86c934b7")}</Button>
         </header>
         <SkillsPageNavigation activeView="authored" />
         <div className="min-h-0 flex-1 overflow-auto">
           <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-8">
             {visited.length > 0 ? (
               <StudioLandingSection
-                title="Recently visited"
+                title={interfaceText("m_b3f3bc0459891f")}
                 skills={visited}
                 onSelectSkill={onSelectSkill}
               />
             ) : null}
             <StudioLandingSection
-              title="Recently updated"
+              title={interfaceText("m_474b2a869ac147")}
               skills={updated}
               onSelectSkill={onSelectSkill}
             />
@@ -883,6 +880,7 @@ function StudioLandingRow({
   skill: CompanySkillListItem;
   onSelect: () => void;
 }) {
+  useInterfaceLanguage();
   const editor = skillEditorAvatar(skill.lastEditor);
   return (
     <button
@@ -897,8 +895,7 @@ function StudioLandingRow({
           <span className="truncate text-xs text-muted-foreground">{skill.tagline}</span>
         ) : null}
       </span>
-      <span className="shrink-0 text-xs text-muted-foreground">
-        updated {relativeTime(skill.updatedAt)}
+      <span className="shrink-0 text-xs text-muted-foreground">{interfaceText("m_53961930ab4482")}{relativeTime(skill.updatedAt)}
       </span>
       {editor ? (
         <Tooltip>
@@ -1153,18 +1150,19 @@ function StudioHeader({
   onSelectSkill: (skillId: string) => void;
   onOpenVersions: () => void;
 }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const version = skill.currentVersion?.revisionNumber ?? null;
   const toast = useOptionalToastActions();
   const copyShareLink = useCallback(() => {
     const href = typeof window !== "undefined" ? window.location.href : "";
     void copyTextToClipboard(href)
-      .then(() => toast?.pushToast({ tone: "success", title: "Link copied", body: "Skill Studio link copied to clipboard." }))
+      .then(() => toast?.pushToast({ tone: "success", title: interfaceText("m_d12860c21e78ba"), body: interfaceText("m_2ec2fa0ded4d2c") }))
       .catch((error) => toast?.pushToast({
         tone: "error",
-        title: "Copy failed",
-        body: error instanceof Error ? error.message : "Could not copy the link.",
+        title: interfaceText("m_5b50e7a693fee9"),
+        body: error instanceof Error ? error.message : interfaceText("m_f5e805d39112ad"),
       }));
-  }, [toast]);
+  }, [toast, interfaceLanguage]);
 
   return (
     <header className="flex items-center gap-3 border-b border-border px-3 py-2">
@@ -1178,10 +1176,10 @@ function StudioHeader({
         <span className="font-mono text-xs text-muted-foreground">v{version}</span>
       )}
       {skillDirty ? (
-        <Badge variant="secondary">Unsaved edits</Badge>
+        <Badge variant="secondary">{interfaceText("m_4cea356a17a185")}</Badge>
       ) : null}
       {!skill.editable ? (
-        <Badge variant="secondary">Read-only</Badge>
+        <Badge variant="secondary">{interfaceText("m_72bb90897ab1ea")}</Badge>
       ) : null}
       {skill.forkedFromSkillId ? (
         <SkillLineageChip
@@ -1192,19 +1190,16 @@ function StudioHeader({
       <AgentsUsingSkillBadge companyId={companyId} skill={skill} />
       <div className="ml-auto flex items-center gap-1">
         <Button variant="ghost" size="sm" onClick={onOpenVersions}>
-          <History className="mr-1.5 h-3.5 w-3.5" />
-          Version history
-        </Button>
+          <History className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_a6df11e706c514")}</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm" aria-label="Studio menu">
+            <Button variant="ghost" size="icon-sm" aria-label={interfaceText("m_b7bc60e8f9c384")}>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuItem onClick={copyShareLink}>
-              <Share2 className="mr-2 h-4 w-4" /> Share link
-            </DropdownMenuItem>
+              <Share2 className="mr-2 h-4 w-4" />{interfaceText("m_777ba33c11851f")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -1229,6 +1224,7 @@ function SkillSwitcher({
   onSelectSkill: (skillId: string) => void;
   emptyLabel?: string;
 }) {
+  useInterfaceLanguage();
   const groups = useMemo<readonly SearchableSelectGroup<string, SkillSwitcherOption>[]>(() => {
     const options: SkillSwitcherOption[] = withCurrentSkill(skills, skill).map((item) => ({
       key: item.id,
@@ -1248,8 +1244,8 @@ function SkillSwitcher({
       loading={loading}
       loadingMessage="Loading skills..."
       placeholder={emptyLabel}
-      searchPlaceholder="Search skills..."
-      emptyMessage="No matching skills."
+      searchPlaceholder={interfaceText("m_65104bc415b313")}
+      emptyMessage={interfaceText("m_18f3ee30c2ff2b")}
       onValueChange={(value) => {
         if (value !== skill?.id) onSelectSkill(value);
       }}
@@ -1292,6 +1288,7 @@ function SkillPane({
   onDirtyChange: (dirty: boolean) => void;
   onEditACopy: () => void;
 }) {
+  useInterfaceLanguage();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
@@ -1473,7 +1470,7 @@ function SkillPane({
           />
         }
       >
-        <EmptyState icon={FileCode} message="This skill has no files yet." />
+        <EmptyState icon={FileCode} message={interfaceText("m_f677a0f2d473e1")} />
         <SkillPathDialog
           mode={createDialog}
           open={createDialog !== null}
@@ -1512,16 +1509,14 @@ function SkillPane({
       <div className="flex min-h-0 flex-1 flex-col">
         {versionConflict ? (
           <div role="alert" className="flex items-center gap-2 border-b border-border bg-muted px-3 py-2 text-xs">
-            <span>This skill changed since you opened it. Your unsaved edits are still here. Copy them before loading the latest file to reconcile the changes.</span>
-            <Button size="sm" variant="outline" disabled={fileQuery.isFetching} onClick={() => void loadLatestSavedFile()}>
-              Load latest saved file
-            </Button>
+            <span>{interfaceText("m_bf46a984eb2943")}</span>
+            <Button size="sm" variant="outline" disabled={fileQuery.isFetching} onClick={() => void loadLatestSavedFile()}>{interfaceText("m_3ca17c504d1e42")}</Button>
           </div>
         ) : null}
         {dirty && !readOnly ? (
           <div className="flex items-start gap-2 border-b border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
             <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
-            <span>Unsaved edits live only in this Studio session. Save to create the next version before running tests or switching files.</span>
+            <span>{interfaceText("m_9484eaf86e613e")}</span>
           </div>
         ) : null}
         <div className="max-h-(--sz-11_75rem) overflow-auto border-b border-border p-1">
@@ -1548,18 +1543,15 @@ function SkillPane({
             <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
             <div className="min-w-0 flex-1">
               <p>
-                {skill.metadata?.skillSourceId ? "This skill is synced from GitHub and is read-only." : skill.editableReason ?? "This skill is read-only because it comes from an external source."}
-                {" "}Make an editable copy to change it — the original stays untouched.
-              </p>
+                {skill.metadata?.skillSourceId ? interfaceText("m_ae518f49ce7537") : skill.editableReason ?? interfaceText("m_cc235b680b7fca")}
+                {" "}{interfaceText("m_12741dd950f498")}</p>
               <Button
                 type="button"
                 size="sm"
                 className="mt-2"
                 onClick={onEditACopy}
               >
-                <GitFork className="mr-1.5 h-3.5 w-3.5" />
-                Make a copy
-              </Button>
+                <GitFork className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_e61974e66c687e")}</Button>
             </div>
           </div>
         )}
@@ -1570,16 +1562,16 @@ function SkillPane({
           </span>
           <div className="flex items-center gap-2">
             {readOnly ? (
-              <Badge variant="secondary">Read-only</Badge>
+              <Badge variant="secondary">{interfaceText("m_72bb90897ab1ea")}</Badge>
             ) : (
               <>
-                {dirty && <Badge variant="secondary">Unsaved</Badge>}
+                {dirty && <Badge variant="secondary">{interfaceText("m_6250d5725dda6d")}</Badge>}
                 <Button
                   size="sm"
                   disabled={!dirty || saveMutation.isPending}
                   onClick={() => saveMutation.mutate({ path: selectedFile, content: draft, versionId: baseVersionId })}
                 >
-                  {saveMutation.isPending ? "Saving…" : "Save"}
+                  {saveMutation.isPending ? interfaceText("m_23e39291d61358") : interfaceText("m_1509f561f24165")}
                 </Button>
               </>
             )}
@@ -1684,7 +1676,7 @@ function folderSeedFile(folderPath: string) {
 }
 
 function folderSeedContent(folderPath: string) {
-  const label = folderPath.split("/").filter(Boolean).at(-1) ?? "Folder";
+  const label = folderPath.split("/").filter(Boolean).at(-1) ?? interfaceText("m_74ccd43303847f");
   return `# ${label}\n`;
 }
 
@@ -1718,6 +1710,7 @@ function SkillFileActions({
   onDeleteFile: () => void;
   onDeleteFolder: () => void;
 }) {
+  useInterfaceLanguage();
   const disabled = readOnly || pending;
   const deleteDisabled = disabled || !canDeleteFile;
   return (
@@ -1725,22 +1718,22 @@ function SkillFileActions({
       <Tooltip>
         <TooltipTrigger asChild>
           <span>
-            <Button variant="ghost" size="icon-sm" disabled={disabled} onClick={onAddFile} aria-label="Add file">
+            <Button variant="ghost" size="icon-sm" disabled={disabled} onClick={onAddFile} aria-label={interfaceText("m_2c83c00f0e83b3")}>
               <FilePlus className="h-4 w-4" />
             </Button>
           </span>
         </TooltipTrigger>
-        <TooltipContent>Add file</TooltipContent>
+        <TooltipContent>{interfaceText("m_2c83c00f0e83b3")}</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
           <span>
-            <Button variant="ghost" size="icon-sm" disabled={disabled} onClick={onAddFolder} aria-label="Add folder">
+            <Button variant="ghost" size="icon-sm" disabled={disabled} onClick={onAddFolder} aria-label={interfaceText("m_5bbfc5a69b25b4")}>
               <FolderPlus className="h-4 w-4" />
             </Button>
           </span>
         </TooltipTrigger>
-        <TooltipContent>Add folder</TooltipContent>
+        <TooltipContent>{interfaceText("m_5bbfc5a69b25b4")}</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -1754,23 +1747,23 @@ function SkillFileActions({
                   onDeleteFile();
                 }
               }}
-              aria-label="Delete file"
+              aria-label={interfaceText("m_28e18dc9db382d")}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </span>
         </TooltipTrigger>
-        <TooltipContent>{canDeleteFile ? "Delete file" : "SKILL.md cannot be deleted"}</TooltipContent>
+        <TooltipContent>{canDeleteFile ? interfaceText("m_28e18dc9db382d") : interfaceText("m_6d30e9630e4ae8")}</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
           <span>
-            <Button variant="ghost" size="icon-sm" disabled={disabled} onClick={onDeleteFolder} aria-label="Delete folder">
+            <Button variant="ghost" size="icon-sm" disabled={disabled} onClick={onDeleteFolder} aria-label={interfaceText("m_39f35f2d44d611")}>
               <FolderMinus className="h-4 w-4" />
             </Button>
           </span>
         </TooltipTrigger>
-        <TooltipContent>Delete folder</TooltipContent>
+        <TooltipContent>{interfaceText("m_39f35f2d44d611")}</TooltipContent>
       </Tooltip>
     </div>
   );
@@ -1793,6 +1786,7 @@ function SkillPathDialog({
   pending: boolean;
   onSubmit: (path: string, content: string) => void;
 }) {
+  useInterfaceLanguage();
   const [pathValue, setPathValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -1804,8 +1798,8 @@ function SkillPathDialog({
     setError(null);
   }, [currentFolder, mode, open]);
 
-  const title = mode === "folder" ? "Add folder" : "Add file";
-  const label = mode === "folder" ? "Folder path" : "File path";
+  const title = mode === "folder" ? interfaceText("m_5bbfc5a69b25b4") : interfaceText("m_2c83c00f0e83b3");
+  const label = mode === "folder" ? interfaceText("m_98bca2fab915ab") : interfaceText("m_2fb6d38632ea2c");
 
   function submit() {
     if (!mode) return;
@@ -1836,9 +1830,7 @@ function SkillPathDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            Saved changes create a new version immediately. External sources are not updated until you publish or install an update.
-          </DialogDescription>
+          <DialogDescription>{interfaceText("m_083269633fb9f8")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
           <Label htmlFor="skill-path-input">{label}</Label>
@@ -1852,17 +1844,13 @@ function SkillPathDialog({
             placeholder={mode === "folder" ? "references/examples" : "references/examples.md"}
           />
           {mode === "folder" ? (
-            <p className="text-xs text-muted-foreground">A README.md seed file is created so the folder appears in the file tree.</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_07f10711eadb62")}</p>
           ) : null}
           {error ? <p className="text-xs text-destructive">{error}</p> : null}
         </div>
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button disabled={pending} onClick={submit}>
-            Create
-          </Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+          <Button disabled={pending} onClick={submit}>{interfaceText("m_4759498ac2a719")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -1884,6 +1872,7 @@ function DeleteFolderDialog({
   pending: boolean;
   onSubmit: (path: string) => void;
 }) {
+  useInterfaceLanguage();
   const [pathValue, setPathValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -1915,13 +1904,11 @@ function DeleteFolderDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete folder</DialogTitle>
-          <DialogDescription>
-            This removes every skill file under the folder and saves the result as the next version.
-          </DialogDescription>
+          <DialogTitle>{interfaceText("m_39f35f2d44d611")}</DialogTitle>
+          <DialogDescription>{interfaceText("m_2055145168d120")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="skill-folder-delete">Folder path</Label>
+          <Label htmlFor="skill-folder-delete">{interfaceText("m_98bca2fab915ab")}</Label>
           <Input
             id="skill-folder-delete"
             value={pathValue}
@@ -1934,12 +1921,8 @@ function DeleteFolderDialog({
           {error ? <p className="text-xs text-destructive">{error}</p> : null}
         </div>
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button variant="destructive" disabled={pending} onClick={submit}>
-            Delete
-          </Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+          <Button variant="destructive" disabled={pending} onClick={submit}>{interfaceText("m_e2d0a54968ead2")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -1973,6 +1956,7 @@ function InputPane({
   onSelectInput: (id: string) => void;
   onSelectAdHoc: () => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
   // The row's menu closes on click, so its copy confirmation goes to a toast.
@@ -2084,7 +2068,7 @@ function InputPane({
                 type="button"
                 variant="ghost"
                 size="icon-xs"
-                aria-label={collapsed ? "Expand input" : "Collapse input"}
+                aria-label={collapsed ? interfaceText("m_8999b91a9b7602") : interfaceText("m_55720f6ca31fc2")}
                 onClick={() => setCollapsed((current) => !current)}
               >
                 {collapsed ? (
@@ -2094,20 +2078,20 @@ function InputPane({
                 )}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{collapsed ? "Expand input" : "Collapse input"}</TooltipContent>
+            <TooltipContent>{collapsed ? interfaceText("m_8999b91a9b7602") : interfaceText("m_55720f6ca31fc2")}</TooltipContent>
           </Tooltip>
-          <span>Input</span>
+          <span>{interfaceText("m_36ecb4f8669133")}</span>
         </span>
       }
       action={
         <div className="flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon-sm" onClick={selectAdHocInput} aria-label="New input">
+              <Button variant="ghost" size="icon-sm" onClick={selectAdHocInput} aria-label={interfaceText("m_6ab4b7742a1a35")}>
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>New input</TooltipContent>
+            <TooltipContent>{interfaceText("m_6ab4b7742a1a35")}</TooltipContent>
           </Tooltip>
         </div>
       }
@@ -2119,20 +2103,19 @@ function InputPane({
           onClick={() => setCollapsed(false)}
         >
           <ChevronRight className="h-3.5 w-3.5" />
-          <span>Input folded</span>
+          <span>{interfaceText("m_32c15719fd6c49")}</span>
         </button>
       ) : (
         <div className="flex min-h-0 flex-1 flex-col">
           {loading || inputs.length > 0 ? (
             <div className="max-h-(--sz-11_75rem) overflow-auto border-b border-border p-1">
               {loading ? (
-                <div className="p-3 text-xs text-muted-foreground">Loading inputs…</div>
+                <div className="p-3 text-xs text-muted-foreground">{interfaceText("m_828e1062249418")}</div>
               ) : (
                 <>
                   {adHocMode && (
                     <div className="flex items-center gap-2 rounded px-2 py-1.5 text-sm italic text-muted-foreground">
-                      <FilePlus className="h-3.5 w-3.5" /> New input (not saved)
-                    </div>
+                      <FilePlus className="h-3.5 w-3.5" />{interfaceText("m_d846e3226476c5")}</div>
                   )}
                   <FileTree
                     nodes={nodes}
@@ -2159,7 +2142,7 @@ function InputPane({
                           <DropdownMenuTrigger asChild>
                             <button
                               className="rounded p-0.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                              aria-label={`Input actions for ${node.name}`}
+                              aria-label={interfaceText("m_4e92b974ba8e38", { value0: (node.name) })}
                               onClick={(e) => e.stopPropagation()}
                             >
                               <MoreHorizontal className="h-3.5 w-3.5" />
@@ -2172,15 +2155,13 @@ function InputPane({
                                 if (input) void copyWithToast(input.content, "Input content copied");
                               }}
                             >
-                              <Copy className="mr-2 h-4 w-4" /> Copy content
-                            </DropdownMenuItem>
+                              <Copy className="mr-2 h-4 w-4" />{interfaceText("m_bc0dd0bf192d98")}</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               variant="destructive"
                               onClick={() => deleteMutation.mutate(id)}
                             >
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete
-                            </DropdownMenuItem>
+                              <Trash2 className="mr-2 h-4 w-4" />{interfaceText("m_3534d686f23a5b")}</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       );
@@ -2195,17 +2176,17 @@ function InputPane({
             <textarea
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Paste text - treated as a new issue description."
-              aria-label="Skill test input"
+              placeholder={interfaceText("m_7be6c2fbad6fdd")}
+              aria-label={interfaceText("m_b36f6be0a6f9ed")}
               className="min-h-0 flex-1 resize-none border-0 bg-transparent px-3 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:ring-0"
             />
           </div>
           <div className="flex items-center gap-2 border-t border-border px-3 py-2">
             <div className="mr-auto flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
               <span className="truncate">
-                {selectedInput ? selectedInput.name : adHocMode ? "New input" : "No input selected"}
+                {selectedInput ? selectedInput.name : adHocMode ? interfaceText("m_6ab4b7742a1a35") : interfaceText("m_60e878f72164d4")}
               </span>
-              {dirty ? <Badge variant="secondary">Unsaved</Badge> : null}
+              {dirty ? <Badge variant="secondary">{interfaceText("m_6250d5725dda6d")}</Badge> : null}
             </div>
             {selectedInput && dirty ? (
               <>
@@ -2218,16 +2199,14 @@ function InputPane({
                     draft: selectedInput.content,
                     baselineContent: selectedInput.content,
                   })}
-                >
-                  Revert
-                </Button>
+                >{interfaceText("m_0026c505347863")}</Button>
                 <Button
                   variant="outline"
                   size="sm"
                   disabled={!canSaveSelectedInput || updateMutation.isPending}
                   onClick={() => updateMutation.mutate({ content: draft })}
                 >
-                  {updateMutation.isPending ? "Saving..." : "Save changes"}
+                  {updateMutation.isPending ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_dd0ae7a5cbcf23")}
                 </Button>
               </>
             ) : null}
@@ -2235,9 +2214,7 @@ function InputPane({
               size="sm"
               disabled={!draft.trim()}
               onClick={() => setSaveDialogOpen(true)}
-            >
-              Save as input
-            </Button>
+            >{interfaceText("m_32f0265144e0e1")}</Button>
           </div>
         </div>
       )}
@@ -2271,6 +2248,7 @@ function SaveInputDialog({
   initialContent: string;
   onSaved: (input: CompanySkillTestInput) => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [content, setContent] = useState(initialContent);
@@ -2305,24 +2283,22 @@ function SaveInputDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Save test input</DialogTitle>
-          <DialogDescription>
-            Runs snapshot input at run time — editing later won't change past runs.
-          </DialogDescription>
+          <DialogTitle>{interfaceText("m_a94553cb633d28")}</DialogTitle>
+          <DialogDescription>{interfaceText("m_66fb8b9b1165f7")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <div className="space-y-1">
-            <Label htmlFor="input-name">Name</Label>
+            <Label htmlFor="input-name">{interfaceText("m_dcd1d5223f73b3")}</Label>
             <Input
               id="input-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="onboarding/happy-path"
             />
-            <p className="text-xs text-muted-foreground">Use “/” for folders, e.g. onboarding/happy-path</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_51b6a98f49e450")}</p>
           </div>
           <div className="space-y-1">
-            <Label htmlFor="input-content">Content</Label>
+            <Label htmlFor="input-content">{interfaceText("m_47bd29075f8b80")}</Label>
             <Textarea
               id="input-content"
               value={content}
@@ -2332,15 +2308,11 @@ function SaveInputDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button
             disabled={!name.trim() || !content.trim() || createMutation.isPending}
             onClick={() => createMutation.mutate()}
-          >
-            Save
-          </Button>
+          >{interfaceText("m_1509f561f24165")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -2385,6 +2357,7 @@ function RunsPane({
   filterInput: CompanySkillTestInput | null;
   onClearFilter: () => void;
 }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
@@ -2426,8 +2399,8 @@ function RunsPane({
     updateTemplateSelection(resolution.selection);
     toast?.pushToast({
       tone: "warn",
-      title: "Run template reset",
-      body: "The saved run template is no longer available. Default test template is selected.",
+      title: interfaceText("m_e086416755d82c"),
+      body: interfaceText("m_1424acb9eb6ab6"),
       dedupeKey: `skill-studio-template-reset:${companyId}`,
     });
   }, [
@@ -2437,7 +2410,7 @@ function RunsPane({
     templatesQuery.isSuccess,
     toast,
     updateTemplateSelection,
-  ]);
+  interfaceLanguage]);
 
   const filterInputId = filterInput?.id ?? null;
   const runsQuery = useQuery({
@@ -2476,8 +2449,8 @@ function RunsPane({
       });
       toast?.pushToast({
         tone: "success",
-        title: "Template saved",
-        body: `${template.name} is ready for Skills Studio runs.`,
+        title: interfaceText("m_1b34f8ff69d42e"),
+        body: interfaceText("m_3c2ced3c0e92ab", { value0: (template.name) }),
       });
     },
     onError: onError("Couldn't save template"),
@@ -2496,8 +2469,8 @@ function RunsPane({
       });
       toast?.pushToast({
         tone: "success",
-        title: "Template updated",
-        body: `${template.name} is ready for Skills Studio runs.`,
+        title: interfaceText("m_cc9213d2617d81"),
+        body: interfaceText("m_3c2ced3c0e92ab", { value0: (template.name) }),
       });
     },
     onError: onError("Couldn't update template"),
@@ -2515,8 +2488,8 @@ function RunsPane({
       });
       toast?.pushToast({
         tone: "success",
-        title: "Template deleted",
-        body: `${template.name} was removed from Skills Studio runs.`,
+        title: interfaceText("m_8fa9d4a8b8272f"),
+        body: interfaceText("m_07cd2cd24204be", { value0: (template.name) }),
       });
     },
     onError: onError("Couldn't delete template"),
@@ -2571,7 +2544,7 @@ function RunsPane({
 
   return (
     <PaneScaffold
-      title="Test runs"
+      title={interfaceText("m_70b86f32d7b06f")}
       action={
         <div className="flex items-center gap-2">
           <AgentPicker
@@ -2588,8 +2561,7 @@ function RunsPane({
                   disabled={gate.disabled || Boolean(templateGateReason) || createRunMutation.isPending}
                   onClick={() => createRunMutation.mutate()}
                 >
-                  <Play className="mr-1.5 h-3.5 w-3.5" /> Run
-                </Button>
+                  <Play className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_f2ccba5f900cb1")}</Button>
               </span>
             </TooltipTrigger>
             {runDisabledReason && <TooltipContent side="bottom">{runDisabledReason}</TooltipContent>}
@@ -2630,7 +2602,7 @@ function RunsPane({
         {filterInput && (
           <div className="px-3 pt-2">
             <FilterBar
-              filters={[{ key: "input", label: "Input", value: filterInput.name }]}
+              filters={[{ key: "input", label: interfaceText("m_36ecb4f8669133"), value: filterInput.name }]}
               onRemove={onClearFilter}
               onClear={onClearFilter}
             />
@@ -2638,9 +2610,9 @@ function RunsPane({
         )}
         <div className="min-h-0 flex-1 overflow-auto p-3">
           {runsQuery.isLoading ? (
-            <div className="text-xs text-muted-foreground">Loading runs…</div>
+            <div className="text-xs text-muted-foreground">{interfaceText("m_8438ea394d1520")}</div>
           ) : runs.length === 0 ? (
-            <EmptyState icon={FlaskConical} message="No test runs yet. Pick an agent and Run." />
+            <EmptyState icon={FlaskConical} message={interfaceText("m_b255891684153e")} />
           ) : (
             <div className="space-y-1 rounded-md border border-border p-1">
               {runs.map((run) => (
@@ -2719,11 +2691,12 @@ function RunTemplateAdvancedPanel({
   deletingTemplateId: string | null;
   actionPending: boolean;
 }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const templateGroups = useMemo<readonly SearchableSelectGroup<string, RunTemplateOption>[]>(() => {
     const noTemplateOption: RunTemplateOption = {
       key: "no-template",
       value: NO_TEST_RUN_TEMPLATE_STORAGE_VALUE,
-      label: "No template",
+      label: interfaceText("m_46b57ee92f038c"),
       title: "No template",
       description: "Run only the input text.",
       builtIn: true,
@@ -2741,10 +2714,10 @@ function RunTemplateAdvancedPanel({
     const builtIn = templates.filter((template) => template.builtIn).map(toOption);
     const custom = templates.filter((template) => !template.builtIn).map(toOption);
     return [
-      { id: "built-in", label: "Built in", options: [noTemplateOption, ...builtIn] },
-      ...(custom.length > 0 ? [{ id: "custom", label: "Custom", options: custom }] : []),
+      { id: "built-in", label: interfaceText("m_78a6a8fe9be5ec"), options: [noTemplateOption, ...builtIn] },
+      ...(custom.length > 0 ? [{ id: "custom", label: interfaceText("m_494ca78f7374e4"), options: custom }] : []),
     ];
-  }, [templates]);
+  }, [templates, interfaceLanguage]);
 
   const selectedValue = runTemplateOptionValue(selectedTemplateId);
   const selectedMissing = selectedTemplateId !== null && !selectedTemplate && !templatesLoading;
@@ -2764,23 +2737,23 @@ function RunTemplateAdvancedPanel({
         ) : (
           <ChevronRight className="h-3.5 w-3.5" />
         )}
-        <span className="font-semibold uppercase tracking-wide">Advanced</span>
+        <span className="font-semibold uppercase tracking-wide">{interfaceText("m_9f088dbebd6c3c")}</span>
         <span className="ml-auto truncate">{selectedTemplateName}</span>
       </button>
       {open ? (
         <div className="space-y-3 px-3 pb-3 pt-1">
           <div className="flex items-end gap-2">
             <div className="min-w-0 flex-1 space-y-1">
-              <Label>Run template</Label>
+              <Label>{interfaceText("m_b940a3fbe1da59")}</Label>
               <SearchableSelect<string, RunTemplateOption>
                 value={selectedValue}
                 groups={templateGroups}
                 loading={templatesLoading}
                 disabled={templatesLoading || templatesError}
                 loadingMessage="Loading templates..."
-                placeholder="Select template"
-                searchPlaceholder="Search templates..."
-                emptyMessage="No templates."
+                placeholder={interfaceText("m_8e56330b72291e")}
+                searchPlaceholder={interfaceText("m_79760c54dcedf9")}
+                emptyMessage={interfaceText("m_1c9dddadddb3b9")}
                 contentClassName="w-(--sz-320px)"
                 onValueChange={(value) => onSelectTemplate(runTemplateSelectionFromOption(value))}
                 renderValue={(option) => option?.label ?? selectedTemplateName}
@@ -2788,7 +2761,7 @@ function RunTemplateAdvancedPanel({
                   <span className="flex min-w-0 flex-col">
                     <span className={cn("truncate", selected && "font-medium")}>{option.label}</span>
                     <span className="truncate text-(length:--text-micro) text-muted-foreground">
-                      {option.description ?? (option.builtIn ? "Built in" : "Custom")}
+                      {option.description ?? (option.builtIn ? interfaceText("m_78a6a8fe9be5ec") : interfaceText("m_494ca78f7374e4"))}
                     </span>
                   </span>
                 )}
@@ -2800,14 +2773,14 @@ function RunTemplateAdvancedPanel({
                   type="button"
                   variant="outline"
                   size="icon-sm"
-                  aria-label="Create run template"
+                  aria-label={interfaceText("m_1306b1ea628075")}
                   disabled={actionPending}
                   onClick={onCreateTemplate}
                 >
                   <Plus />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Create run template</TooltipContent>
+              <TooltipContent>{interfaceText("m_1306b1ea628075")}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -2816,7 +2789,7 @@ function RunTemplateAdvancedPanel({
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label="Edit run template"
+                    aria-label={interfaceText("m_2842f471425cfe")}
                     disabled={!canEdit || actionPending}
                     onClick={() => selectedTemplate && onEditTemplate(selectedTemplate)}
                   >
@@ -2824,7 +2797,7 @@ function RunTemplateAdvancedPanel({
                   </Button>
                 </span>
               </TooltipTrigger>
-              <TooltipContent>Edit custom template</TooltipContent>
+              <TooltipContent>{interfaceText("m_72b92d094d8b17")}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -2833,7 +2806,7 @@ function RunTemplateAdvancedPanel({
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label="Duplicate run template"
+                    aria-label={interfaceText("m_d75ef08f8c129a")}
                     disabled={!canDuplicate || actionPending}
                     onClick={() => selectedTemplate && onDuplicateTemplate(selectedTemplate)}
                   >
@@ -2842,7 +2815,7 @@ function RunTemplateAdvancedPanel({
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                {selectedTemplate?.builtIn ? "Duplicate built-in template" : "Duplicate template"}
+                {selectedTemplate?.builtIn ? interfaceText("m_4b61c8e828540d") : interfaceText("m_b876040a89849e")}
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -2852,7 +2825,7 @@ function RunTemplateAdvancedPanel({
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label="Delete run template"
+                    aria-label={interfaceText("m_de584e70409231")}
                     className="text-destructive hover:text-destructive"
                     disabled={!canDelete || actionPending || deletingTemplateId === selectedTemplate?.id}
                     onClick={() => selectedTemplate && onDeleteTemplate(selectedTemplate)}
@@ -2861,16 +2834,16 @@ function RunTemplateAdvancedPanel({
                   </Button>
                 </span>
               </TooltipTrigger>
-              <TooltipContent>Delete custom template</TooltipContent>
+              <TooltipContent>{interfaceText("m_08edc0924dda0d")}</TooltipContent>
             </Tooltip>
           </div>
 
           {templatesError ? (
-            <p className="text-xs text-destructive">Run templates could not load.</p>
+            <p className="text-xs text-destructive">{interfaceText("m_b698b60fe284ee")}</p>
           ) : selectedTemplateId === null ? (
-            <p className="text-xs text-muted-foreground">Runs will use only the input text.</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_dcda7d05f46bd4")}</p>
           ) : selectedMissing ? (
-            <p className="text-xs text-destructive">Selected template is no longer available.</p>
+            <p className="text-xs text-destructive">{interfaceText("m_3fb121a0db47f7")}</p>
           ) : selectedTemplate ? (
             <div className="space-y-2">
               {selectedTemplate.description ? (
@@ -2881,7 +2854,7 @@ function RunTemplateAdvancedPanel({
               </pre>
             </div>
           ) : (
-            <p className="text-xs text-muted-foreground">Loading template...</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_f687834dd2b9e0")}</p>
           )}
         </div>
       ) : null}
@@ -2900,6 +2873,7 @@ function RunTemplateDialog({
   onOpenChange: (open: boolean) => void;
   onSubmit: (payload: CompanySkillTestRunTemplateCreateRequest) => void;
 }) {
+  useInterfaceLanguage();
   const source = state?.source ?? null;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -2913,13 +2887,13 @@ function RunTemplateDialog({
   }, [source, state]);
 
   const title = state?.mode === "edit"
-    ? "Edit run template"
+    ? interfaceText("m_2842f471425cfe")
     : source?.builtIn
-      ? "Duplicate built-in template"
-      : "Create run template";
+      ? interfaceText("m_4b61c8e828540d")
+      : interfaceText("m_1306b1ea628075");
   const descriptionText = state?.mode === "edit"
-    ? "Update the custom run instructions used by Skills Studio."
-    : "Save reusable run instructions for Skills Studio.";
+    ? interfaceText("m_430b00cb0527f7")
+    : interfaceText("m_1cda952937ad5f");
 
   return (
     <Dialog open={Boolean(state)} onOpenChange={onOpenChange}>
@@ -2930,40 +2904,37 @@ function RunTemplateDialog({
         </DialogHeader>
         <div className="space-y-3">
           <div className="space-y-1">
-            <Label htmlFor="run-template-name">Name</Label>
+            <Label htmlFor="run-template-name">{interfaceText("m_dcd1d5223f73b3")}</Label>
             <Input
               id="run-template-name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Focused smoke"
+              placeholder={interfaceText("m_791d5c0fcd15c6")}
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="run-template-description">Description</Label>
+            <Label htmlFor="run-template-description">{interfaceText("m_526e0087cc3f25")}</Label>
             <Input
               id="run-template-description"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="Short instructions for common skill checks"
+              placeholder={interfaceText("m_d03d6192cf93d6")}
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="run-template-body">Body</Label>
+            <Label htmlFor="run-template-body">{interfaceText("m_6ccaa6415b5ee4")}</Label>
             <Textarea
               id="run-template-body"
               value={body}
               onChange={(event) => setBody(event.target.value)}
               className="min-h-(--sz-240px) font-mono text-xs leading-5"
             />
-            <p className="text-xs text-muted-foreground">
-              Placeholders: {"{{skillName}}"}, {"{{skillKey}}"}, {"{{skillInvocation}}"}, {"{{skillVersion}}"}, {"{{runId}}"}, {"{{issueId}}"}, {"{{outputDocumentKey}}"}.
+            <p className="text-xs text-muted-foreground">{interfaceText("m_ccb432e691e328")}{"{{skillName}}"}, {"{{skillKey}}"}, {"{{skillInvocation}}"}, {"{{skillVersion}}"}, {"{{runId}}"}, {"{{issueId}}"}, {"{{outputDocumentKey}}"}.
             </p>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button
             disabled={!name.trim() || !body.trim() || pending}
             onClick={() =>
@@ -2974,7 +2945,7 @@ function RunTemplateDialog({
               })
             }
           >
-            {pending ? "Saving..." : "Save template"}
+            {pending ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_47f72a2f3e91d3")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -2991,6 +2962,7 @@ function RunHistoryRow({
   agents: Agent[];
   onSelect: () => void;
 }) {
+  useInterfaceLanguage();
   const agent = agents.find((a) => a.id === run.agentId) ?? null;
   const removed = !agent;
   const snapshotName =
@@ -3000,7 +2972,7 @@ function RunHistoryRow({
     <EntityRow
       leading={<StatusBadge status={runBadgeStatus(run.status)} />}
       identifier={runShortId(run)}
-      title={removed ? `${name} (removed)` : name}
+      title={removed ? interfaceText("m_7963cb2860b2e6", { value0: (name) }) : name}
       subtitle={relativeTime(run.createdAt)}
       trailing={
         <span className="font-mono text-xs text-muted-foreground">
@@ -3021,6 +2993,7 @@ function AgentPicker({
   selectedAgent: Agent | null;
   onSelect: (id: string) => void;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -3029,15 +3002,15 @@ function AgentPicker({
           {selectedAgent ? (
             <AgentIdentity agent={selectedAgent} size="xs" />
           ) : (
-            <span className="text-muted-foreground">Pick an agent</span>
+            <span className="text-muted-foreground">{interfaceText("m_012c15d65531b0")}</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 p-0">
         <Command>
-          <CommandInput placeholder="Search agents…" />
+          <CommandInput placeholder={interfaceText("m_e05cb78e973da3")} />
           <CommandList>
-            <CommandEmpty>No agents.</CommandEmpty>
+            <CommandEmpty>{interfaceText("m_04e3179bbc03e7")}</CommandEmpty>
             <CommandGroup>
               {agents.map((agent) => {
                 const selectable = isAgentSelectable(agent);
@@ -3062,9 +3035,7 @@ function AgentPicker({
                     />
                     <AgentIdentity agent={agent} size="xs" />
                     {!selectable && (
-                      <Badge variant="secondary" className="ml-auto">
-                        Paused
-                      </Badge>
+                      <Badge variant="secondary" className="ml-auto">{interfaceText("m_e159b06187d369")}</Badge>
                     )}
                   </CommandItem>
                 );
@@ -3096,6 +3067,7 @@ function RunDetailView({
   onBack: () => void;
   onSelectRun: (id: string | null) => void;
 }) {
+  useInterfaceLanguage();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
@@ -3161,15 +3133,15 @@ function RunDetailView({
 
   if (detailQuery.isLoading) {
     return (
-      <PaneScaffold title="Run" action={<BackButton onBack={onBack} />}>
-        <div className="p-3 text-xs text-muted-foreground">Loading run…</div>
+      <PaneScaffold title={interfaceText("m_00d60e31a4e6b8")} action={<BackButton onBack={onBack} />}>
+        <div className="p-3 text-xs text-muted-foreground">{interfaceText("m_ad8b3027693b85")}</div>
       </PaneScaffold>
     );
   }
   if (!detail) {
     return (
-      <PaneScaffold title="Run" action={<BackButton onBack={onBack} />}>
-        <div className="p-3 text-xs text-muted-foreground">Run not found.</div>
+      <PaneScaffold title={interfaceText("m_00d60e31a4e6b8")} action={<BackButton onBack={onBack} />}>
+        <div className="p-3 text-xs text-muted-foreground">{interfaceText("m_3e498fa2dc954e")}</div>
       </PaneScaffold>
     );
   }
@@ -3183,12 +3155,12 @@ function RunDetailView({
   const taskLink = testTaskLinkState(detail);
 
   return (
-    <PaneScaffold title="Run" action={<BackButton onBack={onBack} />}>
+    <PaneScaffold title={interfaceText("m_00d60e31a4e6b8")} action={<BackButton onBack={onBack} />}>
       <div className="min-h-0 flex-1 space-y-3 overflow-auto p-3">
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge status={runBadgeStatus(detail.status)} />
           <AgentIdentity agent={agent ?? { id: detail.agentId, name: agentName }} size="xs" />
-          {removed && <Badge variant="secondary">removed</Badge>}
+          {removed && <Badge variant="secondary">{interfaceText("m_e1f79758cc42e6")}</Badge>}
           <span className="font-mono text-xs text-muted-foreground">
             v{detail.skillVersion.revisionNumber}
           </span>
@@ -3199,20 +3171,20 @@ function RunDetailView({
 
         {/* snapshot property block */}
         <div className="rounded-md border border-border text-xs">
-          <PropRow label="Input" value={detail.inputId ? "saved input" : "ad-hoc paste"} />
-          <PropRow label="Template" value={detail.templateName ?? "No template"} />
-          <PropRow label="Skill version" value={`v${detail.skillVersion.revisionNumber}`} />
-          <PropRow label="Created" value={relativeTime(detail.createdAt)} />
+          <PropRow label={interfaceText("m_36ecb4f8669133")} value={detail.inputId ? "saved input" : "ad-hoc paste"} />
+          <PropRow label={interfaceText("m_0575f29df888a2")} value={detail.templateName ?? "No template"} />
+          <PropRow label={interfaceText("m_4ba072982170df")} value={`v${detail.skillVersion.revisionNumber}`} />
+          <PropRow label={interfaceText("m_d70b9e24bca26b")} value={relativeTime(detail.createdAt)} />
         </div>
 
         {showRunErrorCard(detail.status) && (
           <Card className="border-destructive/50">
             <CardHeader className="flex-row items-center gap-2 space-y-0 pb-2">
               <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
-              <span className="text-sm font-medium">Run failed</span>
+              <span className="text-sm font-medium">{interfaceText("m_97fddf2d43e8df")}</span>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              {detail.error ?? "The test task ended with an error."}
+              {detail.error ?? interfaceText("m_5c8600f3387cd3")}
             </CardContent>
           </Card>
         )}
@@ -3221,16 +3193,15 @@ function RunDetailView({
         {outputMode === "output" || outputMode === "draft" ? (
           <section className="space-y-2">
             <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              {outputMode === "draft" ? "Draft at failure" : "Output snapshot"}
+              {outputMode === "draft" ? interfaceText("m_39d035d4476ea4") : interfaceText("m_1a9c81c2637dd3")}
             </h3>
             <div className="rounded-md border border-border p-3">
-              <MarkdownBody>{detail.outputBody || "_No output_"}</MarkdownBody>
+              <MarkdownBody>{detail.outputBody || interfaceText("m_f136184631ca6d")}</MarkdownBody>
             </div>
           </section>
         ) : outputMode === "pending" ? (
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Clock className="h-3.5 w-3.5" /> Working… output will appear here.
-          </div>
+            <Clock className="h-3.5 w-3.5" />{interfaceText("m_96a2a81582fcaf")}</div>
         ) : null}
 
         {unavailableCopy ? (
@@ -3289,17 +3260,14 @@ function RunDetailView({
             disabled={reRunMutation.isPending}
             onClick={() => reRunMutation.mutate()}
           >
-            <RotateCcw className="mr-1.5 h-3.5 w-3.5" /> Re-run
-          </Button>
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_1e642a49050c06")}</Button>
           {nonTerminal ? (
             <Button
               variant="ghost"
               size="sm"
               disabled={cancelMutation.isPending}
               onClick={() => cancelMutation.mutate()}
-            >
-              Cancel
-            </Button>
+            >{interfaceText("m_19766ed6ccb2f4")}</Button>
           ) : (
             <Button
               variant="ghost"
@@ -3308,19 +3276,16 @@ function RunDetailView({
               disabled={deleteMutation.isPending}
               onClick={() => deleteMutation.mutate()}
             >
-              <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Delete
-            </Button>
+              <Trash2 className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_3534d686f23a5b")}</Button>
           )}
           {taskLink.enabled && detail.harnessIssue ? (
             <Button variant="link" size="sm" asChild>
-              <Link to={`/issues/${detail.harnessIssue.id}`}>Open test task ↗</Link>
+              <Link to={`/issues/${detail.harnessIssue.id}`}>{interfaceText("m_0c16eec1cfdd39")}</Link>
             </Button>
           ) : (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="cursor-not-allowed text-xs text-muted-foreground">
-                  Open test task ↗
-                </span>
+                <span className="cursor-not-allowed text-xs text-muted-foreground">{interfaceText("m_0c16eec1cfdd39")}</span>
               </TooltipTrigger>
               <TooltipContent>{taskLink.reason}</TooltipContent>
             </Tooltip>
@@ -3355,11 +3320,12 @@ function RunHarnessUnavailableNotice({
 }
 
 function RunDocumentsSection({ documents }: { documents: IssueDocument[] }) {
+  useInterfaceLanguage();
   return (
     <section className="space-y-2">
       <div className="flex items-center gap-2">
         <FileText className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-        <h3 className="text-sm font-medium text-muted-foreground">Documents</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{interfaceText("m_b4e929d8bcfe04")}</h3>
         <span className="text-xs text-muted-foreground">{documents.length}</span>
       </div>
       <div className="space-y-2">
@@ -3392,6 +3358,7 @@ function InteractionSection({
   agents: Agent[];
   onAnswered: () => void;
 }) {
+  useInterfaceLanguage();
   const harnessIssueId = detail.harnessIssue?.id ?? null;
   const hasInlineAnswerable = detail.interactions.some((i) => isInteractionAnswerable(i));
 
@@ -3431,9 +3398,7 @@ function InteractionSection({
 
   return (
     <section>
-      <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Interactions
-      </h3>
+      <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_9089e4b79eb7fd")}</h3>
       <div className="space-y-2">
         {detail.interactions.map((summary) => {
           const inline = routeInteraction(summary.kind) === "inline";
@@ -3465,7 +3430,7 @@ function InteractionSection({
               trailing={
                 harnessIssueId ? (
                   <Button variant="link" size="xs" asChild>
-                    <Link to={`/issues/${harnessIssueId}`}>Open test task ↗</Link>
+                    <Link to={`/issues/${harnessIssueId}`}>{interfaceText("m_0c16eec1cfdd39")}</Link>
                   </Button>
                 ) : null
               }
@@ -3496,6 +3461,7 @@ function VersionHistorySheet({
   onRestored: () => void;
   onFilterRuns: (inputId: string) => void;
 }) {
+  useInterfaceLanguage();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const versionsQuery = useQuery({
@@ -3524,7 +3490,7 @@ function VersionHistorySheet({
       }
       return companySkillsApi.createVersion(companyId, skillId, {
         sourceVersionId: selection.id, expectedVersionId: skill.currentVersionId,
-        label: "Restored saved version",
+        label: interfaceText("m_1cc10a9adc31eb"),
       });
     },
     onSuccess: () => {
@@ -3554,20 +3520,20 @@ function VersionHistorySheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-full sm:max-w-(--sz-560px)">
         <SheetHeader>
-          <SheetTitle>Version history</SheetTitle>
+          <SheetTitle>{interfaceText("m_a6df11e706c514")}</SheetTitle>
         </SheetHeader>
         <div className="mt-3 space-y-2 overflow-auto">
           {versionsQuery.isLoading ? (
-            <div className="text-xs text-muted-foreground">Loading versions…</div>
+            <div className="text-xs text-muted-foreground">{interfaceText("m_9780e2c99c1b82")}</div>
           ) : versions.length === 0 ? (
-            <EmptyState icon={History} message="No versions yet. Save changes to create the first." />
+            <EmptyState icon={History} message={interfaceText("m_1fba7c480a664b")} />
           ) : (
             <div className="space-y-1 rounded-md border border-border p-1">
               {versions.map((v) => (
                 <EntityRow
                   key={v.id}
                   identifier={`v${v.revisionNumber}`}
-                  title={v.label ?? `Version ${v.revisionNumber}`}
+                  title={v.label ?? interfaceText("m_15217bc76da070", { value0: (v.revisionNumber) })}
                   subtitle={relativeTime(v.createdAt)}
                   selected={v.id === leftId || v.id === rightId}
                   onClick={() => {
@@ -3588,8 +3554,7 @@ function VersionHistorySheet({
                         e.stopPropagation();
                         restore.mutate(v);
                       }}
-                    >
-                      Restore as v{(skill.currentVersion?.revisionNumber ?? v.revisionNumber) + 1}
+                    >{interfaceText("m_4944ba4460502f")}{(skill.currentVersion?.revisionNumber ?? v.revisionNumber) + 1}
                     </Button>
                   }
                 />
@@ -3602,12 +3567,11 @@ function VersionHistorySheet({
             </p>
           )}
           {leftId && rightId && (leftQuery.isLoading || rightQuery.isLoading) && (
-            <p className="text-sm text-muted-foreground">Loading selected versions…</p>
+            <p className="text-sm text-muted-foreground">{interfaceText("m_942d2c9b28081a")}</p>
           )}
           {diff && (
             <div className="rounded-md border border-border">
-              <div className="border-b border-border px-3 py-1.5 text-xs text-muted-foreground">
-                Diff v{left?.revisionNumber} → v{right?.revisionNumber}
+              <div className="border-b border-border px-3 py-1.5 text-xs text-muted-foreground">{interfaceText("m_97888195a596c4")}{left?.revisionNumber} → v{right?.revisionNumber}
               </div>
               <pre className="max-h-64 overflow-auto p-2 text-xs">
                 {diff.map((row, i) => (
@@ -3668,10 +3632,10 @@ function PropRow({ label, value }: { label: string; value: string }) {
 }
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  useInterfaceLanguage();
   return (
     <Button variant="ghost" size="sm" onClick={onBack}>
-      <ArrowLeft className="mr-1.5 h-3.5 w-3.5" /> Back
-    </Button>
+      <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_709d9085c264e6")}</Button>
   );
 }
 
@@ -3684,12 +3648,13 @@ function MobileTabs({
   input: React.ReactNode;
   runs: React.ReactNode;
 }) {
+  useInterfaceLanguage();
   return (
     <Tabs defaultValue="skill" className="flex flex-1 flex-col">
       <TabsList variant="line" className="px-3">
-        <TabsTrigger value="skill">Skill</TabsTrigger>
-        <TabsTrigger value="input">Input</TabsTrigger>
-        <TabsTrigger value="runs">Runs</TabsTrigger>
+        <TabsTrigger value="skill">{interfaceText("m_6df1bb18a59ab9")}</TabsTrigger>
+        <TabsTrigger value="input">{interfaceText("m_36ecb4f8669133")}</TabsTrigger>
+        <TabsTrigger value="runs">{interfaceText("m_848f54e89660ce")}</TabsTrigger>
       </TabsList>
       <TabsContent value="skill" className="min-h-0 flex-1">
         {skill}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState, type ReactNode } from "react";
 import type {
   FeedbackDataSharingPreference,
@@ -48,8 +49,9 @@ export function agentBubbleDateLabel(date: Date | string | undefined): string {
  * re-declaring the same button markup on each surface.
  */
 export function BubbleCopyButton({ copyText }: { copyText: string }) {
+  useInterfaceLanguage();
   const { copied, failed, copy } = useCopyAction(2000);
-  const label = failed ? "Couldn’t copy message" : "Copy message";
+  const label = failed ? interfaceText("m_41fff2fdba95e1") : interfaceText("m_457efe538b254d");
 
   return (
     <button
@@ -111,6 +113,7 @@ export function AgentBubbleActionRow({
   menuItems?: ReactNode;
   className?: string;
 }) {
+  useInterfaceLanguage();
   // The menu closes on click, so its copy confirmation has to outlive it.
   const copyWithToast = useCopyToast();
   return (
@@ -145,8 +148,8 @@ export function AgentBubbleActionRow({
             variant="ghost"
             size="icon-xs"
             className="text-muted-foreground hover:text-foreground"
-            title="More actions"
-            aria-label="More actions"
+            title={interfaceText("m_f8d46c2570e707")}
+            aria-label={interfaceText("m_f8d46c2570e707")}
           >
             <MoreHorizontal className="h-3.5 w-3.5" />
           </Button>
@@ -157,9 +160,7 @@ export function AgentBubbleActionRow({
               void copyWithToast(copyText, "Message copied");
             }}
           >
-            <Copy className="mr-2 h-3.5 w-3.5" />
-            Copy message
-          </DropdownMenuItem>
+            <Copy className="mr-2 h-3.5 w-3.5" />{interfaceText("m_457efe538b254d")}</DropdownMenuItem>
           {menuItems}
         </DropdownMenuContent>
       </DropdownMenu>
@@ -183,6 +184,7 @@ export function IssueChatFeedbackButtons({
   termsUrl: string | null;
   onVote: (vote: FeedbackVoteValue, options?: { allowSharing?: boolean; reason?: string }) => Promise<void>;
 }) {
+  useInterfaceLanguage();
   const [isSaving, setIsSaving] = useState(false);
   const [optimisticVote, setOptimisticVote] = useState<FeedbackVoteValue | null>(null);
   const [reasonOpen, setReasonOpen] = useState(false);
@@ -262,8 +264,8 @@ export function IssueChatFeedbackButtons({
             ? "text-green-600 dark:text-green-400"
             : "text-muted-foreground hover:bg-accent hover:text-foreground",
         )}
-        title="Helpful"
-        aria-label="Helpful"
+        title={interfaceText("m_63c432db3ebb9a")}
+        aria-label={interfaceText("m_63c432db3ebb9a")}
         onClick={handleThumbsUp}
       >
         <ThumbsUp className="h-3.5 w-3.5" />
@@ -279,19 +281,19 @@ export function IssueChatFeedbackButtons({
                 ? "text-amber-600 dark:text-amber-400"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )}
-            title="Needs work"
-            aria-label="Needs work"
+            title={interfaceText("m_738a3278e94574")}
+            aria-label={interfaceText("m_738a3278e94574")}
             onClick={handleThumbsDown}
           >
             <ThumbsDown className="h-3.5 w-3.5" />
           </button>
         </PopoverTrigger>
         <PopoverContent side="top" align="start" className="w-80 p-3">
-          <div className="mb-2 text-sm font-medium">What could have been better?</div>
+          <div className="mb-2 text-sm font-medium">{interfaceText("m_829e701d9a2161")}</div>
           <Textarea
             value={downvoteReason}
             onChange={(event) => setDownvoteReason(event.target.value)}
-            placeholder="Add a short note"
+            placeholder={interfaceText("m_1adb884ad7345c")}
             className="min-h-20 resize-y bg-background text-sm"
             disabled={isSaving}
           />
@@ -305,16 +307,14 @@ export function IssueChatFeedbackButtons({
                 setReasonOpen(false);
                 setDownvoteReason("");
               }}
-            >
-              Dismiss
-            </Button>
+            >{interfaceText("m_48845bff334a50")}</Button>
             <Button
               type="button"
               size="sm"
               disabled={isSaving || !downvoteReason.trim()}
               onClick={handleSubmitReason}
             >
-              {isSaving ? "Saving..." : "Save note"}
+              {isSaving ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_6501e1ced8da0b")}
             </Button>
           </div>
         </PopoverContent>
@@ -331,30 +331,21 @@ export function IssueChatFeedbackButtons({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save your feedback sharing preference</DialogTitle>
-            <DialogDescription>
-              Choose whether voted AI outputs can be shared with Paperclip Labs. This
-              answer becomes the default for future thumbs up and thumbs down votes.
-            </DialogDescription>
+            <DialogTitle>{interfaceText("m_1c562b5e2b712a")}</DialogTitle>
+            <DialogDescription>{interfaceText("m_1e435dd128b424")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>This vote is always saved locally.</p>
-            <p>
-              Choose <span className="font-medium text-foreground">Always allow</span> to share
-              this vote and future voted AI outputs. Choose{" "}
-              <span className="font-medium text-foreground">Don't allow</span> to keep this vote
-              and future votes local.
-            </p>
-            <p>You can change this later in Settings &gt; General.</p>
+            <p>{interfaceText("m_a7cd6ce4e69c38")}</p>
+            <p>{interfaceText("m_86a9b212c3cf7b")}<span className="font-medium text-foreground">{interfaceText("m_977618bd8bc7ee")}</span>{interfaceText("m_2f027cc208ef1f")}{" "}
+              <span className="font-medium text-foreground">{interfaceText("m_9803bdd2047b13")}</span>{interfaceText("m_381c9adbcec91d")}</p>
+            <p>{interfaceText("m_46238be658a5b0")}</p>
             {termsUrl ? (
               <a
                 href={termsUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex text-sm text-foreground underline underline-offset-4"
-              >
-                Read our terms of service
-              </a>
+              >{interfaceText("m_50aceeb579a200")}</a>
             ) : null}
           </div>
           <DialogFooter>
@@ -370,7 +361,7 @@ export function IssueChatFeedbackButtons({
                 ).then(() => setPendingSharingDialog(null));
               }}
             >
-              {isSaving ? "Saving..." : "Don't allow"}
+              {isSaving ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_9803bdd2047b13")}
             </Button>
             <Button
               type="button"
@@ -383,7 +374,7 @@ export function IssueChatFeedbackButtons({
                 }).then(() => setPendingSharingDialog(null));
               }}
             >
-              {isSaving ? "Saving..." : "Always allow"}
+              {isSaving ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_977618bd8bc7ee")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Link, useCaseHref } from "@/lib/router";
@@ -23,10 +24,11 @@ export function CaseChildrenTree({
   children: CaseRelationRow[];
   maxVisible?: number;
 }) {
+  useInterfaceLanguage();
   const caseHref = useCaseHref();
   const [expanded, setExpanded] = useState(false);
   if (children.length === 0) {
-    return <p className="text-xs text-muted-foreground">No child cases.</p>;
+    return <p className="text-xs text-muted-foreground">{interfaceText("m_6317c59f9a827e")}</p>;
   }
 
   const shouldCap = maxVisible != null && children.length > maxVisible;
@@ -44,7 +46,7 @@ export function CaseChildrenTree({
             >
               <CaseCopyableToken
                 value={child.identifier}
-                label="case ID"
+                label={interfaceText("m_9c869d6f7ed1f0")}
                 className="shrink-0 font-mono text-xs text-muted-foreground"
                 containerClassName="shrink-0"
                 stopPropagation
@@ -64,9 +66,7 @@ export function CaseChildrenTree({
           className="h-7 gap-1 px-2 text-xs text-muted-foreground"
           onClick={() => setExpanded(true)}
         >
-          <ChevronDown className="h-3.5 w-3.5" />
-          Show {hiddenCount} more
-        </Button>
+          <ChevronDown className="h-3.5 w-3.5" />{interfaceText("m_dd0fcd29c826be")}{hiddenCount}{interfaceText("m_226ba18bbcdb75")}</Button>
       ) : null}
     </div>
   );

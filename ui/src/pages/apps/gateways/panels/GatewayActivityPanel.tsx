@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -12,12 +13,12 @@ import { ErrorState, RelativeTime } from "@/pages/tools/shared";
 const PAGE_SIZE = 25;
 
 const OUTCOME_META: Record<ToolAuditOutcome, { label: string; status: string }> = {
-  allowed: { label: "Allowed", status: "allowed" },
-  blocked: { label: "Blocked", status: "denied" },
-  asked_first: { label: "Asked first", status: "require-approval" },
-  waiting: { label: "Waiting", status: "deferred" },
-  failed: { label: "Failed", status: "failed" },
-  unknown: { label: "Recorded", status: "unchecked" },
+  allowed: { get label() { return interfaceText("m_1bb201d188352e"); }, status: "allowed" },
+  blocked: { get label() { return interfaceText("m_18f2a0947f9d65"); }, status: "denied" },
+  asked_first: { get label() { return interfaceText("m_db928628a30ccd"); }, status: "require-approval" },
+  waiting: { get label() { return interfaceText("m_6e293a8c009e00"); }, status: "deferred" },
+  failed: { get label() { return interfaceText("m_031a8f0f659df8"); }, status: "failed" },
+  unknown: { get label() { return interfaceText("m_c7175fa7a0db0d"); }, status: "unchecked" },
 };
 
 function detailString(details: Record<string, unknown> | null, key: string): string | null {
@@ -63,6 +64,7 @@ function Fact({ label, value, mono = false }: { label: string; value: string; mo
 }
 
 function ActivityRow({ event }: { event: ToolGatewayActivityEvent }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const outcome = OUTCOME_META[event.normalizedOutcome] ?? OUTCOME_META.unknown;
   const actor = event.agentDisplayName ?? "Client";
@@ -93,7 +95,7 @@ function ActivityRow({ event }: { event: ToolGatewayActivityEvent }) {
         )}
         <span className="min-w-0 flex-1">
           <span className="block text-foreground">
-            <span className="font-medium">{actor}</span> used <span className="font-medium">{tool}</span> in {app}
+            <span className="font-medium">{actor}</span>{interfaceText("m_dbe119136b2670")}<span className="font-medium">{tool}</span>{interfaceText("m_2eb9d0d30d4cea")}{app}
           </span>
         </span>
         <span className="flex shrink-0 items-center gap-2 whitespace-nowrap">
@@ -107,18 +109,18 @@ function ActivityRow({ event }: { event: ToolGatewayActivityEvent }) {
       {open ? (
         <div className="border-t border-border bg-muted/30 px-4 py-3 pl-10 text-xs">
           <dl>
-            {rawTool ? <Fact label="Tool" value={rawTool} mono /> : null}
-            {event.invocation?.status ? <Fact label="Call status" value={event.invocation.status} /> : null}
-            {event.invocation?.policyDecision ? <Fact label="Decision" value={event.invocation.policyDecision} /> : null}
-            {reason ? <Fact label="Reason" value={reason} mono /> : null}
-            {duration ? <Fact label="Duration" value={duration} /> : null}
-            {event.invocation?.id ? <Fact label="Invocation ID" value={event.invocation.id} mono /> : null}
-            {event.invocation?.errorCode ? <Fact label="Error code" value={event.invocation.errorCode} mono /> : null}
-            {event.invocation?.errorMessage ? <Fact label="Error" value={event.invocation.errorMessage} /> : null}
+            {rawTool ? <Fact label={interfaceText("m_2e53bdcd074086")} value={rawTool} mono /> : null}
+            {event.invocation?.status ? <Fact label={interfaceText("m_c43d9824781fc9")} value={event.invocation.status} /> : null}
+            {event.invocation?.policyDecision ? <Fact label={interfaceText("m_640ae4baf96061")} value={event.invocation.policyDecision} /> : null}
+            {reason ? <Fact label={interfaceText("m_f81ab834de5f84")} value={reason} mono /> : null}
+            {duration ? <Fact label={interfaceText("m_4fc52a3c4c558b")} value={duration} /> : null}
+            {event.invocation?.id ? <Fact label={interfaceText("m_56d237ee606ca2")} value={event.invocation.id} mono /> : null}
+            {event.invocation?.errorCode ? <Fact label={interfaceText("m_0570b384c3cecf")} value={event.invocation.errorCode} mono /> : null}
+            {event.invocation?.errorMessage ? <Fact label={interfaceText("m_54a0e8c17ebb21")} value={event.invocation.errorMessage} /> : null}
           </dl>
           {argumentsText ? (
             <div className="mt-2 space-y-1">
-              <div className="text-muted-foreground">Arguments (redacted)</div>
+              <div className="text-muted-foreground">{interfaceText("m_1965f782698f96")}</div>
               <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground">
                 {argumentsText}
               </pre>
@@ -126,7 +128,7 @@ function ActivityRow({ event }: { event: ToolGatewayActivityEvent }) {
           ) : null}
           {resultText ? (
             <div className="mt-3 space-y-1">
-              <div className="text-muted-foreground">Result (redacted)</div>
+              <div className="text-muted-foreground">{interfaceText("m_1a33ba53693b5c")}</div>
               <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground">
                 {resultText}
               </pre>
@@ -145,6 +147,7 @@ export function GatewayActivityPanel({
   companyId: string;
   gateway: ToolMcpGatewayWithTokens;
 }) {
+  useInterfaceLanguage();
   const activityQuery = useInfiniteQuery({
     queryKey: queryKeys.tools.activity(companyId, { gateway: gateway.id, window: "30d" }),
     queryFn: ({ pageParam }) =>
@@ -178,13 +181,9 @@ export function GatewayActivityPanel({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">
-        Calls through this gateway from the last 30 days. Open a row to inspect its tool, redacted arguments, result, and decision.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_4c86c708f17186")}</p>
       {events.length === 0 ? (
-        <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-          No calls have gone through this gateway yet.
-        </div>
+        <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">{interfaceText("m_a4511ecdcb0edf")}</div>
       ) : (
         <ul className="divide-y divide-border rounded-lg border border-border">
           {events.map((event) => <ActivityRow key={event.id} event={event} />)}
@@ -198,7 +197,7 @@ export function GatewayActivityPanel({
             onClick={() => activityQuery.fetchNextPage()}
             disabled={activityQuery.isFetchingNextPage}
           >
-            {activityQuery.isFetchingNextPage ? "Loading…" : "Load more"}
+            {activityQuery.isFetchingNextPage ? interfaceText("m_ba3bbbe10d8bef") : interfaceText("m_ac8991ef01019c")}
           </Button>
         </div>
       ) : null}

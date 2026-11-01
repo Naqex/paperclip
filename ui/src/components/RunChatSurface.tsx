@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { memo, useMemo } from "react";
 import type { TranscriptEntry } from "../adapters";
 import type { LiveRunForIssue } from "../api/heartbeats";
@@ -27,6 +28,7 @@ export const RunChatSurface = memo(function RunChatSurface({
   hasOutput,
   companyId,
 }: RunChatSurfaceProps) {
+  useInterfaceLanguage();
   const active = isRunActive(run);
   const liveRuns = useMemo(() => (active ? [run] : EMPTY_LIVE_RUNS), [active, run]);
   const linkedRuns = useMemo<IssueChatLinkedRun[]>(
@@ -59,7 +61,7 @@ export const RunChatSurface = memo(function RunChatSurface({
       showComposer={false}
       showJumpToLatest={false}
       variant="embedded"
-      emptyMessage={active ? "Waiting for run output..." : "No run output captured."}
+      emptyMessage={active ? interfaceText("m_f38cf8a6ba7433") : interfaceText("m_8f98f86f8e16cd")}
       enableLiveTranscriptPolling={false}
       transcriptsByRunId={transcriptsByRunId}
       hasOutputForRun={(runId) => runId === run.id && hasOutput}

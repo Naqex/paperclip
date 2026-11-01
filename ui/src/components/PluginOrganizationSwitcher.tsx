@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, type ReactNode } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import type { PluginOrganizationSwitcherProps } from "@paperclipai/plugin-sdk/ui";
@@ -11,7 +12,8 @@ import { Skeleton } from "./ui/skeleton";
 
 /** Reserve the trigger's space until its owner is known. Never flash another name. */
 function OrganizationSwitcherLoading({ collapsed }: { collapsed: boolean }) {
-  return <div role="status" aria-label="Loading organization" aria-busy="true"
+  useInterfaceLanguage();
+  return <div role="status" aria-label={interfaceText("m_0dc16abf97d88e")} aria-busy="true"
     className="flex h-9 min-w-0 flex-1 items-center gap-2 px-4">
     <Skeleton className="size-5 shrink-0" />
     {!collapsed && <>

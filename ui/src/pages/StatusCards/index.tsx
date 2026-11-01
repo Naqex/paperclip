@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FlaskConical, Loader2, Plus } from "lucide-react";
@@ -19,6 +20,7 @@ import { StatusCardDetailDrawer } from "./StatusCardDetailDrawer";
 import type { StatusCardView } from "./types";
 
 export function StatusCards() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const navigate = useNavigate();
@@ -33,8 +35,8 @@ export function StatusCards() {
   const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Status" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_920e413c7d411b") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const activeQuery = useQuery({
     queryKey: selectedCompanyId ? queryKeys.statusCards.list(selectedCompanyId, false) : ["status-cards", "none", "active"],
@@ -116,41 +118,35 @@ export function StatusCards() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold">Status</h1>
+          <h1 className="text-xl font-bold">{interfaceText("m_920e413c7d411b")}</h1>
           <Badge variant="secondary" className="gap-1">
-            <FlaskConical className="h-3 w-3" />
-            Experimental
-          </Badge>
+            <FlaskConical className="h-3 w-3" />{interfaceText("m_3dc9f569422dcf")}</Badge>
         </div>
         <div className="flex items-center gap-4">
           {showCostMeter ? (
-            <span className="text-xs text-muted-foreground">
-              Today: {formatTokens(todayTotals.tokens)} · ~{formatCents(todayTotals.cents)}
+            <span className="text-xs text-muted-foreground">{interfaceText("m_627ac69da52cc8")}{formatTokens(todayTotals.tokens)} · ~{formatCents(todayTotals.cents)}
             </span>
           ) : null}
           <Button onClick={() => setCreateOpen(true)} disabled={!selectedCompanyId}>
-            <Plus className="h-4 w-4" />
-            New card
-          </Button>
+            <Plus className="h-4 w-4" />{interfaceText("m_8d3efc397417cf")}</Button>
         </div>
       </div>
 
-      {actionError ? <InlineBanner tone="warning" title="Heads up">{actionError}</InlineBanner> : null}
+      {actionError ? <InlineBanner tone="warning" title={interfaceText("m_dc1f657d6c09a8")}>{actionError}</InlineBanner> : null}
 
       {activeQuery.isLoading ? (
         <div className="flex items-center gap-2 py-12 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Loading cards…
-        </div>
+          <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_9d27b353e1c1dd")}</div>
       ) : activeQuery.isError ? (
-        <InlineBanner tone="danger" title="Could not load status cards">
-          {activeQuery.error instanceof Error ? activeQuery.error.message : "Try again."}
+        <InlineBanner tone="danger" title={interfaceText("m_202da107a13594")}>
+          {activeQuery.error instanceof Error ? activeQuery.error.message : interfaceText("m_a0c2cc1374d949")}
         </InlineBanner>
       ) : activeCards.length === 0 ? (
         <EmptyState
           icon={FlaskConical}
-          title="No status cards yet"
-          message="Create a card to keep a living summary of the issues you care about."
-          action={selectedCompanyId ? "New card" : undefined}
+          title={interfaceText("m_9604f34dde154d")}
+          message={interfaceText("m_95707085eb43de")}
+          action={selectedCompanyId ? interfaceText("m_8d3efc397417cf") : undefined}
           onAction={() => setCreateOpen(true)}
         />
       ) : (
@@ -180,7 +176,7 @@ export function StatusCards() {
             onClick={() => setShowArchived((prev) => !prev)}
             className="text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
           >
-            {showArchived ? "Hide archived" : `Show archived (${archivedCards.length})`}
+            {showArchived ? interfaceText("m_dd1c79324e411c") : interfaceText("m_b18aaeeade8991", { value0: (archivedCards.length) })}
           </button>
           {showArchived
             ? archivedCards.map((card) => (

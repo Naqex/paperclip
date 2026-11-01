@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import {
   SMOKE_RUN_STEP_PATHS,
   type SmokeRun,
@@ -37,14 +38,14 @@ export interface LifecycleStage {
 
 /** The PAP-12373 governed lifecycle, in order (plan §3). */
 export const LIFECYCLE_STAGES: LifecycleStage[] = [
-  { key: "connect", label: "Connect", match: ["connect", "oauth", "login", "auth"] },
-  { key: "discover", label: "Discover catalog", match: ["discover", "catalog", "list-tools"] },
-  { key: "read", label: "Allowed read", match: ["read", "allowed"] },
-  { key: "write", label: "Ask-first write", match: ["write", "approve", "ask-first", "askfirst", "review"] },
-  { key: "deny", label: "Denied call", match: ["deny", "denied", "block", "forbidden"] },
-  { key: "quarantine", label: "Schema-change quarantine", match: ["quarantine", "schema"] },
-  { key: "revoke", label: "Revoke", match: ["revoke"] },
-  { key: "audit", label: "Audit evidence", match: ["audit", "activity", "evidence"] },
+  { key: "connect", get label() { return interfaceText("m_1a2303ede07493"); }, match: ["connect", "oauth", "login", "auth"] },
+  { key: "discover", get label() { return interfaceText("m_816990c99738b4"); }, match: ["discover", "catalog", "list-tools"] },
+  { key: "read", get label() { return interfaceText("m_c4e65f38b6a83c"); }, match: ["read", "allowed"] },
+  { key: "write", get label() { return interfaceText("m_5fe97dc1a47009"); }, match: ["write", "approve", "ask-first", "askfirst", "review"] },
+  { key: "deny", get label() { return interfaceText("m_a60746719ea55c"); }, match: ["deny", "denied", "block", "forbidden"] },
+  { key: "quarantine", get label() { return interfaceText("m_6798160d686196"); }, match: ["quarantine", "schema"] },
+  { key: "revoke", get label() { return interfaceText("m_87e6d00bbf53ec"); }, match: ["revoke"] },
+  { key: "audit", get label() { return interfaceText("m_74dbcfd2a32d97"); }, match: ["audit", "activity", "evidence"] },
 ];
 
 /** Fold a free-form scenario step onto a canonical lifecycle stage, or null. */

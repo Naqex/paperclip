@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 /**
  * @fileoverview Core Skill Studio permission surfaces (PAP-13865, Phase 3).
  *
@@ -71,10 +72,9 @@ export function SkillPolicyDenialNotice({
   onDismiss?: () => void;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const actions = onDismiss ? (
-    <Button variant="ghost" size="sm" onClick={onDismiss}>
-      Dismiss
-    </Button>
+    <Button variant="ghost" size="sm" onClick={onDismiss}>{interfaceText("m_48845bff334a50")}</Button>
   ) : undefined;
 
   return (

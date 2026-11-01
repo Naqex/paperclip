@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -55,6 +56,7 @@ export function GitHubRepositoryAccess({
   onChange: (id: string, enabled: boolean) => void;
   onToggleAll: (enabled: boolean) => void;
 }) {
+  useInterfaceLanguage();
   const client = useQueryClient();
   const [search, setSearch] = useState("");
   const scroller = useRef<HTMLDivElement>(null);
@@ -82,54 +84,45 @@ export function GitHubRepositoryAccess({
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">Repositories</h2>
+        <h2 className="text-base font-semibold">{interfaceText("m_1e32af87ea7427")}</h2>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Manage repositories"
+              aria-label={interfaceText("m_7d701a0d7414d5")}
             >
               <MoreHorizontal className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <a href={managementUrl} target="_blank" rel="noreferrer">
-                Manage on GitHub
-                <ExternalLink className="size-4" />
+              <a href={managementUrl} target="_blank" rel="noreferrer">{interfaceText("m_03298bf58cdbfd")}<ExternalLink className="size-4" />
               </a>
             </DropdownMenuItem>
             <DropdownMenuItem disabled={pending} onClick={onRefresh}>
-              <RefreshCw className="size-4" />
-              Refresh repositories
-            </DropdownMenuItem>
+              <RefreshCw className="size-4" />{interfaceText("m_31be4d41775978")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <p className="text-xs text-muted-foreground">
-        Choose where the bot can receive messages and use tools. Repository
-        changes save immediately.
-      </p>
+      <p className="text-xs text-muted-foreground">{interfaceText("m_a03f23af56679f")}</p>
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-0 flex-1 basis-48">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input aria-label="Search repositories" placeholder="Search repositories" className="pl-9"
+          <Input aria-label={interfaceText("m_a134ed6423fab0")} placeholder={interfaceText("m_a134ed6423fab0")} className="pl-9"
             value={search} maxLength={200} onChange={(event) => setSearch(event.target.value)} />
         </div>
         <Button variant="outline" size="sm" disabled={pending || list.isFetching || !summary || !summary.totalCount || (!disableAll && !summary.availableCount)}
-          aria-label={`${disableAll ? "Disable" : "Enable"} all repositories`}
+          aria-label={interfaceText("m_2529badff6d0dd", { value0: (disableAll ? "Disable" : "Enable") })}
           onClick={() => onToggleAll(!disableAll)}>
-          {disableAll ? "Disable all" : "Enable all"}
+          {disableAll ? interfaceText("m_6cb2279dbfe762") : interfaceText("m_06f08e7c2f8a8c")}
         </Button>
       </div>
       {summary && <p className="text-xs text-muted-foreground">
-        {summary.enabledCount} of {summary.totalCount} repositories enabled. Toggle all applies across the entire connection.
+        {summary.enabledCount}{interfaceText("m_a4282e4b2298b9")}{summary.totalCount}{interfaceText("m_a6a01ecf354978")}</p>}
+      {list.isError && <p role="alert" className="text-sm text-destructive">{interfaceText("m_3793ac427e20ad")}<Button variant="link" size="sm" onClick={() => void list.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>
       </p>}
-      {list.isError && <p role="alert" className="text-sm text-destructive">
-        Could not load repositories. <Button variant="link" size="sm" onClick={() => void list.refetch()}>Try again</Button>
-      </p>}
-      <div ref={scroller} role="region" aria-label="Repositories" tabIndex={0}
+      <div ref={scroller} role="region" aria-label={interfaceText("m_1e32af87ea7427")} tabIndex={0}
         className="max-h-96 overflow-y-auto overscroll-contain border-y border-border">
         <div className="divide-y divide-border">
         {rows.map((resource) => (
@@ -144,12 +137,12 @@ export function GitHubRepositoryAccess({
               description={
                 resource.availability === "available"
                   ? undefined
-                  : "Unavailable on GitHub. Update the App’s installation access, then refresh."
+                  : interfaceText("m_8f5c76928e6467")
               }
               onChange={(enabled) => onChange(resource.id, enabled)}
             />
             <details className="text-sm">
-              <summary className="cursor-pointer text-muted-foreground">Task defaults</summary>
+              <summary className="cursor-pointer text-muted-foreground">{interfaceText("m_1aa47f4285de39")}</summary>
               <div className="pt-3">
                 <ChatExecutionDefaults
                   companyId={companyId}
@@ -166,15 +159,15 @@ export function GitHubRepositoryAccess({
           </div>
         ))}
         </div>
-        {list.isPending ? <p role="status" className="py-4 text-sm text-muted-foreground">Loading repositories…</p> : rows.length === 0 && !list.isError && (
+        {list.isPending ? <p role="status" className="py-4 text-sm text-muted-foreground">{interfaceText("m_460ca92c825aee")}</p> : rows.length === 0 && !list.isError && (
           <p className="py-4 text-sm text-muted-foreground">
-            {search ? "No repositories match your search." : "No repositories available. Add repository access on GitHub, then refresh."}
+            {search ? interfaceText("m_454e420a8cf9b4") : interfaceText("m_376e51eba0ca33")}
           </p>
         )}
         {list.hasNextPage && <div ref={more} className="flex justify-center py-2">
           <Button variant="ghost" size="sm" disabled={pending || list.isFetching}
             onClick={() => void list.fetchNextPage({ cancelRefetch: false })}>
-            {list.isFetchingNextPage ? "Loading repositories…" : "Load more repositories"}
+            {list.isFetchingNextPage ? interfaceText("m_460ca92c825aee") : interfaceText("m_43a13fa4d739c8")}
           </Button>
         </div>}
       </div>
@@ -189,6 +182,7 @@ export function GitHubBotManagement({
   endpoint: ChatEndpoint;
   view: "settings" | "access";
 }) {
+  useInterfaceLanguage();
   const client = useQueryClient();
   const query = useQuery({
     queryKey: ["github-bot-configuration", endpoint.id],
@@ -234,23 +228,18 @@ export function GitHubBotManagement({
   };
   if (query.isError)
     return (
-      <p role="alert" className="text-sm text-destructive">
-        Could not load the bot configuration.{" "}
+      <p role="alert" className="text-sm text-destructive">{interfaceText("m_520186526fb3e2")}{" "}
         <Button
           variant="link"
           onClick={() => {
             void query.refetch();
           }}
-        >
-          Try again
-        </Button>
+        >{interfaceText("m_d8b8392e2c5429")}</Button>
       </p>
     );
   if (!record)
     return (
-      <p role="status" className="text-sm text-muted-foreground">
-        Loading configuration…
-      </p>
+      <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_bc8fd86dcffdd9")}</p>
     );
   const config = record.configuration;
   return (
@@ -300,25 +289,18 @@ export function GitHubBotManagement({
             />
             {!config.toolsEnabled && (
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  This saved bot has GitHub tools disabled, so it cannot start
-                  work or respond.
-                </p>
+                <p className="text-sm text-muted-foreground">{interfaceText("m_31c25d6e6c872b")}</p>
                 <Button
                   variant="outline"
                   onClick={() => edit({ ...config, toolsEnabled: true })}
-                >
-                  Enable bot tools
-                </Button>
+                >{interfaceText("m_71332787d66781")}</Button>
               </div>
             )}
             {endpoint.connectionId && (
               <Link
                 className="text-xs text-muted-foreground underline underline-offset-4"
                 to={`/apps/${endpoint.connectionId}`}
-              >
-                Manage tool permissions
-              </Link>
+              >{interfaceText("m_cb2aaaa9da5648")}</Link>
             )}
           </>
         ) : (
@@ -357,9 +339,7 @@ export function GitHubBotManagement({
               setEditorVersion((value) => value + 1);
               setError("");
             }}
-          >
-            Discard changes
-          </Button>
+          >{interfaceText("m_f9bfa3dc7c8fcd")}</Button>
           <Button
             disabled={pending || !scoreValid}
             onClick={() =>
@@ -380,7 +360,7 @@ export function GitHubBotManagement({
               })
             }
           >
-            {pending ? "Saving…" : "Save changes"}
+            {pending ? interfaceText("m_23e39291d61358") : interfaceText("m_dd0ae7a5cbcf23")}
           </Button>
         </div>
       )}
@@ -417,6 +397,7 @@ export function gitHubReviewResultLabel(review: GitHubTaskReview) {
 }
 
 function ReviewResult({ review }: { review: GitHubTaskReview }) {
+  useInterfaceLanguage();
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -433,26 +414,20 @@ function ReviewResult({ review }: { review: GitHubTaskReview }) {
           {review.assessment.summary}
         </MarkdownBody>
       ) : (
-        <p className="text-sm text-muted-foreground">
-          No assessment has been submitted yet.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_8d5fdd017b5474")}</p>
       )}
       <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <Link
           className="underline underline-offset-4"
           to={`/issues/${review.issueId}`}
-        >
-          Paperclip task
-        </Link>
+        >{interfaceText("m_ff44b378e15c1f")}</Link>
         {review.summaryUrl && (
           <a
             className="underline underline-offset-4"
             href={review.summaryUrl}
             target="_blank"
             rel="noreferrer"
-          >
-            GitHub comment
-          </a>
+          >{interfaceText("m_d119f0c5993d22")}</a>
         )}
         {review.checkUrl && (
           <a
@@ -460,28 +435,24 @@ function ReviewResult({ review }: { review: GitHubTaskReview }) {
             href={review.checkUrl}
             target="_blank"
             rel="noreferrer"
-          >
-            Check
-          </a>
+          >{interfaceText("m_9d60841e0a7891")}</a>
         )}
       </div>
-      <section className="space-y-4 text-sm" aria-label="Review evidence">
+      <section className="space-y-4 text-sm" aria-label={interfaceText("m_5e068aeb73ef51")}>
         <div className="space-y-3">
           {review.runId && (
             <Link
               className="text-xs underline underline-offset-4"
               to={`/issues/${review.issueId}?runId=${review.runId}`}
-            >
-              Agent run
-            </Link>
+            >{interfaceText("m_5b89ba1a2ec542")}</Link>
           )}
           {review.assessment && (
             <>
-              <h3 className="font-medium">Rationale</h3>
+              <h3 className="font-medium">{interfaceText("m_58f23be0ac904b")}</h3>
               <MarkdownBody>{review.assessment.rationale}</MarkdownBody>
               {review.assessment.findings.length > 0 && (
                 <section className="space-y-3">
-                  <h3 className="font-medium">Findings</h3>
+                  <h3 className="font-medium">{interfaceText("m_e171c2ff25b55e")}</h3>
                   {review.assessment.findings.map((finding) => (
                     <div
                       key={finding.key}
@@ -495,11 +466,9 @@ function ReviewResult({ review }: { review: GitHubTaskReview }) {
                   ))}
                 </section>
               )}
-              <h3 className="font-medium">Coverage</h3>
+              <h3 className="font-medium">{interfaceText("m_523487a5de21ad")}</h3>
               <p className="text-xs text-muted-foreground">
-                {review.assessment.coverage.reviewedPaths.length} files reviewed
-                · {review.assessment.coverage.omittedPaths.length} omitted
-              </p>
+                {review.assessment.coverage.reviewedPaths.length}{interfaceText("m_896fa18ab12386")}{review.assessment.coverage.omittedPaths.length}{interfaceText("m_0d9a7e08fb85eb")}</p>
               {review.assessment.coverage.limitations.map((limit, index) => (
                 <p key={index} className="text-xs text-muted-foreground">
                   {limit}
@@ -520,17 +489,18 @@ export function GitHubReviewList({
   endpointId: string;
   reviews: GitHubTaskReview[];
 }) {
+  useInterfaceLanguage();
   if (!reviews.length)
     return (
       <EmptyState
         icon={GitPullRequest}
-        message="No reviews yet"
-        description="Mention the bot on a pull request, or enable automatic events in Settings."
+        message={interfaceText("m_8b670b7eead75f")}
+        description={interfaceText("m_f1ea1d50cdca41")}
       />
     );
   return (
     <ul
-      aria-label="Reviews"
+      aria-label={interfaceText("m_84cb7871b741c3")}
       className="divide-y divide-border border-y border-border"
     >
       {orderedGitHubReviews(reviews).map((review) => (
@@ -571,14 +541,13 @@ export function GitHubReviewDetail({
   endpointId: string;
   review: GitHubTaskReview;
 }) {
+  useInterfaceLanguage();
   return (
     <article className="max-w-3xl space-y-6">
       <Link
         className="text-sm text-muted-foreground hover:underline"
         to={`/apps/chat/${endpointId}/reviews`}
-      >
-        ← All reviews
-      </Link>
+      >{interfaceText("m_e33611013684e5")}</Link>
       <header className="space-y-2">
         <h2 className="text-lg font-semibold">
           {review.event.title || `Pull request #${review.pullNumber}`}
@@ -604,6 +573,7 @@ export function GitHubReviews({
   endpointId: string;
   reviewId?: string;
 }) {
+  useInterfaceLanguage();
   const query = useQuery({
     queryKey: ["github-bot-reviews", endpointId, reviewId ?? "list"],
     queryFn: async () => reviewId ? [await githubChatApi.review(endpointId, reviewId)] : githubChatApi.reviews(endpointId),
@@ -612,17 +582,13 @@ export function GitHubReviews({
   if (query.isError)
     return (
       <p role="alert" className="text-sm text-destructive">
-        {reviewId ? "This review could not be loaded or was not found in this connection." : "Reviews could not be loaded."}{" "}
-        <Button variant="link" onClick={() => void query.refetch()}>
-          Try again
-        </Button>
+        {reviewId ? interfaceText("m_9241edac1949a8") : interfaceText("m_58b6d1547d5375")}{" "}
+        <Button variant="link" onClick={() => void query.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>
       </p>
     );
   if (query.isPending)
     return (
-      <p role="status" className="text-sm text-muted-foreground">
-        Loading reviews…
-      </p>
+      <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_510c765f211f33")}</p>
     );
   if (reviewId) {
     const review = query.data.find((review) => review.id === reviewId);
@@ -630,15 +596,11 @@ export function GitHubReviews({
       <GitHubReviewDetail endpointId={endpointId} review={review} />
     ) : (
       <div className="space-y-3">
-        <p role="alert" className="text-sm text-muted-foreground">
-          This review was not found in this connection.
-        </p>
+        <p role="alert" className="text-sm text-muted-foreground">{interfaceText("m_835786fb9b3839")}</p>
         <Link
           to={`/apps/chat/${endpointId}/reviews`}
           className="text-sm underline"
-        >
-          All reviews
-        </Link>
+        >{interfaceText("m_ab84bf98f25922")}</Link>
       </div>
     );
   }

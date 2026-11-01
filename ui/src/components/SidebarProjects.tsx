@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
@@ -49,9 +50,9 @@ import type { Project } from "@paperclipai/shared";
 type ProjectSidebarSlot = ReturnType<typeof usePluginSlots>["slots"][number];
 
 const PROJECT_SORT_CHOICES: SidebarSectionRadioChoice[] = [
-  { value: "top", label: "Top" },
-  { value: "alphabetical", label: "Alphabetical" },
-  { value: "recent", label: "Recent" },
+  { value: "top", get label() { return interfaceText("m_d5cdfcf7ff7533"); } },
+  { value: "alphabetical", get label() { return interfaceText("m_a49d631f8c6cf6"); } },
+  { value: "recent", get label() { return interfaceText("m_690dbe9dc0993c"); } },
 ];
 const REORDER_POINTER_MEDIA = "(hover: hover) and (pointer: fine)";
 
@@ -123,6 +124,7 @@ function ProjectItem({
   leaving = false,
   isDragging = false,
 }: ProjectItemProps) {
+  useInterfaceLanguage();
   const routeRef = projectRouteRef(project);
   const { summary: externalObjectsSummary } = useProjectExternalObjectSummary(project.id);
 
@@ -146,9 +148,9 @@ function ProjectItem({
     >
       <ProjectTile color={project.color ?? null} icon={project.icon ?? null} size="xs" />
       <span className={rail ? SIDEBAR_RAIL_HIDDEN_LABEL : "flex-1 truncate"}>{project.name}</span>
-            {!rail && project.visibility === "private" ? <Lock className="size-3.5 shrink-0 text-muted-foreground" aria-label="Private project" /> : null}
+            {!rail && project.visibility === "private" ? <Lock className="size-3.5 shrink-0 text-muted-foreground" aria-label={interfaceText("m_5baec6fcbec2e2")} /> : null}
       {!rail ? <ExternalObjectStatusSummary summary={externalObjectsSummary} compact /> : null}
-      {!rail && project.pauseReason === "budget" ? <BudgetSidebarMarker title="Project paused by budget" /> : null}
+      {!rail && project.pauseReason === "budget" ? <BudgetSidebarMarker title={interfaceText("m_1aa2562895efb5")} /> : null}
     </NavLink>
   );
 
@@ -183,7 +185,7 @@ function ProjectItem({
                   ? "opacity-100"
                   : "pointer-events-none opacity-0 group-hover/project:pointer-events-auto group-hover/project:opacity-100 group-focus-within/project:pointer-events-auto group-focus-within/project:opacity-100",
               )}
-              aria-label={`Open actions for ${project.name}`}
+              aria-label={interfaceText("m_c4ad765739a668", { value0: (project.name) })}
             >
               <MoreHorizontal className="h-3.5 w-3.5" />
             </Button>
@@ -197,7 +199,7 @@ function ProjectItem({
               disabled={leaving}
             >
               {leaving ? <Loader2 className="size-4 motion-safe:animate-spin" /> : <LogOut className="size-4" />}
-              <span>{leaving ? "Leaving..." : "Leave project"}</span>
+              <span>{leaving ? interfaceText("m_9b6b4fb63c666d") : interfaceText("m_4c6941ff7aa37c")}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -254,6 +256,7 @@ function SortableProjectItem(props: ProjectItemProps) {
 }
 
 export function SidebarProjects() {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(true);
   const { selectedCompany, selectedCompanyId } = useCompany();
   const { openNewProject } = useDialogActions();
@@ -410,7 +413,7 @@ export function SidebarProjects() {
 
   return (
     <SidebarSection
-      label="Projects"
+      label={interfaceText("m_04e2a9728af758")}
       collapsible={{ open, onOpenChange: setOpen }}
       headerAction={{
         ariaLabel: "New project",
@@ -420,7 +423,7 @@ export function SidebarProjects() {
       menu={{
         ariaLabel: "Projects section actions",
         actions: [
-          { type: "item", label: "Browse projects", icon: FolderOpen, href: "/projects" },
+          { type: "item", label: interfaceText("m_8eac1d4abf06ff"), icon: FolderOpen, href: "/projects" },
           { type: "separator" },
         ],
         radioLabel: "Project sort",

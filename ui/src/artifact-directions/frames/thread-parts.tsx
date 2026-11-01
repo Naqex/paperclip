@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { ArrowUp, AtSign, Check, ChevronDown, ChevronRight, Copy, Plus, ThumbsDown, ThumbsUp } from "lucide-react";
 import { StatusIcon } from "@/components/StatusIcon";
@@ -60,17 +61,18 @@ const ACTION = "inline-flex h-7 w-7 items-center justify-center rounded-md text-
 
 /** TaskChatBubble.tsx:396-404, streamlined runless footer. */
 export function MessageFooter({ timestamp }: { timestamp: string }) {
+  useInterfaceLanguage();
   return (
     <div className="flex w-full items-center justify-between gap-2 px-1">
       <span className="text-(length:--text-micro) text-muted-foreground">{timestamp}</span>
       <div className="flex items-center gap-0.5">
-        <button type="button" className={ACTION} aria-label="Copy message">
+        <button type="button" className={ACTION} aria-label={interfaceText("m_457efe538b254d")}>
           <Copy className="h-3.5 w-3.5" />
         </button>
-        <button type="button" className={ACTION} aria-label="Good response">
+        <button type="button" className={ACTION} aria-label={interfaceText("m_5a113737926c5a")}>
           <ThumbsUp className="h-3.5 w-3.5" />
         </button>
-        <button type="button" className={ACTION} aria-label="Bad response">
+        <button type="button" className={ACTION} aria-label={interfaceText("m_5ffca88c155507")}>
           <ThumbsDown className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -80,10 +82,11 @@ export function MessageFooter({ timestamp }: { timestamp: string }) {
 
 /** TaskChatTurn.tsx:184-237, settled standalone turn: "✓ Worked ›". */
 export function WorkedRow() {
+  useInterfaceLanguage();
   return (
     <button type="button" aria-expanded={false} className="group flex w-full items-center gap-2 px-1 text-muted-foreground transition-colors hover:text-foreground py-0.5 text-xs min-w-0">
       <Check className="h-3.5 w-3.5 shrink-0" />
-      <span>Worked</span>
+      <span>{interfaceText("m_e7f93aad5026ee")}</span>
       <ChevronRight className="h-3 w-3 shrink-0 transition-transform" aria-hidden />
     </button>
   );
@@ -91,20 +94,17 @@ export function WorkedRow() {
 
 /** TaskChatComposerDock.tsx:14-25 + TaskChatComposer.tsx:1184-1189, 1292-1296, 1371-1545. Not sticky here: the frame does not scroll. */
 export function ComposerShell() {
+  useInterfaceLanguage();
   return (
     <div className="mx-auto mt-6 flex w-full max-w-(--tc-shell-max-w) flex-col gap-2 px-1 pb-1 md:px-0 md:pb-0">
       <div className="paperclip-task-chat-composer rounded-(--radius-task-composer) border border-border bg-card p-(--sz-18px) shadow-(--shadow-task-composer) dark:border-0 dark:bg-muted dark:shadow-none">
-        <div className="min-h-(--sz-48px) px-1 py-1 text-sm text-muted-foreground">
-          Message {DESIGNER} — describe what you want done…
-        </div>
+        <div className="min-h-(--sz-48px) px-1 py-1 text-sm text-muted-foreground">{interfaceText("m_4a40c796120d23")}{DESIGNER}{interfaceText("m_8ffc07d8b8ddbf")}</div>
         <div className="mt-2 flex items-center gap-x-2 gap-y-3 flex-wrap">
           <span className="flex size-8 items-center justify-center rounded-md text-muted-foreground">
             <Plus className="size-4" />
           </span>
           <div className="ml-auto flex items-center gap-2">
-            <span className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs text-muted-foreground">
-              Uses defaults
-              <ChevronDown className="h-3 w-3" />
+            <span className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs text-muted-foreground">{interfaceText("m_d7282036533055")}<ChevronDown className="h-3 w-3" />
             </span>
             <span className="flex size-8 items-center justify-center rounded-full bg-foreground text-background">
               <ArrowUp className="h-4 w-4" />

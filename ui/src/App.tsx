@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCoordinatorWorkspaceEnabled } from "./hooks/useCoordinatorWorkspaceEnabled";
 import { AgentChats } from "./pages/AgentChats";
 import { lazy, Suspense, useEffect, type ReactNode } from "react";
@@ -569,6 +570,7 @@ function legacyToolsRedirectTarget(tab?: string) {
 }
 
 export function OnboardingRoutePage() {
+  useInterfaceLanguage();
   const { companies } = useCompany();
   const { openOnboarding } = useDialogActions();
   const { t } = useTranslation();
@@ -589,15 +591,15 @@ export function OnboardingRoutePage() {
   }
 
   const title = matchedCompany
-    ? `Add another agent to ${matchedCompany.name}`
+    ? interfaceText("m_9b6b8265e7e15a", { value0: (matchedCompany.name) })
     : companies.length > 0
-      ? "Create another organization"
-      : "Create your first organization";
+      ? interfaceText("m_0defc5bc726eb4")
+      : interfaceText("m_b85c051e18f9b9");
   const description = matchedCompany
-    ? "Run onboarding again to add an agent and a starter task for this organization."
+    ? interfaceText("m_8b91695087b3b2")
     : companies.length > 0
-      ? "Run onboarding again to create another organization and seed its first agent."
-      : "Get started by creating an organization and your first agent.";
+      ? interfaceText("m_1a96e8db14a179")
+      : interfaceText("m_e4bcc59f479353");
 
   return (
     <div className="mx-auto max-w-xl py-10">
@@ -635,7 +637,7 @@ export function OnboardingRoutePage() {
                     : openOnboarding()
               }
             >
-              {matchedCompany ? "Add Agent" : "Start Onboarding"}
+              {matchedCompany ? interfaceText("m_9d4bc87eb4eae8") : interfaceText("m_2ffae665b3ad7b")}
             </Button>
           )}
         </div>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import {
   forwardRef,
   useImperativeHandle,
@@ -113,7 +114,7 @@ export const ChatComposer = forwardRef<ChatComposerHandle, ChatComposerProps>(fu
     value,
     onChange,
     onSubmit,
-    placeholder = "Message…",
+    placeholder = interfaceText("m_fc71507e47999a"),
     disabled = false,
     submitting = false,
     submitKey = "mod-enter",
@@ -135,6 +136,7 @@ export const ChatComposer = forwardRef<ChatComposerHandle, ChatComposerProps>(fu
   },
   forwardedRef,
 ) {
+  useInterfaceLanguage();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragDepthRef = useRef(0);
@@ -253,9 +255,7 @@ export const ChatComposer = forwardRef<ChatComposerHandle, ChatComposerProps>(fu
           className="pointer-events-none absolute inset-1.5 z-20 flex items-center justify-center rounded-lg border border-dashed border-muted-foreground/50 bg-background/80 text-xs text-muted-foreground backdrop-blur-(--blur-1px)"
         >
           <span className="inline-flex items-center gap-2">
-            <Paperclip className="h-3.5 w-3.5" />
-            Drop to attach
-          </span>
+            <Paperclip className="h-3.5 w-3.5" />{interfaceText("m_34a7a637100fb1")}</span>
         </div>
       ) : null}
 
@@ -288,12 +288,12 @@ export const ChatComposer = forwardRef<ChatComposerHandle, ChatComposerProps>(fu
             const sizeLabel = formatAttachmentSize(attachment.size);
             const statusLabel =
               attachment.status === "uploading"
-                ? "Uploading…"
+                ? interfaceText("m_5ce44dd77dae78")
                 : attachment.status === "error"
-                  ? attachment.error ?? "Upload failed"
+                  ? attachment.error ?? interfaceText("m_6efc5d27f30b20")
                   : attachment.inline
-                    ? "Inserted inline"
-                    : "Attached";
+                    ? interfaceText("m_096fb2cc191e29")
+                    : interfaceText("m_ac6d9b76a14136");
             return (
               <div
                 key={attachment.id}
@@ -342,8 +342,8 @@ export const ChatComposer = forwardRef<ChatComposerHandle, ChatComposerProps>(fu
               type="button"
               onClick={triggerFilePicker}
               disabled={disabled || attaching}
-              aria-label="Attach files"
-              title="Attach files"
+              aria-label={interfaceText("m_e697cc1e45afa5")}
+              title={interfaceText("m_e697cc1e45afa5")}
               className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               {attaching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId, useState, type ReactNode } from "react";
 import {
   Check,
@@ -67,6 +68,7 @@ function sourceHostname(href: string): string {
 }
 
 function ResearchDetails({ item }: { item: TaskChatProviderActivityItem }) {
+  useInterfaceLanguage();
   const [showAllResults, setShowAllResults] = useState(false);
   const query = item.details.find((detail) => detail.label.toLowerCase() === "query");
   const additionalDetails = item.details.filter((detail) => !["action", "query", "status"].includes(detail.label.toLowerCase()));
@@ -77,16 +79,16 @@ function ResearchDetails({ item }: { item: TaskChatProviderActivityItem }) {
     <div className="flex min-w-0 flex-col gap-2.5">
       {query ? (
         <div className="min-w-0 rounded-sm bg-muted/40 px-2.5 py-2" data-testid="task-chat-research-query">
-          <p className="text-(length:--text-nano) font-medium uppercase tracking-wide text-muted-foreground">Query</p>
+          <p className="text-(length:--text-nano) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_b80a37564fbb3c")}</p>
           <p className="mt-0.5 min-w-0 break-words font-mono text-(length:--text-micro) text-foreground">{query.value}</p>
         </div>
       ) : null}
       {item.links.length > 0 ? (
         <div className="min-w-0">
           <p className="mb-1 text-(length:--text-nano) font-medium uppercase tracking-wide text-muted-foreground">
-            {item.links.length} {item.links.length === 1 ? "result" : "results"}
+            {item.links.length} {item.links.length === 1 ? interfaceText("m_f6a214f7a5fcda") : interfaceText("m_c099142bc3186d")}
           </p>
-          <ol className="divide-y divide-border/60" aria-label="Research sources">
+          <ol className="divide-y divide-border/60" aria-label={interfaceText("m_6891cd2295ca83")}>
             {visibleLinks.map((link, index) => (
               <li className="min-w-0 py-1.5 first:pt-0 last:pb-0" key={`${link.href}:${index}`}>
                 <a className="flex min-w-0 items-center gap-1 font-medium text-foreground hover:underline" href={link.href} target="_blank" rel="noreferrer">
@@ -105,34 +107,32 @@ function ResearchDetails({ item }: { item: TaskChatProviderActivityItem }) {
               type="button"
               className="mt-1.5 text-muted-foreground hover:text-foreground"
               onClick={() => setShowAllResults(true)}
-            >
-              Show {hiddenResultCount} more {hiddenResultCount === 1 ? "result" : "results"}
+            >{interfaceText("m_dd0fcd29c826be")}{hiddenResultCount}{interfaceText("m_ca1231ab640ad2")}{hiddenResultCount === 1 ? interfaceText("m_f6a214f7a5fcda") : interfaceText("m_c099142bc3186d")}
             </button>
           ) : showAllResults && item.links.length > COMPACT_RESEARCH_RESULT_LIMIT ? (
             <button
               type="button"
               className="mt-1.5 text-muted-foreground hover:text-foreground"
               onClick={() => setShowAllResults(false)}
-            >
-              Show fewer results
-            </button>
+            >{interfaceText("m_b27c7ae586f1c9")}</button>
           ) : null}
         </div>
       ) : null}
       <DetailList details={additionalDetails} />
       {item.output || item.outputTruncated ? (
-        <p className="text-muted-foreground">Additional provider output is available in Runner Inspector.</p>
+        <p className="text-muted-foreground">{interfaceText("m_d70af4779b65d0")}</p>
       ) : null}
     </div>
   );
 }
 
 function ProviderDetails({ item, neutral = false }: { item: TaskChatProviderActivityItem; neutral?: boolean }) {
+  useInterfaceLanguage();
   if (item.family === "research") return <ResearchDetails item={item} />;
   return (
     <div className="flex min-w-0 flex-col gap-2">
       {item.steps.length > 0 ? (
-        <ol className="flex flex-col gap-1" aria-label="Plan steps">
+        <ol className="flex flex-col gap-1" aria-label={interfaceText("m_3fa02f98189b83")}>
           {item.steps.map((step) => (
             <li className="flex min-w-0 items-start gap-2" key={step.id}>
               <span className="mt-0.5 shrink-0">{stepStatusIcon(step.status, neutral)}</span>
@@ -142,7 +142,7 @@ function ProviderDetails({ item, neutral = false }: { item: TaskChatProviderActi
         </ol>
       ) : null}
       {item.links.length > 0 ? (
-        <ul className="flex flex-col gap-1.5" aria-label="Research sources">
+        <ul className="flex flex-col gap-1.5" aria-label={interfaceText("m_6891cd2295ca83")}>
           {item.links.map((link) => (
             <li key={link.href}>
               <a className="inline-flex min-w-0 items-center gap-1 font-medium text-primary hover:underline" href={link.href} target="_blank" rel="noreferrer">
@@ -155,7 +155,7 @@ function ProviderDetails({ item, neutral = false }: { item: TaskChatProviderActi
         </ul>
       ) : null}
       {item.children.length > 0 ? (
-        <ul className="flex flex-col gap-1.5" aria-label="Delegated agents">
+        <ul className="flex flex-col gap-1.5" aria-label={interfaceText("m_a3a4ad04fa0db2")}>
           {item.children.map((child) => (
             <li className="flex min-w-0 flex-col gap-0.5" key={child.id}>
               <span className="flex min-w-0 items-center gap-2">
@@ -174,18 +174,19 @@ function ProviderDetails({ item, neutral = false }: { item: TaskChatProviderActi
       {item.output ? (
         <pre className="max-h-(--sz-64) overflow-auto whitespace-pre-wrap rounded-sm bg-muted/50 p-2 font-mono text-(length:--text-micro) text-foreground">{item.output}</pre>
       ) : null}
-      {item.outputTruncated ? <p className="text-muted-foreground">Output truncated to 8 KiB.</p> : null}
+      {item.outputTruncated ? <p className="text-muted-foreground">{interfaceText("m_71045c3c3bab4c")}</p> : null}
     </div>
   );
 }
 
 function WorkspaceChangeDetails({ item }: { item: TaskChatWorkspaceChangeItem }) {
-  if (item.files.length === 0) return <p className="text-muted-foreground">No changed-file details were reported.</p>;
+  useInterfaceLanguage();
+  if (item.files.length === 0) return <p className="text-muted-foreground">{interfaceText("m_ab8948ff38f05f")}</p>;
   const visibleFiles = item.files.slice(0, COMPACT_WORKSPACE_FILE_LIMIT);
   const hiddenFileCount = item.files.length - visibleFiles.length;
   return (
     <div className="min-w-0" data-testid="task-chat-workspace-change-details">
-      <ul className="flex min-w-0 flex-col divide-y divide-border/60" aria-label="Changed files">
+      <ul className="flex min-w-0 flex-col divide-y divide-border/60" aria-label={interfaceText("m_5d4041aa7af3b4")}>
         {visibleFiles.map((file) => (
           <li className="flex min-w-0 items-center gap-2 py-1.5 first:pt-0 last:pb-0" key={`${file.operation}:${file.path}`}>
             <span className="min-w-0 flex-1 truncate font-mono text-foreground" title={file.previousPath ? `${file.previousPath} → ${file.path}` : file.path}>
@@ -200,12 +201,13 @@ function WorkspaceChangeDetails({ item }: { item: TaskChatWorkspaceChangeItem })
           </li>
         ))}
       </ul>
-      {hiddenFileCount > 0 ? <p className="mt-1.5 text-muted-foreground">{hiddenFileCount} more {hiddenFileCount === 1 ? "file" : "files"} not shown</p> : null}
+      {hiddenFileCount > 0 ? <p className="mt-1.5 text-muted-foreground">{hiddenFileCount}{interfaceText("m_ca1231ab640ad2")}{hiddenFileCount === 1 ? interfaceText("m_3b9c358f36f0a3") : interfaceText("m_3d7db37d08f914")}{interfaceText("m_53d389152e437c")}</p> : null}
     </div>
   );
 }
 
 function WorkspaceFileDetails({ item }: { item: TaskChatWorkspaceFileItem }) {
+  useInterfaceLanguage();
   const workspaceFileRef = {
     path: item.path,
     resourceKind: "file" as const,
@@ -222,8 +224,8 @@ function WorkspaceFileDetails({ item }: { item: TaskChatWorkspaceFileItem }) {
         ) : (
           <pre className="max-h-(--sz-64) overflow-auto whitespace-pre-wrap rounded-sm bg-muted/50 p-2 font-mono text-(length:--text-micro) text-foreground">{item.preview}</pre>
         )
-      ) : <p className="text-muted-foreground">Preview unavailable.</p>}
-      {item.previewTruncated ? <p className="text-muted-foreground">Preview truncated by the runner.</p> : null}
+      ) : <p className="text-muted-foreground">{interfaceText("m_769469b525dc99")}</p>}
+      {item.previewTruncated ? <p className="text-muted-foreground">{interfaceText("m_c8a44a1ed087a8")}</p> : null}
     </div>
   );
 }
@@ -277,6 +279,7 @@ function itemStatus(item: TaskChatProtocolItem): "running" | "completed" | "fail
 }
 
 export function TaskChatProtocolActivityRow({ item }: { item: TaskChatProtocolItem }) {
+  useInterfaceLanguage();
   const shimmer = useTaskChatShimmer(item.id);
   const [open, setOpen] = useState(false);
   const detailId = `task-chat-protocol-activity-${useId().replaceAll(":", "")}`;
@@ -292,12 +295,12 @@ export function TaskChatProtocolActivityRow({ item }: { item: TaskChatProtocolIt
       <div className="flex min-w-0 flex-col gap-1.5 py-1 text-xs" data-testid="task-chat-protocol-activity-row" data-activity-family="provider_notice">
         <div className="flex items-center gap-2 text-muted-foreground">
           <NoticeIcon className="size-(--sz-protocol-notice-icon) shrink-0" aria-hidden data-testid="task-chat-protocol-activity-icon" />
-          <span className="font-medium">{severity === "error" ? "Error" : severity === "info" ? "Provider update" : "Warning"}</span>
+          <span className="font-medium">{severity === "error" ? interfaceText("m_54a0e8c17ebb21") : severity === "info" ? interfaceText("m_9c32c14815e4c4") : interfaceText("m_e981ddae45d8f4")}</span>
         </div>
         <p className="min-w-0 whitespace-pre-wrap break-words text-foreground">{summary}</p>
         {item.details.some(detail => detail.label !== "Summary") ? (
           <details className="text-muted-foreground">
-            <summary className="cursor-pointer">Details</summary>
+            <summary className="cursor-pointer">{interfaceText("m_45989de49fb7f6")}</summary>
             <DetailList details={item.details.filter(detail => detail.label !== "Summary")} />
           </details>
         ) : null}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useSearchParams } from "@/lib/router";
@@ -17,6 +18,7 @@ import { PaperclipLockup } from "../components/PaperclipLockup";
 type AuthMode = "sign_in" | "sign_up";
 
 export function AuthPage() {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -92,7 +94,7 @@ export function AuthPage() {
 
   // A health/session failure must not be mistaken for a self-hosted instance.
   if (healthQuery.error || sessionError) {
-    return <p role="alert" className="p-6 text-sm text-destructive">Unable to check sign-in. Refresh and try again.</p>;
+    return <p role="alert" className="p-6 text-sm text-destructive">{interfaceText("m_152f7dacfc7f96")}</p>;
   }
 
   if (healthQuery.data?.cloud) {
@@ -112,12 +114,12 @@ export function AuthPage() {
           </div>
 
           <h1 className="text-xl font-semibold">
-            {mode === "sign_in" ? "Sign in to Paperclip" : "Create your Paperclip account"}
+            {mode === "sign_in" ? interfaceText("m_315a9e5cee356a") : interfaceText("m_f6c4b1d05291d4")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {mode === "sign_in"
-              ? "Use your email and password to access this instance."
-              : "Create an account for this instance. Email confirmation is not required in v1."}
+              ? interfaceText("m_7665f3a50e4d2e")
+              : interfaceText("m_fa7492f54fc52d")}
           </p>
 
           <form
@@ -136,7 +138,7 @@ export function AuthPage() {
           >
             {mode === "sign_up" && (
               <div>
-                <label htmlFor="name" className="text-xs text-muted-foreground mb-1 block">Name</label>
+                <label htmlFor="name" className="text-xs text-muted-foreground mb-1 block">{interfaceText("m_dcd1d5223f73b3")}</label>
                 <input
                   id="name"
                   name="name"
@@ -170,7 +172,7 @@ export function AuthPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="text-xs text-muted-foreground mb-1 block">Password</label>
+              <label htmlFor="password" className="text-xs text-muted-foreground mb-1 block">{interfaceText("m_e7cf3ef4f17c39")}</label>
               <input
                 id="password"
                 name="password"
@@ -197,15 +199,15 @@ export function AuthPage() {
               className={`w-full ${!canSubmit && !mutation.isPending ? "opacity-50" : ""}`}
             >
               {mutation.isPending
-                ? "Working…"
+                ? interfaceText("m_5474eef8d0f179")
                 : mode === "sign_in"
-                  ? "Sign In"
-                  : "Create Account"}
+                  ? interfaceText("m_bcc0bcc9140b0c")
+                  : interfaceText("m_0dffe234b44793")}
             </Button>
           </form>
 
           <div className="mt-5 text-sm text-muted-foreground">
-            {mode === "sign_in" ? "Need an account?" : "Already have an account?"}{" "}
+            {mode === "sign_in" ? interfaceText("m_d24daaf3d934a5") : interfaceText("m_e77fea936d3e01")}{" "}
             <button
               type="button"
               className="font-medium text-foreground underline underline-offset-2"
@@ -214,7 +216,7 @@ export function AuthPage() {
                 setMode(mode === "sign_in" ? "sign_up" : "sign_in");
               }}
             >
-              {mode === "sign_in" ? "Create one" : "Sign in"}
+              {mode === "sign_in" ? interfaceText("m_b6ab95ea074921") : interfaceText("m_bfd402b2f6f381")}
             </button>
           </div>
         </div>

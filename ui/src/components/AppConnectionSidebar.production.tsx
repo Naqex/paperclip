@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ChevronLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { humanizeConnectionDisplayName } from "@paperclipai/shared";
@@ -27,6 +28,7 @@ type AppDetailSidebarProps =
   | { kind: "application"; applicationId: string };
 
 export function AppDetailSidebar(props: AppDetailSidebarProps) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { isMobile, setSidebarOpen } = useSidebar();
 
@@ -90,7 +92,7 @@ export function AppDetailSidebar(props: AppDetailSidebarProps) {
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
         >
           <ChevronLeft className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">All apps</span>
+          <span className="truncate">{interfaceText("m_01bed311e7d0c9")}</span>
         </Link>
         <div className="flex min-w-0 items-center gap-2 px-2 py-1">
           <AppLogo name={appName} logoUrl={appDefinitionLogoUrl(logoEntry)} size={28} />

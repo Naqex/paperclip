@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { IssueRecoveryAction, IssueScheduledRetry } from "@paperclipai/shared";
 import { formatMonitorOffset } from "./issue-monitor";
 
@@ -206,7 +207,7 @@ export function readRecoveryRetryLineage(
 /** "Attempt 2 of 5", or null when the server did not record a bounded budget. */
 export function formatRecoveryAttemptLabel(lineage: RecoveryRetryLineage): string | null {
   if (lineage.maxAttempts === null) return null;
-  return `Attempt ${Math.min(lineage.attempt, lineage.maxAttempts)} of ${lineage.maxAttempts}`;
+  return interfaceText("m_dff56f81ee5781", { value0: (Math.min(lineage.attempt, lineage.maxAttempts)), value1: (lineage.maxAttempts) });
 }
 
 /** "in 3m" / "now" / "3m ago" for the stored next attempt, or null when none is stored. */

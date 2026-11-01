@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { countLabel } from "./gallery-model";
 import type { PanelSection } from "./panel-order";
 import { StateFlag } from "./StateFlag";
@@ -14,13 +15,14 @@ import { StateFlag } from "./StateFlag";
 const SHADOW = { filter: "var(--tac-divider-shadow)" } as const;
 
 export function PanelDivider({ section }: { section: PanelSection }) {
+  useInterfaceLanguage();
   return (
     <header className="flex flex-col gap-1.5">
       <div className="relative flex items-end justify-between gap-3 pb-(--tac-divider-bar)">
         <span className="relative flex min-w-0 max-w-(--tac-divider-max)" style={SHADOW}>
           <h3
             className="flex h-(--tac-divider-h) min-w-0 items-center gap-2 rounded-tl-md bg-(--tac-folder) bg-(image:--tac-board-grain) pl-2.5 pr-0.5 text-xs font-medium text-(--tac-folder-ink)"
-            title={section.run ? `${section.label} · run started ${section.run.startedLabel}` : section.label}
+            title={section.run ? interfaceText("m_fbfbd240495b2b", { value0: (section.label), value1: (section.run.startedLabel) }) : section.label}
           >
             <span className="truncate">{section.label}</span>
             <span className="font-mono text-(length:--text-micro) font-normal text-(--tac-folder-meta)">
@@ -39,8 +41,7 @@ export function PanelDivider({ section }: { section: PanelSection }) {
         <span aria-hidden className="absolute inset-x-0 bottom-0 block h-(--tac-divider-bar) rounded-r-full bg-(--tac-folder)" />
       </div>
       {section.run ? (
-        <p className="pl-0.5 text-(length:--text-micro) leading-4 text-(--tac-meta)">
-          Run started{" "}
+        <p className="pl-0.5 text-(length:--text-micro) leading-4 text-(--tac-meta)">{interfaceText("m_0bb43be2d4b5a1")}{" "}
           <time dateTime={section.run.startedAt} className="font-mono">
             {section.run.startedLabel}
           </time>

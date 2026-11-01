@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import type { LabArtifact, LabGroup } from "../../kit";
 import { Front } from "./Front";
@@ -61,9 +62,10 @@ function Tile({ label, children, caption }: { label: string; children: ReactNode
 
 /** A task with several artifacts: its newest one on top of a stack, the task's title underneath. Every stack stands on the frame's bottom edge so their tops align. */
 export function StackTile({ group }: { group: LabGroup }) {
+  useInterfaceLanguage();
   const front = group.artifacts[0];
   return (
-    <Tile label={`Open ${group.taskIdentifier} ${group.title}, ${countLabel(group.count)}`} caption={<Caption title={group.title} identifier={group.taskIdentifier} facts={[countLabel(group.count), `Updated ${updatedLabel(front.updatedAt)}`]} />}>
+    <Tile label={interfaceText("m_cbc58527357a77", { value0: (group.taskIdentifier), value1: (group.title), value2: (countLabel(group.count)) })} caption={<Caption title={group.title} identifier={group.taskIdentifier} facts={[countLabel(group.count), `Updated ${updatedLabel(front.updatedAt)}`]} />}>
       <StackComposition front={front} />
     </Tile>
   );
@@ -71,9 +73,10 @@ export function StackTile({ group }: { group: LabGroup }) {
 
 /** One artifact on its own: its file name underneath. */
 export function SingleTile({ artifact }: { artifact: LabArtifact }) {
+  useInterfaceLanguage();
   const name = artifact.filename ?? artifact.title;
   return (
-    <Tile label={`Open ${name}`} caption={<Caption title={name} identifier={artifact.taskIdentifier} facts={[`Updated ${updatedLabel(artifact.updatedAt)}`]} />}>
+    <Tile label={interfaceText("m_b50808ac499900", { value0: (name) })} caption={<Caption title={name} identifier={artifact.taskIdentifier} facts={[`Updated ${updatedLabel(artifact.updatedAt)}`]} />}>
       <Front artifact={artifact} />
     </Tile>
   );

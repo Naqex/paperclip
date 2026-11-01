@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { HeartbeatRun } from "@paperclipai/shared";
@@ -62,6 +63,7 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
 }
 
 function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
+  useInterfaceLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
@@ -126,8 +128,8 @@ function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
     },
     onError: (err) => {
       pushToast({
-        title: "Reconcile failed",
-        body: err instanceof Error ? err.message : "Unable to reconcile the workspace branch.",
+        title: interfaceText("m_45e781836d8737"),
+        body: err instanceof Error ? err.message : interfaceText("m_f5dd81121d3443"),
         tone: "error",
       });
     },
@@ -136,7 +138,7 @@ function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
   const reissue = useMutation({
     mutationFn: async (request: RecoveryReissueRequest) => {
       if (!issue) throw new Error("Task is not loaded yet.");
-      const sourceLabel = issue.identifier ?? "the stalled task";
+      const sourceLabel = issue.identifier ?? interfaceText("m_701f1d79cdc054");
       const descriptionLines = [
         `Re-issued from ${sourceLabel} on an isolated git worktree after a workspace branch divergence.`,
         "",
@@ -168,10 +170,10 @@ function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
     onSuccess: (created) => {
       invalidate();
       pushToast({
-        title: "Isolated re-issue created",
+        title: interfaceText("m_6d11286299c745"),
         body: created.identifier
-          ? `${created.identifier} will run on a fresh isolated workspace.`
-          : "A fresh isolated re-issue was created.",
+          ? interfaceText("m_d95a0eb1160cad", { value0: (created.identifier) })
+          : interfaceText("m_f8e1a20e81a862"),
         tone: "success",
       });
       if (created.identifier) {
@@ -180,8 +182,8 @@ function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
     },
     onError: (err) => {
       pushToast({
-        title: "Re-issue failed",
-        body: err instanceof Error ? err.message : "Unable to create an isolated re-issue.",
+        title: interfaceText("m_d2f4dc96997e51"),
+        body: err instanceof Error ? err.message : interfaceText("m_36df82b6e5ee2e"),
         tone: "error",
       });
     },
@@ -204,8 +206,8 @@ function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
     },
     onError: (err) => {
       pushToast({
-        title: "Recovery resolution failed",
-        body: err instanceof Error ? err.message : "Unable to resolve recovery action",
+        title: interfaceText("m_f9244c725b820b"),
+        body: err instanceof Error ? err.message : interfaceText("m_98c80218bddf2c"),
         tone: "error",
       });
     },
@@ -265,7 +267,7 @@ function WorkspaceValidationRecoverySurface({ run }: { run: HeartbeatRun }) {
   return (
     <div className="space-y-2" data-testid="run-workspace-recovery-surface">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">Workspace recovery</span>
+        <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_9869a22291109c")}</span>
         {issue?.identifier ? (
           <a
             href={`/issues/${issue.identifier}`}

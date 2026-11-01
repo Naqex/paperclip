@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { Clock, Pencil, ShieldCheck } from "lucide-react";
 import type { ToolRiskLevel } from "@paperclipai/shared";
@@ -133,10 +134,10 @@ function initials(name: string): string {
 function bindingRows(binding: ActionCardBinding, isStale: boolean): BindingRow[] {
   const catalogValue = isStale && binding.previousCatalogSha256 ? (
     <span className="inline-flex flex-wrap items-center gap-1.5">
-      <span className="text-muted-foreground line-through decoration-amber-500" title="Previous catalog hash">
+      <span className="text-muted-foreground line-through decoration-amber-500" title={interfaceText("m_ba0cd6985bc2d9")}>
         {shortSha(binding.previousCatalogSha256)}
       </span>
-      <span className="text-amber-600 dark:text-amber-400" title="Current catalog hash">
+      <span className="text-amber-600 dark:text-amber-400" title={interfaceText("m_540922c9135cff")}>
         {shortSha(binding.catalogSha256)}
       </span>
     </span>
@@ -146,7 +147,7 @@ function bindingRows(binding: ActionCardBinding, isStale: boolean): BindingRow[]
 
   return [
     {
-      label: "Application",
+      label: interfaceText("m_e7ad522ea327e5"),
       value: (
         <span>
           {binding.application}
@@ -154,15 +155,15 @@ function bindingRows(binding: ActionCardBinding, isStale: boolean): BindingRow[]
         </span>
       ),
     },
-    { label: "Connection", value: binding.connection, mono: true },
-    { label: "Catalog", value: catalogValue, mono: !isStale },
+    { label: interfaceText("m_639a40e82b9a96"), value: binding.connection, mono: true },
+    { label: interfaceText("m_3877d14889a990"), value: catalogValue, mono: !isStale },
     {
       label: "Payload",
       value: (
         <span className="inline-flex items-center gap-1.5">
           <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <span>{shortSha(binding.payloadSha256)}</span>
-          <span className="font-sans text-(length:--text-micro) uppercase tracking-normal text-muted-foreground">signed</span>
+          <span className="font-sans text-(length:--text-micro) uppercase tracking-normal text-muted-foreground">{interfaceText("m_4a3cdfae6f291c")}</span>
         </span>
       ),
       mono: true,
@@ -190,6 +191,7 @@ export function ActionCard({
   onEditResign,
   className,
 }: ActionCardProps) {
+  useInterfaceLanguage();
   const isStale = variant === "stale";
   const json = typeof input === "string" ? input : JSON.stringify(input, null, 2);
 
@@ -201,21 +203,15 @@ export function ActionCard({
       onClick={onApprove}
       disabled={isStale}
       className={mobile ? "w-full" : undefined}
-      title={isStale ? "Re-issue the request before approving — the catalog hash changed." : undefined}
-    >
-      Approve
-    </Button>
+      title={isStale ? interfaceText("m_09773d0a1d1176") : undefined}
+    >{interfaceText("m_6007acbe30b2cd")}</Button>
   );
   const denyButton = (
-    <Button size="sm" variant="outline" onClick={onDeny} className={mobile ? "w-full" : undefined}>
-      Deny
-    </Button>
+    <Button size="sm" variant="outline" onClick={onDeny} className={mobile ? "w-full" : undefined}>{interfaceText("m_05a2d7332eb9d8")}</Button>
   );
   const editButton = (
     <Button size="sm" variant="outline" onClick={onEditResign} className={mobile ? "w-full" : undefined}>
-      <Pencil className="mr-1 h-3.5 w-3.5" />
-      Edit &amp; re-sign
-    </Button>
+      <Pencil className="mr-1 h-3.5 w-3.5" />{interfaceText("m_6da7aeb419e888")}</Button>
   );
 
   return (
@@ -236,8 +232,7 @@ export function ActionCard({
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="text-sm text-foreground">
-              <span className="font-medium">{agentName}</span> requested approval to call
-            </p>
+              <span className="font-medium">{agentName}</span>{interfaceText("m_238d91c256b172")}</p>
             <p className="mt-0.5 font-mono text-xs text-muted-foreground break-all">{toolName}</p>
           </div>
           <div className="shrink-0">
@@ -256,7 +251,7 @@ export function ActionCard({
         {isStale ? (
           <EnforcementBanner
             tone="warning"
-            title="Catalog changed since this request was signed."
+            title={interfaceText("m_5c01858afd3bbf")}
             body="The application's tool catalog hash no longer matches the one this approval was issued against. Approval is disabled — the agent must edit & re-sign to request again."
           />
         ) : null}
@@ -266,7 +261,7 @@ export function ActionCard({
 
         {/* JSON input */}
         <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-normal text-muted-foreground">Input</p>
+          <p className="text-xs font-medium uppercase tracking-normal text-muted-foreground">{interfaceText("m_36ecb4f8669133")}</p>
           <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-3 font-mono text-xs leading-relaxed text-foreground">
             {json}
           </pre>
@@ -274,14 +269,13 @@ export function ActionCard({
 
         {/* Why I'm asking */}
         <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-normal text-muted-foreground">Why I&apos;m asking</p>
+          <p className="text-xs font-medium uppercase tracking-normal text-muted-foreground">{interfaceText("m_9484d188507e2c")}</p>
           <p className="text-sm text-muted-foreground">
             {reason}
             {policyNumber != null ? (
               <>
                 {" "}
-                <span className="font-medium text-foreground">Policy #{policyNumber}</span> requires approval here.
-              </>
+                <span className="font-medium text-foreground">{interfaceText("m_feca2a17118cbc")}{policyNumber}</span>{interfaceText("m_867f6ddec2b181")}</>
             ) : null}
           </p>
         </div>
@@ -296,7 +290,7 @@ export function ActionCard({
       >
         <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Clock className="h-3.5 w-3.5 shrink-0" />
-          {expiresInLabel ?? "no expiry set"}
+          {expiresInLabel ?? interfaceText("m_fcbeaba82c15da")}
         </span>
         {mobile ? (
           <div className="flex flex-col gap-2">

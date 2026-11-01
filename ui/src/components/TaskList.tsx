@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Fragment, useId, useState, type ReactNode } from "react";
 import type { Issue } from "@paperclipai/shared";
 import { ChevronDown, ChevronRight, GitBranch } from "lucide-react";
@@ -50,6 +51,7 @@ export function TaskList({ items, allItems = items, initialColumns = defaultTask
   /** Company/person/view/filter identity; membership changes do not reset it. */
   collectionKey?: string;
 }) {
+  useInterfaceLanguage();
   const localKey = useId();
   const [columns, setColumns] = useState(initialColumns);
   const [columnOrder, setColumnOrder] = useState(allTaskListColumns);
@@ -123,26 +125,26 @@ export function TaskList({ items, allItems = items, initialColumns = defaultTask
   };
   const groups = new Map<string, Issue[]>();
   for (const root of roots) {
-    const label = groupBy === "status" ? issueFilterLabel(root.status) : groupBy === "project" ? root.project?.name ?? "No project" : "";
+    const label = groupBy === "status" ? issueFilterLabel(root.status) : groupBy === "project" ? root.project?.name ?? interfaceText("m_f34c2be0d1c5f5") : "";
     groups.set(label, [...(groups.get(label) ?? []), root]);
   }
   return (
     <TaskListViewport visibleColumns={columns} columnOrder={columnOrder} controls={<TaskListColumnSettings visibleColumns={columns} onVisibleColumnsChange={updateColumns} onColumnOrderChange={setColumnOrder} onResetDefaults={() => setSort(undefined)} />}>
       <TaskListColumnHeader sort={sort} onSortChange={setSort} onColumnOrderChange={setColumnOrder} />
       {items.length === 0 ? emptyState : (
-        <div aria-label={`${density} task list`}>
+        <div aria-label={interfaceText("m_fc6a18ef0475e6", { value0: (density) })}>
           {[...groups].map(([label, groupRoots]) => groupRoots.some(issue => renderedIds.has(issue.id)) ? (
             <Fragment key={label}>
               {label ? <IssueGroupHeader label={label} className="task-list-group-heading" trailing={<span className="text-xs text-muted-foreground">{groupRoots.length}</span>} /> : null}
-              {groupRoots.filter(issue => renderedIds.has(issue.id)).map(issue => <TaskRowGroup key={issue.id} role="rowgroup" aria-label={`${issue.title} task group`}
+              {groupRoots.filter(issue => renderedIds.has(issue.id)).map(issue => <TaskRowGroup key={issue.id} role="rowgroup" aria-label={interfaceText("m_8af2bf055f9569", { value0: (issue.title) })}
                 data-density={density} className={childMap.get(issue.id)?.length ? undefined : "task-row-deferred"}>{renderBranch(issue, 0)}</TaskRowGroup>)}
             </Fragment>
           ) : null)}
         </div>
       )}
       {hasMore ? <div ref={sentinel} className="flex items-center gap-3 py-2 text-sm text-muted-foreground">
-        <span>Rendering {Math.min(limit, rowIds.length)} of {rowIds.length} tasks</span>
-        <Button variant="outline" size="sm" onClick={loadMore}>Show more tasks</Button>
+        <span>{interfaceText("m_7426decc54fece")}{Math.min(limit, rowIds.length)}{interfaceText("m_a4282e4b2298b9")}{rowIds.length}{interfaceText("m_21f86011eefb0d")}</span>
+        <Button variant="outline" size="sm" onClick={loadMore}>{interfaceText("m_45219cf285e5b9")}</Button>
       </div> : null}
     </TaskListViewport>
   );

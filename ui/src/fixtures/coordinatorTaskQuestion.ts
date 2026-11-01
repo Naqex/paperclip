@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { AttentionItem } from "@paperclipai/shared";
 import { pendingAskUserQuestionsInteraction } from "./issueThreadInteractionFixtures";
 
@@ -7,8 +8,8 @@ export const coordinatorTaskQuestion = {
   summary: "The draft needs an audience before its examples and success criteria can be chosen.",
   payload: { version: 1 as const, title: "Who should the launch post help?", submitLabel: "Confirm audience", questions: [{
     id: "audience", prompt: "Who is the primary reader?", selectionMode: "single" as const, required: true,
-    options: [{ id: "operators", label: "People setting up agents", description: "Explain how to choose access for their team." },
-      { id: "teammates", label: "Teammates using agents", description: "Explain what they can do with the connected tools." }],
+    options: [{ id: "operators", get label() { return interfaceText("m_70f8dfb6caeb45"); }, description: "Explain how to choose access for their team." },
+      { id: "teammates", get label() { return interfaceText("m_0c3125b750d45c"); }, description: "Explain what they can do with the connected tools." }],
   }] },
 };
 

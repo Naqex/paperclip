@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { AlertTriangle, RotateCcw, TimerReset } from "lucide-react";
 import { healthApi, type DevServerHealthStatus } from "../api/health";
@@ -31,6 +32,7 @@ function describeReason(devServer: DevServerHealthStatus): string {
 }
 
 export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthStatus }) {
+  useInterfaceLanguage();
   const [restartPending, setRestartPending] = useState(false);
   useEffect(() => {
     if (!restartPending) return;
@@ -45,9 +47,7 @@ export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthSta
   const currentDevServer = devServer;
   const changedAt = formatRelativeTimestamp(devServer.lastChangedAt);
   const sample = devServer.changedPathsSample.slice(0, 3);
-  const activeRunLabel = `${devServer.activeRunCount} live run${
-    devServer.activeRunCount === 1 ? "" : "s"
-  }`;
+  const activeRunLabel = interfaceText("m_d1c4d5419bd8fb", { value0: (devServer.activeRunCount), value1: (devServer.activeRunCount === 1 ? "" : interfaceText("m_043a718774c572")) });
 
   async function requestRestartNow() {
     const warning =
@@ -71,28 +71,24 @@ export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthSta
         <div className="min-w-0">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-(--tracking-caps)">
             <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-            <span>Restart Required</span>
+            <span>{interfaceText("m_5e0716dcc27fa9")}</span>
             {devServer.autoRestartEnabled ? (
-              <Badge variant="ghost" className="bg-amber-900/10 text-(length:--text-nano) tracking-(--tracking-eyebrow) dark:bg-amber-100/10">
-                Auto-Restart On
-              </Badge>
+              <Badge variant="ghost" className="bg-amber-900/10 text-(length:--text-nano) tracking-(--tracking-eyebrow) dark:bg-amber-100/10">{interfaceText("m_0bf77a450a4627")}</Badge>
             ) : null}
           </div>
           <p className="mt-1 text-sm">
             {describeReason(devServer)}
-            {changedAt ? ` · updated ${changedAt}` : ""}
+            {changedAt ? interfaceText("m_21a78ce9a3c730", { value0: (changedAt) }) : ""}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-amber-900/80 dark:text-amber-100/75">
             {sample.length > 0 ? (
-              <span>
-                Changed: {sample.join(", ")}
-                {devServer.changedPathCount > sample.length ? ` +${devServer.changedPathCount - sample.length} more` : ""}
+              <span>{interfaceText("m_b9f02acce96b8d")}{sample.join(", ")}
+                {devServer.changedPathCount > sample.length ? interfaceText("m_5faabf12087fd1", { value0: (devServer.changedPathCount - sample.length) }) : ""}
               </span>
             ) : null}
             {devServer.pendingMigrations.length > 0 ? (
-              <span>
-                Pending migrations: {devServer.pendingMigrations.slice(0, 2).join(", ")}
-                {devServer.pendingMigrations.length > 2 ? ` +${devServer.pendingMigrations.length - 2} more` : ""}
+              <span>{interfaceText("m_671a76e9e5f5aa")}{devServer.pendingMigrations.slice(0, 2).join(", ")}
+                {devServer.pendingMigrations.length > 2 ? interfaceText("m_5faabf12087fd1", { value0: (devServer.pendingMigrations.length - 2) }) : ""}
               </span>
             ) : null}
           </div>
@@ -102,17 +98,17 @@ export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthSta
           {devServer.waitingForIdle ? (
             <div className="inline-flex items-center gap-2 rounded-full bg-amber-900/10 px-3 py-1.5 dark:bg-amber-100/10">
               <TimerReset className="h-3.5 w-3.5" />
-              <span>Waiting for {activeRunLabel} to finish</span>
+              <span>{interfaceText("m_a9263aa25f03d1")}{activeRunLabel}{interfaceText("m_6bb202dcdefb9d")}</span>
             </div>
           ) : devServer.autoRestartEnabled ? (
             <div className="inline-flex items-center gap-2 rounded-full bg-amber-900/10 px-3 py-1.5 dark:bg-amber-100/10">
               <RotateCcw className="h-3.5 w-3.5" />
-              <span>Auto-restart will trigger when the instance is idle</span>
+              <span>{interfaceText("m_f49f9acf61f92a")}</span>
             </div>
           ) : (
             <div className="inline-flex items-center gap-2 rounded-full bg-amber-900/10 px-3 py-1.5 dark:bg-amber-100/10">
               <RotateCcw className="h-3.5 w-3.5" />
-              <span>Restart <code>pnpm dev:once</code> after the active work is safe to interrupt</span>
+              <span>{interfaceText("m_bb449819b9e1ce")}<code>pnpm dev:once</code>{interfaceText("m_c47ed2dd66d88d")}</span>
             </div>
           )}
           <button
@@ -124,7 +120,7 @@ export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthSta
             disabled={restartPending}
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>{restartPending ? "Restart requested" : "Restart now"}</span>
+            <span>{restartPending ? interfaceText("m_8427d283aad931") : interfaceText("m_09af1002abafb2")}</span>
           </button>
         </div>
       </div>

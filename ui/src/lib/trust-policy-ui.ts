@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import {
   DEFAULT_TRUST_PRESET,
   LOW_TRUST_REVIEW_PRESET,
@@ -176,6 +177,6 @@ export function lowTrustBoundaryHasScope(boundary: LowTrustBoundary | null | und
 
 export function sourceTrustLabel(sourceTrust: SourceTrustMetadata | null | undefined) {
   if (!sourceTrust || sourceTrust.preset !== LOW_TRUST_REVIEW_PRESET) return null;
-  if (sourceTrust.disposition === "promoted") return "Promoted from low-trust";
-  return "Low-trust source";
+  if (sourceTrust.disposition === "promoted") return interfaceText("m_12077ee8a4b734");
+  return interfaceText("m_717ed76db04ee6");
 }

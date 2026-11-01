@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { EmailMessageCard } from "./EmailMessageCard";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -68,6 +69,7 @@ function EmailDelivery({
   publication: EmailPublicationSummary;
   onResolved: () => void;
 }) {
+  useInterfaceLanguage();
   const [messageId, setMessageId] = useState("");
   const resolve = useMutation({
     mutationFn: (outcome: "sent" | "failed") =>
@@ -78,11 +80,11 @@ function EmailDelivery({
     <div className="space-y-2 text-xs text-muted-foreground">
       {p.request && !p.providerMessageId && (
         <article
-          aria-label="Email send intent"
+          aria-label={interfaceText("m_5cd558440d103f")}
           className="task-context-notice space-y-3"
         >
-          <p className="font-semibold">{p.request.subject ?? "Email reply"}</p>
-          {p.request.to && <p>To: {p.request.to.join(", ")}</p>}
+          <p className="font-semibold">{p.request.subject ?? interfaceText("m_ef902e3860283b")}</p>
+          {p.request.to && <p>{interfaceText("m_e38ec11fedb3a1")}{p.request.to.join(", ")}</p>}
           <div className="whitespace-pre-wrap break-words text-sm text-foreground">
             {p.request.text}
           </div>
@@ -94,19 +96,14 @@ function EmailDelivery({
       </p>
       {p.outcome === "uncertain" && (
         <details>
-          <summary className="cursor-pointer">
-            Resolve delivery after checking AgentMail
-          </summary>
+          <summary className="cursor-pointer">{interfaceText("m_457318724b32f2")}</summary>
           <div className="space-y-2 py-2">
-            <p>
-              Confirm the outcome in AgentMail before resolving. This action
-              does not resend.
-            </p>
+            <p>{interfaceText("m_0e8704013507e0")}</p>
             <Input
-              aria-label="Provider message ID"
+              aria-label={interfaceText("m_c250cfdf994a70")}
               value={messageId}
               onChange={(e) => setMessageId(e.target.value)}
-              placeholder="Provider message ID"
+              placeholder={interfaceText("m_c250cfdf994a70")}
             />
             <div className="flex gap-2">
               <Button
@@ -114,17 +111,13 @@ function EmailDelivery({
                 variant="outline"
                 disabled={!messageId || resolve.isPending}
                 onClick={() => resolve.mutate("sent")}
-              >
-                Confirm sent
-              </Button>
+              >{interfaceText("m_a1913b58f2df8b")}</Button>
               <Button
                 size="sm"
                 variant="outline"
                 disabled={resolve.isPending}
                 onClick={() => resolve.mutate("failed")}
-              >
-                Confirm not sent
-              </Button>
+              >{interfaceText("m_e948b4c3c1a395")}</Button>
             </div>
             {resolve.error && (
               <p role="alert" className="text-destructive">

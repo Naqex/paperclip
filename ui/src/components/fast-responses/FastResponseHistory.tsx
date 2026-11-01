@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { fastResponsesApi } from "@/api/fast-responses";
 import { DecisionHistoryTable } from "@/components/decision-models/DecisionHistory";
@@ -12,6 +13,7 @@ export function FastResponseHistory({
   from?: string | null;
   to?: string | null;
 }) {
+  useInterfaceLanguage();
   const { enabled } = useFastResponsesEnabled();
   const query = useQuery({
     queryKey: ["fast-response-history", companyId, from, to],
@@ -28,17 +30,13 @@ export function FastResponseHistory({
   });
   if (query.isPending)
     return (
-      <p className="text-sm text-muted-foreground">Loading fast responses…</p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_f3e9969d6a60de")}</p>
     );
   if (query.error)
     return (
       <div role="alert">
-        <p className="text-sm text-destructive">
-          Could not load fast responses.
-        </p>
-        <Button variant="outline" onClick={() => void query.refetch()}>
-          Try again
-        </Button>
+        <p className="text-sm text-destructive">{interfaceText("m_dacc162cd8ac80")}</p>
+        <Button variant="outline" onClick={() => void query.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>
       </div>
     );
   return <DecisionHistoryTable entries={query.data ?? []} fastResponse fastResponsesEnabled={enabled} />;

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useStreamlinedTaskChatPresentation } from "./presentation-mode";
@@ -46,7 +47,7 @@ export function turnSummaryMetrics(
 /** "✓ Worked · 38s · 3 tools · +34 −3 · 12.3k tokens" (parts omitted when unknown). */
 export function turnSummaryText(summary: TaskChatTurnItem["summary"]): string {
   const metrics = turnSummaryMetrics(summary);
-  const label = summary.failed ? "Stopped" : "Worked";
+  const label = summary.failed ? interfaceText("m_1a4f630ac1b69f") : interfaceText("m_e7f93aad5026ee");
   return metrics ? `${label} · ${metrics}` : label;
 }
 
@@ -75,6 +76,7 @@ export function TaskChatTurn({
   timestampPrefix,
   leading,
 }: TaskChatTurnProps) {
+  useInterfaceLanguage();
   const streamlined = useStreamlinedTaskChatPresentation();
   const parentRow = !item.settled && item.liveStatus != null;
   // The new Paperclip Runner task surface owns one durable chronological
@@ -100,12 +102,12 @@ export function TaskChatTurn({
             />
           ) : null}
           {!item.historical ? <span className="min-w-0 truncate">
-            {item.continuedAfterSteering ? "Continued after steering · " : ""}
+            {item.continuedAfterSteering ? interfaceText("m_9d15c1341d5763") : ""}
             {item.summary.durationLabel
-              ? `${item.summary.failed ? "Stopped" : "Worked"} for ${item.summary.durationLabel}`
+              ? interfaceText("m_0edf3d52a1232e", { value0: (item.summary.failed ? "Stopped" : "Worked"), value1: (item.summary.durationLabel) })
               : item.summary.failed
-                ? "Stopped"
-                : "Worked"}
+                ? interfaceText("m_1a4f630ac1b69f")
+                : interfaceText("m_e7f93aad5026ee")}
           </span> : null}
         </div> : null}
         {item.items.length > 0 ? (
@@ -206,11 +208,11 @@ export function TaskChatTurn({
         <SummaryIcon className="h-3.5 w-3.5 shrink-0" />
       ) : null}
       <span>
-        {item.historical ? "Activity" : item.standaloneHeader && item.summary.durationLabel
-          ? `${item.summary.failed ? "Stopped" : "Worked"} for ${item.summary.durationLabel}`
+        {item.historical ? interfaceText("m_38da1505ca8373") : item.standaloneHeader && item.summary.durationLabel
+          ? interfaceText("m_0edf3d52a1232e", { value0: (item.summary.failed ? "Stopped" : "Worked"), value1: (item.summary.durationLabel) })
           : item.summary.failed
-            ? "Stopped"
-            : "Worked"}
+            ? interfaceText("m_1a4f630ac1b69f")
+            : interfaceText("m_e7f93aad5026ee")}
       </span>
       {!item.standaloneHeader && turnSummaryMetrics(item.summary) ? (
         // Time/tools/tokens is demoted, not deleted (PAP-502): it stays in the

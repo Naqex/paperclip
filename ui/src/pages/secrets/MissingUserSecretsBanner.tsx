@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle } from "lucide-react";
@@ -20,7 +21,7 @@ import { SetMyUserSecretDialog } from "./SetMyUserSecretDialog";
 export function MissingUserSecretsBanner({
   companyId,
   definitionKeys,
-  title = "Set your user secrets",
+  title = interfaceText("m_9f5349de86173e"),
   secretsPath,
   className,
 }: {
@@ -31,6 +32,7 @@ export function MissingUserSecretsBanner({
   secretsPath?: string;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const [dialogFor, setDialogFor] = useState<MyUserSecretEntry | null>(null);
 
   const mySecretsQuery = useQuery({
@@ -61,10 +63,7 @@ export function MissingUserSecretsBanner({
         <div className="min-w-0 flex-1">
           <p className="font-medium">{title}</p>
           <p className="mt-0.5 text-amber-700/90 dark:text-amber-300/90">
-            {missing.length} user secret{missing.length === 1 ? "" : "s"} you are responsible for
-            {missing.length === 1 ? " has" : " have"} no value yet. Runs that require
-            {missing.length === 1 ? " it" : " them"} will fail until you set your value.
-          </p>
+            {missing.length}{interfaceText("m_9a11171414c419")}{missing.length === 1 ? "" : interfaceText("m_043a718774c572")}{interfaceText("m_661eff004e32e6")}{missing.length === 1 ? interfaceText("m_e4417b8003a7b0") : interfaceText("m_3f0d5db6ad7c23")}{interfaceText("m_13337a5d9c38a5")}{missing.length === 1 ? interfaceText("m_1d45e2ad4d8596") : interfaceText("m_7333823a2d91c3")}{interfaceText("m_7fdad2e9578c9e")}</p>
           <ul className="mt-2 space-y-1.5">
             {missing.map((entry) => (
               <li
@@ -75,9 +74,7 @@ export function MissingUserSecretsBanner({
                   <span className="font-medium text-foreground">{entry.definition.name}</span>{" "}
                   <code className="text-(length:--text-micro) text-muted-foreground">{entry.definition.key}</code>
                 </span>
-                <Button size="sm" onClick={() => setDialogFor(entry)}>
-                  Set value
-                </Button>
+                <Button size="sm" onClick={() => setDialogFor(entry)}>{interfaceText("m_58bf3410b028e7")}</Button>
               </li>
             ))}
           </ul>
@@ -85,9 +82,7 @@ export function MissingUserSecretsBanner({
             <Link
               to={secretsPath}
               className="mt-2 inline-block text-(length:--text-micro) font-medium underline underline-offset-2"
-            >
-              Manage all my secrets
-            </Link>
+            >{interfaceText("m_632626ac59f190")}</Link>
           ) : null}
         </div>
       </div>

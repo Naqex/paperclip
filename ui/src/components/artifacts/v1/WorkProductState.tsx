@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { IssueWorkProduct } from "@paperclipai/shared";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +13,7 @@ export function workProductStateBadge(
   workProduct: Pick<IssueWorkProduct, "type" | "status" | "reviewState" | "healthStatus">,
   label?: string | null,
 ): ReactNode {
-  if (workProduct.healthStatus === "unhealthy") return <Badge variant="destructive">Unhealthy</Badge>;
+  if (workProduct.healthStatus === "unhealthy") return <Badge variant="destructive">{interfaceText("m_317b1fbc1e13be")}</Badge>;
   const text = label ?? stateChipFor(workProduct.type, workProduct.status, workProduct.reviewState)?.label;
   return text ? <span className="text-xs text-muted-foreground">{text}</span> : undefined;
 }

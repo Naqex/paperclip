@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +23,7 @@ export function SummarizerAgentSelect({
   onChange: (agentId: string) => void;
   enabled?: boolean;
 }) {
+  useInterfaceLanguage();
   const agentsQuery = useQuery({
     queryKey: companyId ? queryKeys.agents.list(companyId) : ["agents", "none"],
     queryFn: () => agentsApi.list(companyId!),
@@ -44,7 +46,7 @@ export function SummarizerAgentSelect({
   );
 
   const renderAgent = (option: InlineEntityOption | null) => {
-    if (!option || !option.id) return <span>Summarizer (default)</span>;
+    if (!option || !option.id) return <span>{interfaceText("m_8302e6afb406e7")}</span>;
     const agent = option.id.startsWith("agent:") ? agentById.get(option.id.slice("agent:".length)) : null;
     return (
       <>
@@ -58,10 +60,10 @@ export function SummarizerAgentSelect({
     <InlineEntitySelector
       value={value ? `agent:${value}` : ""}
       options={agentOptions}
-      placeholder="Summarizer (default)"
+      placeholder={interfaceText("m_8302e6afb406e7")}
       noneLabel="Summarizer (default)"
-      searchPlaceholder="Search agents..."
-      emptyMessage="No agents found."
+      searchPlaceholder={interfaceText("m_32f4468b0b6f94")}
+      emptyMessage={interfaceText("m_61666542b1caa1")}
       onChange={(next) => onChange(next.startsWith("agent:") ? next.slice("agent:".length) : "")}
       className="h-8 text-sm"
       renderTriggerValue={renderAgent}

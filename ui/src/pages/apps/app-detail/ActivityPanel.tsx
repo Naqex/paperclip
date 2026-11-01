@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import {
   humanizeConnectionDisplayName,
@@ -38,6 +39,7 @@ function RecentActivity({
   appName,
   userLabelById,
 }: ActivityPanelProps) {
+  useInterfaceLanguage();
   const nameById = useMemo(() => new Map(agents.map((a) => [a.id, a.name])), [agents]);
 
   const rows = useMemo<TimelineRow[]>(() => {
@@ -76,7 +78,7 @@ function RecentActivity({
   return (
     <section className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold text-foreground">Recent activity</h2>
+        <h2 className="text-lg font-semibold text-foreground">{interfaceText("m_6cb44b56336af7")}</h2>
       </div>
       {loading ? (
         <div className="space-y-2 py-4">
@@ -84,7 +86,7 @@ function RecentActivity({
           <Skeleton className="h-4 w-2/3" />
         </div>
       ) : rows.length === 0 ? (
-        <p className="py-5 text-sm text-muted-foreground">No activity yet.</p>
+        <p className="py-5 text-sm text-muted-foreground">{interfaceText("m_a288d2d0a21eed")}</p>
       ) : (
         <ul className="divide-y divide-border">
           {rows.map((row) => (
@@ -94,8 +96,7 @@ function RecentActivity({
                 <span className="block text-foreground">{row.primary}</span>
                 <span className="block truncate text-xs text-muted-foreground">
                   {row.issue ? (
-                    <>
-                      while working on{" "}
+                    <>{interfaceText("m_74d62b6c83ab75")}{" "}
                       <Link
                         to={`/issues/${row.issue.identifier}`}
                         className="font-medium text-muted-foreground hover:text-foreground hover:underline"
@@ -151,9 +152,9 @@ export function resolveActorLabel(
   if (actorId) {
     const label = userLabelById?.get(actorId);
     if (label) return label;
-    if (actorId === "local-board") return "Board";
+    if (actorId === "local-board") return interfaceText("m_4816cbfd74aa82");
   }
-  return "Someone";
+  return interfaceText("m_864c855e3d6439");
 }
 
 export function humanizeEvent(
@@ -250,7 +251,7 @@ function humanizeAllowlistChange(who: string, details: Record<string, unknown> |
 }
 
 function lifecycleLinkLabel(event: ToolConnectionLifecycleEvent): string {
-  return event.type === "actions_quarantined" ? "Review permissions" : "View permissions";
+  return event.type === "actions_quarantined" ? interfaceText("m_5b9f70dddc3b77") : interfaceText("m_92f9bdbdf1534e");
 }
 
 function numberFrom(value: unknown): number {

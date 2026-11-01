@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Ellipsis } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { LabArtifact } from "../../kit";
@@ -12,10 +13,11 @@ import { ICON_BUTTON } from "./slab";
  * an unlabelled icon.
  */
 export function PanelMenu({ actions, artifact }: { actions: SolidAction[]; artifact: LabArtifact }) {
+  useInterfaceLanguage();
   if (actions.length === 0) return null;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger data-secondary aria-label={`More actions: ${artifact.title}`} title="More actions" className={ICON_BUTTON}>
+      <DropdownMenuTrigger data-secondary aria-label={interfaceText("m_131542b320ba2a", { value0: (artifact.title) })} title={interfaceText("m_f8d46c2570e707")} className={ICON_BUTTON}>
         <Ellipsis aria-hidden className="size-3.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

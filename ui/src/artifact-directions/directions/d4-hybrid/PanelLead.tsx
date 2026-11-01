@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../kit";
@@ -118,8 +119,9 @@ const DURATION = "absolute bottom-2 right-2 rounded-(--rad-4) bg-(--hy-scrim) px
 
 /** The play button over a lead, above the card's stretched action. The disc is its visible state: it darkens under the pointer and grows while pressed. */
 function PlayButton({ artifact, duration, onPlay, className }: { artifact: LabArtifact; duration: boolean; onPlay: () => void; className: string }) {
+  useInterfaceLanguage();
   return (
-    <button type="button" aria-label={`Play video: ${artifact.title}`} onClick={onPlay} className={cn("group/play absolute z-10 cursor-pointer", PLAY_RING, className)}>
+    <button type="button" aria-label={interfaceText("m_75fba36e6d4726", { value0: (artifact.title) })} onClick={onPlay} className={cn("group/play absolute z-10 cursor-pointer", PLAY_RING, className)}>
       <PlayMark size="lg" className={cn("group-hover/play:bg-(--hy-scrim-strong) group-active/play:scale-95", MOTION)} />
       {duration && artifact.durationLabel ? <span className={DURATION}>{artifact.durationLabel}</span> : null}
     </button>

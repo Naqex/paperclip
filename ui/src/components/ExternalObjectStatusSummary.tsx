@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { ExternalObjectSummary } from "@paperclipai/shared";
 import {
   dominantExternalObjectTone,
@@ -36,7 +37,7 @@ function buildBreakdownTitle(summary: ExternalObjectSummary): string {
   }
   if (summary.staleCount > 0) parts.push(`${summary.staleCount} stale`);
   parts.push(`${summary.total} total`);
-  return `External objects: ${parts.join(", ")}`;
+  return interfaceText("m_ca9a48270f9ac4", { value0: (parts.join(", ")) });
 }
 
 /**

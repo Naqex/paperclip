@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -78,6 +79,7 @@ function SortableCompanyItem({
   isSelected: boolean;
   onSelect: (company: Company) => void;
 }) {
+  useInterfaceLanguage();
   const {
     attributes,
     listeners,
@@ -124,7 +126,7 @@ function SortableCompanyItem({
         <button
           type="button"
           ref={setActivatorNodeRef}
-          aria-label={`Reorder ${company.name}`}
+          aria-label={interfaceText("m_20613b31c84cdb", { value0: (company.name) })}
           className="inline-flex size-8 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-(length:--rad-2) focus-visible:ring-ring"
           onClick={(event) => {
             event.preventDefault();
@@ -153,6 +155,7 @@ export function SidebarCompanyMenu(props: SidebarCompanyMenuProps = {}) {
 }
 
 function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompanyMenuProps) {
+  useInterfaceLanguage();
   const [internalOpen, setInternalOpen] = useState(false);
   const [isEditingOrder, setIsEditingOrder] = useState(false);
   const { companies, selectedCompany, setSelectedCompanyId, companyListUnavailable, retryCompanies } =
@@ -268,8 +271,8 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
           className="h-9 min-w-0 flex-1 justify-start gap-2 px-4 text-left hover:bg-accent/50 hover:text-foreground has-[>svg]:px-4 dark:hover:bg-accent/50"
           aria-label={
             currentName
-              ? `Open ${currentName} ${switcherNoun} switcher`
-              : `Open ${switcherNoun} switcher`
+              ? interfaceText("m_3edcd9a6138eb6", { value0: (currentName), value1: (switcherNoun) })
+              : interfaceText("m_ca8fc701ad3f67", { value0: (switcherNoun) })
           }
         >
           <span className="flex min-w-0 flex-1 items-center gap-2">
@@ -285,7 +288,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
               )}
               title={currentName ?? undefined}
             >
-              {currentName ?? `Select ${switcherNoun}`}
+              {currentName ?? interfaceText("m_33de0e8b35aac1", { value0: (switcherNoun) })}
             </span>
           </span>
           {!rail && <ChevronsUpDown className="size-3.5 shrink-0 text-muted-foreground" />}
@@ -297,9 +300,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
         className="ml-2 w-(--organization-popover-width) max-w-(--sz-calc-24) overflow-hidden rounded-xl border-border bg-popover p-0 shadow-(--shadow-profile-popover)"
       >
         <div className="flex h-(--organization-popover-header-height) items-center justify-between gap-2 px-3.5">
-          <DropdownMenuLabel className="p-0 text-(length:--text-compact) font-semibold text-foreground">
-            Organizations
-          </DropdownMenuLabel>
+          <DropdownMenuLabel className="p-0 text-(length:--text-compact) font-semibold text-foreground">{interfaceText("m_2730183d6b776b")}</DropdownMenuLabel>
           <button
             type="button"
             onClick={(event) => {
@@ -309,7 +310,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
             }}
             className="rounded px-1.5 py-0.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
-            {isEditingOrder ? "Done" : "Edit"}
+            {isEditingOrder ? interfaceText("m_11a6767d5674c7") : interfaceText("m_464c4ffd019e1e")}
           </button>
         </div>
         <div className="flex max-h-96 flex-col gap-0.5 overflow-y-auto px-2.5 pb-2 pt-1">
@@ -340,7 +341,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
             // offer the way back.
             companyListUnavailable ? (
               <>
-                <DropdownMenuItem disabled>Couldn&apos;t load companies</DropdownMenuItem>
+                <DropdownMenuItem disabled>{interfaceText("m_dee9b8633bafd3")}</DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={(event) => {
                     // Keep the menu open so the result of the retry is visible.
@@ -348,12 +349,10 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
                     void retryCompanies();
                   }}
                 >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Try again
-                </DropdownMenuItem>
+                  <RefreshCw className="h-4 w-4 mr-2" />{interfaceText("m_d8b8392e2c5429")}</DropdownMenuItem>
               </>
             ) : (
-              <DropdownMenuItem disabled>No companies</DropdownMenuItem>
+              <DropdownMenuItem disabled>{interfaceText("m_4562e319e462b3")}</DropdownMenuItem>
             )
           ) : null}
         </div>
@@ -367,7 +366,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
               <span className="flex size-5 shrink-0 items-center justify-center text-muted-foreground">
                 <Plus className="size-4" />
               </span>
-              <span className="min-w-0 flex-1 truncate">Create organization</span>
+              <span className="min-w-0 flex-1 truncate">{interfaceText("m_f14e1b22393c0d")}</span>
             </DropdownMenuItem>
           )}
           {showInvitePeople ? (
@@ -391,8 +390,8 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
                 </span>
                 <span className="min-w-0 flex-1 truncate">
                   {currentName
-                    ? `Invite people to ${currentName}`
-                    : "Invite people"}
+                    ? interfaceText("m_d4d50c1752b4f2", { value0: (currentName) })
+                    : interfaceText("m_27bf0f2d3f3f54")}
                 </span>
               </Link>
             </DropdownMenuItem>
@@ -407,7 +406,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
                 <LogOut className="size-4" />
               </span>
               <span className="min-w-0 flex-1 truncate">
-                {signOutMutation.isPending ? "Signing out..." : "Sign out"}
+                {signOutMutation.isPending ? interfaceText("m_0436231679a0cb") : interfaceText("m_48f0d3d397d49f")}
               </span>
             </DropdownMenuItem>
           ) : null}

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { formatDateTime } from "./utils";
 
 type RetryAwareRun = {
@@ -49,7 +50,7 @@ export function describeRunRetryState(run: RetryAwareRun): RunRetryStateSummary 
     typeof run.scheduledRetryAttempt === "number" && Number.isFinite(run.scheduledRetryAttempt) && run.scheduledRetryAttempt > 0
       ? run.scheduledRetryAttempt
       : null;
-  const attemptLabel = attempt ? `Attempt ${attempt}` : null;
+  const attemptLabel = attempt ? interfaceText("m_03b460dd016062", { value0: (attempt) }) : null;
   const reasonLabel = formatRetryReason(run.scheduledRetryReason);
   const retryOfRunId = readNonEmptyString(run.retryOfRunId);
   const exhaustedReason = readNonEmptyString(run.retryExhaustedReason);

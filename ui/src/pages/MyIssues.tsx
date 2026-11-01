@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { issuesApi } from "../api/issues";
@@ -14,13 +15,14 @@ import { ListTodo } from "lucide-react";
 import { useStreamlinedUiEnabled } from "../hooks/useStreamlinedUiEnabled";
 
 export function MyIssues() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { enabled: streamlinedUiEnabled } = useStreamlinedUiEnabled();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "My Tasks" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_faf87355035004") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const { data: issues, isLoading, error } = useQuery({
     queryKey: queryKeys.issues.list(selectedCompanyId!),
@@ -33,8 +35,8 @@ export function MyIssues() {
       <EmptyState
         icon={ListTodo}
         message={streamlinedUiEnabled
-          ? "Select an organization to view your tasks."
-          : "Select a company to view your tasks."}
+          ? interfaceText("m_bfb85604b2da18")
+          : interfaceText("m_f43365f9a8e6a7")}
       />
     );
   }
@@ -53,7 +55,7 @@ export function MyIssues() {
       {error && <p className="text-sm text-destructive">{error.message}</p>}
 
       {myIssues.length === 0 && (
-        <EmptyState icon={ListTodo} message="No tasks assigned to you." />
+        <EmptyState icon={ListTodo} message={interfaceText("m_1a9677b0bfa04c")} />
       )}
 
       {myIssues.length > 0 && (

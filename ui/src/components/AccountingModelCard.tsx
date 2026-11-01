@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Database, Gauge, ReceiptText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
@@ -26,17 +27,13 @@ const SURFACES = [
 ] as const;
 
 export function AccountingModelCard() {
+  useInterfaceLanguage();
   return (
     <Card className="relative overflow-hidden border-border/70">
       <div className="absolute inset-0 bg-(image:--gradient-extract-3)" />
       <CardHeader className="relative px-5 pt-5 pb-2">
-        <CardTitle className="text-sm font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Accounting model
-        </CardTitle>
-        <CardDescription className="max-w-2xl text-sm leading-6">
-          Paperclip now separates request-level inference usage from account-level finance events.
-          That keeps provider reporting honest when the biller is OpenRouter, Cloudflare, Bedrock, or another intermediary.
-        </CardDescription>
+        <CardTitle className="text-sm font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_811f1fa2a5af2e")}</CardTitle>
+        <CardDescription className="max-w-2xl text-sm leading-6">{interfaceText("m_ac0ede425ebaec")}</CardDescription>
       </CardHeader>
       <CardContent className="relative grid gap-3 px-5 pb-5 md:grid-cols-3">
         {SURFACES.map((surface) => {

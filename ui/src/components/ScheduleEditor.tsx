@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,13 +8,13 @@ import { nextCronFires, parseCronExpression } from "../lib/cron-fires";
 export type SchedulePreset = "every_minute" | "every_hour" | "every_day" | "weekdays" | "weekly" | "monthly" | "custom";
 
 const PRESETS: { value: SchedulePreset; label: string }[] = [
-  { value: "every_minute", label: "Every minute" },
-  { value: "every_hour", label: "Every hour" },
-  { value: "every_day", label: "Every day" },
-  { value: "weekdays", label: "Weekdays" },
-  { value: "weekly", label: "Weekly" },
-  { value: "monthly", label: "Monthly" },
-  { value: "custom", label: "Custom (cron)" },
+  { value: "every_minute", get label() { return interfaceText("m_3c14fb8a288138"); } },
+  { value: "every_hour", get label() { return interfaceText("m_a4bac4655d4593"); } },
+  { value: "every_day", get label() { return interfaceText("m_c4e42b974c335d"); } },
+  { value: "weekdays", get label() { return interfaceText("m_6f4b602bb52984"); } },
+  { value: "weekly", get label() { return interfaceText("m_2975132481a7a6"); } },
+  { value: "monthly", get label() { return interfaceText("m_9b11f6b707d2a0"); } },
+  { value: "custom", get label() { return interfaceText("m_6dc53fd85ce22b"); } },
 ];
 
 const HOURS = Array.from({ length: 24 }, (_, i) => ({
@@ -27,13 +28,13 @@ const MINUTES = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 const DAYS_OF_WEEK = [
-  { value: "1", label: "Mon" },
-  { value: "2", label: "Tue" },
-  { value: "3", label: "Wed" },
-  { value: "4", label: "Thu" },
-  { value: "5", label: "Fri" },
-  { value: "6", label: "Sat" },
-  { value: "0", label: "Sun" },
+  { value: "1", get label() { return interfaceText("m_f40d7f51f69edf"); } },
+  { value: "2", get label() { return interfaceText("m_d1eb39b09bf52b"); } },
+  { value: "3", get label() { return interfaceText("m_58339f45df9604"); } },
+  { value: "4", get label() { return interfaceText("m_7da11212ed340e"); } },
+  { value: "5", get label() { return interfaceText("m_66dab40cea1dea"); } },
+  { value: "6", get label() { return interfaceText("m_fdeb71b569e003"); } },
+  { value: "0", get label() { return interfaceText("m_db18f17fe53200"); } },
 ];
 
 const DAYS_OF_MONTH = Array.from({ length: 31 }, (_, i) => ({
@@ -200,6 +201,7 @@ export function ScheduleEditor({
   onChange: (cron: string) => void;
   onValidityChange?: (valid: boolean) => void;
 }) {
+  useInterfaceLanguage();
   const parsed = useMemo(() => parseCronToPreset(value), [value]);
   const [preset, setPreset] = useState<SchedulePreset>(parsed.preset);
   const [hour, setHour] = useState(parsed.hour);
@@ -247,8 +249,8 @@ export function ScheduleEditor({
   return (
     <div className="space-y-3">
       <Select value={preset} onValueChange={(v) => handlePresetChange(v as SchedulePreset)}>
-        <SelectTrigger className="w-full" aria-label="Schedule frequency">
-          <SelectValue placeholder="Choose frequency..." />
+        <SelectTrigger className="w-full" aria-label={interfaceText("m_feed2d11fc52ba")}>
+          <SelectValue placeholder={interfaceText("m_554798442cd7ef")} />
         </SelectTrigger>
         <SelectContent>
           {PRESETS.map((p) => (
@@ -277,20 +279,18 @@ export function ScheduleEditor({
               }
             }}
             placeholder="0 10 * * *"
-            aria-label="Cron expression"
+            aria-label={interfaceText("m_9e6e7de6b9d693")}
             aria-invalid={!customValidation.valid}
             className="font-mono text-sm"
           />
-          <p className="text-xs text-muted-foreground">
-            Five fields: minute hour day-of-month month day-of-week
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_7abb912add4d39")}</p>
           <p
             className={customValidation.valid ? "text-xs text-muted-foreground" : "text-xs text-destructive"}
             aria-live="polite"
           >
             {customValidation.message}
             {customValidation.valid && customValidation.nextFires.length > 0
-              ? ` Next: ${customValidation.nextFires.map((fire) => fire.toLocaleString()).join(", ")}.`
+              ? interfaceText("m_c01b7703f05d8f", { value0: (customValidation.nextFires.map((fire) => fire.toLocaleString()).join(", ")) })
               : null}
           </p>
         </div>
@@ -298,7 +298,7 @@ export function ScheduleEditor({
         <div className="flex flex-wrap items-center gap-2">
           {preset !== "every_minute" && preset !== "every_hour" && (
             <>
-              <span className="text-sm text-muted-foreground">at</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_b1d6b91b67c2af")}</span>
               <Select
                 value={hour}
                 onValueChange={(h) => {
@@ -341,7 +341,7 @@ export function ScheduleEditor({
 
           {preset === "every_hour" && (
             <>
-              <span className="text-sm text-muted-foreground">at minute</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_5f2ed72dfcbcf1")}</span>
               <Select
                 value={minute}
                 onValueChange={(m) => {
@@ -365,7 +365,7 @@ export function ScheduleEditor({
 
           {preset === "weekly" && (
             <>
-              <span className="text-sm text-muted-foreground">on</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_b8d31e852725af")}</span>
               <div className="flex gap-1">
                 {DAYS_OF_WEEK.map((d) => (
                   <Button
@@ -389,7 +389,7 @@ export function ScheduleEditor({
 
           {preset === "monthly" && (
             <>
-              <span className="text-sm text-muted-foreground">on day</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_ada1fca3e7ade2")}</span>
               <Select
                 value={dayOfMonth}
                 onValueChange={(dom) => {

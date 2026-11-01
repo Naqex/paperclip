@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, FileText, Loader2, Wrench } from "lucide-react";
 import { companySkillsApi } from "@/api/companySkills";
@@ -9,6 +10,7 @@ import { useNavigate } from "@/lib/router";
 import { parseFrontmatterMarkdown } from "@paperclipai/shared";
 
 export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skillId: string }) {
+  useInterfaceLanguage();
   const navigate = useNavigate();
   const query = useQuery({
     queryKey: queryKeys.companySkills.detail(companyId, skillId),
@@ -20,26 +22,24 @@ export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skil
   if (query.isLoading || view.kind === "reconnecting") {
     return (
       <div className="flex items-center gap-2 py-8 text-sm text-muted-foreground" role="status">
-        <Loader2 className="size-4 animate-spin" aria-hidden />
-        Loading skill…
-      </div>
+        <Loader2 className="size-4 animate-spin" aria-hidden />{interfaceText("m_5c57e60fe4ca90")}</div>
     );
   }
   if (view.kind === "error") {
     if (view.errorKind === "not_found") {
-      return <div className="py-8 text-sm text-muted-foreground" role="status">Skill no longer available.</div>;
+      return <div className="py-8 text-sm text-muted-foreground" role="status">{interfaceText("m_f266c3fde7c5a4")}</div>;
     }
     if (view.errorKind === "forbidden") {
-      return <div className="py-8 text-sm text-muted-foreground" role="alert">You do not have access to this skill.</div>;
+      return <div className="py-8 text-sm text-muted-foreground" role="alert">{interfaceText("m_cc90e7ec78bd1a")}</div>;
     }
     return (
       <div className="py-6">
-        <QueryErrorState error={query.error} action="load the skill" onRetry={view.retry} retrying={view.isFetching} />
+        <QueryErrorState error={query.error} action={interfaceText("m_af68592494e97c")} onRetry={view.retry} retrying={view.isFetching} />
       </div>
     );
   }
   if (!query.data) {
-    return <div className="py-8 text-sm text-muted-foreground" role="status">Skill no longer available.</div>;
+    return <div className="py-8 text-sm text-muted-foreground" role="status">{interfaceText("m_f266c3fde7c5a4")}</div>;
   }
   const skill = query.data;
   const previewMarkdown = parseFrontmatterMarkdown(skill.markdown).body;
@@ -56,21 +56,17 @@ export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skil
             size="sm"
             onClick={() => navigate(`/skills/studio/${encodeURIComponent(skill.id)}`)}
           >
-            <ExternalLink className="mr-1.5 size-3.5" aria-hidden />
-            Open in Skill Studio
-          </Button>
+            <ExternalLink className="mr-1.5 size-3.5" aria-hidden />{interfaceText("m_90ec3b0d0d07e6")}</Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          {skill.slug} · {skill.currentVersion ? `Revision ${skill.currentVersion.revisionNumber}` : "Current version"}
+          {skill.slug} · {skill.currentVersion ? interfaceText("m_86873588d0db54", { value0: (skill.currentVersion.revisionNumber) }) : interfaceText("m_a74487de8969b1")}
         </p>
       </header>
       {skill.description ? <p className="text-sm text-muted-foreground">{skill.description}</p> : null}
       <section className="space-y-2">
         <h3 className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-          <FileText className="size-3.5" aria-hidden />
-          Skill instructions
-        </h3>
-        <MarkdownBody>{previewMarkdown || "Skill instructions are empty."}</MarkdownBody>
+          <FileText className="size-3.5" aria-hidden />{interfaceText("m_f9f4685609f87a")}</h3>
+        <MarkdownBody>{previewMarkdown || interfaceText("m_427e00bb362aaa")}</MarkdownBody>
       </section>
     </article>
   );

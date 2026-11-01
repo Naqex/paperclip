@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { CoordinatorPresentation } from "./coordinator/CoordinatorPresentation";
 import { CoordinatorChatReferencesProvider } from "./coordinator/CoordinatorChatReferences";
 import { useCoordinatorWorkspaceEnabled } from "@/hooks/useCoordinatorWorkspaceEnabled";
@@ -85,6 +86,7 @@ const RESERVED_APP_SUBPATHS = new Set([
 ]);
 
 export function Layout({ sidebarSections }: { sidebarSections?: ReactNode }) {
+  useInterfaceLanguage();
   const designSandbox = useDesignSandbox();
   const {
     sidebarOpen,
@@ -601,9 +603,7 @@ export function Layout({ sidebarSections }: { sidebarSections?: ReactNode }) {
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-(--z-200) focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        Skip to Main Content
-      </a>
+      >{interfaceText("m_435bdbf65cffab")}</a>
       <WorktreeBanner />
       <DevRestartBanner devServer={health?.devServer} />
       <div className={cn("app-main-row min-h-0 flex-1", isMobile ? "w-full" : "flex overflow-clip")}>
@@ -612,7 +612,7 @@ export function Layout({ sidebarSections }: { sidebarSections?: ReactNode }) {
             type="button"
             className="fixed inset-0 z-40 bg-black/50"
             onClick={() => setSidebarOpen(false)}
-            aria-label="Close sidebar"
+            aria-label={interfaceText("m_17e28e2302175d")}
           />
         )}
 

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { agentChatsApi } from "@/api/agentChats";
@@ -14,6 +15,7 @@ import { TaskDetailSurface } from "./IssueDetail";
 import { isUuidLike, type Issue } from "@paperclipai/shared";
 
 export function AgentChat() {
+  useInterfaceLanguage();
   const { agentRef = "" } = useParams<{ agentRef: string }>();
   const { selectedCompanyId } = useCompany();
   const { enabled, loaded } = useAgentChatEnabled();
@@ -81,15 +83,13 @@ export function AgentChat() {
     || chatView.kind === "reconnecting" || (!rosterAgent && historyView.kind === "reconnecting");
   if (!loaded || agents.isPending || session.isPending || historyAgent.isFetching && !agent || reconnecting)
     return (
-      <p className="text-sm text-muted-foreground">Loading conversation…</p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_5eb1e4a3be4147")}</p>
     );
   if (!enabled && !chat.data)
     return (
-      <p className="text-sm text-muted-foreground">
-        Agent Chat is disabled for this instance. An administrator can enable it in{" "}
-        <Link className="underline underline-offset-4" to="/company/settings/instance/experimental#experimental-enableAgentChat">Experimental settings</Link>.
-        {" "}Your workspace preference does not change Chat availability. Existing history remains available through task links.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_3583739ddf5a3d")}{" "}
+        <Link className="underline underline-offset-4" to="/company/settings/instance/experimental#experimental-enableAgentChat">{interfaceText("m_26c0cd933f3ca5")}</Link>.
+        {" "}{interfaceText("m_6de47952fd33ba")}</p>
     );
   const failed = [agentsView, chatView, ...(rosterAgent ? [] : [historyView])].find((view) => view.kind === "error");
   if (failed)
@@ -97,16 +97,16 @@ export function AgentChat() {
       <QueryErrorState
         size="page"
         error={failed.error}
-        action="load this conversation"
+        action={interfaceText("m_e9a7c236a39fc5")}
         onRetry={failed.retry}
         retrying={failed.isFetching}
       />
     );
   if (!agent)
-    return <p className="text-sm text-destructive">Agent not found.</p>;
+    return <p className="text-sm text-destructive">{interfaceText("m_1392fa7fe29f14")}</p>;
   if (chat.isPending)
     return (
-      <p className="text-sm text-muted-foreground">Loading conversation…</p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_5eb1e4a3be4147")}</p>
     );
   return (
     <TaskDetailSurface

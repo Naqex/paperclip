@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId, useState, type ReactNode } from "react";
 import {
   ChevronDown,
@@ -248,6 +249,7 @@ export function SystemNotice({
   timestamp,
   className,
 }: SystemNoticeProps) {
+  useInterfaceLanguage();
   const tokens = TONE_TOKENS[tone];
   const ToneIcon = tokens.icon;
   const [open, setOpen] = useState(detailsDefaultOpen);
@@ -326,7 +328,7 @@ export function SystemNotice({
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
             )}
           >
-            <span>{open ? "Hide details" : "Details"}</span>
+            <span>{open ? interfaceText("m_c9722a7a962a84") : interfaceText("m_45989de49fb7f6")}</span>
             <ChevronDown
               className={cn(
                 "h-3.5 w-3.5 transition-transform duration-150",

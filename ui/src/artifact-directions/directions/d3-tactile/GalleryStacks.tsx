@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact, LabGroup } from "../../kit";
@@ -55,13 +56,13 @@ function FolderContents({ artifacts }: { artifacts: LabArtifact[] }) {
 const FOCUS = cn(RING, RING_ON.canvas, "focus-visible:ring-offset-4");
 
 function Count({ group, className }: { group: LabGroup; className?: string }) {
+  useInterfaceLanguage();
   return (
     <span className={className}>
       <span className="whitespace-nowrap">
         <span className="font-mono text-(length:--tac-mono-scale)">{group.count}</span> {countLabel(group.count)}
       </span>
-      <span className="whitespace-nowrap">
-        Updated <span className="font-mono text-(length:--tac-mono-scale)">{group.updatedLabel}</span>
+      <span className="whitespace-nowrap">{interfaceText("m_a919c7c2d1a486")}<span className="font-mono text-(length:--tac-mono-scale)">{group.updatedLabel}</span>
       </span>
     </span>
   );
@@ -162,7 +163,8 @@ function StackLone({ group }: { group: LabGroup }) {
 }
 
 export function GalleryStacks({ groups }: { groups: LabGroup[] }) {
-  if (groups.length === 0) return <p className="py-16 text-center text-sm font-medium text-foreground">No artifact stacks yet.</p>;
+  useInterfaceLanguage();
+  if (groups.length === 0) return <p className="py-16 text-center text-sm font-medium text-foreground">{interfaceText("m_7f21bb0ea0e278")}</p>;
   return (
     // The shelf, measured: under 40rem it keeps two columns of compact folders (tokens-gallery.css).
     <div className="@container/shelf">

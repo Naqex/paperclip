@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ShortcutEntry {
@@ -17,46 +18,46 @@ const sections: ShortcutSection[] = [
   {
     title: "Inbox",
     shortcuts: [
-      { keys: ["j"], label: "Move down" },
-      { keys: ["↓"], label: "Move down" },
-      { keys: ["k"], label: "Move up" },
-      { keys: ["↑"], label: "Move up" },
-      { keys: ["←"], label: "Collapse selected group" },
-      { keys: ["→"], label: "Expand selected group" },
-      { keys: ["Enter"], label: "Open selected item" },
-      { keys: ["a"], label: "Archive item" },
-      { keys: ["y"], label: "Archive item" },
-      { keys: ["r"], label: "Mark as read" },
-      { keys: ["U"], label: "Mark as unread" },
+      { keys: ["j"], get label() { return interfaceText("m_40bb50da160cdc"); } },
+      { keys: ["↓"], get label() { return interfaceText("m_40bb50da160cdc"); } },
+      { keys: ["k"], get label() { return interfaceText("m_c66feb5eb8f217"); } },
+      { keys: ["↑"], get label() { return interfaceText("m_c66feb5eb8f217"); } },
+      { keys: ["←"], get label() { return interfaceText("m_933a60afce8a6b"); } },
+      { keys: ["→"], get label() { return interfaceText("m_6ecae6bf37bf05"); } },
+      { keys: ["Enter"], get label() { return interfaceText("m_948dbc15b31394"); } },
+      { keys: ["a"], get label() { return interfaceText("m_0fd57cea79115d"); } },
+      { keys: ["y"], get label() { return interfaceText("m_0fd57cea79115d"); } },
+      { keys: ["r"], get label() { return interfaceText("m_50c8b81faf51e7"); } },
+      { keys: ["U"], get label() { return interfaceText("m_2c19d584bf8ad5"); } },
     ],
   },
   {
     title: "Task detail",
     shortcuts: [
-      { keys: ["y"], label: "Quick-archive back to inbox" },
-      { keys: ["g", "i"], label: "Go to inbox" },
-      { keys: ["g", "c"], label: "Focus comment composer" },
+      { keys: ["y"], get label() { return interfaceText("m_630428a4c87f5f"); } },
+      { keys: ["g", "i"], get label() { return interfaceText("m_cde5bedaa1cc43"); } },
+      { keys: ["g", "c"], get label() { return interfaceText("m_a0f6da743c0710"); } },
     ],
   },
   {
     title: "Decisions",
     shortcuts: [
-      { keys: ["j"], label: "Move down" },
-      { keys: ["↓"], label: "Move down" },
-      { keys: ["k"], label: "Move up" },
-      { keys: ["↑"], label: "Move up" },
-      { keys: ["Enter"], label: "Open or close selected decision" },
-      { keys: ["x"], label: "Dismiss selected decision" },
+      { keys: ["j"], get label() { return interfaceText("m_40bb50da160cdc"); } },
+      { keys: ["↓"], get label() { return interfaceText("m_40bb50da160cdc"); } },
+      { keys: ["k"], get label() { return interfaceText("m_c66feb5eb8f217"); } },
+      { keys: ["↑"], get label() { return interfaceText("m_c66feb5eb8f217"); } },
+      { keys: ["Enter"], get label() { return interfaceText("m_54d2aedada1f0c"); } },
+      { keys: ["x"], get label() { return interfaceText("m_371158fa81c251"); } },
     ],
   },
   {
     title: "Global",
     shortcuts: [
-      { keys: ["/"], label: "Search current page or quick search" },
-      { keys: ["c"], label: "New task" },
-      { keys: ["["], label: "Toggle sidebar" },
-      { keys: ["]"], label: "Toggle panel" },
-      { keys: ["?"], label: "Show keyboard shortcuts" },
+      { keys: ["/"], get label() { return interfaceText("m_4dac6ee7d1ea34"); } },
+      { keys: ["c"], get label() { return interfaceText("m_3e992276b2298a"); } },
+      { keys: ["["], get label() { return interfaceText("m_041aefc44394f5"); } },
+      { keys: ["]"], get label() { return interfaceText("m_ed98852805c905"); } },
+      { keys: ["?"], get label() { return interfaceText("m_3d0ced5dc621bc"); } },
     ],
   },
 ];
@@ -70,6 +71,7 @@ function KeyCap({ children }: { children: string }) {
 }
 
 export function KeyboardShortcutsCheatsheetContent() {
+  useInterfaceLanguage();
   return (
     <>
       <div className="divide-y divide-border border-t border-border">
@@ -90,7 +92,7 @@ export function KeyboardShortcutsCheatsheetContent() {
                       <span key={key} className="flex items-center gap-1">
                         {i > 0 && (
                           <span className="text-xs text-muted-foreground">
-                            {shortcut.combo ? "+" : "then"}
+                            {shortcut.combo ? "+" : interfaceText("m_21af6f1260f927")}
                           </span>
                         )}
                         <KeyCap>{key}</KeyCap>
@@ -104,9 +106,7 @@ export function KeyboardShortcutsCheatsheetContent() {
         ))}
       </div>
       <div className="border-t border-border px-5 py-3">
-        <p className="text-xs text-muted-foreground">
-          Press <KeyCap>Esc</KeyCap> to close &middot; Shortcuts are disabled in text fields
-        </p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_5b9f51465222a8")}<KeyCap>Esc</KeyCap>{interfaceText("m_2a95fa288e7744")}</p>
       </div>
     </>
   );
@@ -119,11 +119,12 @@ export function KeyboardShortcutsCheatsheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md gap-0 p-0 overflow-hidden" showCloseButton={false}>
         <DialogHeader className="px-5 pt-5 pb-3">
-          <DialogTitle className="text-base">Keyboard shortcuts</DialogTitle>
+          <DialogTitle className="text-base">{interfaceText("m_e9bef0b0f3c25e")}</DialogTitle>
         </DialogHeader>
         <KeyboardShortcutsCheatsheetContent />
       </DialogContent>

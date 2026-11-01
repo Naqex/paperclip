@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { startTransition, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -201,8 +202,8 @@ export function buildRoutineGroups(
     const groups = groupBy(routines, (routine) => routine.projectId ?? "__no_project");
     return Object.keys(groups)
       .sort((left, right) => {
-        const leftLabel = left === "__no_project" ? "No project" : (projectById.get(left)?.name ?? "Unknown project");
-        const rightLabel = right === "__no_project" ? "No project" : (projectById.get(right)?.name ?? "Unknown project");
+        const leftLabel = left === "__no_project" ? interfaceText("m_f34c2be0d1c5f5") : (projectById.get(left)?.name ?? interfaceText("m_ed51cfeff0d969"));
+        const rightLabel = right === "__no_project" ? interfaceText("m_f34c2be0d1c5f5") : (projectById.get(right)?.name ?? interfaceText("m_ed51cfeff0d969"));
         return leftLabel.localeCompare(rightLabel);
       })
       .map((key) => ({
@@ -215,8 +216,8 @@ export function buildRoutineGroups(
   const groups = groupBy(routines, (routine) => routine.assigneeAgentId ?? "__unassigned");
   return Object.keys(groups)
     .sort((left, right) => {
-      const leftLabel = left === "__unassigned" ? "Unassigned" : (agentById.get(left)?.name ?? "Unknown agent");
-      const rightLabel = right === "__unassigned" ? "Unassigned" : (agentById.get(right)?.name ?? "Unknown agent");
+      const leftLabel = left === "__unassigned" ? interfaceText("m_14d33bd014e6b4") : (agentById.get(left)?.name ?? interfaceText("m_342b4ab21e2eb3"));
+      const rightLabel = right === "__unassigned" ? interfaceText("m_14d33bd014e6b4") : (agentById.get(right)?.name ?? interfaceText("m_342b4ab21e2eb3"));
       return leftLabel.localeCompare(rightLabel);
     })
     .map((key) => ({
@@ -243,7 +244,7 @@ export function buildRoutineSections(
     .filter((group) => group.items.length > 0)
     .map((group) => (
       builtInRoutines.length > 0 && groupByValue === "none" && group.key === "__all"
-        ? { ...group, label: "Custom routines" }
+        ? { ...group, label: interfaceText("m_9454c52303759a") }
         : group
     ));
 
@@ -253,7 +254,7 @@ export function buildRoutineSections(
     ...customGroups,
     {
       key: builtInRoutineGroupKey,
-      label: "Built-in routines",
+      label: interfaceText("m_f81d47affaac37"),
       items: builtInRoutines,
     },
   ];
@@ -317,6 +318,7 @@ function RoutineSectionHeader({
 }
 
 export function Routines() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const queryClient = useQueryClient();
@@ -368,8 +370,8 @@ export function Routines() {
   const folderSelection = normalizeFolderSelection(searchParams.get("folder"));
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Routines" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_61b7bb44e2b47b") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   useEffect(() => {
     setRoutineViewState(getRoutineViewState(routineViewStateKey));
@@ -454,10 +456,10 @@ export function Routines() {
       setAdvancedOpen(false);
       await queryClient.invalidateQueries({ queryKey: queryKeys.routines.list(selectedCompanyId!) });
       pushToast({
-        title: "Routine created",
+        title: interfaceText("m_73aa781897d216"),
         body: routine.assigneeAgentId
-          ? "Add the first trigger to turn it into a live workflow."
-          : "Draft saved. Add a default agent before enabling automation.",
+          ? interfaceText("m_0dd3f88980b42a")
+          : interfaceText("m_ed85f399febe36"),
         tone: "success",
       });
       navigate(`/routines/${routine.id}?tab=triggers`);
@@ -483,8 +485,8 @@ export function Routines() {
           ]);
         } catch (moveError) {
           pushToast({
-            title: "Folder created, move failed",
-            body: moveError instanceof Error ? moveError.message : "Paperclip could not move the selected routines.",
+            title: interfaceText("m_cc944912a73877"),
+            body: moveError instanceof Error ? moveError.message : interfaceText("m_465c9829ca9cc0"),
             tone: "error",
           });
           return;
@@ -492,12 +494,12 @@ export function Routines() {
       } else {
         setFolderSelection(folder.id);
       }
-      pushToast({ title: "Folder created", body: folder.name, tone: "success" });
+      pushToast({ title: interfaceText("m_b1dfe0e9670cba"), body: folder.name, tone: "success" });
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Failed to save folder",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not save the folder.",
+        title: interfaceText("m_64879e714ac971"),
+        body: mutationError instanceof Error ? mutationError.message : interfaceText("m_abc2c37fa5a68a"),
         tone: "error",
       });
     },
@@ -512,8 +514,8 @@ export function Routines() {
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Folder save failed",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not update the folder.",
+        title: interfaceText("m_b0b2fe03ac2afa"),
+        body: mutationError instanceof Error ? mutationError.message : interfaceText("m_ba99b37476412e"),
         tone: "error",
       });
     },
@@ -527,12 +529,12 @@ export function Routines() {
         queryClient.invalidateQueries({ queryKey: queryKeys.routines.list(selectedCompanyId!) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.folders.list(selectedCompanyId!, "routine") }),
       ]);
-      pushToast({ title: "Folder deleted", body: "Items moved to Unfiled.", tone: "success" });
+      pushToast({ title: interfaceText("m_796dc50ba898b2"), body: interfaceText("m_ec2297b4826e48"), tone: "success" });
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Folder delete failed",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not delete the folder.",
+        title: interfaceText("m_cdb83bbddabd2d"),
+        body: mutationError instanceof Error ? mutationError.message : interfaceText("m_4ae3faf093e1ab"),
         tone: "error",
       });
     },
@@ -548,8 +550,8 @@ export function Routines() {
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Move failed",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not move the routine.",
+        title: interfaceText("m_55185d67bf51c3"),
+        body: mutationError instanceof Error ? mutationError.message : interfaceText("m_13f663f69de10a"),
         tone: "error",
       });
     },
@@ -578,8 +580,8 @@ export function Routines() {
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Failed to update routine",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not update the routine.",
+        title: interfaceText("m_658553fd32ab2e"),
+        body: mutationError instanceof Error ? mutationError.message : interfaceText("m_8a9065aa3123a4"),
         tone: "error",
       });
     },
@@ -613,8 +615,8 @@ export function Routines() {
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Routine run failed",
-        body: mutationError instanceof Error ? mutationError.message : "Paperclip could not start the routine run.",
+        title: interfaceText("m_296c7ca6e9b82b"),
+        body: mutationError instanceof Error ? mutationError.message : interfaceText("m_5628bbf83ac3d5"),
         tone: "error",
       });
     },
@@ -759,11 +761,11 @@ export function Routines() {
         queryClient.invalidateQueries({ queryKey: queryKeys.routines.list(selectedCompanyId!) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.folders.list(selectedCompanyId!, "routine") }),
       ]);
-      pushToast({ title: "Routines moved", body: `${ids.length} routine${ids.length === 1 ? "" : "s"} filed.`, tone: "success" });
+      pushToast({ title: interfaceText("m_b282d6059a999b"), body: interfaceText("m_b10b431b89192a", { value0: (ids.length), value1: (ids.length === 1 ? "" : interfaceText("m_043a718774c572")) }), tone: "success" });
     } catch (moveError) {
       pushToast({
-        title: "Failed to move routines",
-        body: moveError instanceof Error ? moveError.message : "Paperclip could not move the selected routines.",
+        title: interfaceText("m_cd16aeca56e41a"),
+        body: moveError instanceof Error ? moveError.message : interfaceText("m_465c9829ca9cc0"),
         tone: "error",
       });
     }
@@ -776,8 +778,8 @@ export function Routines() {
   function handleToggleEnabled(routine: RoutineListItem, enabled: boolean) {
     if (!enabled && !routine.assigneeAgentId) {
       pushToast({
-        title: "Default agent required",
-        body: "Set a default agent before enabling routine automation.",
+        title: interfaceText("m_2761f376d7aad0"),
+        body: interfaceText("m_1885fd9975c551"),
         tone: "warn",
       });
       return;
@@ -796,7 +798,7 @@ export function Routines() {
   }
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Repeat} message="Select a company to view routines." />;
+    return <EmptyState icon={Repeat} message={interfaceText("m_3418ac74952c01")} />;
   }
 
   if (isLoading) {
@@ -807,17 +809,11 @@ export function Routines() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Routines
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Recurring work definitions that materialize into auditable execution tasks.
-          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">{interfaceText("m_61b7bb44e2b47b")}</h1>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_2b8bf160a00c36")}</p>
         </div>
         <Button onClick={openCreateRoutine}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create routine
-        </Button>
+          <Plus className="mr-2 h-4 w-4" />{interfaceText("m_f0fe070861695a")}</Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -826,21 +822,21 @@ export function Routines() {
           value={activeTab}
           onValueChange={handleTabChange}
           items={[
-            { value: "routines", label: "Routines" },
-            { value: "runs", label: "Recent Runs" },
+            { value: "routines", label: interfaceText("m_61b7bb44e2b47b") },
+            { value: "runs", label: interfaceText("m_53972e864229c7") },
           ]}
         />
         <TabsContent value="routines" className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
-              {visibleRoutines.length} routine{visibleRoutines.length === 1 ? "" : "s"}
+              {visibleRoutines.length}{interfaceText("m_2fe51c04cef6ae")}{visibleRoutines.length === 1 ? "" : interfaceText("m_043a718774c572")}
             </p>
             <div className="flex items-center gap-1">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-xs" title="Sort">
+                  <Button variant="ghost" size="sm" className="text-xs" title={interfaceText("m_bec69036aa27e7")}>
                     <ArrowUpDown className="h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1" />
-                    <span className="hidden sm:inline">Sort</span>
+                    <span className="hidden sm:inline">{interfaceText("m_bec69036aa27e7")}</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-44 p-0">
@@ -869,7 +865,7 @@ export function Routines() {
                         <span>{label}</span>
                         {routineViewState.sortField === field ? (
                           <span className="text-xs text-muted-foreground">
-                            {routineViewState.sortDir === "asc" ? "Asc" : "Desc"}
+                            {routineViewState.sortDir === "asc" ? interfaceText("m_cddeba5cfc9a05") : interfaceText("m_5c4419a6999d2a")}
                           </span>
                         ) : null}
                       </button>
@@ -879,9 +875,9 @@ export function Routines() {
               </Popover>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-xs" title="Group">
+                  <Button variant="ghost" size="sm" className="text-xs" title={interfaceText("m_34ca0e76608842")}>
                     <Layers className="h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1" />
-                    <span className="hidden sm:inline">Group</span>
+                    <span className="hidden sm:inline">{interfaceText("m_34ca0e76608842")}</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-44 p-0">
@@ -910,13 +906,11 @@ export function Routines() {
               </Popover>
               {routineViewState.groupBy === "folder" && !hasRoutineFolders ? (
                 <Button variant="outline" size="sm" onClick={() => openCreateFolder()}>
-                  <Plus className="mr-2 h-3.5 w-3.5" />
-                  New folder
-                </Button>
+                  <Plus className="mr-2 h-3.5 w-3.5" />{interfaceText("m_cf28f49ec597a6")}</Button>
               ) : null}
               {showFolderRail ? (
                 <Button variant="ghost" size="sm" className="text-xs" onClick={() => setSelectMode((current) => !current)}>
-                  {selectMode ? "Done" : "Select"}
+                  {selectMode ? interfaceText("m_11a6767d5674c7") : interfaceText("m_2a78025de6aae5")}
                 </Button>
               ) : null}
             </div>
@@ -961,10 +955,8 @@ export function Routines() {
         >
           <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-5 py-3">
             <div>
-              <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">New routine</p>
-              <p className="text-sm text-muted-foreground">
-                Define the recurring work first. Default project and agent are optional for draft routines.
-              </p>
+              <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_d5e520f554b100")}</p>
+              <p className="text-sm text-muted-foreground">{interfaceText("m_5e36131aa23b69")}</p>
             </div>
             <Button
               variant="ghost"
@@ -974,9 +966,7 @@ export function Routines() {
                 setAdvancedOpen(false);
               }}
               disabled={createRoutine.isPending}
-            >
-              Cancel
-            </Button>
+            >{interfaceText("m_19766ed6ccb2f4")}</Button>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto">
@@ -984,7 +974,7 @@ export function Routines() {
               <textarea
                 ref={titleInputRef}
                 className="w-full resize-none overflow-hidden bg-transparent text-xl font-semibold outline-none placeholder:text-muted-foreground/50"
-                placeholder="Routine title"
+                placeholder={interfaceText("m_26d0f82a0da1d5")}
                 rows={1}
                 value={draft.title}
                 onChange={(event) => {
@@ -1017,16 +1007,16 @@ export function Routines() {
             <div className="px-5 pb-3">
               <div className="overflow-x-auto overscroll-x-contain">
                 <div className="inline-flex min-w-full flex-wrap items-center gap-2 text-sm text-muted-foreground sm:min-w-max sm:flex-nowrap">
-                  <span>For</span>
+                  <span>{interfaceText("m_ca15ebc05a3c5c")}</span>
                   <InlineEntitySelector
                     ref={assigneeSelectorRef}
                     value={draft.assigneeAgentId}
                     options={assigneeOptions}
                     recentOptionIds={recentAssigneeIds}
-                    placeholder="Responsible"
+                    placeholder={interfaceText("m_bc110a6d072209")}
                     noneLabel="No responsible"
-                    searchPlaceholder="Search responsible..."
-                    emptyMessage="No responsible found."
+                    searchPlaceholder={interfaceText("m_9cb8d79fc8b40d")}
+                    emptyMessage={interfaceText("m_045a8ffe4067d6")}
                     onChange={(assigneeAgentId) => {
                       if (assigneeAgentId) trackRecentAssignee(assigneeAgentId);
                       setDraft((current) => ({ ...current, assigneeAgentId }));
@@ -1049,7 +1039,7 @@ export function Routines() {
                           <span className="truncate">{option.label}</span>
                         )
                       ) : (
-                        <span className="text-muted-foreground">Responsible</span>
+                        <span className="text-muted-foreground">{interfaceText("m_bc110a6d072209")}</span>
                       )
                     }
                     renderOption={(option) => {
@@ -1063,16 +1053,16 @@ export function Routines() {
                       );
                     }}
                   />
-                  <span>in</span>
+                  <span>{interfaceText("m_582967534d0f90")}</span>
                   <InlineEntitySelector
                     ref={projectSelectorRef}
                     value={draft.projectId}
                     options={projectOptions}
                     recentOptionIds={recentProjectIds}
-                    placeholder="Project"
+                    placeholder={interfaceText("m_98595978531974")}
                     noneLabel="No project"
-                    searchPlaceholder="Search projects..."
-                    emptyMessage="No projects found."
+                    searchPlaceholder={interfaceText("m_c59dd5a3c5a255")}
+                    emptyMessage={interfaceText("m_26e92309ba5b0c")}
                     onChange={(projectId) => {
                       if (projectId) trackRecentProject(projectId);
                       setDraft((current) => ({ ...current, projectId }));
@@ -1088,7 +1078,7 @@ export function Routines() {
                           <span className="truncate">{option.label}</span>
                         </>
                       ) : (
-                        <span className="text-muted-foreground">Project</span>
+                        <span className="text-muted-foreground">{interfaceText("m_98595978531974")}</span>
                       )
                     }
                     renderOption={(option) => {
@@ -1105,7 +1095,7 @@ export function Routines() {
                       );
                     }}
                   />
-                  <span>filed in</span>
+                  <span>{interfaceText("m_8effe18fb31887")}</span>
                   <Select
                     value={draft.folderId ?? "__unfiled"}
                     onValueChange={(value) => setDraft((current) => ({
@@ -1117,7 +1107,7 @@ export function Routines() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__unfiled">Unfiled</SelectItem>
+                      <SelectItem value="__unfiled">{interfaceText("m_d64dc9ae400c28")}</SelectItem>
                       {(routineFolders?.folders ?? []).map((folder) => (
                         <SelectItem key={folder.id} value={folder.id}>
                           {folder.name}
@@ -1134,7 +1124,7 @@ export function Routines() {
                 ref={descriptionEditorRef}
                 value={draft.description}
                 onChange={(description) => setDraft((current) => ({ ...current, description }))}
-                placeholder="Add instructions..."
+                placeholder={interfaceText("m_d49e19c5685d2f")}
                 bordered={false}
                 contentClassName="min-h-(--sz-160px) text-sm text-muted-foreground"
                 mentions={mentionOptions}
@@ -1150,15 +1140,15 @@ export function Routines() {
               <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
                 <CollapsibleTrigger className="flex w-full items-center justify-between text-left">
                   <div>
-                    <p className="text-sm font-medium">Advanced delivery settings</p>
-                    <p className="text-sm text-muted-foreground">Keep policy controls secondary to the work definition.</p>
+                    <p className="text-sm font-medium">{interfaceText("m_6fbfb2fa312aad")}</p>
+                    <p className="text-sm text-muted-foreground">{interfaceText("m_264481cebdc6ae")}</p>
                   </div>
                   {advancedOpen ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-3">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">Concurrency</p>
+                      <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_8708492f3ef5c1")}</p>
                       <Select
                         value={draft.concurrencyPolicy}
                         onValueChange={(concurrencyPolicy) => setDraft((current) => ({ ...current, concurrencyPolicy }))}
@@ -1175,7 +1165,7 @@ export function Routines() {
                       <p className="text-xs text-muted-foreground">{concurrencyPolicyDescriptions[draft.concurrencyPolicy]}</p>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">Catch-up</p>
+                      <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_1c2d0f8e6b923c")}</p>
                       <Select
                         value={draft.catchUpPolicy}
                         onValueChange={(catchUpPolicy) => setDraft((current) => ({ ...current, catchUpPolicy }))}
@@ -1198,9 +1188,7 @@ export function Routines() {
           </div>
 
           <div className="shrink-0 flex flex-col gap-3 border-t border-border/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-muted-foreground">
-              After creation, Paperclip takes you straight to trigger setup. Draft routines stay paused until you add a default agent.
-            </div>
+            <div className="text-sm text-muted-foreground">{interfaceText("m_1ff03dde57cb6c")}</div>
             <div className="flex flex-col gap-2 sm:items-end">
               <Button
                 onClick={() => createRoutine.mutate()}
@@ -1210,11 +1198,11 @@ export function Routines() {
                 }
               >
                 <Plus className="mr-2 h-4 w-4" />
-                {createRoutine.isPending ? "Creating..." : "Create routine"}
+                {createRoutine.isPending ? interfaceText("m_def70944c9bb9c") : interfaceText("m_f0fe070861695a")}
               </Button>
               {createRoutine.isError ? (
                 <p className="text-sm text-destructive">
-                  {createRoutine.error instanceof Error ? createRoutine.error.message : "Failed to create routine"}
+                  {createRoutine.error instanceof Error ? createRoutine.error.message : interfaceText("m_7374cba284beb8")}
                 </p>
               ) : null}
             </div>
@@ -1225,7 +1213,7 @@ export function Routines() {
       {error ? (
         <Card>
           <CardContent className="pt-6 text-sm text-destructive">
-            {error instanceof Error ? error.message : "Failed to load routines"}
+            {error instanceof Error ? error.message : interfaceText("m_8917291223f82f")}
           </CardContent>
         </Card>
       ) : null}
@@ -1252,11 +1240,11 @@ export function Routines() {
           <div className="min-w-0 flex-1">
           {routineViewState.groupBy === "folder" && hasRoutineFolders ? (
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              {folderSelection === "all" ? <FolderIconHeader label="All routines" count={sortedRoutines.length} /> : (
+              {folderSelection === "all" ? <FolderIconHeader label={interfaceText("m_4a8c7842a533fa")} count={sortedRoutines.length} /> : (
                 <div className="flex min-w-0 items-center gap-2 text-sm">
                   <FolderSwatch color={activeFolder?.color} />
-                  <span className="truncate font-medium">{folderSelection === "unfiled" ? "Unfiled" : activeFolder?.name ?? "Folder"}</span>
-                  <span className="text-muted-foreground">{sortedRoutines.length} routine{sortedRoutines.length === 1 ? "" : "s"}</span>
+                  <span className="truncate font-medium">{folderSelection === "unfiled" ? interfaceText("m_d64dc9ae400c28") : activeFolder?.name ?? interfaceText("m_74ccd43303847f")}</span>
+                  <span className="text-muted-foreground">{sortedRoutines.length}{interfaceText("m_2fe51c04cef6ae")}{sortedRoutines.length === 1 ? "" : interfaceText("m_043a718774c572")}</span>
                 </div>
               )}
             </div>
@@ -1285,21 +1273,19 @@ export function Routines() {
             <div className="py-12">
               <EmptyState
                 icon={Repeat}
-                message="No active routines. Use Create routine to define the first recurring workflow."
+                message={interfaceText("m_7ba430dfc06859")}
               />
             </div>
           ) : sortedRoutines.length === 0 ? (
             <div className="py-12">
               <EmptyState
                 icon={Repeat}
-                message={folderSelection === "all" ? "No routines match this view." : "This folder is empty."}
+                message={folderSelection === "all" ? interfaceText("m_7bf937cf568942") : interfaceText("m_bd88d713ecd339")}
               />
               {folderSelection !== "all" ? (
                 <div className="mt-3 flex justify-center">
                   <Button size="sm" onClick={openCreateRoutine}>
-                    <Plus className="mr-2 h-3.5 w-3.5" />
-                    New routine in this folder
-                  </Button>
+                    <Plus className="mr-2 h-3.5 w-3.5" />{interfaceText("m_086c8aefb7d922")}</Button>
                 </div>
               ) : null}
             </div>
@@ -1358,13 +1344,13 @@ export function Routines() {
                                 const previousFolderId = routine.folderId ?? null;
                                 moveRoutineToFolder.mutate({ itemId: routine.id, folderId });
                                 pushToast({
-                                  title: "Routine moved",
+                                  title: interfaceText("m_0710300f56cc8c"),
                                   body: folderId
-                                    ? `Moved "${routine.title}" to ${routineFolders?.folders.find((folder) => folder.id === folderId)?.name ?? "folder"}.`
-                                    : `Moved "${routine.title}" to Unfiled.`,
+                                    ? interfaceText("m_53b0ad4e234191", { value0: (routine.title), value1: (routineFolders?.folders.find((folder) => folder.id === folderId)?.name ?? "folder") })
+                                    : interfaceText("m_00ada081272e73", { value0: (routine.title) }),
                                   tone: "success",
                                   action: {
-                                    label: "Undo",
+                                    label: interfaceText("m_a8283ade31856f"),
                                     onClick: () => moveRoutineToFolder.mutate({ itemId: routine.id, folderId: previousFolderId }),
                                   },
                                 });
@@ -1441,11 +1427,12 @@ export function Routines() {
 }
 
 function FolderIconHeader({ label, count }: { label: string; count: number }) {
+  useInterfaceLanguage();
   return (
     <div className="flex min-w-0 items-center gap-2 text-sm">
       <Repeat className="h-3.5 w-3.5 text-muted-foreground" />
       <span className="truncate font-medium">{label}</span>
-      <span className="text-muted-foreground">{count} routine{count === 1 ? "" : "s"}</span>
+      <span className="text-muted-foreground">{count}{interfaceText("m_2fe51c04cef6ae")}{count === 1 ? "" : interfaceText("m_043a718774c572")}</span>
     </div>
   );
 }

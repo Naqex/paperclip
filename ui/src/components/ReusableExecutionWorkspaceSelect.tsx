@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import { SearchableSelect } from "@/components/SearchableSelect";
 import {
@@ -28,7 +29,7 @@ export function ReusableExecutionWorkspaceSelect<TWorkspace extends ReusableExec
   value,
   workspaces,
   onValueChange,
-  placeholder = "Choose an existing workspace",
+  placeholder = interfaceText("m_f8f73210599b2f"),
   loading = false,
   error = false,
   disabled = false,
@@ -36,6 +37,7 @@ export function ReusableExecutionWorkspaceSelect<TWorkspace extends ReusableExec
   triggerClassName,
   disablePortal,
 }: ReusableExecutionWorkspaceSelectProps<TWorkspace>) {
+  useInterfaceLanguage();
   const groups = useMemo(() => buildReusableExecutionWorkspaceOptionGroups(workspaces), [workspaces]);
 
   return (
@@ -44,8 +46,8 @@ export function ReusableExecutionWorkspaceSelect<TWorkspace extends ReusableExec
       groups={groups}
       onValueChange={onValueChange}
       placeholder={placeholder}
-      searchPlaceholder="Search workspaces..."
-      emptyMessage={error ? "Workspaces failed to load." : "No matching workspaces."}
+      searchPlaceholder={interfaceText("m_5c192a3e6f23b1")}
+      emptyMessage={error ? interfaceText("m_d6a5fb0cd6f2c1") : interfaceText("m_76be0ffe594be8")}
       loadingMessage="Loading workspaces..."
       loading={loading}
       disabled={disabled}

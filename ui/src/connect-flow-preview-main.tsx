@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { MotionConfig, motion } from "motion/react";
@@ -121,6 +122,7 @@ function ConnectFlowPreview({
   initialSourceId: string | null;
   initialPhase: Phase;
 }) {
+  useInterfaceLanguage();
   const [selectedId, setSelectedId] = useState<string | null>(initialSourceId);
   const [useApiKeys, setUseApiKeys] = useState(false);
   const [phase, setPhase] = useState<Phase>(initialPhase);
@@ -130,7 +132,7 @@ function ConnectFlowPreview({
 
   const mode: CredentialMode = useApiKeys ? "api" : "subscription";
   const providerName = selectedId === "codex_local" ? "OpenAI" : "Claude";
-  const signInLabel = `Sign in to ${providerName}`;
+  const signInLabel = interfaceText("m_aa5eed1607ea22", { value0: (providerName) });
   /*
     Claude takes a code back from the customer; OpenAI hands one over. That is
     the only difference between the two cards — the sentence and the last row —
@@ -277,18 +279,18 @@ function ConnectFlowPreview({
     phase === "unwindCard"
       ? { label: signInLabel, icon: "none" as const, disabled: true }
       : done
-      ? { label: "Start over", icon: "arrow" as const, disabled: false }
+      ? { label: interfaceText("m_5eed7e9fc8f3cd"), icon: "arrow" as const, disabled: false }
       : phase === "ready" && apiMode
         ? // A key is typed here rather than fetched elsewhere, so the button is
           // the submit and stays dead until there is something to submit.
-          { label: "Connect", icon: "arrow" as const, disabled: !apiKey.trim() }
+          { label: interfaceText("m_1a2303ede07493"), icon: "arrow" as const, disabled: !apiKey.trim() }
         : phase === "ready"
         ? { label: signInLabel, icon: "none" as const, disabled: false }
         : phase === "waiting"
-          ? { label: "Waiting for code", icon: "spinner" as const, disabled: true }
+          ? { label: interfaceText("m_f22b705c3b7ce6"), icon: "spinner" as const, disabled: true }
           : phase === "connecting"
-            ? { label: "Connecting", icon: "spinner" as const, disabled: true }
-            : { label: "Next", icon: "arrow" as const, disabled: true };
+            ? { label: interfaceText("m_d403c686f6a104"), icon: "spinner" as const, disabled: true }
+            : { label: interfaceText("m_1ff57a29d7c9d1"), icon: "arrow" as const, disabled: true };
 
   return (
     <MotionConfig reducedMotion="user">
@@ -308,7 +310,7 @@ function ConnectFlowPreview({
         <div className="pt-6">
           <OnboardingHeading
             center
-            title={done ? "Connected" : "Connect a model"}
+            title={done ? interfaceText("m_22965568d22a14") : interfaceText("m_87bdaaf8ac10de")}
             lede={
               done
                 ? "The step advances straight to Review — there is no success screen."
@@ -321,7 +323,7 @@ function ConnectFlowPreview({
           <>
             <div className="space-y-2 pt-12">
               <ModelSourceTiles
-                label="Model source"
+                label={interfaceText("m_9fb88c74db9bfb")}
                 sources={MODEL_SOURCES}
                 mode={mode}
                 selectedId={selectedId}
@@ -420,8 +422,8 @@ function ConnectFlowPreview({
                     {/* The one place the three paths differ. */}
                     {apiMode ? (
                       <OnboardingCardField
-                        label="API key"
-                        placeholder="Enter API key here"
+                        label={interfaceText("m_16f0ee47f993d6")}
+                        placeholder={interfaceText("m_c80c3ac9799dc1")}
                         masked
                         value={apiKey}
                         onChange={setApiKey}

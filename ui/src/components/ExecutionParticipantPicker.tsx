@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useMemo, useState } from "react";
 import type { Agent, Issue } from "@paperclipai/shared";
@@ -33,6 +34,7 @@ export function ExecutionParticipantPicker({
   currentUserId,
   onUpdate,
 }: ExecutionParticipantPickerProps) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const policyAvailable = useExecutionPolicy(issue.executionPolicy).success;
@@ -70,7 +72,7 @@ export function ExecutionParticipantPicker({
 
   const participantLabel = (value: string) => {
     if (value.startsWith("agent:")) return agentName(value.slice("agent:".length));
-    if (value.startsWith("user:")) return userLabel(value.slice("user:".length)) ?? "User";
+    if (value.startsWith("user:")) return userLabel(value.slice("user:".length)) ?? interfaceText("m_b512d97e7cbf97");
     return value;
   };
 
@@ -92,11 +94,11 @@ export function ExecutionParticipantPicker({
     updatePolicy(next);
   };
 
-  const label = stageType === "review" ? "Reviewers" : "Approvers";
+  const label = stageType === "review" ? interfaceText("m_06499a309e3588") : interfaceText("m_97ecaec16a965f");
   const Icon = stageType === "review" ? Eye : ShieldCheck;
 
   if (!policyAvailable) {
-    return <span role="status" className="text-xs text-muted-foreground">Execution policy unavailable. Refresh to try again.</span>;
+    return <span role="status" className="text-xs text-muted-foreground">{interfaceText("m_f5e92904c0df85")}</span>;
   }
 
   return (
@@ -123,7 +125,7 @@ export function ExecutionParticipantPicker({
       <PopoverContent className="p-1 w-56" align="start" collisionPadding={16}>
         <input
           className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-          placeholder={`Search ${label.toLowerCase()}...`}
+          placeholder={interfaceText("m_05c735642a36db", { value0: (label.toLowerCase()) })}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           autoFocus
@@ -135,8 +137,7 @@ export function ExecutionParticipantPicker({
               values.length === 0 && "bg-accent",
             )}
             onClick={() => updatePolicy([])}
-          >
-            No {label.toLowerCase()}
+          >{interfaceText("m_05f8bb36f8813c")}{label.toLowerCase()}
           </button>
           {currentUserId && (
             <button
@@ -146,9 +147,7 @@ export function ExecutionParticipantPicker({
               )}
               onClick={() => toggle(`user:${currentUserId}`)}
             >
-              <User className="h-3 w-3 shrink-0 text-muted-foreground" />
-              Assign to me
-            </button>
+              <User className="h-3 w-3 shrink-0 text-muted-foreground" />{interfaceText("m_9dd977a40985e4")}</button>
           )}
           {issue.createdByUserId && issue.createdByUserId !== currentUserId && (
             <button
@@ -159,7 +158,7 @@ export function ExecutionParticipantPicker({
               onClick={() => toggle(`user:${issue.createdByUserId}`)}
             >
               <User className="h-3 w-3 shrink-0 text-muted-foreground" />
-              {creatorUserLabel ?? "Requester"}
+              {creatorUserLabel ?? interfaceText("m_b5687cf04af300")}
             </button>
           )}
           {otherUserOptions

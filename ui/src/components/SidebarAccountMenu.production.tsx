@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useTranslation } from "@/i18n";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -121,6 +122,7 @@ export function SidebarAccountMenu({
   open: controlledOpen,
   onOpenChange,
 }: SidebarAccountMenuProps) {
+  useInterfaceLanguage();
   const cloud = useCloudInstance();
   const isCloud = Boolean(cloud);
   // Invites live on the Members page (or in Cloud's People settings). Hide the
@@ -222,7 +224,7 @@ export function SidebarAccountMenu({
                     href={`https://github.com/paperclipai/paperclip/commit/${stagingCommit}`}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`View commit ${stagingCommit} on GitHub`}
+                    aria-label={interfaceText("m_57eb5fef26c34f", { value0: (stagingCommit) })}
                     title={stagingCommit}
                   >
                     SHA {stagingCommit.slice(0, 7)}
@@ -235,7 +237,7 @@ export function SidebarAccountMenu({
               {showInvite && inviteHref ? (
                 <MenuAction
                   label={t("account.invite")}
-                  description="Invite people to your organization."
+                  description={interfaceText("m_22344f54a6a332")}
                   icon={UserPlus}
                   href={inviteHref}
                   topLevel={isCloud}
@@ -244,7 +246,7 @@ export function SidebarAccountMenu({
               ) : null}
               <MenuAction
                 label={t("account.docs")}
-                description="Open Paperclip docs in a new tab."
+                description={interfaceText("m_1b5779dcc55bf2")}
                 icon={BookOpen}
                 href={DOCS_URL}
                 external
@@ -268,9 +270,7 @@ export function SidebarAccountMenu({
                     <span className="block text-sm font-medium text-foreground">
                       {signOutMutation.isPending ? t("account.signingOut") : t("account.signOut")}
                     </span>
-                    <span className="block text-xs text-muted-foreground">
-                      End this browser session.
-                    </span>
+                    <span className="block text-xs text-muted-foreground">{interfaceText("m_c1dadf22fd8313")}</span>
                   </span>
                 </button>
               ) : null}

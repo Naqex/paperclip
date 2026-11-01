@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useState } from "react";
 import { Link2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ export function ManagedOAuthHandoffState({
   onRetry: () => void;
   onCancel: () => void;
 }) {
+  useInterfaceLanguage();
   const failed = phase === "error";
   return (
     <main className="flex min-h-screen items-center justify-center bg-background p-6">
@@ -34,19 +36,19 @@ export function ManagedOAuthHandoffState({
         </span>
         <div className="min-w-0">
           <h1 className="text-xl font-bold tracking-tight">
-            {failed ? "Sign-in couldn’t continue" : "Preparing secure sign-in"}
+            {failed ? interfaceText("m_a790c4c9cb70e5") : interfaceText("m_5909bba0d947d0")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {failed
-              ? error ?? "Paperclip couldn’t prepare the provider sign-in. Try again."
+              ? error ?? interfaceText("m_4c14d5fc3f528c")
               : phase === "reauthenticating"
-                ? "Your Paperclip sign-in is being refreshed."
-                : "Paperclip is opening the provider securely."}
+                ? interfaceText("m_549710816016e3")
+                : interfaceText("m_a6a543ef434198")}
           </p>
           {failed ? (
             <div className="mt-6 flex items-center gap-2">
-              <Button type="button" onClick={onRetry}>Try again</Button>
-              <Button type="button" variant="ghost" onClick={onCancel}>Return to Paperclip</Button>
+              <Button type="button" onClick={onRetry}>{interfaceText("m_d8b8392e2c5429")}</Button>
+              <Button type="button" variant="ghost" onClick={onCancel}>{interfaceText("m_7cb9e4e1973dad")}</Button>
             </div>
           ) : null}
         </div>

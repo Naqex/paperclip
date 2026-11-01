@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { describeError } from "../api/errors";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "@/lib/router";
@@ -18,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 type StatusFilter = "pending" | "all";
 
 export function Approvals() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const queryClient = useQueryClient();
@@ -28,8 +30,8 @@ export function Approvals() {
   const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Approvals" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_2bfc3471571e5c") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: queryKeys.approvals.list(selectedCompanyId!),
@@ -77,7 +79,7 @@ export function Approvals() {
   ).length;
 
   if (!selectedCompanyId) {
-    return <p className="text-sm text-muted-foreground">Select an organization first.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_0d7c81ffe0023b")}</p>;
   }
 
   if (isLoading) {
@@ -89,7 +91,7 @@ export function Approvals() {
       <div className="flex items-center justify-between">
         <Tabs value={statusFilter} onValueChange={(v) => navigate(`/approvals/${v}`)}>
           <PageTabBar items={[
-            { value: "pending", label: <>Pending{pendingCount > 0 && (
+            { value: "pending", label: <>{interfaceText("m_331551b0de4157")}{pendingCount > 0 && (
               <Badge variant="ghost" className={cn(
                 "ml-1.5 px-1.5 text-(length:--text-nano)",
                 "bg-yellow-500/20 text-yellow-500"
@@ -97,7 +99,7 @@ export function Approvals() {
                 {pendingCount}
               </Badge>
             )}</> },
-            { value: "all", label: "All" },
+            { value: "all", label: interfaceText("m_a52ace420f2175") },
           ]} />
         </Tabs>
       </div>
@@ -109,7 +111,7 @@ export function Approvals() {
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <ShieldCheck className="h-8 w-8 text-muted-foreground/30 mb-3" />
           <p className="text-sm text-muted-foreground">
-            {statusFilter === "pending" ? "No pending approvals." : "No approvals yet."}
+            {statusFilter === "pending" ? interfaceText("m_bac0662a619b4f") : interfaceText("m_0e967ef975fe86")}
           </p>
         </div>
       )}

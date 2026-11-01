@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ export function SecretPopoverForm({
   onCancel,
   onSubmit,
 }: SecretPopoverFormProps) {
+  useInterfaceLanguage();
   const [name, setName] = useState(initialName);
   const [value, setValue] = useState(initialValue);
   const [reveal, setReveal] = useState(false);
@@ -67,30 +69,28 @@ export function SecretPopoverForm({
     }
   }
 
-  const ctaLabel = mode === "create" ? "Create & bind" : "Store & bind";
-  const heading = mode === "create" ? "Create secret" : "Store value as secret";
+  const ctaLabel = mode === "create" ? interfaceText("m_e4fbc1826339fe") : interfaceText("m_b11682f46d179b");
+  const heading = mode === "create" ? interfaceText("m_b72a982613b6b6") : interfaceText("m_26f01e474333e3");
 
   return (
     <div className="w-72 space-y-3">
       <div className="space-y-1">
         <PopoverTitle className="text-sm font-medium">{heading}</PopoverTitle>
         {mode === "store" ? (
-          <PopoverDescription className="text-(length:--text-micro) text-muted-foreground">
-            Moves the typed value into an encrypted organization secret and binds{" "}
-            <span className="font-mono">{initialName || "this variable"}</span> to it.
-          </PopoverDescription>
+          <PopoverDescription className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_f4cbdedc735780")}{" "}
+            <span className="font-mono">{initialName || interfaceText("m_7ab1059a5f2a8f")}</span>{interfaceText("m_9cbba67d96453a")}</PopoverDescription>
         ) : null}
       </div>
 
       <label className="block space-y-1">
-        <span className="text-(length:--text-micro) font-medium text-muted-foreground">Name</span>
+        <span className="text-(length:--text-micro) font-medium text-muted-foreground">{interfaceText("m_dcd1d5223f73b3")}</span>
         <input
           className={cn(fieldClass, nameError && "border-destructive focus-visible:ring-destructive/40")}
           value={name}
           autoFocus
           spellCheck={false}
           placeholder="secret_name"
-          aria-label="Secret name"
+          aria-label={interfaceText("m_5cdf573b8913b2")}
           aria-invalid={nameError ? true : undefined}
           onChange={(event) => setName(event.target.value)}
           onBlur={() => setTouched(true)}
@@ -105,7 +105,7 @@ export function SecretPopoverForm({
       </label>
 
       <label className="block space-y-1">
-        <span className="text-(length:--text-micro) font-medium text-muted-foreground">Value</span>
+        <span className="text-(length:--text-micro) font-medium text-muted-foreground">{interfaceText("m_8e37953d23daca")}</span>
         <div className="relative">
           <input
             className={cn(fieldClass, "pr-8", valueError && "border-destructive focus-visible:ring-destructive/40")}
@@ -114,14 +114,14 @@ export function SecretPopoverForm({
             readOnly={mode === "store"}
             spellCheck={false}
             placeholder={mode === "create" ? "value" : undefined}
-            aria-label="Secret value"
+            aria-label={interfaceText("m_6ef47d9880313f")}
             aria-invalid={valueError ? true : undefined}
             onChange={mode === "create" ? (event) => setValue(event.target.value) : undefined}
           />
           <button
             type="button"
             className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:text-foreground"
-            aria-label={reveal ? "Hide value" : "Show value"}
+            aria-label={reveal ? interfaceText("m_381d9c1845cf1b") : interfaceText("m_fad206e22ec126")}
             onClick={() => setReveal((prev) => !prev)}
           >
             {reveal ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -133,9 +133,7 @@ export function SecretPopoverForm({
       {error ? <p className="text-(length:--text-micro) text-destructive">{error}</p> : null}
 
       <div className="flex items-center justify-end gap-2 pt-0.5">
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
-          Cancel
-        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>{interfaceText("m_19766ed6ccb2f4")}</Button>
         <Button type="button" size="sm" onClick={() => void handleSubmit()} disabled={!canSubmit}>
           {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
           {ctaLabel}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId } from "react";
 import { Loader2, Pause, Play } from "lucide-react";
 import { Link } from "@/lib/router";
@@ -22,6 +23,7 @@ export function TaskChatPausedTakeover({
 }: {
   hasDraft?: boolean;
 } & TaskComposerPause) {
+  useInterfaceLanguage();
   const headingId = useId();
   const subtree = scope === "subtree";
   return (
@@ -35,12 +37,12 @@ export function TaskChatPausedTakeover({
         <Pause aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-(--status-task-icon-todo)" />
         <div className="flex min-w-0 flex-col gap-1">
           <h2 id={headingId} className="text-sm font-medium text-foreground">
-            {subtree ? "Subtree is paused." : "Task is paused."}
+            {subtree ? interfaceText("m_f9ebf72d55c387") : interfaceText("m_fb9c04c93b5e4f")}
           </h2>
           <p className="text-sm text-muted-foreground">
             {subtree
-              ? "Resume this subtree to send a message."
-              : "Resume this task to send a message."}
+              ? interfaceText("m_1f80fbce1bce03")
+              : interfaceText("m_24253739dd69b9")}
           </p>
         </div>
       </div>
@@ -51,11 +53,11 @@ export function TaskChatPausedTakeover({
       ) : null}
       <div className="flex flex-wrap items-center justify-end gap-3">
         {hasDraft ? (
-          <p className="mr-auto text-xs text-muted-foreground">Your draft is saved.</p>
+          <p className="mr-auto text-xs text-muted-foreground">{interfaceText("m_58c808d96ad9a8")}</p>
         ) : null}
         {resumeHref ? (
           <Button asChild size="sm" className="bg-(--status-agent-paused) text-foreground hover:bg-(--status-agent-paused)/80 dark:text-background">
-            <Link to={resumeHref}><Play aria-hidden="true" />Resume subtree</Link>
+            <Link to={resumeHref}><Play aria-hidden="true" />{interfaceText("m_b38209885d3237")}</Link>
           </Button>
         ) : (
           <Button
@@ -65,7 +67,7 @@ export function TaskChatPausedTakeover({
             className="bg-(--status-agent-paused) text-foreground hover:bg-(--status-agent-paused)/80 dark:text-background"
           >
             {pending ? <Loader2 aria-hidden="true" className="animate-spin" /> : <Play aria-hidden="true" />}
-            {pending ? "Resuming…" : subtree ? "Resume subtree" : "Resume task"}
+            {pending ? interfaceText("m_c494e3ca3e3b04") : subtree ? interfaceText("m_b38209885d3237") : interfaceText("m_c697c05633945b")}
           </Button>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import {
   Boxes,
@@ -39,23 +40,23 @@ interface NavEntry {
 }
 
 const TOP: NavEntry[] = [
-  { label: "New Task", icon: SquarePen },
-  { label: "Search", icon: Search },
-  { label: "Dashboard", icon: LayoutDashboard },
-  { label: "Inbox", icon: Inbox },
+  { get label() { return interfaceText("m_718e58cc20d675"); }, icon: SquarePen },
+  { get label() { return interfaceText("m_49c266baaaa709"); }, icon: Search },
+  { get label() { return interfaceText("m_67b696468610b8"); }, icon: LayoutDashboard },
+  { get label() { return interfaceText("m_94835ea2fcf775"); }, icon: Inbox },
 ];
 const WORK: NavEntry[] = [
-  { label: "Tasks", icon: CircleCheck, nav: "tasks" },
-  { label: "Projects", icon: FolderOpen },
-  { label: "Routines", icon: Repeat },
-  { label: "Artifacts", icon: Package, nav: "artifacts" },
-  { label: "Workspaces", icon: GitBranch },
+  { get label() { return interfaceText("m_b3a60e61a5233d"); }, icon: CircleCheck, nav: "tasks" },
+  { get label() { return interfaceText("m_04e2a9728af758"); }, icon: FolderOpen },
+  { get label() { return interfaceText("m_61b7bb44e2b47b"); }, icon: Repeat },
+  { get label() { return interfaceText("m_314ae71b8c8dc9"); }, icon: Package, nav: "artifacts" },
+  { get label() { return interfaceText("m_1377264ba3b0a7"); }, icon: GitBranch },
 ];
 const ORG: NavEntry[] = [
-  { label: "Agents", icon: Users },
-  { label: "Skills", icon: Boxes },
-  { label: "Connectors", icon: Unplug },
-  { label: "Audit", icon: History },
+  { get label() { return interfaceText("m_279b44d2ab4b40"); }, icon: Users },
+  { get label() { return interfaceText("m_66d0f523a379b2"); }, icon: Boxes },
+  { get label() { return interfaceText("m_c3d2e79ebdd046"); }, icon: Unplug },
+  { get label() { return interfaceText("m_bb6aea28739637"); }, icon: History },
 ];
 const RECENT = [TASKS["ACM-1"], TASKS["ACM-3"], TASKS["ACM-2"]];
 
@@ -95,9 +96,10 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
 }
 
 function Sidebar({ nav }: { nav: ShellNav }) {
+  useInterfaceLanguage();
   return (
     // SidebarShell.tsx:15 (240px), Sidebar.tsx:128 — no right border; the edge is the surface change.
-    <aside className="flex w-60 shrink-0 flex-col primary-sidebar-surface" aria-label="Primary">
+    <aside className="flex w-60 shrink-0 flex-col primary-sidebar-surface" aria-label={interfaceText("m_efe10c80ec8a9f")}>
       {/* Sidebar.tsx:142 + SidebarCompanyMenu.tsx:268-291 */}
       <div className="flex h-(--sz-60px) shrink-0 items-center gap-1 px-3">
         <span className="flex h-9 min-w-0 flex-1 items-center justify-start gap-2 rounded-md px-4 text-left">
@@ -120,17 +122,17 @@ function Sidebar({ nav }: { nav: ShellNav }) {
             <NavItem key={entry.label} {...entry} />
           ))}
         </div>
-        <Section label="Work">
+        <Section label={interfaceText("m_104ab9213e28e4")}>
           {WORK.map((entry) => (
             <NavItem key={entry.label} {...entry} active={entry.nav === nav} />
           ))}
         </Section>
-        <Section label="Org">
+        <Section label={interfaceText("m_b1ee7e9705a211")}>
           {ORG.map((entry) => (
             <NavItem key={entry.label} {...entry} />
           ))}
         </Section>
-        <Section label="Recent Tasks">
+        <Section label={interfaceText("m_49a027ddc61602")}>
           {RECENT.map((title) => (
             <NavItem key={title} label={title} />
           ))}
@@ -157,12 +159,11 @@ function Sidebar({ nav }: { nav: ShellNav }) {
  * screenshots as a ghost button.
  */
 export function SupportButton() {
+  useInterfaceLanguage();
   return (
     <span className="ml-auto flex shrink-0 items-center gap-1 pl-2">
       <span className="inline-flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium text-muted-foreground">
-        <LifeBuoy className="size-4" />
-        Support
-      </span>
+        <LifeBuoy className="size-4" />{interfaceText("m_be91940b79f469")}</span>
     </span>
   );
 }

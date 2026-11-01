@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
@@ -178,7 +179,7 @@ function renderImportFileExtra(node: FileTreeNode, checked: boolean, renameMap: 
       "text-(length:--text-nano) uppercase tracking-wide",
       ACTION_COLORS[node.action] ?? ACTION_COLORS.skip,
     )}>
-      {checked ? node.action : "skip"}
+      {checked ? node.action : interfaceText("m_42e93b9bb77d8a")}
     </Badge>
   ) : null;
 
@@ -215,9 +216,10 @@ function ImportPreviewPane({
   action: string | null;
   renamedTo: string | null;
 }) {
+  useInterfaceLanguage();
   if (!selectedFile || content === null) {
     return (
-      <EmptyState icon={Package} message="Select a file to preview its contents." />
+      <EmptyState icon={Package} message={interfaceText("m_e7aff2e8e1c53e")} />
     );
   }
 
@@ -278,9 +280,7 @@ function ImportPreviewPane({
             <code>{textContent}</code>
           </pre>
         ) : (
-          <div className="rounded-lg border border-border bg-accent/10 px-4 py-3 text-sm text-muted-foreground">
-            Binary asset preview is not available for this file type.
-          </div>
+          <div className="rounded-lg border border-border bg-accent/10 px-4 py-3 text-sm text-muted-foreground">{interfaceText("m_0a5cc3efb5c91f")}</div>
         )}
       </div>
     </div>
@@ -451,17 +451,16 @@ function ConflictResolutionList({
   onToggleSkip: (slug: string, filePath: string | null) => void;
   onToggleConfirm: (slug: string) => void;
 }) {
+  useInterfaceLanguage();
   if (conflicts.length === 0) return null;
 
   return (
     <div className="mx-5 mt-3">
       <div className="rounded-md border border-border">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-          <h3 className="text-sm font-medium">
-            Renames
-          </h3>
+          <h3 className="text-sm font-medium">{interfaceText("m_bff42c25bfc4b8")}</h3>
           <span className="text-xs text-muted-foreground">
-            {conflicts.length} item{conflicts.length === 1 ? "" : "s"}
+            {conflicts.length}{interfaceText("m_a5f3c2e9f903f3")}{conflicts.length === 1 ? "" : interfaceText("m_043a718774c572")}
           </span>
         </div>
         <div className="divide-y divide-border">
@@ -489,7 +488,7 @@ function ConflictResolutionList({
                   )}
                   onClick={() => onToggleSkip(item.slug, item.filePath)}
                 >
-                  {isSkipped ? "skipped" : "skip"}
+                  {isSkipped ? interfaceText("m_389595a44dc9dc") : interfaceText("m_42e93b9bb77d8a")}
                 </button>
 
                 <Badge variant="outline" className={cn(
@@ -541,11 +540,9 @@ function ConflictResolutionList({
                   >
                     {isConfirmed ? (
                       <>
-                        <Check className="h-3 w-3" />
-                        confirmed
-                      </>
+                        <Check className="h-3 w-3" />{interfaceText("m_9599915bd8cd62")}</>
                     ) : (
-                      "confirm rename"
+                      interfaceText("m_d216585d96c4c8")
                     )}
                   </button>
                 )}
@@ -565,8 +562,8 @@ const IMPORT_ADAPTER_OPTIONS: { value: string; label: string }[] = [
     value: adapter.type,
     label: adapterLabels[adapter.type] ?? getAdapterLabel(adapter.type),
   })),
-  { value: "openai_dot", label: "OpenAI Dot (experimental)" },
-  { value: "muse", label: "Muse — Personal agent (experimental)" },
+  { value: "openai_dot", get label() { return interfaceText("m_ef3294327fb866"); } },
+  { value: "muse", get label() { return interfaceText("m_6e460eaa6dcee6"); } },
 ];
 
 // Dot is a picker choice backed by the shared Runner API adapter.
@@ -661,15 +658,16 @@ function AdapterPickerList({
   onToggleExpand: (slug: string) => void;
   onChangeConfig: (slug: string, patch: Partial<CreateConfigValues>) => void;
 }) {
+  useInterfaceLanguage();
   if (agents.length === 0) return null;
 
   return (
     <div className="mx-5 mt-3">
       <div className="rounded-md border border-border">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-          <h3 className="text-sm font-medium">Adapters</h3>
+          <h3 className="text-sm font-medium">{interfaceText("m_d20547a8145f71")}</h3>
           <span className="text-xs text-muted-foreground">
-            {agents.length} agent{agents.length === 1 ? "" : "s"}
+            {agents.length} agent{agents.length === 1 ? "" : interfaceText("m_043a718774c572")}
           </span>
         </div>
         <div className="divide-y divide-border">
@@ -707,7 +705,7 @@ function AdapterPickerList({
                       </option>
                     ))}
                     {!adapterOptions.some((option) => option.value === selectedType) && (
-                      <option value={selectedType}>{agent.adapterChoice === "openai_dot" ? "OpenAI Dot (experimental)" : `${getAdapterLabel(selectedType)} (${agentHarnessType(agent.adapterType, agent.adapterConfig)})`}</option>
+                      <option value={selectedType}>{agent.adapterChoice === "openai_dot" ? interfaceText("m_ef3294327fb866") : `${getAdapterLabel(selectedType)} (${agentHarnessType(agent.adapterType, agent.adapterConfig)})`}</option>
                     )}
                   </select>
                   <button
@@ -720,15 +718,11 @@ function AdapterPickerList({
                     )}
                     onClick={() => onToggleExpand(agent.slug)}
                   >
-                    <ChevronRight className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-90")} />
-                    configure adapter
-                  </button>
+                    <ChevronRight className={cn("h-3 w-3 transition-transform", isExpanded && "rotate-90")} />{interfaceText("m_0e83650a60da09")}</button>
                 </div>
                 {agent.fallbackAdapterType && (
                   <div className="mx-4 mb-2.5 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
-                    <p className="text-xs text-amber-500">
-                      source adapter {agent.adapterChoice === "openai_dot" ? "OpenAI Dot" : agent.adapterChoice === "muse" ? "Muse — Personal agent" : agent.adapterType} is not installed here — this agent
-                      will use {adapterLabels[selectedType] ?? getAdapterLabel(selectedType)}
+                    <p className="text-xs text-amber-500">{interfaceText("m_c2b91fe67f578d")}{agent.adapterChoice === "openai_dot" ? "OpenAI Dot" : agent.adapterChoice === "muse" ? interfaceText("m_36b7c21c77b5e8") : agent.adapterType}{interfaceText("m_ab58a0d63423db")}{adapterLabels[selectedType] ?? getAdapterLabel(selectedType)}
                     </p>
                   </div>
                 )}
@@ -919,6 +913,8 @@ async function watchImportJob(
 // ── Main page ─────────────────────────────────────────────────────────
 
 export function CompanyImport() {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const {
     selectedCompanyId,
     selectedCompany,
@@ -1117,15 +1113,15 @@ export function CompanyImport() {
   );
 
   const localZipHelpText =
-    "Upload a .zip exported directly from Paperclip. Re-zipped archives created by Finder, Explorer, or other zip tools may not import correctly.";
+    interfaceText("m_23785e377078d5");
 
   useEffect(() => {
     setBreadcrumbs([
       { label: selectedCompany?.name ?? "Company", href: "/dashboard" },
-      { label: "Settings", href: "/company/settings" },
-      { label: "Import" },
+      { label: interfaceText("m_74a883a037bc22"), href: "/company/settings" },
+      { label: interfaceText("m_2cff9baabf56ca") },
     ]);
-  }, [selectedCompany?.name, setBreadcrumbs]);
+  }, [selectedCompany?.name, setBreadcrumbs, interfaceLanguage]);
 
   // The GitHub/URL source still travels inline (it is just a URL, so it never
   // hits the inline-size ceiling). The local .zip source uploads its raw
@@ -1244,8 +1240,8 @@ export function CompanyImport() {
       if (generation !== previewGenerationRef.current) return;
       pushToast({
         tone: "error",
-        title: "Preview failed",
-        body: err instanceof Error ? err.message : "Failed to preview import.",
+        title: interfaceText("m_97ce5234adcb49"),
+        body: err instanceof Error ? err.message : interfaceText("m_4ed200fd76ce8c"),
       });
     },
   });
@@ -1363,8 +1359,8 @@ export function CompanyImport() {
         });
         pushToast({
           tone: "success",
-          title: "Import completed",
-          body: "Open the organization to view it.",
+          title: interfaceText("m_69135372f0c4f5"),
+          body: interfaceText("m_9e28b2e33cc6ff"),
         });
         return;
       }
@@ -1398,8 +1394,8 @@ export function CompanyImport() {
       setResumedWatchJobId(null);
       pushToast({
         tone: "error",
-        title: "Import failed",
-        body: err instanceof Error ? err.message : "Failed to apply import.",
+        title: interfaceText("m_0a26f41abd00f9"),
+        body: err instanceof Error ? err.message : interfaceText("m_026e5ceeb357b1"),
       });
     },
   });
@@ -1452,8 +1448,8 @@ export function CompanyImport() {
     } catch (err) {
       pushToast({
         tone: "error",
-        title: "Package read failed",
-        body: err instanceof Error ? err.message : "Failed to read folder.",
+        title: interfaceText("m_4bb06e81c69099"),
+        body: err instanceof Error ? err.message : interfaceText("m_23cae9617380e7"),
       });
     }
   }
@@ -1672,8 +1668,8 @@ export function CompanyImport() {
     if (failureCount > 0) {
       pushToast({
         tone: "error",
-        title: "Some items were not activated",
-        body: `${failureCount} item${failureCount === 1 ? "" : "s"} failed to activate; the rest were activated.`,
+        title: interfaceText("m_3bd449d7bda6eb"),
+        body: interfaceText("m_9dee2944bb366f", { value0: (failureCount), value1: (failureCount === 1 ? "" : interfaceText("m_043a718774c572")) }),
       });
     }
   }
@@ -1824,16 +1820,14 @@ export function CompanyImport() {
     return (
       <div className="max-w-6xl space-y-4 px-5 py-5">
         <div>
-          <h2 className="text-base font-semibold">Import completed</h2>
+          <h2 className="text-base font-semibold">{interfaceText("m_69135372f0c4f5")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             {importOutcome.companyName
-              ? <>The import finished and <span className="font-medium text-foreground">{importOutcome.companyName}</span> is ready. Its detailed summary is no longer available.</>
-              : "The import finished and your organization is ready. Its detailed summary is no longer available, but the organization has been added — select it from the organization switcher to view it."}
+              ? <>{interfaceText("m_832a4e4e4ae8fb")}<span className="font-medium text-foreground">{importOutcome.companyName}</span>{interfaceText("m_246cef2941f6e0")}</>
+              : interfaceText("m_682f65d6d45400")}
           </p>
           {importOutcome.pausedAutomations ? (
-            <p className="text-xs text-muted-foreground mt-1">
-              Imported agents arrived paused — resume them from the company's Agents page so assigned tasks can start.
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">{interfaceText("m_94f886962ac01f")}</p>
           ) : null}
         </div>
         {importOutcome.dashboardPath ? (
@@ -1845,9 +1839,7 @@ export function CompanyImport() {
               // Force a fresh dashboard load so newly imported agents are
               // immediately visible (same reason as the full-outcome CTA).
               onClick={() => window.location.assign(importOutcome.dashboardPath!)}
-            >
-              Open organization dashboard
-            </Button>
+            >{interfaceText("m_51cddc9a1d1d55")}</Button>
           </div>
         ) : null}
       </div>
@@ -1864,19 +1856,18 @@ export function CompanyImport() {
     return (
       <div className="max-w-6xl space-y-4 px-5 py-5">
         <div>
-          <h2 className="text-base font-semibold">Import complete</h2>
+          <h2 className="text-base font-semibold">{interfaceText("m_a9c747fe220f0a")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
-            {result.company.name}: {result.agents.length} agent{result.agents.length === 1 ? "" : "s"},{" "}
-            {skillResults.length} skill{skillResults.length === 1 ? "" : "s"},{" "}
-            {result.projects.length} project{result.projects.length === 1 ? "" : "s"}, and{" "}
-            {result.routines.length} routine{result.routines.length === 1 ? "" : "s"} processed.
-          </p>
+            {result.company.name}: {result.agents.length} agent{result.agents.length === 1 ? "" : interfaceText("m_043a718774c572")},{" "}
+            {skillResults.length}{interfaceText("m_da29f2eaf0c722")}{skillResults.length === 1 ? "" : interfaceText("m_043a718774c572")},{" "}
+            {result.projects.length}{interfaceText("m_c6e0c8d38fc71d")}{result.projects.length === 1 ? "" : interfaceText("m_043a718774c572")}{interfaceText("m_4aa9bfd2f175a9")}{" "}
+            {result.routines.length}{interfaceText("m_2fe51c04cef6ae")}{result.routines.length === 1 ? "" : interfaceText("m_043a718774c572")}{interfaceText("m_1b839b9cf13d00")}</p>
         </div>
 
         {skillResults.length > 0 && (
           <div className="rounded-md border border-border">
             <div className="border-b border-border px-4 py-2.5">
-              <h3 className="text-sm font-medium">Skill import results</h3>
+              <h3 className="text-sm font-medium">{interfaceText("m_44784eda0726a7")}</h3>
             </div>
             <div className="divide-y divide-border">
               {skillResults.map((skill) => (
@@ -1884,7 +1875,7 @@ export function CompanyImport() {
                   <span className="min-w-0 flex-1 truncate">{skill.originalSlug}</span>
                   <span className="shrink-0 text-xs text-muted-foreground">{skill.action}</span>
                   {skill.slug !== skill.originalSlug && (
-                    <span className="shrink-0 text-xs text-muted-foreground">as {skill.slug}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{interfaceText("m_12876f7c066042")}{skill.slug}</span>
                   )}
                 </div>
               ))}
@@ -1903,8 +1894,8 @@ export function CompanyImport() {
         {activationItems.length > 0 && (
           <div className="rounded-md border border-border">
             <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-              <h3 className="text-sm font-medium">Activate imported agents and routines</h3>
-              <span className="text-xs text-muted-foreground">imported paused</span>
+              <h3 className="text-sm font-medium">{interfaceText("m_2c27dd18687833")}</h3>
+              <span className="text-xs text-muted-foreground">{interfaceText("m_d84db03f67700e")}</span>
             </div>
             <div className="divide-y divide-border">
               {activationItems.map((item) => {
@@ -1929,11 +1920,11 @@ export function CompanyImport() {
                     </Badge>
                     <span className="min-w-0 flex-1 truncate">{item.name}</span>
                     {isActivated ? (
-                      <span className="shrink-0 text-xs text-emerald-500">activated</span>
+                      <span className="shrink-0 text-xs text-emerald-500">{interfaceText("m_dd61d5ff27c4b4")}</span>
                     ) : failure ? (
-                      <span className="shrink-0 text-xs text-destructive">failed: {failure}</span>
+                      <span className="shrink-0 text-xs text-destructive">{interfaceText("m_53f83e3eb24865")}{failure}</span>
                     ) : (
-                      <span className="shrink-0 text-xs text-muted-foreground">paused</span>
+                      <span className="shrink-0 text-xs text-muted-foreground">{interfaceText("m_a7a9dc5bcf71ad")}</span>
                     )}
                   </label>
                 );
@@ -1945,16 +1936,14 @@ export function CompanyImport() {
                 onClick={() => void handleActivateSelected()}
                 disabled={isActivating || pendingCount === 0}
               >
-                {isActivating ? "Activating..." : `Activate selected (${pendingCount})`}
+                {isActivating ? interfaceText("m_fd2db6af73fce6") : interfaceText("m_4bb651704a2db2", { value0: (pendingCount) })}
               </Button>
             </div>
           </div>
         )}
 
         {importOutcome.pausedAutomations ? (
-          <p className="text-xs text-muted-foreground">
-            Anything left paused here stays visible on the company's Agents and Routines pages, which offer the same resume actions — nothing is lost if you leave this page.
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_dcc6f3f9e8a278")}</p>
         ) : null}
 
         {/* Force a fresh dashboard load so newly imported agents are immediately visible. */}
@@ -1963,9 +1952,7 @@ export function CompanyImport() {
             size="sm"
             variant="outline"
             onClick={() => window.location.assign(dashboardPath)}
-          >
-            Go to dashboard
-          </Button>
+          >{interfaceText("m_f085ee865703cd")}</Button>
         </div>
       </div>
     );
@@ -1978,23 +1965,19 @@ export function CompanyImport() {
     return (
       <div className="max-w-6xl space-y-4 px-5 py-5">
         <div>
-          <h2 className="text-base font-semibold">Resume watching import</h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            An import you started earlier is still running on the server.
-          </p>
+          <h2 className="text-base font-semibold">{interfaceText("m_a933e16f329dcf")}</h2>
+          <p className="text-xs text-muted-foreground mt-1">{interfaceText("m_d6e8190691fbba")}</p>
         </div>
         <div className="flex items-start gap-2 rounded-md border border-border bg-muted/30 px-3 py-2.5">
           <Loader2 className="mt-0.5 h-3.5 w-3.5 shrink-0 animate-spin text-muted-foreground" />
-          <p className="text-xs text-muted-foreground">
-            Import running on the server — safe to keep waiting; reconnecting won&apos;t lose it.
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_29e5a2577d150e")}</p>
         </div>
       </div>
     );
   }
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Download} message="Select an organization to import into." />;
+    return <EmptyState icon={Download} message={interfaceText("m_7083fce2d4878e")} />;
   }
 
   return (
@@ -2002,17 +1985,15 @@ export function CompanyImport() {
       {/* Source form section */}
       <div className="border-b border-border px-5 py-5 space-y-4">
         <div>
-          <h2 className="text-base font-semibold">Import source</h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            Choose a GitHub repo or upload a local Paperclip zip package.
-          </p>
+          <h2 className="text-base font-semibold">{interfaceText("m_dbff5bdee4bda1")}</h2>
+          <p className="text-xs text-muted-foreground mt-1">{interfaceText("m_1c2429b0488270")}</p>
         </div>
 
         <div className="grid gap-2 md:grid-cols-2">
           {(
             [
-              { key: "github", icon: GithubIcon, label: "GitHub repo" },
-              { key: "local", icon: Upload, label: "Local zip" },
+              { key: "github", icon: GithubIcon, label: interfaceText("m_0a2e4df8c1d1d6") },
+              { key: "local", icon: Upload, label: interfaceText("m_6a0b2c3c6b3a7c") },
             ] as const
           ).map(({ key, icon: Icon, label }) => (
             <button
@@ -2054,15 +2035,12 @@ export function CompanyImport() {
                 variant="outline"
                 onClick={() => packageInputRef.current?.click()}
                 disabled={importMutation.isPending}
-              >
-                Choose zip
-              </Button>
+              >{interfaceText("m_d1fe8266d658fe")}</Button>
               {localPackage && (
                 <span className="text-xs text-muted-foreground">
-                  {localPackage.name} with{" "}
-                  {Object.keys(localPackage.files).length} file
-                  {Object.keys(localPackage.files).length === 1 ? "" : "s"}
-                  {localCompressedBytes !== null ? ` (${formatMegabytes(localCompressedBytes)} zip)` : ""}
+                  {localPackage.name}{interfaceText("m_6a413b5775392d")}{" "}
+                  {Object.keys(localPackage.files).length}{interfaceText("m_b4c480d5276e0f")}{Object.keys(localPackage.files).length === 1 ? "" : interfaceText("m_043a718774c572")}
+                  {localCompressedBytes !== null ? interfaceText("m_9aa21527c9a32f", { value0: (formatMegabytes(localCompressedBytes)) }) : ""}
                 </span>
               )}
             </div>
@@ -2074,8 +2052,8 @@ export function CompanyImport() {
           </div>
         ) : (
           <Field
-            label="GitHub URL"
-            hint="Repo tree path or blob URL to COMPANY.md (e.g. github.com/owner/repo/tree/main/company)."
+            label={interfaceText("m_76a692132c7005")}
+            hint={interfaceText("m_89e8783f6b8f2d")}
           >
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
@@ -2091,7 +2069,7 @@ export function CompanyImport() {
           </Field>
         )}
 
-        <Field label="Target" hint="Import into this organization or create a new one.">
+        <Field label={interfaceText("m_978354db0c00fc")} hint={interfaceText("m_a801114169b946")}>
           <select
             className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
             value={targetMode}
@@ -2101,17 +2079,16 @@ export function CompanyImport() {
               resetImportFlowState();
             }}
           >
-            <option value="new">Create new organization</option>
-            <option value="existing">
-              Existing company: {selectedCompany?.name}
+            <option value="new">{interfaceText("m_c7e9e6018ab9c4")}</option>
+            <option value="existing">{interfaceText("m_af01cfa1efdcf5")}{selectedCompany?.name}
             </option>
           </select>
         </Field>
 
         {targetMode === "new" && (
           <Field
-            label="New organization name"
-            hint="Optional override. Leave blank to use the package name."
+            label={interfaceText("m_958cb49e8efa5e")}
+            hint={interfaceText("m_2e773b23943411")}
           >
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
@@ -2121,14 +2098,14 @@ export function CompanyImport() {
                 setNewCompanyName(e.target.value);
                 resetMutationState();
               }}
-              placeholder="Imported Organization"
+              placeholder={interfaceText("m_7771473043b6e7")}
             />
           </Field>
         )}
 
         <Field
-          label="Collision strategy"
-          hint="Board imports can rename, skip, or replace matching organization content."
+          label={interfaceText("m_f2d126a181a16c")}
+          hint={interfaceText("m_f303b67b55e2d1")}
         >
           <select
             className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
@@ -2139,9 +2116,9 @@ export function CompanyImport() {
               resetImportFlowState();
             }}
           >
-            <option value="rename">Rename on conflict</option>
-            <option value="skip">Skip on conflict</option>
-            <option value="replace">Replace existing</option>
+            <option value="rename">{interfaceText("m_c90814771b07b3")}</option>
+            <option value="skip">{interfaceText("m_e5984701c98835")}</option>
+            <option value="replace">{interfaceText("m_c72a3c56ffad61")}</option>
           </select>
         </Field>
 
@@ -2154,17 +2131,13 @@ export function CompanyImport() {
               previewMutation.isPending || importMutation.isPending || !hasSource
             }
           >
-            {previewMutation.isPending ? "Previewing..." : "Preview import"}
+            {previewMutation.isPending ? interfaceText("m_9b0c77929c1cd4") : interfaceText("m_ab5c8e55ce2c0b")}
           </Button>
           {!hasSource && !previewMutation.isPending && (
-            <span className="text-xs text-muted-foreground">
-              Choose a package above to enable the preview.
-            </span>
+            <span className="text-xs text-muted-foreground">{interfaceText("m_192d5a95330e5a")}</span>
           )}
           {importMutation.isPending && (
-            <span className="text-xs text-muted-foreground">
-              Import in progress — the package and settings unlock when it finishes.
-            </span>
+            <span className="text-xs text-muted-foreground">{interfaceText("m_776046e3e02113")}</span>
           )}
         </div>
         {previewMutation.isPending && (
@@ -2172,10 +2145,8 @@ export function CompanyImport() {
             <Loader2 className="mt-0.5 h-3.5 w-3.5 shrink-0 animate-spin text-muted-foreground" />
             <p className="text-xs text-muted-foreground">
               {transferProgress
-                ? `${formatTransferProgress(transferProgress)} An interrupted upload resumes from the finished parts.`
-                : `Uploading and analyzing your package${
-                    localCompressedBytes !== null ? ` (${formatMegabytes(localCompressedBytes)} zip)` : ""
-                  } — large packages can take a few minutes. Keep this page open.`}
+                ? interfaceText("m_10edd187a3c479", { value0: (formatTransferProgress(transferProgress)) })
+                : interfaceText("m_e791df55523633", { value0: (localCompressedBytes !== null ? ` (${formatMegabytes(localCompressedBytes)} zip)` : "") })}
             </p>
           </div>
         )}
@@ -2183,13 +2154,10 @@ export function CompanyImport() {
           !previewMutation.isPending &&
           previewMutation.variables === previewGenerationRef.current && (
           <div className="mt-3 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2.5">
-            <p className="text-xs text-destructive">
-              Preview failed:{" "}
+            <p className="text-xs text-destructive">{interfaceText("m_99683894c89570")}{" "}
               {previewMutation.error instanceof Error
                 ? previewMutation.error.message
-                : "the request did not complete."}{" "}
-              Retry, or re-export the package without large attachments to shrink it.
-            </p>
+                : interfaceText("m_3ce408400c5cd6")}{" "}{interfaceText("m_1192a4574947c0")}</p>
           </div>
         )}
       </div>
@@ -2200,20 +2168,17 @@ export function CompanyImport() {
           {/* Sticky import action bar */}
           <div className="sticky top-0 z-10 border-b border-border bg-background px-5 py-3">
             <div className="flex flex-wrap items-center gap-4 text-sm">
-              <span className="font-medium">
-                Import preview
-              </span>
+              <span className="font-medium">{interfaceText("m_ed144b77c0d788")}</span>
               <span className="text-muted-foreground">
-                {selectedCount} / {totalFiles} file{totalFiles === 1 ? "" : "s"} selected
-              </span>
+                {selectedCount} / {totalFiles}{interfaceText("m_b4c480d5276e0f")}{totalFiles === 1 ? "" : interfaceText("m_043a718774c572")}{interfaceText("m_97a2e8815acd21")}</span>
               {conflicts.length > 0 && (
                 <span className="text-amber-500">
-                  {conflicts.length} conflict{conflicts.length === 1 ? "" : "s"}
+                  {conflicts.length}{interfaceText("m_b967f2bfcc25b5")}{conflicts.length === 1 ? "" : interfaceText("m_043a718774c572")}
                 </span>
               )}
               {importPreview.errors.length > 0 && (
                 <span className="text-destructive">
-                  {importPreview.errors.length} error{importPreview.errors.length === 1 ? "" : "s"}
+                  {importPreview.errors.length}{interfaceText("m_fc80a47b5ef226")}{importPreview.errors.length === 1 ? "" : interfaceText("m_043a718774c572")}
                 </span>
               )}
             </div>
@@ -2253,9 +2218,7 @@ export function CompanyImport() {
                   resetMutationState();
                 }}
                 className="accent-foreground"
-              />
-              Start imported agents and routines paused
-            </label>
+              />{interfaceText("m_1289f896671a7a")}</label>
             <Button
               size="sm"
               onClick={() => importMutation.mutate({ previewForImport: importPreview, pauseAutomations })}
@@ -2263,8 +2226,8 @@ export function CompanyImport() {
             >
               <Download className="mr-1.5 h-3.5 w-3.5" />
               {importMutation.isPending
-                ? "Importing..."
-                : `Import ${selectedCount} file${selectedCount === 1 ? "" : "s"}`}
+                ? interfaceText("m_b7a3cd401b23dd")
+                : interfaceText("m_8d16a49fb91ef8", { value0: (selectedCount), value1: (selectedCount === 1 ? "" : interfaceText("m_043a718774c572")) })}
             </Button>
           </div>
           {importMutation.isPending && (
@@ -2272,21 +2235,17 @@ export function CompanyImport() {
               <Loader2 className="mt-0.5 h-3.5 w-3.5 shrink-0 animate-spin text-muted-foreground" />
               <p className="text-xs text-muted-foreground">
                 {transferProgress
-                  ? `${formatTransferProgress(transferProgress)} An interrupted upload resumes from the finished parts.`
-                  : "Import running on the server — safe to keep waiting; reconnecting won't lose it. Large packages can take several minutes."}
+                  ? interfaceText("m_10edd187a3c479", { value0: (formatTransferProgress(transferProgress)) })
+                  : interfaceText("m_76c5d31dd313e2")}
               </p>
             </div>
           )}
           {importMutation.isError && !importMutation.isPending && (
             <div className="mx-5 mt-3 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2.5">
-              <p className="text-xs text-destructive">
-                Import failed:{" "}
+              <p className="text-xs text-destructive">{interfaceText("m_113b8e2f4761d7")}{" "}
                 {importMutation.error instanceof Error
                   ? importMutation.error.message
-                  : "the request did not complete."}{" "}
-                Nothing may have been created, or the import stopped partway — check the target company
-                before retrying.
-              </p>
+                  : interfaceText("m_3ce408400c5cd6")}{" "}{interfaceText("m_d3b0bff6fb0c76")}</p>
             </div>
           )}
 
@@ -2312,7 +2271,7 @@ export function CompanyImport() {
           <div className="grid gap-4 xl:h-(--sz-calc-31) xl:grid-cols-(--gtc-25) xl:gap-0">
             <aside className="flex max-h-(--sz-24rem) flex-col overflow-hidden border-b border-border xl:max-h-none xl:border-b-0 xl:border-r">
               <div className="border-b border-border px-4 py-3 shrink-0">
-                <h2 className="text-base font-semibold">Package files</h2>
+                <h2 className="text-base font-semibold">{interfaceText("m_0ae7e5128ad41a")}</h2>
               </div>
               <div className="flex-1 overflow-y-auto">
                 <FileTree

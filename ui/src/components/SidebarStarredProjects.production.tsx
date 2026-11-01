@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useMemo } from "react";
 import { NavLink, useLocation } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +41,7 @@ const STAR_ROW_REVEAL =
  * server-side, so a stale star never resurrects a hidden project.
  */
 export function SidebarStarredProjects() {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { isMobile, setSidebarOpen, collapsed, peeking } = useSidebar();
   const rail = collapsed && !peeking;
@@ -104,7 +106,7 @@ export function SidebarStarredProjects() {
   }
 
   return (
-    <div className="flex flex-col gap-0.5" aria-label="Starred projects">
+    <div className="flex flex-col gap-0.5" aria-label={interfaceText("m_2212799bd8ac83")}>
       {starredProjects.map((project) => {
         const routeRef = projectRouteRef(project);
         const isActive = activeProjectRef === routeRef || activeProjectRef === project.id;
@@ -130,9 +132,9 @@ export function SidebarStarredProjects() {
           >
             <ProjectTile color={project.color ?? null} icon={project.icon ?? null} size="xs" />
             <span className={rail ? SIDEBAR_RAIL_HIDDEN_LABEL : "flex-1 truncate"}>{project.name}</span>
-            {!rail && project.visibility === "private" ? <Lock className="size-3.5 shrink-0 text-muted-foreground" aria-label="Private project" /> : null}
+            {!rail && project.visibility === "private" ? <Lock className="size-3.5 shrink-0 text-muted-foreground" aria-label={interfaceText("m_5baec6fcbec2e2")} /> : null}
             {!rail && project.pauseReason === "budget" ? (
-              <BudgetSidebarMarker title="Project paused by budget" />
+              <BudgetSidebarMarker title={interfaceText("m_1aa2562895efb5")} />
             ) : null}
           </NavLink>
         );
@@ -173,7 +175,7 @@ export function SidebarStarredProjects() {
                     variant="ghost"
                     size="icon-xs"
                     className="absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2 opacity-100"
-                    aria-label={`Open actions for ${project.name}`}
+                    aria-label={interfaceText("m_c4ad765739a668", { value0: (project.name) })}
                   >
                     <MoreHorizontal className="h-3.5 w-3.5" />
                   </Button>
@@ -191,7 +193,7 @@ export function SidebarStarredProjects() {
                     ) : (
                       <Star className="size-4 fill-amber-500 text-amber-500" />
                     )}
-                    <span>Remove from starred</span>
+                    <span>{interfaceText("m_f1133f6566cd10")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -206,7 +208,7 @@ export function SidebarStarredProjects() {
                     ) : (
                       <LogOut className="size-4" />
                     )}
-                    <span>Leave project</span>
+                    <span>{interfaceText("m_4c6941ff7aa37c")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

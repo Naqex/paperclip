@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useMemo, useState } from "react";
 import { CornerUpLeft, Folder, KeyRound, Plus } from "lucide-react";
 import type { CompanySecret, SecretStatus } from "@paperclipai/shared";
@@ -107,7 +108,7 @@ function buildFolderGroup(
     options.push({
       key: `folder-up-${pathKey(currentPath)}`,
       value: folderValue(parentPath),
-      label: "Up one folder",
+      label: interfaceText("m_ef9a7ae0b5bec5"),
       title: pathLabel(parentPath),
       searchText: pathLabel(parentPath),
       kind: "back",
@@ -154,6 +155,7 @@ export function SecretPicker({
   triggerClassName,
   disablePortal,
 }: SecretPickerProps) {
+  const interfaceLanguage = useInterfaceLanguage();
   const [currentPathKey, setCurrentPathKey] = useState("");
   const boundSecret = useMemo(
     () => secrets.find((secret) => secret.id === secretId) ?? null,
@@ -171,7 +173,7 @@ export function SecretPicker({
     if (boundMissing) {
       result.push({
         id: "current-missing",
-        label: "Current",
+        label: interfaceText("m_e0d1b68224bf0b"),
         options: [
           {
             key: `missing-${secretId}`,
@@ -191,7 +193,7 @@ export function SecretPicker({
     if (recent.length > 0) {
       result.push({
         id: "recently-used",
-        label: "Recently used",
+        label: interfaceText("m_1e7cf8df9b6aa4"),
         options: recent.map((secret) => ({
           key: `recent-${secret.id}`,
           value: secret.id,
@@ -224,7 +226,7 @@ export function SecretPicker({
     });
 
     return result;
-  }, [boundMissing, recentlyUsedSecrets, secretId, secrets]);
+  }, [boundMissing, recentlyUsedSecrets, secretId, secrets, interfaceLanguage]);
 
   const deriveGroups = useCallback(
     (query: string, baseGroups: readonly SearchableSelectGroup<string, SecretOption>[]) => {
@@ -253,9 +255,9 @@ export function SecretPicker({
       deriveGroups={deriveGroups}
       disabled={disabled}
       disablePortal={disablePortal}
-      placeholder="Select secret…"
-      searchPlaceholder="Search secrets…"
-      emptyMessage="No matching secrets"
+      placeholder={interfaceText("m_002572e95b7141")}
+      searchPlaceholder={interfaceText("m_01b390cb5448c2")}
+      emptyMessage={interfaceText("m_a336141effeacf")}
       triggerClassName={cn(
         "h-(--sz-34px) min-h-(--sz-34px) font-mono text-sm",
         boundMissing && "border-destructive text-destructive",
@@ -264,7 +266,7 @@ export function SecretPicker({
       )}
       renderValue={(option) => {
         if (!option) {
-          return <span className="text-muted-foreground">Select secret…</span>;
+          return <span className="text-muted-foreground">{interfaceText("m_002572e95b7141")}</span>;
         }
         if (option.missing) {
           return (
@@ -323,11 +325,10 @@ export function SecretPicker({
               <span className="flex items-center gap-1.5 text-sm">
                 <Plus className="size-3.5 shrink-0" />
                 {query.trim() ? (
-                  <span>
-                    Create secret <span className="font-mono">&ldquo;{query.trim()}&rdquo;</span>…
+                  <span>{interfaceText("m_d69739b9e4d8a4")}<span className="font-mono">&ldquo;{query.trim()}&rdquo;</span>…
                   </span>
                 ) : (
-                  <span>Create new secret…</span>
+                  <span>{interfaceText("m_e51d402a190315")}</span>
                 )}
               </span>
             ),

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 const DAY = 86_400_000;
 
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
@@ -7,7 +8,7 @@ export function updatedLabel(iso: string, now: Date = new Date()): string {
   const date = new Date(iso);
   const days = Math.round((startOfDay(now) - startOfDay(date)) / DAY);
   if (days <= 0) return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-  if (days === 1) return "Yesterday";
+  if (days === 1) return interfaceText("m_566181254b293a");
   if (days < 7) return date.toLocaleDateString("en-US", { weekday: "long" });
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
@@ -16,9 +17,9 @@ export function updatedLabel(iso: string, now: Date = new Date()): string {
 export function panelDateLabel(iso: string, now: Date = new Date()): string {
   const date = new Date(iso);
   const days = Math.round((startOfDay(now) - startOfDay(date)) / DAY);
-  if (days <= 0) return "Today";
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days}D ago`;
+  if (days <= 0) return interfaceText("m_2b065c7c9ce466");
+  if (days === 1) return interfaceText("m_566181254b293a");
+  if (days < 7) return interfaceText("m_80bc0bfbd13b9e", { value0: (days) });
   return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
 }
 

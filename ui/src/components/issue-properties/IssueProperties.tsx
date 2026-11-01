@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { isLockedIssueStub } from "@/components/LockedIssueChip";
 import { IssuePullRequestLinks } from "../IssuePullRequestLinks";
 import { useIssueWorkProducts } from "../../hooks/useIssueWorkProducts";
@@ -145,6 +146,7 @@ function splitMiddleTruncation(value: string): { prefix: string; suffix: string 
 }
 
 function TruncatedCopyable({ value, icon: Icon }: { value: string; icon: ComponentType<{ className?: string }> }) {
+  useInterfaceLanguage();
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timerRef.current), []);
@@ -170,7 +172,7 @@ function TruncatedCopyable({ value, icon: Icon }: { value: string; icon: Compone
         )}
         onClick={handleCopy}
         title={value}
-        aria-label={`Copy ${value} to clipboard`}
+        aria-label={interfaceText("m_da419dd10a2d93", { value0: (value) })}
       >
         {!streamlinedUiEnabled ? value : middle ? (
           <span className="flex min-w-0" data-middle-truncate="true">
@@ -183,9 +185,7 @@ function TruncatedCopyable({ value, icon: Icon }: { value: string; icon: Compone
       </button>
       {copied && (
         <span className={cn("inline-flex items-center gap-1 text-xs shrink-0", issueStatusText.done)} role="status">
-          <Check className="h-3 w-3 shrink-0" />
-          Copied
-        </span>
+          <Check className="h-3 w-3 shrink-0" />{interfaceText("m_8d525e5f158b9a")}</span>
       )}
     </div>
   );
@@ -249,6 +249,7 @@ export function IssueProperties({
   documentDeepLink,
   sidePanelContentOnly = false,
 }: IssuePropertiesProps) {
+  useInterfaceLanguage();
   const policyResult = useExecutionPolicy(issue.executionPolicy);
   const policyAvailable = policyResult.success;
   const executionPolicy = policyResult.success ? policyResult.data : null;
@@ -584,10 +585,10 @@ export function IssueProperties({
     (workspace) => workspace.id === issue.executionWorkspaceId,
   ) ?? issue.currentExecutionWorkspace ?? null;
   const workspaceTriggerLabel = activeWorkspacePickerMode === "isolated"
-    ? "New isolated workspace"
+    ? interfaceText("m_0c67029f9e1abe")
     : activeWorkspacePickerMode === "reuse"
-      ? boundWorkspace?.name ?? "Reuse existing workspace"
-      : "Default";
+      ? boundWorkspace?.name ?? interfaceText("m_c84ba2b63629f7")
+      : interfaceText("m_21b111cbfe6e8f");
   const workspaceTriggerTitle = activeWorkspacePickerMode === "reuse"
     ? boundWorkspace?.branchName ?? undefined
     : undefined;
@@ -859,19 +860,19 @@ export function IssueProperties({
       return (
         <span
           className="min-w-0 truncate text-sm"
-          title={`Task-level model override — replaces the agent's primary model for this issue.${details.length > 0 ? ` (${details.join(" · ")})` : ""}`}
+          title={interfaceText("m_ca802db464b9d8", { value0: (details.length > 0 ? ` (${details.join(" · ")})` : "") })}
         >
           {summary}
         </span>
       );
     }
-    return <span className="text-sm text-muted-foreground">Primary model</span>;
+    return <span className="text-sm text-muted-foreground">{interfaceText("m_51cbaf4cd59c0b")}</span>;
   })();
   const assigneeOptionsContent = supportsAssigneeOverrides ? (
     <div className="w-full space-y-3 p-2">
       <div className="space-y-1.5">
-        <div className="text-xs text-muted-foreground">Model lane</div>
-        <div className="flex w-full overflow-hidden rounded-md border border-border" role="radiogroup" aria-label="Model lane">
+        <div className="text-xs text-muted-foreground">{interfaceText("m_7cd1d36fde63b9")}</div>
+        <div className="flex w-full overflow-hidden rounded-md border border-border" role="radiogroup" aria-label={interfaceText("m_7cd1d36fde63b9")}>
           {(["primary", "custom"] as const).map((lane) => (
             <button
               key={lane}
@@ -884,33 +885,31 @@ export function IssueProperties({
               )}
               onClick={() => setAssigneeOverrideLane(lane)}
             >
-              {lane === "primary" ? "Primary" : "Override"}
+              {lane === "primary" ? interfaceText("m_efe10c80ec8a9f") : interfaceText("m_43bc0f5fc03510")}
             </button>
           ))}
         </div>
         {assigneeOverrideLane === "custom" ? (
-          <p className="text-xs text-muted-foreground">
-            Task-level model override — replaces the agent&apos;s primary model for this issue.
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_fd6678a2255d7a")}</p>
         ) : null}
       </div>
       {assigneeOverrideLane === "custom" ? (
         <>
           <div className="space-y-1.5">
-            <div className="text-xs text-muted-foreground">Model</div>
+            <div className="text-xs text-muted-foreground">{interfaceText("m_5e2c614c23f022")}</div>
             <InlineEntitySelector
               value={assigneeOverrideModel}
               options={modelOverrideOptions}
-              placeholder="Default model"
+              placeholder={interfaceText("m_3840d9d29421c4")}
               disablePortal
               noneLabel="Default model"
-              searchPlaceholder="Search models..."
-              emptyMessage="No models found."
+              searchPlaceholder={interfaceText("m_37b90680b8421a")}
+              emptyMessage={interfaceText("m_339e5fcda064be")}
               onChange={updateAssigneeOverrideModel}
             />
           </div>
           <div className="space-y-1.5">
-            <div className="text-xs text-muted-foreground">Thinking effort</div>
+            <div className="text-xs text-muted-foreground">{interfaceText("m_264c28cbf01ce9")}</div>
             <div className="flex items-center gap-1.5 flex-wrap">
               {thinkingEffortOptionsFor(assigneeAdapterType, effectiveAssigneeModel).map((option) => (
                 <button
@@ -928,7 +927,7 @@ export function IssueProperties({
           </div>
           {assigneeAdapterType === "claude_local" ? (
             <div className="flex items-center justify-between rounded-md border border-border px-2 py-1.5">
-              <div className="text-xs text-muted-foreground">Enable Chrome (--chrome)</div>
+              <div className="text-xs text-muted-foreground">{interfaceText("m_df1c9d6705885e")}</div>
               <ToggleSwitch
                 checked={assigneeOverrideChrome}
                 onCheckedChange={(next) => updateAssigneeOverrideConfig({ chrome: next ? true : undefined })}
@@ -942,16 +941,14 @@ export function IssueProperties({
     <div className="w-full space-y-2 p-2">
       <p className="text-xs text-muted-foreground">
         {assignee
-          ? "This assignee's adapter does not expose editable task overrides."
-          : "Select a compatible assignee agent to edit these overrides."}
+          ? interfaceText("m_8b4cf55ababc37")
+          : interfaceText("m_747f189d641c7d")}
       </p>
       <button
         type="button"
         className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
         onClick={() => updateAssigneeAdapterOverrides(null)}
-      >
-        Clear adapter options
-      </button>
+      >{interfaceText("m_9a262cb359fa6f")}</button>
     </div>
   );
   const reviewerValues = stageParticipantValues(issue.executionPolicy, "review");
@@ -1042,7 +1039,7 @@ export function IssueProperties({
       return agentName(value.slice("agent:".length)) ?? value.slice("agent:".length, "agent:".length + 8);
     }
     if (value.startsWith("user:")) {
-      return userLabel(value.slice("user:".length)) ?? "User";
+      return userLabel(value.slice("user:".length)) ?? interfaceText("m_b512d97e7cbf97");
     }
     return value;
   };
@@ -1050,10 +1047,10 @@ export function IssueProperties({
   const approverLabel = approverValues.map((value) => executionParticipantLabel(value)).join(", ");
   const reviewerTrigger = reviewerValues.length > 0
     ? <span className="text-sm truncate min-w-0" title={reviewerLabel}>{reviewerLabel}</span>
-    : <span className="text-sm text-muted-foreground">None</span>;
+    : <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>;
   const approverTrigger = approverValues.length > 0
     ? <span className="text-sm truncate min-w-0" title={approverLabel}>{approverLabel}</span>
-    : <span className="text-sm text-muted-foreground">None</span>;
+    : <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>;
   // PAP-16506 P4: who may give the `in_review` verdict. Only an agent sets this,
   // and only the two opt-in constraints are worth a row — the default (`null` ≡
   // "anyone can approve") is what every issue already does, so it shows nothing.
@@ -1074,13 +1071,13 @@ export function IssueProperties({
         className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
         onClick={() => onUpdate({ status: "in_review" })}
       >
-        {stageType === "review" ? "Run review now" : "Run approval now"}
+        {stageType === "review" ? interfaceText("m_32a0248a51146e") : interfaceText("m_f574ab35693acd")}
       </button>
     </PropertyRow>
   );
   const currentExecutionLabel = (() => {
     if (!issue.executionState?.currentStageType) return null;
-    const stageLabel = issue.executionState.currentStageType === "review" ? "Review" : "Approval";
+    const stageLabel = issue.executionState.currentStageType === "review" ? interfaceText("m_aff0766a5290e1") : interfaceText("m_147fb813a25157");
     const participant = issue.executionState.currentParticipant;
     const participantLabel = participant
       ? (participant.type === "agent"
@@ -1178,38 +1175,36 @@ export function IssueProperties({
         </span>
       ) : null}
       {issue.watchdog.status === "disabled" ? (
-        <span className="shrink-0 text-xs text-muted-foreground">(disabled)</span>
+        <span className="shrink-0 text-xs text-muted-foreground">{interfaceText("m_f2d421e5379bb2")}</span>
       ) : null}
     </span>
   ) : (
-    <span className="text-sm text-muted-foreground">None</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
   );
   const labelsExtra = !streamlinedPropertiesEnabled && (issue.labelIds ?? []).length > 0 ? (
     <button
       type="button"
       className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
       onClick={() => setLabelsOpen(true)}
-      aria-label="Add label"
-      title="Add label"
+      aria-label={interfaceText("m_e3488b9096633f")}
+      title={interfaceText("m_e3488b9096633f")}
     >
-      <Plus className="h-3 w-3" />
-      Add label
-    </button>
+      <Plus className="h-3 w-3" />{interfaceText("m_e3488b9096633f")}</button>
   ) : undefined;
   const watchdogContent = (
     <div className="space-y-3 p-2">
       <div className="space-y-1.5">
-        <div className="text-xs font-medium text-foreground">Watchdog agent</div>
+        <div className="text-xs font-medium text-foreground">{interfaceText("m_c6f340c43bfcc6")}</div>
         <InlineEntitySelector
           value={watchdogAgentInput}
           options={watchdogAgentOptions}
-          placeholder="Select agent"
+          placeholder={interfaceText("m_e9a702a933e860")}
           noneLabel="No watchdog agent"
-          searchPlaceholder="Search agents..."
-          emptyMessage="No agents found."
+          searchPlaceholder={interfaceText("m_32f4468b0b6f94")}
+          emptyMessage={interfaceText("m_61666542b1caa1")}
           onChange={setWatchdogAgentInput}
           renderTriggerValue={(option) => {
-            if (!option) return <span className="text-muted-foreground">Select agent</span>;
+            if (!option) return <span className="text-muted-foreground">{interfaceText("m_e9a702a933e860")}</span>;
             const agent = (agents ?? []).find((candidate) => candidate.id === option.id);
             return (
               <>
@@ -1230,22 +1225,20 @@ export function IssueProperties({
         />
       </div>
       <div className="space-y-1.5">
-        <div className="text-xs font-medium text-foreground">
-          Instructions <span className="font-normal text-muted-foreground">(optional)</span>
+        <div className="text-xs font-medium text-foreground">{interfaceText("m_6425e671628632")}<span className="font-normal text-muted-foreground">{interfaceText("m_0059798b7f7023")}</span>
         </div>
         <Textarea
           value={watchdogInstructionsInput}
           onChange={(event) => setWatchdogInstructionsInput(event.target.value)}
-          placeholder="What should the watchdog watch for and how should it keep work moving?"
+          placeholder={interfaceText("m_f3065c6b3c1ff3")}
           rows={4}
           className="text-xs"
         />
       </div>
       {watchdogIssueRef ? (
-        <div className="text-xs text-muted-foreground">
-          Watchdog task:{" "}
+        <div className="text-xs text-muted-foreground">{interfaceText("m_c9c37c8bdac25a")}{" "}
           <Link to={`/issues/${watchdogIssueRef.id}`} className="text-primary hover:underline">
-            {watchdogIssueRef.identifier ?? "View task"}
+            {watchdogIssueRef.identifier ?? interfaceText("m_01444a2b442a7b")}
           </Link>
         </div>
       ) : null}
@@ -1261,7 +1254,7 @@ export function IssueProperties({
           disabled={deleteWatchdog.isPending || (!issue.watchdog && !watchdogAgentInput)}
           onClick={removeWatchdog}
         >
-          {deleteWatchdog.isPending ? "Removing…" : "Remove"}
+          {deleteWatchdog.isPending ? interfaceText("m_d4b09919ec929f") : interfaceText("m_c3812fc4acb861")}
         </button>
         <Button
           type="button"
@@ -1270,7 +1263,7 @@ export function IssueProperties({
           disabled={!watchdogAgentInput || upsertWatchdog.isPending}
           onClick={saveWatchdog}
         >
-          {upsertWatchdog.isPending ? "Saving…" : issue.watchdog ? "Update" : "Set watchdog"}
+          {upsertWatchdog.isPending ? interfaceText("m_23e39291d61358") : issue.watchdog ? interfaceText("m_c1c1009d3f37ec") : interfaceText("m_03d6a6833c8e64")}
         </Button>
       </div>
     </div>
@@ -1377,36 +1370,36 @@ export function IssueProperties({
           onPointerDown={(event) => event.stopPropagation()}
         >
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <span className="text-sm font-semibold">Monitor</span>
-            {monitorAttemptCount > 0 ? <span className="text-xs text-muted-foreground">Attempt {monitorAttemptCount}</span> : null}
+            <span className="text-sm font-semibold">{interfaceText("m_4c2e1df4570beb")}</span>
+            {monitorAttemptCount > 0 ? <span className="text-xs text-muted-foreground">{interfaceText("m_51c78c7782f637")}{monitorAttemptCount}</span> : null}
           </div>
           <div className="space-y-3 px-4 py-3 text-left">
             <div>
-              <div className="text-xs text-muted-foreground">Next check</div>
+              <div className="text-xs text-muted-foreground">{interfaceText("m_9625086a3d4fd2")}</div>
               <div className="text-sm">{formatMonitorAbsoluteFull(monitorNextCheckAt)}</div>
-              <div className="text-xs text-muted-foreground">{monitorPaused ? "Automatic checks paused" : monitorRelative}</div>
+              <div className="text-xs text-muted-foreground">{monitorPaused ? interfaceText("m_03d978cd00fae2") : monitorRelative}</div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">Watching</div>
+              <div className="text-xs text-muted-foreground">{interfaceText("m_fbc594054d512e")}</div>
               <div className="text-sm">{monitorServiceName ?? "—"}</div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">Notes</div>
+              <div className="text-xs text-muted-foreground">{interfaceText("m_8a7525b1492fb8")}</div>
               <div className="whitespace-normal text-sm">{monitorNotes ?? "—"}</div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">Last triggered</div>
-              <div className="text-sm">{monitorLastTriggeredAt ? formatMonitorAbsoluteFull(monitorLastTriggeredAt) : "— not yet triggered"}</div>
+              <div className="text-xs text-muted-foreground">{interfaceText("m_4876b1e2e86615")}</div>
+              <div className="text-sm">{monitorLastTriggeredAt ? formatMonitorAbsoluteFull(monitorLastTriggeredAt) : interfaceText("m_bb0ba130d0fb85")}</div>
             </div>
           </div>
           <div className="flex gap-2 border-t border-border px-4 py-3">
             {onCheckMonitorNow && canCheckMonitorNow ? (
               <Button type="button" size="sm" variant="outline" disabled={checkingMonitorNow} onClick={() => { setMonitorDetailsOpen(false); onCheckMonitorNow(); }}>
-                {checkingMonitorNow ? "Checking…" : "Check now"}
+                {checkingMonitorNow ? interfaceText("m_ec963ffc911b84") : interfaceText("m_2937cffb37abce")}
               </Button>
             ) : null}
-            <Button type="button" size="sm" variant="outline" onClick={() => { setMonitorDetailsOpen(false); setMonitorOpen(true); }}>Edit</Button>
-            <Button type="button" size="sm" variant="outline" onClick={() => { setMonitorDetailsOpen(false); clearMonitor(); }}>Clear</Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => { setMonitorDetailsOpen(false); setMonitorOpen(true); }}>{interfaceText("m_464c4ffd019e1e")}</Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => { setMonitorDetailsOpen(false); clearMonitor(); }}>{interfaceText("m_83b12c2216efb4")}</Button>
           </div>
         </TooltipContent>
       ) : null}
@@ -1447,7 +1440,7 @@ export function IssueProperties({
   const scheduledRetryRetryNowSuccess = retryNow.isSuccess
     && (retryNow.data?.outcome === "promoted" || retryNow.data?.outcome === "already_promoted");
   const scheduledRetryAttemptBadge = scheduledRetryAttempt !== null ? (
-    <span className="whitespace-nowrap shrink-0 text-xs text-muted-foreground">Attempt {scheduledRetryAttempt}</span>
+    <span className="whitespace-nowrap shrink-0 text-xs text-muted-foreground">{interfaceText("m_51c78c7782f637")}{scheduledRetryAttempt}</span>
   ) : null;
   const scheduledRetryTrigger = (
     <span className="inline-flex min-w-0 items-center gap-1.5">
@@ -1469,24 +1462,23 @@ export function IssueProperties({
     <div className="flex w-full flex-col gap-2 p-2 text-xs">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">
-          {scheduledRetryIsContinuation ? "Scheduled continuation" : "Scheduled retry"}
+          {scheduledRetryIsContinuation ? interfaceText("m_90d74172f1254f") : interfaceText("m_263ed103472a1c")}
         </span>
         {scheduledRetryAttempt !== null ? (
-          <span className="text-xs text-muted-foreground">
-            Attempt {scheduledRetryAttempt}
+          <span className="text-xs text-muted-foreground">{interfaceText("m_51c78c7782f637")}{scheduledRetryAttempt}
           </span>
         ) : null}
       </div>
       <dl className="grid grid-cols-(--gtc-15) gap-y-1">
         {scheduledRetryReasonLabel ? (
           <>
-            <dt className="text-muted-foreground">Reason</dt>
+            <dt className="text-muted-foreground">{interfaceText("m_f81ab834de5f84")}</dt>
             <dd className="text-foreground">{scheduledRetryReasonLabel}</dd>
           </>
         ) : null}
         {scheduledRetryAbsolute ? (
           <>
-            <dt className="text-muted-foreground">Next attempt</dt>
+            <dt className="text-muted-foreground">{interfaceText("m_94158821ee3802")}</dt>
             <dd className="text-foreground">
               {scheduledRetryAbsolute}
               {scheduledRetryRelative ? (
@@ -1497,7 +1489,7 @@ export function IssueProperties({
         ) : null}
         {scheduledRetry.retryOfRunId ? (
           <>
-            <dt className="text-muted-foreground">Replaces run</dt>
+            <dt className="text-muted-foreground">{interfaceText("m_28efd336f8ed5a")}</dt>
             <dd className="text-foreground">
               <Link
                 to={`/agents/${scheduledRetry.agentId}/runs/${scheduledRetry.retryOfRunId}`}
@@ -1523,7 +1515,7 @@ export function IssueProperties({
         ) : null}
         {scheduledRetry.error ? (
           <>
-            <dt className="text-muted-foreground">Last error</dt>
+            <dt className="text-muted-foreground">{interfaceText("m_5488d837f5f65d")}</dt>
             <dd className="text-foreground break-words">{scheduledRetry.error}</dd>
           </>
         ) : null}
@@ -1547,33 +1539,29 @@ export function IssueProperties({
         >
           {retryNow.isPending ? (
             <span className="inline-flex items-center gap-1.5">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              Retrying…
-            </span>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />{interfaceText("m_a16c8b1c95956f")}</span>
           ) : scheduledRetryRetryNowSuccess ? (
             <span className="inline-flex items-center gap-1.5">
               <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-              {retryNow.data?.outcome === "already_promoted" ? "Already promoted" : "Promoted"}
+              {retryNow.data?.outcome === "already_promoted" ? interfaceText("m_8a7ece835bf32b") : interfaceText("m_0cf04463c4276a")}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5">
-              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              Retry now
-            </span>
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />{interfaceText("m_5148c3e2057692")}</span>
           )}
         </Button>
         <span className="text-right text-xs text-muted-foreground">
           {retryNow.isPending
-            ? "Promoting scheduled retry"
+            ? interfaceText("m_ff49385cbf5146")
             : scheduledRetryRetryNowSuccess
               ? retryNow.data?.outcome === "already_promoted"
-                ? "Already promoted — run starting"
-                : "Promoted — run starting"
+                ? interfaceText("m_53e3c8d4b5d4e4")
+                : interfaceText("m_6c8f599a6dafe5")
               : retryNow.data?.outcome === "waiting" && retryNow.data.scheduledRetry?.runId === scheduledRetry.runId
                 ? retryNow.data.message
                 : scheduledRetryIsContinuation
-                  ? "Pulls continuation forward immediately"
-                  : "Pulls retry forward immediately"}
+                  ? interfaceText("m_0e8e38b538ba2f")
+                  : interfaceText("m_4730094a66feb8")}
         </span>
       </div>
     </div>
@@ -1590,7 +1578,7 @@ export function IssueProperties({
         <input
           type="text"
           className="min-w-0 flex-1 rounded-md border border-border bg-transparent px-2 py-1 text-xs"
-          placeholder="What should the agent re-check?"
+          placeholder={interfaceText("m_ade0821de91bcb")}
           value={monitorNotesInput}
           onChange={(e) => setMonitorNotesInput(e.target.value)}
         />
@@ -1599,7 +1587,7 @@ export function IssueProperties({
         <input
           type="text"
           className="min-w-0 flex-1 rounded-md border border-border bg-transparent px-2 py-1 text-xs"
-          placeholder="External service"
+          placeholder={interfaceText("m_7ede008e9ab2d6")}
           value={monitorServiceInput}
           onChange={(e) => setMonitorServiceInput(e.target.value)}
         />
@@ -1609,17 +1597,13 @@ export function IssueProperties({
             className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground disabled:opacity-50"
             disabled={!monitorAtInput}
             onClick={saveMonitor}
-          >
-            Schedule
-          </button>
+          >{interfaceText("m_f4830a1dae2980")}</button>
           {executionPolicy?.monitor ? (
             <button
               type="button"
               className="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
               onClick={clearMonitor}
-            >
-              Clear
-            </button>
+            >{interfaceText("m_83b12c2216efb4")}</button>
           ) : null}
         </div>
       </div>
@@ -1655,18 +1639,17 @@ export function IssueProperties({
       ))}
       {selectedIssueLabels.length > 3 && (
         <Badge variant="outline" className="border-border text-muted-foreground">
-          +{selectedIssueLabels.length - 3} more
-        </Badge>
+          +{selectedIssueLabels.length - 3}{interfaceText("m_226ba18bbcdb75")}</Badge>
       )}
     </div>
   ) : (
-    <span className="text-sm text-muted-foreground">None</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
   );
   const labelsContent = (
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search labels..."
+        placeholder={interfaceText("m_8b2837c0480a2a")}
         value={labelSearch}
         onChange={(e) => setLabelSearch(e.target.value)}
         autoFocus={!inline}
@@ -1705,7 +1688,7 @@ export function IssueProperties({
           />
           <input
             className="flex-1 px-2 py-1.5 text-xs bg-transparent outline-none rounded placeholder:text-muted-foreground/50"
-            placeholder="New label"
+            placeholder={interfaceText("m_2bda0a8b27535e")}
             value={newLabelName}
             onChange={(e) => setNewLabelName(e.target.value)}
           />
@@ -1721,7 +1704,7 @@ export function IssueProperties({
           }
         >
           <Plus className="h-3 w-3" />
-          {createLabel.isPending ? "Creating…" : "Create label"}
+          {createLabel.isPending ? interfaceText("m_c79ed9492e3c17") : interfaceText("m_69b585c181ec87")}
         </button>
       </div>
     </>
@@ -1735,7 +1718,7 @@ export function IssueProperties({
       <span className="min-w-0 truncate text-sm" title={assigneeUserLabel}>{assigneeUserLabel}</span>
     </>
   ) : (
-    <span className="text-sm text-muted-foreground">Unassigned</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_14d33bd014e6b4")}</span>
   );
 
   // Grouped picker options (design surface 2): a board-users section and an
@@ -1747,7 +1730,7 @@ export function IssueProperties({
           kind: "user" as const,
           value: `user:${currentUserId}`,
           userId: currentUserId,
-          label: "Assign to me",
+          label: interfaceText("m_9dd977a40985e4"),
           searchText: userLabel(currentUserId) ?? "",
         }]
       : []),
@@ -1856,14 +1839,14 @@ export function IssueProperties({
       ) : null}
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search assignees..."
+        placeholder={interfaceText("m_ad7ec86de2987b")}
         value={assigneeSearch}
         onChange={(e) => setAssigneeSearch(e.target.value)}
         autoFocus={!inline}
       />
       <div className="max-h-56 overflow-y-auto overscroll-contain">
         {showNoAssigneeOption
-          ? renderAssigneeOption({ kind: "none", value: "", label: "No assignee", searchText: "" })
+          ? renderAssigneeOption({ kind: "none", value: "", label: interfaceText("m_d64d8cecf4ebff"), searchText: "" })
           : null}
         {visibleAgentOptions.length > 0 ? (
           <>
@@ -1878,7 +1861,7 @@ export function IssueProperties({
           </>
         ) : null}
         {!showNoAssigneeOption && visibleAgentOptions.length === 0 && visibleUserOptions.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">No matches.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_d6572bd2e77380")}</div>
         ) : null}
       </div>
     </>
@@ -1894,7 +1877,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder={`Search ${stageType === "review" ? "reviewers" : "approvers"}...`}
+        placeholder={interfaceText("m_05c735642a36db", { value0: (stageType === "review" ? "reviewers" : "approvers") })}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         autoFocus={!inline}
@@ -1906,8 +1889,7 @@ export function IssueProperties({
             values.length === 0 && "bg-accent",
           )}
           onClick={onClear}
-        >
-          No {stageType === "review" ? "reviewers" : "approvers"}
+        >{interfaceText("m_05f8bb36f8813c")}{stageType === "review" ? interfaceText("m_f49dd73f5cf9d5") : interfaceText("m_45522a36c31951")}
         </button>
         {currentUserId && (
           <button
@@ -1917,9 +1899,7 @@ export function IssueProperties({
             )}
             onClick={() => toggleExecutionParticipant(stageType, `user:${currentUserId}`)}
           >
-            <User className="h-3 w-3 shrink-0 text-muted-foreground" />
-            Assign to me
-          </button>
+            <User className="h-3 w-3 shrink-0 text-muted-foreground" />{interfaceText("m_9dd977a40985e4")}</button>
         )}
         {issue.createdByUserId && issue.createdByUserId !== currentUserId && (
           <button
@@ -1930,7 +1910,7 @@ export function IssueProperties({
             onClick={() => toggleExecutionParticipant(stageType, `user:${issue.createdByUserId}`)}
           >
             <User className="h-3 w-3 shrink-0 text-muted-foreground" />
-            {creatorUserLabel ? creatorUserLabel : "Requester"}
+            {creatorUserLabel ? creatorUserLabel : interfaceText("m_b5687cf04af300")}
           </button>
         )}
         {otherUserOptions
@@ -1986,7 +1966,7 @@ export function IssueProperties({
       <span className="text-sm truncate min-w-0" title={projectName(issue.projectId)}>{projectName(issue.projectId)}</span>
     </>
   ) : (
-    <span className="text-sm text-muted-foreground">None</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
   );
   const projectPickerOptions = orderItemsBySelectedAndRecent(
     [
@@ -2007,7 +1987,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search projects..."
+        placeholder={interfaceText("m_c59dd5a3c5a255")}
         value={projectSearch}
         onChange={(e) => setProjectSearch(e.target.value)}
         autoFocus={!inline}
@@ -2071,12 +2051,12 @@ export function IssueProperties({
       ))}
       {blockedByRelations.length > 2 ? (
         <Badge asChild variant="outline" className="border-border text-muted-foreground hover:bg-accent/50">
-          <button type="button" onClick={() => setBlockedByOpen(true)}>+{blockedByRelations.length - 2} more</button>
+          <button type="button" onClick={() => setBlockedByOpen(true)}>+{blockedByRelations.length - 2}{interfaceText("m_226ba18bbcdb75")}</button>
         </Badge>
       ) : null}
     </div>
   ) : (
-    <span className="text-sm text-muted-foreground">None</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
   );
   const subtasksTrigger = childIssues.length > 0 ? (
     <div className="flex min-w-0 flex-col items-start gap-1">
@@ -2085,12 +2065,12 @@ export function IssueProperties({
       ))}
       {childIssues.length > 2 ? (
         <Badge asChild variant="outline" className="border-border text-muted-foreground hover:bg-accent/50">
-          <button type="button" onClick={() => setSubtasksOpen(true)}>+{childIssues.length - 2} more</button>
+          <button type="button" onClick={() => setSubtasksOpen(true)}>+{childIssues.length - 2}{interfaceText("m_226ba18bbcdb75")}</button>
         </Badge>
       ) : null}
     </div>
   ) : (
-    <span className="text-sm text-muted-foreground">None</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
   );
   const visibleRelatedTasks = relatedTasksExpanded
     ? relatedTasks
@@ -2135,7 +2115,7 @@ export function IssueProperties({
       className="min-w-0 max-w-full"
     />
   ) : (
-    <span className="text-sm text-muted-foreground">None</span>
+    <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
   );
   const parentSearchActive = normalizedParentSearch.length > 0;
   // When the user types, search on the server. The default list caps at 500 rows
@@ -2157,7 +2137,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search tasks..."
+        placeholder={interfaceText("m_c1af8370c5f689")}
         value={parentSearch}
         onChange={(e) => setParentSearch(e.target.value)}
         autoFocus={!inline}
@@ -2172,9 +2152,7 @@ export function IssueProperties({
             onUpdate({ parentId: null });
             setParentOpen(false);
           }}
-        >
-          No parent
-        </button>
+        >{interfaceText("m_bfc4337cf757dd")}</button>
         {parentOptions.map((candidate) => (
           <button
             key={candidate.id}
@@ -2195,9 +2173,9 @@ export function IssueProperties({
           </button>
         ))}
         {parentOptionsLoading ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">Searching tasks...</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_33bf3954e7da98")}</div>
         ) : parentOptions.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">No matching tasks.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_ee92fb1dc4c97b")}</div>
         ) : null}
       </div>
     </>
@@ -2243,11 +2221,11 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search tasks..."
+        placeholder={interfaceText("m_c1af8370c5f689")}
         value={blockedBySearch}
         onChange={(e) => setBlockedBySearch(e.target.value)}
         autoFocus={!inline}
-        aria-label="Search tasks to add as blockers"
+        aria-label={interfaceText("m_b075e6c59d85da")}
       />
       <div className="max-h-48 overflow-y-auto overscroll-contain">
         <button
@@ -2260,9 +2238,7 @@ export function IssueProperties({
             setBlockedByOpen(false);
             setBlockedBySearch("");
           }}
-        >
-          No blockers
-        </button>
+        >{interfaceText("m_c93d3fab385191")}</button>
         {blockerOptions.map((candidate) => {
           const selected = blockedByIds.includes(candidate.id);
           return (
@@ -2284,9 +2260,9 @@ export function IssueProperties({
           );
         })}
         {blockerOptionsLoading ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">Searching tasks...</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_33bf3954e7da98")}</div>
         ) : blockerOptions.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">No matching tasks.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_ee92fb1dc4c97b")}</div>
         ) : null}
       </div>
     </>
@@ -2297,9 +2273,7 @@ export function IssueProperties({
       className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
       onClick={onClick}
     >
-      <Plus className="h-3 w-3" />
-      Add blocker
-    </button>
+      <Plus className="h-3 w-3" />{interfaceText("m_61671f983691b7")}</button>
   );
   const subtasksContent = (
     <>
@@ -2319,7 +2293,7 @@ export function IssueProperties({
             </span>
           </Link>
         )) : (
-          <div className="px-2 py-2 text-xs text-muted-foreground">No subtasks yet.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_17d17d5bca7d27")}</div>
         )}
       </div>
       {onAddSubIssue ? (
@@ -2332,9 +2306,7 @@ export function IssueProperties({
               onAddSubIssue();
             }}
           >
-            <Plus className="h-3 w-3" />
-            Add subtask
-          </button>
+            <Plus className="h-3 w-3" />{interfaceText("m_65db0c29ba4fff")}</button>
         </div>
       ) : null}
     </>
@@ -2343,11 +2315,11 @@ export function IssueProperties({
   const propertiesBody = (
     <div className={cn(streamlinedPropertiesEnabled && "task-detail-properties pl-4")}>
       <PropertySection
-        title={streamlinedPropertiesEnabled ? "Work" : "Triage"}
+        title={streamlinedPropertiesEnabled ? interfaceText("m_104ab9213e28e4") : interfaceText("m_4ffbef3c08edfa")}
         first
         streamlined={streamlinedPropertiesEnabled}
       >
-        <PropertyRow label="Status">
+        <PropertyRow label={interfaceText("m_920e413c7d411b")}>
           <StatusIcon
             status={issue.status}
             externalConversationState={issue.externalConversationState}
@@ -2360,7 +2332,7 @@ export function IssueProperties({
 
         {/* PAP-411: priority UI is hidden behind SHOW_TASK_PRIORITY_UI. Revive by flipping the flag. */}
         {SHOW_TASK_PRIORITY_UI && (
-          <PropertyRow label="Priority">
+          <PropertyRow label={interfaceText("m_d60dbba0792232")}>
             <PriorityIcon
               priority={issue.priority}
               onChange={(priority) => onUpdate({ priority })}
@@ -2371,7 +2343,7 @@ export function IssueProperties({
 
         <PropertyPicker
           inline={inline}
-          label="Assignee"
+          label={interfaceText("m_5e20d20e3978dc")}
           open={assigneeOpen}
           onOpenChange={(open) => { setAssigneeOpen(open); if (!open) { setAssigneeSearch(""); setPendingAssignee(null); } }}
           triggerContent={assigneeTrigger}
@@ -2392,7 +2364,7 @@ export function IssueProperties({
         {showAssigneeAdapterOptions ? (
           <PropertyPicker
             inline={inline}
-            label="Model"
+            label={interfaceText("m_5e2c614c23f022")}
             open={assigneeOptionsOpen}
             onOpenChange={setAssigneeOptionsOpen}
             triggerContent={assigneeOptionsTrigger}
@@ -2405,7 +2377,7 @@ export function IssueProperties({
 
         <PropertyPicker
           inline={inline}
-          label="Project"
+          label={interfaceText("m_98595978531974")}
           open={projectOpen}
           onOpenChange={(open) => { setProjectOpen(open); if (!open) setProjectSearch(""); }}
           triggerContent={projectTrigger}
@@ -2426,7 +2398,7 @@ export function IssueProperties({
 
         <PropertyPicker
           inline={inline}
-          label="Labels"
+          label={interfaceText("m_934b8899c3d918")}
           open={labelsOpen}
           onOpenChange={(open) => { setLabelsOpen(open); if (!open) setLabelSearch(""); }}
           triggerContent={labelsTrigger}
@@ -2439,10 +2411,10 @@ export function IssueProperties({
         </PropertyPicker>
       </PropertySection>
 
-      <PropertySection title="Relationships" streamlined={streamlinedPropertiesEnabled}>
+      <PropertySection title={interfaceText("m_85752a46aa46dc")} streamlined={streamlinedPropertiesEnabled}>
         <PropertyPicker
           inline={inline}
-          label="Parent"
+          label={interfaceText("m_5f7953f7c9b6ba")}
           open={parentOpen}
           onOpenChange={(open) => {
             setParentOpen(open);
@@ -2463,7 +2435,7 @@ export function IssueProperties({
         {streamlinedPropertiesEnabled ? (
           <PropertyPicker
             inline={inline}
-            label="Blocked by"
+            label={interfaceText("m_36931a940259df")}
             open={blockedByOpen}
             onOpenChange={(open) => {
               setBlockedByOpen(open);
@@ -2479,7 +2451,7 @@ export function IssueProperties({
           </PropertyPicker>
         ) : inline ? (
           <div>
-            <PropertyRow label="Blocked by" wrap>
+            <PropertyRow label={interfaceText("m_36931a940259df")} wrap>
               {visibleBlockedByRelations.map((relation) => (
                 <RemovableIssueReferencePill
                   key={relation.id}
@@ -2502,7 +2474,7 @@ export function IssueProperties({
             ) : null}
           </div>
         ) : (
-          <PropertyRow label="Blocked by" wrap>
+          <PropertyRow label={interfaceText("m_36931a940259df")} wrap>
             {visibleBlockedByRelations.map((relation) => (
               <RemovableIssueReferencePill
                 key={relation.id}
@@ -2531,7 +2503,7 @@ export function IssueProperties({
           </PropertyRow>
         )}
 
-        <PropertyRow label="Blocking" wrap>
+        <PropertyRow label={interfaceText("m_f778a33133e5c3")} wrap>
           {blockingIssues.length > 0 ? (
             <div className="flex flex-col items-start gap-1.5">
               {visibleBlockingIssues.map((relation) => (
@@ -2544,14 +2516,14 @@ export function IssueProperties({
               />
             </div>
           ) : (
-            <span className="text-sm text-muted-foreground">None</span>
+            <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
           )}
         </PropertyRow>
 
         {streamlinedPropertiesEnabled ? (
           <PropertyPicker
             inline={inline}
-            label="Subtasks"
+            label={interfaceText("m_7eff0a1919b2f6")}
             open={subtasksOpen}
             onOpenChange={setSubtasksOpen}
             separateTrigger={childIssues.length > 0}
@@ -2563,7 +2535,7 @@ export function IssueProperties({
             {subtasksContent}
           </PropertyPicker>
         ) : !taskChatShellEnabled ? (
-          <PropertyRow label="Sub-tasks" wrap>
+          <PropertyRow label={interfaceText("m_ede4f8886e7d35")} wrap>
             <div className="flex flex-col items-start gap-1.5">
               {visibleChildIssues.map((child) => (
                 <IssueReferencePill key={child.id} issue={child} />
@@ -2579,16 +2551,14 @@ export function IssueProperties({
                   className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
                   onClick={onAddSubIssue}
                 >
-                  <Plus className="h-3 w-3" />
-                  Add sub-task
-                </button>
+                  <Plus className="h-3 w-3" />{interfaceText("m_d4a8efaabc35bd")}</button>
               ) : null}
             </div>
           </PropertyRow>
         ) : null}
 
         {(!streamlinedPropertiesEnabled || !taskChatShellEnabled) && relatedTasks.length > 0 ? (
-          <PropertyRow label={streamlinedPropertiesEnabled ? "Referenced" : "Related tasks"} wrap>
+          <PropertyRow label={streamlinedPropertiesEnabled ? interfaceText("m_e1ea8a5e413c7e") : interfaceText("m_c5ded36c752cc9")} wrap>
             <div className="flex flex-col items-start gap-1.5">
               {visibleRelatedTasks.map((related) => (
                 <IssueReferencePill key={related.id} issue={related} />
@@ -2603,12 +2573,11 @@ export function IssueProperties({
         ) : null}
 
         {pullRequests.length > 0 || workProductsError ? (
-          <PropertyRow label="Pull requests" wrap>
+          <PropertyRow label={interfaceText("m_d9e3f260282517")} wrap>
             <div className="flex min-w-0 flex-col gap-2">
               <IssuePullRequestLinks products={pullRequests} externalObjects={externalObjects?.map((entry) => entry.pill)} />
               {workProductsError ? (
-                <span className="text-xs text-muted-foreground">
-                  Couldn’t load pull requests. <button type="button" className="text-primary hover:underline" onClick={() => void refetchWorkProducts()}>Retry</button>
+                <span className="text-xs text-muted-foreground">{interfaceText("m_64032093c7d661")}<button type="button" className="text-primary hover:underline" onClick={() => void refetchWorkProducts()}>{interfaceText("m_942087cc2d41e0")}</button>
                 </span>
               ) : null}
             </div>
@@ -2622,10 +2591,10 @@ export function IssueProperties({
         />
       </PropertySection>
 
-      <PropertySection title="Execution" streamlined={streamlinedPropertiesEnabled}>
+      <PropertySection title={interfaceText("m_a45cd4bd0998e5")} streamlined={streamlinedPropertiesEnabled}>
         {/* Read-only: agents set the policy, the board does not. */}
         {reviewPolicyBadge ? (
-          <PropertyRow label="Approvals">
+          <PropertyRow label={interfaceText("m_2bfc3471571e5c")}>
             <PropertyChip title={reviewPolicyBadge.description}>
               <reviewPolicyBadge.Icon className="shrink-0 text-muted-foreground" aria-hidden />
               <span className="min-w-0 truncate">{reviewPolicyBadge.label}</span>
@@ -2634,13 +2603,13 @@ export function IssueProperties({
         ) : null}
 
         {!policyAvailable ? (
-          <PropertyRow label="Execution policy" wrap>
-            <span role="status" className="text-sm text-muted-foreground">Execution policy unavailable. Refresh to try again.</span>
+          <PropertyRow label={interfaceText("m_b9215cec74545a")} wrap>
+            <span role="status" className="text-sm text-muted-foreground">{interfaceText("m_f5e92904c0df85")}</span>
           </PropertyRow>
         ) : (<>
         <PropertyPicker
           inline={inline}
-          label="Reviewers"
+          label={interfaceText("m_06499a309e3588")}
           open={reviewersOpen}
           onOpenChange={(open) => { setReviewersOpen(open); if (!open) setReviewerSearch(""); }}
           triggerContent={reviewerTrigger}
@@ -2659,7 +2628,7 @@ export function IssueProperties({
 
         <PropertyPicker
           inline={inline}
-          label="Approvers"
+          label={interfaceText("m_97ecaec16a965f")}
           open={approversOpen}
           onOpenChange={(open) => { setApproversOpen(open); if (!open) setApproverSearch(""); }}
           triggerContent={approverTrigger}
@@ -2678,19 +2647,19 @@ export function IssueProperties({
         </>)}
 
         {currentExecutionLabel && (
-          <PropertyRow label="Execution">
+          <PropertyRow label={interfaceText("m_a45cd4bd0998e5")}>
             <span className="text-sm truncate min-w-0" title={currentExecutionLabel}>{currentExecutionLabel}</span>
           </PropertyRow>
         )}
 
         {showScheduledRetryRow && scheduledRetry?.scheduledRetryReason === "workspace_busy" ? (
-          <PropertyRow label="Workspace">
-            <span className="text-sm text-muted-foreground">Waiting for workspace</span>
+          <PropertyRow label={interfaceText("m_87bb59ba2f92f2")}>
+            <span className="text-sm text-muted-foreground">{interfaceText("m_e682cb09e669c4")}</span>
           </PropertyRow>
         ) : showScheduledRetryRow && scheduledRetryContent ? (
           <PropertyPicker
             inline={inline}
-            label="Scheduled retry"
+            label={interfaceText("m_263ed103472a1c")}
             open={scheduledRetryOpen}
             onOpenChange={setScheduledRetryOpen}
             triggerContent={scheduledRetryTrigger}
@@ -2705,7 +2674,7 @@ export function IssueProperties({
         {policyAvailable ? (
         <PropertyPicker
           inline={inline}
-          label="Monitor"
+          label={interfaceText("m_4c2e1df4570beb")}
           open={monitorOpen}
           onOpenChange={setMonitorOpen}
           triggerContent={monitorTrigger}
@@ -2718,7 +2687,7 @@ export function IssueProperties({
 
         <PropertyPicker
           inline={inline}
-          label="Watchdog"
+          label={interfaceText("m_da0ccfeab090c5")}
           open={watchdogOpen}
           onOpenChange={setWatchdogOpen}
           triggerContent={watchdogTrigger}
@@ -2729,8 +2698,8 @@ export function IssueProperties({
               <Link
                 to={`/issues/${watchdogIssueRef.id}`}
                 className="inline-flex items-center justify-center h-5 w-5 rounded hover:bg-accent/50 transition-colors text-muted-foreground hover:text-foreground"
-                title="Open watchdog task"
-                aria-label="Open watchdog task"
+                title={interfaceText("m_b396a984306ca5")}
+                aria-label={interfaceText("m_b396a984306ca5")}
                 onClick={(e) => e.stopPropagation()}
               >
                 <ArrowUpRight className="h-3 w-3" />
@@ -2743,11 +2712,11 @@ export function IssueProperties({
       </PropertySection>
 
       {workspacePickerEligible || hasWorkspaceRuntimeControls || issue.currentExecutionWorkspace?.branchName || issue.currentExecutionWorkspace?.cwd || issue.executionWorkspaceId ? (
-        <PropertySection title="Workspace" streamlined={streamlinedPropertiesEnabled}>
+        <PropertySection title={interfaceText("m_87bb59ba2f92f2")} streamlined={streamlinedPropertiesEnabled}>
           {workspacePickerEligible ? (
             <PropertyPicker
               inline={inline}
-              label="Execution"
+              label={interfaceText("m_a45cd4bd0998e5")}
               open={workspacePickerOpen}
               onOpenChange={(open) => {
                 setWorkspacePickerOpen(open);
@@ -2773,8 +2742,8 @@ export function IssueProperties({
                       onClick={() => saveWorkspaceSelection(null)}
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm">Default</span>
-                        <span className="block text-xs text-muted-foreground">Use the project workspace policy</span>
+                        <span className="block text-sm">{interfaceText("m_21b111cbfe6e8f")}</span>
+                        <span className="block text-xs text-muted-foreground">{interfaceText("m_8bf3f9b7a6c9c9")}</span>
                       </span>
                       {activeWorkspacePickerMode === "default" ? <Check className="h-3.5 w-3.5 shrink-0" /> : null}
                     </button>
@@ -2784,8 +2753,8 @@ export function IssueProperties({
                       onClick={() => saveWorkspaceSelection("isolated_workspace")}
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm">New isolated workspace</span>
-                        <span className="block text-xs text-muted-foreground">Create a fresh workspace on the next run</span>
+                        <span className="block text-sm">{interfaceText("m_0c67029f9e1abe")}</span>
+                        <span className="block text-xs text-muted-foreground">{interfaceText("m_b5e083ccf7de47")}</span>
                       </span>
                       {activeWorkspacePickerMode === "isolated" ? <Check className="h-3.5 w-3.5 shrink-0" /> : null}
                     </button>
@@ -2795,14 +2764,14 @@ export function IssueProperties({
                       onClick={() => setWorkspacePickerStep("reuse")}
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm">Reuse existing workspace…</span>
-                        <span className="block text-xs text-muted-foreground">Pick a workspace to reuse</span>
+                        <span className="block text-sm">{interfaceText("m_9d80bee3b85993")}</span>
+                        <span className="block text-xs text-muted-foreground">{interfaceText("m_50fe55e71d209a")}</span>
                       </span>
                       {activeWorkspacePickerMode === "reuse" ? <Check className="h-3.5 w-3.5 shrink-0" /> : null}
                     </button>
                   </div>
                   <div className="mt-1 border-t border-border px-2 py-1.5 text-xs text-muted-foreground">
-                    {issue.executionWorkspaceId ? "Current workspace stays active. Applies on the next run." : "Applies on the next run."}
+                    {issue.executionWorkspaceId ? interfaceText("m_84ea502a06299c") : interfaceText("m_d6d33783915510")}
                   </div>
                 </>
               ) : (
@@ -2812,27 +2781,25 @@ export function IssueProperties({
                       type="button"
                       className="inline-flex items-center gap-1 rounded px-1 py-1 text-xs text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                       onClick={() => setWorkspacePickerStep("mode")}
-                      aria-label="Back to workspace options"
+                      aria-label={interfaceText("m_bc31531ca54332")}
                     >
-                      <ChevronLeft className="h-3.5 w-3.5" />
-                      Workspace mode
-                    </button>
+                      <ChevronLeft className="h-3.5 w-3.5" />{interfaceText("m_36e8bba4734df2")}</button>
                     <input
                       className="block w-full bg-transparent px-2 py-1.5 text-xs outline-none placeholder:text-muted-foreground/50"
-                      placeholder="Search workspaces..."
+                      placeholder={interfaceText("m_5c192a3e6f23b1")}
                       value={workspaceSearch}
                       onChange={(event) => setWorkspaceSearch(event.target.value)}
                       autoFocus={!inline}
-                      aria-label="Search reusable workspaces"
+                      aria-label={interfaceText("m_cb34b5ebe05ae7")}
                     />
                   </div>
                   <div className="max-h-48 overflow-y-auto overscroll-contain py-1">
                     {reusableExecutionWorkspacesLoading ? (
-                      <div className="px-2 py-2 text-xs text-muted-foreground">Loading workspaces...</div>
+                      <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_3f9adb0f75f8f0")}</div>
                     ) : reusableExecutionWorkspacesError ? (
-                      <div className="px-2 py-2 text-xs text-destructive">Failed to load workspaces.</div>
+                      <div className="px-2 py-2 text-xs text-destructive">{interfaceText("m_c7033771ac3e65")}</div>
                     ) : reusableWorkspaceOptions.length === 0 ? (
-                      <div className="px-2 py-2 text-xs text-muted-foreground">No matching workspaces.</div>
+                      <div className="px-2 py-2 text-xs text-muted-foreground">{interfaceText("m_76be0ffe594be8")}</div>
                     ) : reusableWorkspaceOptions.map((group) => (
                       <div key={group.id} className="py-1">
                         <div className="px-2 pb-1 text-xs font-medium text-muted-foreground">{group.label}</div>
@@ -2854,26 +2821,24 @@ export function IssueProperties({
                     ))}
                   </div>
                   <div className="border-t border-border px-2 py-1.5 text-xs text-muted-foreground">
-                    {issue.executionWorkspaceId ? "Current workspace stays active. Applies on the next run." : "Applies on the next run."}
+                    {issue.executionWorkspaceId ? interfaceText("m_84ea502a06299c") : interfaceText("m_d6d33783915510")}
                   </div>
                 </>
               )}
             </PropertyPicker>
           ) : null}
           {showWorkspaceDetailLink && issue.executionWorkspaceId && (
-            <PropertyRow label="Workspace">
+            <PropertyRow label={interfaceText("m_87bb59ba2f92f2")}>
               <Link
                 to={`/execution-workspaces/${issue.executionWorkspaceId}`}
                 className="text-sm text-primary hover:underline inline-flex min-w-0 items-center gap-1.5"
               >
-                <HardDrive className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                View workspace
-                <ArrowUpRight className="h-3 w-3 shrink-0" />
+                <HardDrive className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />{interfaceText("m_ea77e961b1f737")}<ArrowUpRight className="h-3 w-3 shrink-0" />
               </Link>
             </PropertyRow>
           )}
           {hasWorkspaceRuntimeControls && (
-            <PropertyRow label="Service">
+            <PropertyRow label={interfaceText("m_d677190e0a9990")}>
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <WorkspaceRuntimeQuickControls
                   sections={workspaceRuntimeSections}
@@ -2894,7 +2859,7 @@ export function IssueProperties({
             </PropertyRow>
           )}
           {issue.currentExecutionWorkspace?.branchName && (
-            <PropertyRow label="Branch">
+            <PropertyRow label={interfaceText("m_52656e8104eef3")}>
               <TruncatedCopyable
                 value={issue.currentExecutionWorkspace.branchName}
                 icon={GitBranch}
@@ -2902,7 +2867,7 @@ export function IssueProperties({
             </PropertyRow>
           )}
           {issue.currentExecutionWorkspace?.cwd && !hideHostPaths && (
-            <PropertyRow label="Folder">
+            <PropertyRow label={interfaceText("m_74ccd43303847f")}>
               <TruncatedCopyable
                 value={issue.currentExecutionWorkspace.cwd}
                 icon={FolderOpen}
@@ -2912,9 +2877,9 @@ export function IssueProperties({
         </PropertySection>
       ) : null}
 
-      <PropertySection title="About" streamlined={streamlinedPropertiesEnabled}>
+      <PropertySection title={interfaceText("m_4efca0d10c5feb")} streamlined={streamlinedPropertiesEnabled}>
         {originatingActor ? (
-          <PropertyRow label="Originating">
+          <PropertyRow label={interfaceText("m_28d9df90dd1d4d")}>
             {originatingActor.kind === "agent" ? (
               <Link
                 to={`/agents/${originatingActor.id}`}
@@ -2930,8 +2895,7 @@ export function IssueProperties({
                   size="sm"
                 />
                 {originatingViaAgentName ? (
-                  <span className="shrink-0 truncate text-xs text-muted-foreground">
-                    via {originatingViaAgentName}
+                  <span className="shrink-0 truncate text-xs text-muted-foreground">{interfaceText("m_c1035a0b39a76d")}{originatingViaAgentName}
                   </span>
                 ) : null}
               </span>
@@ -2939,7 +2903,7 @@ export function IssueProperties({
           </PropertyRow>
         ) : null}
         {issue.startedAt && (
-          <PropertyRow label="Started">
+          <PropertyRow label={interfaceText("m_ecbc89cd37a037")}>
             <span
               className={streamlinedPropertiesEnabled ? "min-w-0 truncate whitespace-nowrap text-sm" : "text-sm"}
               title={streamlinedPropertiesEnabled ? formatDateTime(issue.startedAt) : undefined}
@@ -2947,20 +2911,20 @@ export function IssueProperties({
           </PropertyRow>
         )}
         {issue.completedAt && (
-          <PropertyRow label="Completed">
+          <PropertyRow label={interfaceText("m_22a970d2e5b1cc")}>
             <span
               className={streamlinedPropertiesEnabled ? "min-w-0 truncate whitespace-nowrap text-sm" : "text-sm"}
               title={streamlinedPropertiesEnabled ? formatDateTime(issue.completedAt) : undefined}
             >{formatDateTime(issue.completedAt)}</span>
           </PropertyRow>
         )}
-        <PropertyRow label="Created">
+        <PropertyRow label={interfaceText("m_d70b9e24bca26b")}>
           <span
             className={streamlinedPropertiesEnabled ? "min-w-0 truncate whitespace-nowrap text-sm" : "text-sm"}
             title={streamlinedPropertiesEnabled ? formatDateTime(issue.createdAt) : undefined}
           >{formatDateTime(issue.createdAt)}</span>
         </PropertyRow>
-        <PropertyRow label="Updated">
+        <PropertyRow label={interfaceText("m_3a5ecca188c057")}>
           <span
             className={streamlinedPropertiesEnabled ? "min-w-0 truncate whitespace-nowrap text-sm" : "text-sm"}
             title={streamlinedPropertiesEnabled ? timeAgo(issue.updatedAt) : undefined}
@@ -2971,7 +2935,7 @@ export function IssueProperties({
             const archivedByAgent = (agents ?? []).find((candidate) => candidate.id === issue.archivedByAgentId);
             const archivedByName = agentName(issue.archivedByAgentId);
             return (
-              <PropertyRow label="Archived">
+              <PropertyRow label={interfaceText("m_bdb86505f8062d")}>
                 <div className="flex min-w-0 max-w-full flex-col items-start gap-1">
                   {/* The row label already reads "Archived", so the value shows just
                       the attributing agent (icon + name) — this gives the name the
@@ -2981,7 +2945,7 @@ export function IssueProperties({
                       truncation on genuinely long names is recoverable. */}
                   <span
                     className="flex min-w-0 max-w-full items-center gap-1.5 text-sm"
-                    title={`Archived by ${archivedByName} · ${formatDateTime(issue.archivedAt)}`}
+                    title={interfaceText("m_ae8b4feffe5560", { value0: (archivedByName), value1: (formatDateTime(issue.archivedAt)) })}
                   >
                     {archivedByAgent
                       ? <AgentAvatar agent={archivedByAgent} size={16} className="h-3.5 w-3.5 shrink-0 text-muted-foreground"/>
@@ -2999,7 +2963,7 @@ export function IssueProperties({
                       disabled={unarchiveFromInbox.isPending}
                     >
                       <ArchiveRestore className="h-3 w-3" />
-                      {unarchiveFromInbox.isPending ? "Unarchiving…" : "Unarchive"}
+                      {unarchiveFromInbox.isPending ? interfaceText("m_80a70ba6096074") : interfaceText("m_f565318d124534")}
                     </button>
                   </div>
                   {unarchiveErrorMessage ? (
@@ -3013,7 +2977,7 @@ export function IssueProperties({
           })()
         ) : null}
         {issue.requestDepth > 0 && (
-          <PropertyRow label="Depth">
+          <PropertyRow label={interfaceText("m_f1dbc33978a95b")}>
             <span className="text-sm font-mono">{issue.requestDepth}</span>
           </PropertyRow>
         )}
@@ -3034,18 +2998,18 @@ export function IssueProperties({
   const hasReferencesTab = streamlinedPropertiesEnabled
     && (panelReferencedTasks.length > 0 || panelMentionedInTasks.length > 0);
   const availablePaneTabs: IssuePaneTabDescriptor[] = [
-    { value: "properties", label: "Properties", closable: false },
+    { value: "properties", label: interfaceText("m_ae43692b2a310b"), closable: false },
     ...(hasSubtasksTab
-      ? [{ value: "subtasks" as const, label: "Subtasks", count: childIssues.length, closable: true }]
+      ? [{ value: "subtasks" as const, label: interfaceText("m_7eff0a1919b2f6"), count: childIssues.length, closable: true }]
       : []),
     ...(hasReferencesTab
-      ? [{ value: "references" as const, label: "References", closable: true }]
+      ? [{ value: "references" as const, label: interfaceText("m_69824d3b0e70ca"), closable: true }]
       : []),
     ...(hasPlanTab
       ? [{ value: "plans" as const, label: "Plan", closable: true }]
       : []),
     ...(hasArtifactsTab
-      ? [{ value: "artifacts" as const, label: "Artifacts", closable: true }]
+      ? [{ value: "artifacts" as const, label: interfaceText("m_314ae71b8c8dc9"), closable: true }]
       : []),
   ];
   const visiblePaneTabs = availablePaneTabs.filter(
@@ -3060,7 +3024,7 @@ export function IssueProperties({
       <>
         {paneHeaderSlot
           ? streamlinedPropertiesEnabled ? createPortal(
-              <div className="flex items-center" role="tablist" aria-label="Properties panel sections">
+              <div className="flex items-center" role="tablist" aria-label={interfaceText("m_60eb8c4e1aa887")}>
                 <button
                   type="button"
                   role="tab"
@@ -3069,12 +3033,10 @@ export function IssueProperties({
                     STREAMLINED_PANE_TAB_CLASS,
                     "inline-flex flex-none items-center bg-muted px-3",
                   )}
-                >
-                  Properties
-                </button>
+                >{interfaceText("m_ae43692b2a310b")}</button>
               </div>,
               paneHeaderSlot,
-            ) : createPortal(<span className="text-sm font-medium">Properties</span>, paneHeaderSlot)
+            ) : createPortal(<span className="text-sm font-medium">{interfaceText("m_ae43692b2a310b")}</span>, paneHeaderSlot)
           : null}
         {propertiesBody}
       </>
@@ -3189,7 +3151,7 @@ export function IssueProperties({
               <button
                 type="button"
                 className="absolute right-2.5 top-1/2 z-20 inline-flex size-5 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-(length:--rad-3) focus-visible:ring-ring group-hover/pane-tab:opacity-100 group-focus-within/pane-tab:opacity-100"
-                aria-label={`Close ${tab.label} tab`}
+                aria-label={interfaceText("m_d9f193b5ccf3b8", { value0: (tab.label) })}
                 onPointerDown={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
@@ -3218,8 +3180,8 @@ export function IssueProperties({
             size="icon-xs"
             className="size-6 shrink-0 text-muted-foreground"
             disabled={hiddenPaneTabs.length === 0}
-            aria-label="Open closed sidebar tab"
-            title={hiddenPaneTabs.length === 0 ? "All sidebar tabs are open" : "Open closed sidebar tab"}
+            aria-label={interfaceText("m_a5dddc07fdfa94")}
+            title={hiddenPaneTabs.length === 0 ? interfaceText("m_48d6f9cc1cf587") : interfaceText("m_a5dddc07fdfa94")}
           >
             <Plus className="size-3.5" aria-hidden />
           </Button>

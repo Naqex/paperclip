@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useTranslation } from "@/i18n";
 import { useState, type CSSProperties } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -125,6 +126,7 @@ export function SidebarAccountMenu({
   forceExpanded = false,
   shadow,
 }: SidebarAccountMenuProps) {
+  useInterfaceLanguage();
   const cloud = useCloudInstance();
   const isCloud = Boolean(cloud);
   // Invites live on the Members page (or in Cloud's People settings). Hide the
@@ -228,7 +230,7 @@ export function SidebarAccountMenu({
                     href={`https://github.com/paperclipai/paperclip/commit/${stagingCommit}`}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`View commit ${stagingCommit} on GitHub`}
+                    aria-label={interfaceText("m_57eb5fef26c34f", { value0: (stagingCommit) })}
                     title={stagingCommit}
                   >
                     SHA {stagingCommit.slice(0, 7)}

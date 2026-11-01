@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   Approval,
   HeartbeatRun,
@@ -524,7 +525,7 @@ export function getInboxSearchSupplementIssues({
 
 function formatDefaultWorkspaceGroupLabel(name: string | null | undefined): string {
   const normalizedName = name?.trim();
-  return normalizedName ? `${normalizedName} (default)` : "Default workspace";
+  return normalizedName ? interfaceText("m_60886f0b5ccdbb", { value0: (normalizedName) }) : interfaceText("m_6d67c6eb93089a");
 }
 
 function resolveDefaultProjectWorkspaceInfo(
@@ -640,7 +641,7 @@ export function resolveIssueWorkspaceGroup(
 
   return {
     key: "workspace:none",
-    label: "No workspace",
+    label: interfaceText("m_fce263d326818c"),
   };
 }
 
@@ -875,14 +876,14 @@ function resolveIssueAssigneeGroup(
     };
   }
 
-  return { key: "assignee:none", label: "Unassigned" };
+  return { key: "assignee:none", label: interfaceText("m_14d33bd014e6b4") };
 }
 
 function resolveIssueProjectGroup(
   issue: Pick<Issue, "projectId">,
   { projectById }: Pick<InboxWorkspaceGroupingOptions, "projectById">,
 ): { key: string; label: string } {
-  if (!issue.projectId) return { key: "project:none", label: "No project" };
+  if (!issue.projectId) return { key: "project:none", label: interfaceText("m_f34c2be0d1c5f5") };
 
   const projectName = projectById?.get(issue.projectId)?.name?.trim();
   return {

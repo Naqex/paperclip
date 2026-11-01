@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { ActivityEvent } from "@paperclipai/shared";
 
 export interface AssigneeSelection {
@@ -93,7 +94,7 @@ export function currentUserAssigneeOption(currentUserId: string | null | undefin
   if (!currentUserId) return [];
   return [{
     id: assigneeValueFromSelection({ assigneeUserId: currentUserId }),
-    label: "Me",
+    label: interfaceText("m_d30af076b0dc85"),
     searchText: currentUserId === "local-board" ? "me board human local-board" : `me human ${currentUserId}`,
   }];
 }
@@ -104,7 +105,7 @@ export function formatAssigneeUserLabel(
   userLabels?: ReadonlyMap<string, string> | Record<string, string> | null,
 ): string | null {
   if (!userId) return null;
-  if (currentUserId && userId === currentUserId) return "You";
+  if (currentUserId && userId === currentUserId) return interfaceText("m_08b041935798fb");
   return formatUserLabel(userId, userLabels);
 }
 
@@ -119,6 +120,6 @@ export function formatUserLabel(
       : (userLabels as Record<string, string>)[userId];
     if (typeof label === "string" && label.trim()) return label;
   }
-  if (userId === "local-board") return "Board";
+  if (userId === "local-board") return interfaceText("m_4816cbfd74aa82");
   return userId.slice(0, 5);
 }

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState } from "react";
 import {
   Check,
@@ -67,21 +68,21 @@ function formatServiceUrl(url: string | null | undefined) {
 function statusMeta(entry: WorkspaceServiceControlEntry): { label: string; unhealthy: boolean } {
   switch (entry.state) {
     case "provisioning":
-      return { label: "Provisioning…", unhealthy: false };
+      return { label: interfaceText("m_62cd0e7db7caf3"), unhealthy: false };
     case "starting":
-      return { label: "Starting…", unhealthy: false };
+      return { label: interfaceText("m_bbe5fc3b9ef39f"), unhealthy: false };
     case "stopping":
-      return { label: "Stopping…", unhealthy: false };
+      return { label: interfaceText("m_bbe8574175aba8"), unhealthy: false };
     case "restarting":
-      return { label: "Restarting…", unhealthy: false };
+      return { label: interfaceText("m_75d0f1469d166c"), unhealthy: false };
     case "failed":
-      return { label: "Failed", unhealthy: false };
+      return { label: interfaceText("m_031a8f0f659df8"), unhealthy: false };
     case "running":
       return entry.healthStatus === "unhealthy"
-        ? { label: "Unhealthy", unhealthy: true }
-        : { label: "Running", unhealthy: false };
+        ? { label: interfaceText("m_317b1fbc1e13be"), unhealthy: true }
+        : { label: interfaceText("m_f4ccae29e1bb0c"), unhealthy: false };
     default:
-      return { label: "Stopped", unhealthy: false };
+      return { label: interfaceText("m_1a4f630ac1b69f"), unhealthy: false };
   }
 }
 
@@ -109,12 +110,13 @@ function StatusIndicator({ entry, className }: { entry: WorkspaceServiceControlE
 }
 
 function CopyUrlButton({ url, disabled }: { url: string; disabled?: boolean }) {
+  useInterfaceLanguage();
   const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   }, []);
-  const copyLabel = copyState === "copied" ? "URL copied" : copyState === "failed" ? "Copy failed" : "Copy URL";
+  const copyLabel = copyState === "copied" ? interfaceText("m_0017bda4785398") : copyState === "failed" ? interfaceText("m_5b50e7a693fee9") : interfaceText("m_b26d1037f1c2da");
   return (
     <Button
       variant="ghost"
@@ -147,11 +149,12 @@ function CopyUrlButton({ url, disabled }: { url: string; disabled?: boolean }) {
 }
 
 function UrlSegment({ entry, compact }: { entry: WorkspaceServiceControlEntry; compact?: boolean }) {
+  useInterfaceLanguage();
   const displayUrl = formatServiceUrl(entry.url) ?? (entry.port ? `:${entry.port}` : null);
   const live = entry.state === "running" && Boolean(entry.url);
 
   if (!displayUrl) {
-    return <span className="font-mono text-xs text-muted-foreground/70">no url</span>;
+    return <span className="font-mono text-xs text-muted-foreground/70">{interfaceText("m_d36257bc62258b")}</span>;
   }
   return (
     <>
@@ -181,10 +184,10 @@ function UrlSegment({ entry, compact }: { entry: WorkspaceServiceControlEntry; c
           size="icon-xs"
           disabled={!live}
           className="text-muted-foreground hover:text-foreground"
-          title="Open in new tab"
+          title={interfaceText("m_e0af5c0bc24574")}
         >
           {live ? (
-            <a href={entry.url ?? undefined} target="_blank" rel="noreferrer" aria-label="Open in new tab">
+            <a href={entry.url ?? undefined} target="_blank" rel="noreferrer" aria-label={interfaceText("m_e0af5c0bc24574")}>
               <ExternalLink className="size-3" />
             </a>
           ) : (
@@ -203,6 +206,7 @@ function ActionSlots({
   entry: Pick<WorkspaceServiceControlEntry, "state" | "canStart">;
   onAction: (action: WorkspaceServiceControlAction) => void;
 }) {
+  useInterfaceLanguage();
   const transitional = isTransitional(entry.state);
   const canStart = entry.canStart ?? true;
 
@@ -214,12 +218,10 @@ function ActionSlots({
         className="w-13 justify-center"
         disabled={!canStart}
         onClick={() => onAction("start")}
-        aria-label="Start"
-        title="Start"
+        aria-label={interfaceText("m_e4bb9f1ece9af9")}
+        title={interfaceText("m_e4bb9f1ece9af9")}
       >
-        <Play className="size-3" />
-        Start
-      </Button>
+        <Play className="size-3" />{interfaceText("m_e4bb9f1ece9af9")}</Button>
     );
   }
 
@@ -231,8 +233,8 @@ function ActionSlots({
           size="icon-xs"
           disabled={!canStart}
           onClick={() => onAction("start")}
-          aria-label="Start"
-          title="Start"
+          aria-label={interfaceText("m_e4bb9f1ece9af9")}
+          title={interfaceText("m_e4bb9f1ece9af9")}
         >
           <Play className="size-3" />
         </Button>
@@ -241,8 +243,8 @@ function ActionSlots({
           size="icon-xs"
           disabled={!canStart}
           onClick={() => onAction("restart")}
-          aria-label="Restart"
-          title="Restart"
+          aria-label={interfaceText("m_6b983a81e5e809")}
+          title={interfaceText("m_6b983a81e5e809")}
           className="border border-border text-foreground"
         >
           <RotateCcw className="size-3" />
@@ -258,8 +260,8 @@ function ActionSlots({
         size="icon-xs"
         disabled={transitional}
         onClick={() => onAction("stop")}
-        aria-label="Stop"
-        title="Stop"
+        aria-label={interfaceText("m_cae7d57bc067a5")}
+        title={interfaceText("m_cae7d57bc067a5")}
         className="border border-border text-foreground"
       >
         <Square className="size-3" />
@@ -269,8 +271,8 @@ function ActionSlots({
         size="icon-xs"
         disabled={transitional || !canStart}
         onClick={() => onAction("restart")}
-        aria-label="Restart"
-        title="Restart"
+        aria-label={interfaceText("m_6b983a81e5e809")}
+        title={interfaceText("m_6b983a81e5e809")}
         className="border border-border text-foreground"
       >
         <RotateCcw className="size-3" />
@@ -286,6 +288,7 @@ function ServiceDetail({
   entry: WorkspaceServiceControlEntry;
   onViewLogs?: () => void;
 }) {
+  useInterfaceLanguage();
   const detail = entry.exposureDetail ?? (entry.state === "failed" ? entry.failureDetail : null);
   if (!detail) return null;
   const exposureFailed = entry.exposureState === "failed" || entry.exposureState === "cleanup_pending";
@@ -299,9 +302,7 @@ function ServiceDetail({
             type="button"
             onClick={onViewLogs}
             className="font-medium text-foreground underline underline-offset-2 hover:text-foreground/80"
-          >
-            View logs
-          </button>
+          >{interfaceText("m_9ec41ffd7797fa")}</button>
         </>
       ) : null}
     </div>
@@ -423,6 +424,7 @@ function MultiServiceBar({
   defaultServicesOpen?: boolean;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(defaultServicesOpen ?? false);
   const runningCount = services.filter((entry) => entry.state === "running").length;
   const anyTransitional = services.some((entry) => isTransitional(entry.state));
@@ -454,16 +456,15 @@ function MultiServiceBar({
               <button
                 type="button"
                 className="flex h-full items-center gap-2 rounded-l-lg pr-1 text-xs font-medium text-foreground hover:bg-accent"
-                aria-label={`${runningCount} of ${services.length} services running — show services`}
+                aria-label={interfaceText("m_b13f01864e697b", { value0: (runningCount), value1: (services.length) })}
               >
                 <StatusIndicator entry={aggregateEntry} />
-                <span className="whitespace-nowrap">{runningCount}/{services.length} running</span>
+                <span className="whitespace-nowrap">{runningCount}/{services.length}{interfaceText("m_934b35e4b1b32d")}</span>
                 <ChevronDown className="size-3 text-muted-foreground" />
               </button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-96 p-0" onOpenAutoFocus={(event) => event.preventDefault()}>
-              <div className="px-4 pb-1 pt-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Services · {services.length}
+              <div className="px-4 pb-1 pt-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_315c02bf3d37ce")}{services.length}
               </div>
               <div className="divide-y divide-border px-4">
                 {services.map((entry) => (
@@ -471,18 +472,16 @@ function MultiServiceBar({
                 ))}
               </div>
               <div className="flex items-center gap-1 border-t border-border px-4 py-2">
-                <Button variant="ghost" size="xs" onClick={() => onAction("start", null)}>Start all</Button>
-                <Button variant="ghost" size="xs" onClick={() => onAction("stop", null)}>Stop all</Button>
-                <Button variant="ghost" size="xs" onClick={() => onAction("restart", null)}>Restart all</Button>
+                <Button variant="ghost" size="xs" onClick={() => onAction("start", null)}>{interfaceText("m_1a7e6299576a8e")}</Button>
+                <Button variant="ghost" size="xs" onClick={() => onAction("stop", null)}>{interfaceText("m_ead4f70a6fdb15")}</Button>
+                <Button variant="ghost" size="xs" onClick={() => onAction("restart", null)}>{interfaceText("m_b232152527c935")}</Button>
                 {onManageServices ? (
                   <Button
                     variant="link"
                     size="xs"
                     className="ml-auto text-muted-foreground"
                     onClick={onManageServices}
-                  >
-                    Manage in Services tab →
-                  </Button>
+                  >{interfaceText("m_84d3c11f258cc8")}</Button>
                 ) : null}
               </div>
             </PopoverContent>
@@ -495,7 +494,7 @@ function MultiServiceBar({
                 <UrlSegment entry={primary} />
               </>
             ) : (
-              <span className="font-mono text-xs text-muted-foreground/70">no url</span>
+              <span className="font-mono text-xs text-muted-foreground/70">{interfaceText("m_d36257bc62258b")}</span>
             )}
           </div>
           <div className="mx-3 hidden h-5 w-px bg-border sm:block" />

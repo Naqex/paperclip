@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../../kit";
 import { excerptBlocks, isTaskDocument, tabLabel, tabTone } from "../kind";
@@ -25,6 +26,7 @@ const GREEK_C = ["w-full", "w-11/12", "w-2/3"] as const;
  * has no file, so it carries its revision as a rubber stamp instead.
  */
 export function DocumentSheet({ artifact, size }: { artifact: LabArtifact; size: ObjectSize }) {
+  useInterfaceLanguage();
   const tab = tabLabel(artifact);
   const pdf = artifact.kind === "pdf";
   const blank = artifact.kind === "file";
@@ -78,7 +80,7 @@ export function DocumentSheet({ artifact, size }: { artifact: LabArtifact; size:
             </span>
           </span>
         )}
-        {isTaskDocument(artifact) ? <Stamp>rev {artifact.revision}</Stamp> : null}
+        {isTaskDocument(artifact) ? <Stamp>{interfaceText("m_efd46cd7c40429")}{artifact.revision}</Stamp> : null}
       </Paper>
       {tab ? <ExtTab label={tab} tone={tabTone(artifact)} /> : null}
     </Scaled>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
@@ -36,11 +37,11 @@ export type RoutineContextualNavItem = {
 };
 
 export const ROUTINE_CONTEXTUAL_NAV_ITEMS: readonly RoutineContextualNavItem[] = [
-  { view: "overview", label: "Overview", icon: LayoutDashboard },
-  { view: "triggers", label: "Triggers", icon: CalendarClock },
-  { view: "variables", label: "Variables", icon: Braces },
-  { view: "delivery", label: "Delivery", icon: Send },
-  { view: "secrets", label: "Secrets", icon: KeyRound },
+  { view: "overview", get label() { return interfaceText("m_d4b1ea5708dd53"); }, icon: LayoutDashboard },
+  { view: "triggers", get label() { return interfaceText("m_e62f2148a64d96"); }, icon: CalendarClock },
+  { view: "variables", get label() { return interfaceText("m_02db55bac5e3f7"); }, icon: Braces },
+  { view: "delivery", get label() { return interfaceText("m_52bfe584a5fc45"); }, icon: Send },
+  { view: "secrets", get label() { return interfaceText("m_d8707d411d9976"); }, icon: KeyRound },
 ];
 
 export function isRoutineDetailView(value: string | null | undefined): value is RoutineDetailView {
@@ -69,6 +70,7 @@ export function RoutineContextualSidebar({
   routineId?: string;
   title?: string;
 } = {}) {
+  useInterfaceLanguage();
   const params = useParams<{ routineId?: string }>();
   const routineId = routineIdProp ?? params.routineId ?? "";
   const { data: routine } = useQuery({
@@ -76,7 +78,7 @@ export function RoutineContextualSidebar({
     queryFn: () => routinesApi.get(routineId),
     enabled: Boolean(routineId && !title),
   });
-  const frameTitle = title ?? routine?.title ?? "Routine";
+  const frameTitle = title ?? routine?.title ?? interfaceText("m_0b5baf309897ec");
 
   return (
     <ContextualSidebarFrame
@@ -87,7 +89,7 @@ export function RoutineContextualSidebar({
       showHeader={false}
       className="border-r border-border bg-background"
     >
-      <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-2" aria-label="Routine navigation">
+      <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-2" aria-label={interfaceText("m_906a9d167c535d")}>
         <div className="flex flex-col gap-0.5">
           {ROUTINE_CONTEXTUAL_NAV_ITEMS.map((item) => (
             <SidebarNavItem
@@ -100,18 +102,16 @@ export function RoutineContextualSidebar({
           ))}
         </div>
 
-        <p className="px-4 pb-1 pt-5 text-(length:--text-nano) font-mono font-medium uppercase tracking-widest text-muted-foreground/60">
-          Operate
-        </p>
+        <p className="px-4 pb-1 pt-5 text-(length:--text-nano) font-mono font-medium uppercase tracking-widest text-muted-foreground/60">{interfaceText("m_58c3939c4ce986")}</p>
         <div className="flex flex-col gap-0.5">
           <SidebarNavItem
             to={routineDetailHref(routineId, "runs")}
-            label="Runs"
+            label={interfaceText("m_848f54e89660ce")}
             icon={Play}
           />
           <SidebarNavItem
             to={routineDetailHref(routineId, "activity")}
-            label="Activity"
+            label={interfaceText("m_38da1505ca8373")}
             icon={Activity}
           />
         </div>

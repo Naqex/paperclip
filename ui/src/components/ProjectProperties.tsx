@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { authApi } from "@/api/auth";
 import { accessApi } from "@/api/access";
 import { canManageProjectPrivacy } from "@/lib/issuePrivacy";
@@ -67,44 +68,39 @@ const SHARED_WORKSPACE_CONCURRENCY_OPTIONS: {
 }[] = [
   {
     value: "auto",
-    label: "Auto",
+    get label() { return interfaceText("m_0286249762f7c9"); },
     help: "Concurrent runs on local/SSH runners; runs take turns in cloud environments.",
   },
   {
     value: "serialize",
-    label: "Serialize",
+    get label() { return interfaceText("m_be3403d5e885cf"); },
     help: "Sandbox runs take turns in the shared project workspace. Local/SSH folders allow concurrent runs.",
   },
   {
     value: "allow",
-    label: "Allow",
+    get label() { return interfaceText("m_e213c161d5cefa"); },
     help: "Runs never wait for the workspace; concurrent edits are possible.",
   },
 ];
 
 function SaveIndicator({ state }: { state: ProjectFieldSaveState }) {
+  useInterfaceLanguage();
   if (state === "saving") {
     return (
       <span className="inline-flex items-center gap-1 text-(length:--text-micro) text-muted-foreground">
-        <Loader2 className="h-3 w-3 animate-spin" />
-        Saving
-      </span>
+        <Loader2 className="h-3 w-3 animate-spin" />{interfaceText("m_096b73624b092b")}</span>
     );
   }
   if (state === "saved") {
     return (
       <span className="inline-flex items-center gap-1 text-(length:--text-micro) text-green-600 dark:text-green-400">
-        <Check className="h-3 w-3" />
-        Saved
-      </span>
+        <Check className="h-3 w-3" />{interfaceText("m_b5c120b316c237")}</span>
     );
   }
   if (state === "error") {
     return (
       <span className="inline-flex items-center gap-1 text-(length:--text-micro) text-destructive">
-        <AlertCircle className="h-3 w-3" />
-        Failed
-      </span>
+        <AlertCircle className="h-3 w-3" />{interfaceText("m_031a8f0f659df8")}</span>
     );
   }
   return null;
@@ -158,6 +154,7 @@ function ArchiveDangerZone({
   onArchive: (archived: boolean) => void;
   archivePending?: boolean;
 }) {
+  useInterfaceLanguage();
   const [confirming, setConfirming] = useState(false);
   const isArchive = !project.archivedAt;
   const action = isArchive ? "Archive" : "Unarchive";
@@ -166,13 +163,13 @@ function ArchiveDangerZone({
     <div className="space-y-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-4">
       <p className="text-sm text-muted-foreground">
         {isArchive
-          ? "Archive this project to hide it from the sidebar and project selectors."
-          : "Unarchive this project to restore it in the sidebar and project selectors."}
+          ? interfaceText("m_4b63f9ea162245")
+          : interfaceText("m_36b12ead1239d5")}
       </p>
       {archivePending ? (
         <Button size="sm" variant="destructive" disabled>
           <Loader2 className="h-3 w-3 animate-spin mr-1" />
-          {isArchive ? "Archiving..." : "Unarchiving..."}
+          {isArchive ? interfaceText("m_6f3407113f0774") : interfaceText("m_e845716c57d191")}
         </Button>
       ) : confirming ? (
         <div className="flex items-center gap-2">
@@ -186,16 +183,12 @@ function ArchiveDangerZone({
               setConfirming(false);
               onArchive(isArchive);
             }}
-          >
-            Confirm
-          </Button>
+          >{interfaceText("m_eebdd24a77d9ad")}</Button>
           <Button
             size="sm"
             variant="outline"
             onClick={() => setConfirming(false)}
-          >
-            Cancel
-          </Button>
+          >{interfaceText("m_19766ed6ccb2f4")}</Button>
         </div>
       ) : (
         <Button
@@ -204,9 +197,9 @@ function ArchiveDangerZone({
           onClick={() => setConfirming(true)}
         >
           {isArchive ? (
-            <><Archive className="h-3 w-3 mr-1" />{action} project</>
+            <><Archive className="h-3 w-3 mr-1" />{action}{interfaceText("m_c6e0c8d38fc71d")}</>
           ) : (
-            <><ArchiveRestore className="h-3 w-3 mr-1" />{action} project</>
+            <><ArchiveRestore className="h-3 w-3 mr-1" />{action}{interfaceText("m_c6e0c8d38fc71d")}</>
           )}
         </Button>
       )}
@@ -215,6 +208,7 @@ function ArchiveDangerZone({
 }
 
 export function ProjectProperties({ project, repositories, onUpdate, onFieldUpdate, getFieldSaveState, onArchive, archivePending }: ProjectPropertiesProps) {
+  useInterfaceLanguage();
   const { visible: workspaceIsolationControlsVisible } = useWorkspaceIsolationControls();
   const { selectedCompanyId } = useCompany();
   const { data: privacySession } = useQuery({ queryKey: queryKeys.auth.session, queryFn: () => authApi.getSession() });
@@ -435,37 +429,31 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
       <AlertDialog open={openProjectConfirmation} onOpenChange={setOpenProjectConfirmation}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Open this project to the company?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Everyone in the company will be able to discover this project. Its private tasks stay private.
-              Members who only have access through this project will lose access to those tasks.
-              Share tasks directly first if you want them to keep access.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{interfaceText("m_26b9c8edfd2c44")}</AlertDialogTitle>
+            <AlertDialogDescription>{interfaceText("m_f248ef99e3357d")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep private</AlertDialogCancel>
-            <AlertDialogAction onClick={() => commitField("visibility", { visibility: "open" })}>
-              Open to company
-            </AlertDialogAction>
+            <AlertDialogCancel>{interfaceText("m_3c24c8b9006c8d")}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => commitField("visibility", { visibility: "open" })}>{interfaceText("m_c5148ca7cfd731")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
       <div className="space-y-1 pb-4">
-        <PropertyRow label={<FieldLabel label="Name" state={fieldState("name")} />}>
+        <PropertyRow label={<FieldLabel label={interfaceText("m_dcd1d5223f73b3")} state={fieldState("name")} />}>
           {onUpdate || onFieldUpdate ? (
             <DraftInput
               value={project.name}
               onCommit={(name) => commitField("name", { name })}
               immediate
               className="w-full rounded border border-border bg-transparent px-2 py-1 text-sm outline-none"
-              placeholder="Project name"
+              placeholder={interfaceText("m_25498193b89819")}
             />
           ) : (
             <span className="text-sm">{project.name}</span>
           )}
         </PropertyRow>
         <PropertyRow
-          label={<FieldLabel label="Description" state={fieldState("description")} />}
+          label={<FieldLabel label={interfaceText("m_526e0087cc3f25")} state={fieldState("description")} />}
           alignStart
           valueClassName="space-y-0.5"
         >
@@ -476,20 +464,20 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
               nullable
               as="p"
               className="text-sm text-muted-foreground"
-              placeholder="Add a description..."
+              placeholder={interfaceText("m_eed0f05bd94207")}
               multiline
             />
           ) : (
             <p className="text-sm text-muted-foreground">
-              {project.description?.trim() || "No description"}
+              {project.description?.trim() || interfaceText("m_bcd8cc53f40e3d")}
             </p>
           )}
         </PropertyRow>
-        <PropertyRow label={<FieldLabel label="Visibility" state={fieldState("visibility")} />} alignStart>
+        <PropertyRow label={<FieldLabel label={interfaceText("m_7448611d5f93aa")} state={fieldState("visibility")} />} alignStart>
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm">
               <ToggleSwitch
-                aria-label="Private project"
+                aria-label={interfaceText("m_5baec6fcbec2e2")}
                 checked={project.visibility === "private"}
                 onCheckedChange={(checked) => {
                   if (!checked) {
@@ -500,12 +488,12 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                 }}
                 disabled={!canManagePrivacy || (!onUpdate && !onFieldUpdate)}
               />
-              <span>{project.visibility === "private" ? "Private" : "Open to company"}</span>
+              <span>{project.visibility === "private" ? interfaceText("m_c63eb6720c6e88") : interfaceText("m_c5148ca7cfd731")}</span>
             </label>
             <p className="text-(length:--text-micro) text-muted-foreground">
               {project.visibility === "private"
-                ? "Only access members can discover this project. Tasks shared directly remain readable on their own."
-                : "Everyone in the company can discover this project. Individually private tasks keep their own access rules."}
+                ? interfaceText("m_6654d7ff857b25")
+                : interfaceText("m_89e81a419224ca")}
             </p>
             {project.visibility === "private" ? <ProjectAccessMembers project={project} canManage={canManagePrivacy} /> : null}
           </div>
@@ -513,7 +501,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
         {repositories ?? <ProjectRepositories key={project.id} project={project} />}
         <ProjectGitAuthorization key={`git-${project.id}`} project={project} />
         <PropertyRow
-          label={<FieldLabel label="Env" state={fieldState("env")} />}
+          label={<FieldLabel label={interfaceText("m_494d9aa0c06844")} state={fieldState("env")} />}
           alignStart
           valueClassName="space-y-2"
         >
@@ -532,11 +520,11 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
 
           </div>
         </PropertyRow>
-        <PropertyRow label={<FieldLabel label="Updated" state="idle" />}>
+        <PropertyRow label={<FieldLabel label={interfaceText("m_3a5ecca188c057")} state="idle" />}>
           <span className="text-sm">{formatDate(project.updatedAt)}</span>
         </PropertyRow>
         {project.targetDate && (
-          <PropertyRow label={<FieldLabel label="Target Date" state="idle" />}>
+          <PropertyRow label={<FieldLabel label={interfaceText("m_be1422226c2669")} state="idle" />}>
             <span className="text-sm">{formatDate(project.targetDate)}</span>
           </PropertyRow>
         )}
@@ -547,21 +535,21 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
       <div className="space-y-1 py-4">
         {(!hideHostPaths || (primaryCodebaseWorkspace?.runtimeServices?.length ?? 0) > 0) && <div className="space-y-2">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span>Codebase</span>
+            <span>{interfaceText("m_75d4293db937ea")}</span>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   type="button"
                   className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-(length:--text-nano) text-muted-foreground hover:text-foreground"
-                  aria-label="Codebase help"
+                  aria-label={interfaceText("m_4505bd9bd0e229")}
                 >
                   ?
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top">
                 {hideHostPaths
-                  ? "Repo identifies the source of truth. Agents check it out in the platform-managed environment."
-                  : "Repo identifies the source of truth. Local folder is the default place agents write code."}
+                  ? interfaceText("m_5d9728932ba4ff")
+                  : interfaceText("m_5de0dddf7b5724")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -576,18 +564,18 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
             */}
             {hideHostPaths ? (
               codebase.origin === "managed_checkout" ? (
-                <div className="text-(length:--text-micro) text-muted-foreground">Paperclip-managed folder.</div>
+                <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_9f173c4ccae250")}</div>
               ) : null
             ) : (
               <div className="space-y-1">
-                <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">Local folder</div>
+                <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">{interfaceText("m_b53e4dccdfe92f")}</div>
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0 space-y-1">
                     <div className="min-w-0 break-all font-mono text-xs text-muted-foreground">
                       {codebase.effectiveLocalFolder}
                     </div>
                     {codebase.origin === "managed_checkout" && (
-                      <div className="text-(length:--text-micro) text-muted-foreground">Paperclip-managed folder.</div>
+                      <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_9f173c4ccae250")}</div>
                     )}
                   </div>
                   <div className="flex items-center gap-1">
@@ -601,14 +589,14 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         setWorkspaceError(null);
                       }}
                     >
-                      {codebase.localFolder ? "Change local folder" : "Set local folder"}
+                      {codebase.localFolder ? interfaceText("m_213dcf7304b8c9") : interfaceText("m_698944672c9534")}
                     </Button>
                     {codebase.localFolder ? (
                       <Button
                         variant="ghost"
                         size="icon-xs"
                         onClick={clearLocalWorkspace}
-                        aria-label="Clear local folder"
+                        aria-label={interfaceText("m_845edc73f97b59")}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -619,9 +607,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
             )}
 
             {hasAdditionalLegacyWorkspaces && (
-              <div className="text-(length:--text-micro) text-muted-foreground">
-                Additional legacy workspace records exist on this project. Paperclip is using the primary workspace as the codebase view.
-              </div>
+              <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_71b817a66cecfe")}</div>
             )}
 
             {primaryCodebaseWorkspace?.runtimeServices && primaryCodebaseWorkspace.runtimeServices.length > 0 ? (
@@ -658,7 +644,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                             {service.url}
                           </a>
                         ) : (
-                          service.command ?? "No URL"
+                          service.command ?? interfaceText("m_d15bb2d40a641b")
                         )}
                       </div>
                       {service.exposure && service.exposure.state !== "removed" ? (
@@ -689,7 +675,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                   className="w-full rounded border border-border bg-transparent px-2 py-1 text-xs font-mono outline-none"
                   value={workspaceCwd}
                   onChange={(e) => setWorkspaceCwd(e.target.value)}
-                  placeholder="/absolute/path/to/workspace"
+                  placeholder={interfaceText("m_f8bdc2305f39d5")}
                 />
                 <ChoosePathButton />
               </div>
@@ -700,9 +686,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                   className="h-6 px-2"
                   disabled={(!workspaceCwd.trim() && !primaryCodebaseWorkspace) || createWorkspace.isPending || updateWorkspace.isPending}
                   onClick={submitLocalWorkspace}
-                >
-                  Save
-                </Button>
+                >{interfaceText("m_1509f561f24165")}</Button>
                 <Button
                   variant="ghost"
                   size="xs"
@@ -712,9 +696,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                     setWorkspaceCwd("");
                     setWorkspaceError(null);
                   }}
-                >
-                  Cancel
-                </Button>
+                >{interfaceText("m_19766ed6ccb2f4")}</Button>
               </div>
             </div>
           )}
@@ -722,25 +704,23 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
             <p className="text-xs text-destructive">{workspaceError}</p>
           )}
           {createWorkspace.isError && (
-            <p className="text-xs text-destructive">Failed to save workspace.</p>
+            <p className="text-xs text-destructive">{interfaceText("m_08f774be682a9f")}</p>
           )}
           {removeWorkspace.isError && (
-            <p className="text-xs text-destructive">Failed to delete workspace.</p>
+            <p className="text-xs text-destructive">{interfaceText("m_f06ebbe9a37d7b")}</p>
           )}
           {updateWorkspace.isError && (
-            <p className="text-xs text-destructive">Failed to update workspace.</p>
+            <p className="text-xs text-destructive">{interfaceText("m_def40bab1de5e2")}</p>
           )}
         </div>}
 
         {providerConfiguration ? (
           <div className="py-1.5 space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium" htmlFor="workspace-storage-provider">
-              Workspace storage
-              <SaveIndicator state={fieldState("workspace_storage_provider")} />
+            <label className="flex items-center gap-2 text-sm font-medium" htmlFor="workspace-storage-provider">{interfaceText("m_3107f98e483529")}<SaveIndicator state={fieldState("workspace_storage_provider")} />
             </label>
             <select
               id="workspace-storage-provider"
-              aria-label="Workspace storage provider"
+              aria-label={interfaceText("m_2b39267c273f2e")}
               className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
               disabled={!onUpdate && !onFieldUpdate}
               value={storedExecutionWorkspacePolicy?.storageProviderPluginId === null ? "core" : storedExecutionWorkspacePolicy?.storageProviderPluginId ?? "inherit"}
@@ -751,17 +731,17 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                 commitField("workspace_storage_provider", { executionWorkspacePolicy: policy });
               }}
             >
-              <option value="inherit">Inherit installed default</option>
-              <option value="core">Core / local</option>
+              <option value="inherit">{interfaceText("m_8be30b0b60f6af")}</option>
+              <option value="core">{interfaceText("m_387ca7478f5122")}</option>
               {providerConfiguration.providers.map(provider => (
-                <option key={provider.id} value={provider.id}>{provider.displayName}{provider.isDefault ? " (default)" : ""}</option>
+                <option key={provider.id} value={provider.id}>{provider.displayName}{provider.isDefault ? interfaceText("m_12fd6081e4350f") : ""}</option>
               ))}
               {storedExecutionWorkspacePolicy?.storageProviderPluginId && !providerConfiguration.providers.some(provider => provider.id === storedExecutionWorkspacePolicy.storageProviderPluginId) ? (
-                <option value={storedExecutionWorkspacePolicy.storageProviderPluginId}>Unavailable provider</option>
+                <option value={storedExecutionWorkspacePolicy.storageProviderPluginId}>{interfaceText("m_71ec8a45893920")}</option>
               ) : null}
             </select>
             <p className="text-xs text-muted-foreground">
-              {providerConfiguration.source === "default" ? `Inherited default: ${providerConfiguration.displayName}` : `Selected: ${providerConfiguration.displayName}`}
+              {providerConfiguration.source === "default" ? interfaceText("m_c948e9fa2d1425", { value0: (providerConfiguration.displayName) }) : interfaceText("m_1286334ffe94d7", { value0: (providerConfiguration.displayName) })}
             </p>
             {providerConfiguration.error ? <p role="alert" className="text-xs text-destructive">{providerConfiguration.error}</p> : null}
           </div>
@@ -773,32 +753,28 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
 
             <div className="py-1.5 space-y-2">
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <span>Execution Workspaces</span>
+                <span>{interfaceText("m_50070986462459")}</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
                       className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-(length:--text-nano) text-muted-foreground hover:text-foreground"
-                      aria-label="Execution workspaces help"
+                      aria-label={interfaceText("m_edd694f942f626")}
                     >
                       ?
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="top">
-                    Project-owned defaults for isolated task checkouts and execution workspace behavior.
-                  </TooltipContent>
+                  <TooltipContent side="top">{interfaceText("m_266252475a6f54")}</TooltipContent>
                 </Tooltip>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-3">
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2 text-sm font-medium">
-                      <span>Enable isolated task checkouts</span>
+                      <span>{interfaceText("m_6b02ced06b917d")}</span>
                       <SaveIndicator state={fieldState("execution_workspace_enabled")} />
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      Let tasks choose between the project's primary checkout and an isolated execution workspace.
-                    </div>
+                    <div className="text-xs text-muted-foreground">{interfaceText("m_0e077e1e04f9c8")}</div>
                   </div>
                   {onUpdate || onFieldUpdate ? (
                     <ToggleSwitch
@@ -811,7 +787,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                     />
                   ) : (
                     <span className="text-xs text-muted-foreground">
-                      {executionWorkspacesEnabled ? "Enabled" : "Disabled"}
+                      {executionWorkspacesEnabled ? interfaceText("m_92c1cdfdf4cb9c") : interfaceText("m_75081b593d15cf")}
                     </span>
                   )}
                 </div>
@@ -821,12 +797,10 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                     <div className="flex items-center justify-between gap-3">
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2 text-sm">
-                          <span>New tasks default to isolated checkout</span>
+                          <span>{interfaceText("m_e2b6f92c622c93")}</span>
                           <SaveIndicator state={fieldState("execution_workspace_default_mode")} />
                         </div>
-                        <div className="text-(length:--text-micro) text-muted-foreground">
-                          If disabled, new tasks stay on the project's primary checkout unless someone opts in.
-                        </div>
+                        <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_e03fbea8a63e02")}</div>
                       </div>
                       <ToggleSwitch
                         checked={executionWorkspaceDefaultMode === "isolated_workspace"}
@@ -846,14 +820,14 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                     <div className="space-y-0.5">
                       <div className="mb-1 flex items-center gap-1.5">
                         <label className="flex items-center gap-2 text-sm">
-                          <span>Shared workspace concurrency</span>
+                          <span>{interfaceText("m_85c39d51889394")}</span>
                           <SaveIndicator state={fieldState("execution_workspace_shared_concurrency")} />
                         </label>
                       </div>
                       {onUpdate || onFieldUpdate ? (
                         <select
                           className="w-full rounded border border-border bg-transparent px-2 py-1 text-xs outline-none"
-                          aria-label="Shared workspace concurrency"
+                          aria-label={interfaceText("m_85c39d51889394")}
                           value={executionWorkspaceSharedConcurrency}
                           onChange={(e) =>
                             commitField(
@@ -890,21 +864,20 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         onClick={() => setExecutionWorkspaceAdvancedOpen((open) => !open)}
                       >
                         {executionWorkspaceAdvancedOpen
-                          ? "Hide advanced checkout settings"
-                          : "Show advanced checkout settings"}
+                          ? interfaceText("m_9980c7cfbf5417")
+                          : interfaceText("m_67863632b6e7c3")}
                       </button>
                     </div>
 
                     {executionWorkspaceAdvancedOpen ? (
                       <div className="space-y-3">
-                        <div className="text-xs text-muted-foreground">
-                          Host-managed implementation: <span className="text-foreground">Git worktree</span>
+                        <div className="text-xs text-muted-foreground">{interfaceText("m_801b26d507bf63")}<span className="text-foreground">Git worktree</span>
                         </div>
                         {showExecutionWorkspaceEnvironmentControl ? (
                           <div>
                             <div className="mb-1 flex items-center gap-1.5">
                               <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <span>Environment</span>
+                                <span>{interfaceText("m_9e471951a1b410")}</span>
                                 <SaveIndicator state={fieldState("execution_workspace_environment")} />
                               </label>
                             </div>
@@ -919,7 +892,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                                   })!,
                                 )}
                             >
-                              <option value="">No environment</option>
+                              <option value="">{interfaceText("m_8d33facf68a970")}</option>
                               {runSelectableEnvironments.map((environment) => (
                                 <option key={environment.id} value={environment.id}>
                                   {environmentDisplayLabel(environment)}
@@ -931,7 +904,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         <div>
                           <div className="mb-1 flex items-center gap-1.5">
                             <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>Base ref</span>
+                              <span>{interfaceText("m_9c6c10f9d4c60b")}</span>
                               <SaveIndicator state={fieldState("execution_workspace_base_ref")} />
                             </label>
                           </div>
@@ -955,7 +928,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         <div>
                           <div className="mb-1 flex items-center gap-1.5">
                             <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>Branch template</span>
+                              <span>{interfaceText("m_af312cfa7a5283")}</span>
                               <SaveIndicator state={fieldState("execution_workspace_branch_template")} />
                             </label>
                           </div>
@@ -979,7 +952,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         <div>
                           <div className="mb-1 flex items-center gap-1.5">
                             <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>Worktree parent dir</span>
+                              <span>{interfaceText("m_d25dc4593bdd43")}</span>
                               <SaveIndicator state={fieldState("execution_workspace_worktree_parent_dir")} />
                             </label>
                           </div>
@@ -1003,7 +976,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         <div>
                           <div className="mb-1 flex items-center gap-1.5">
                             <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>Provision command</span>
+                              <span>{interfaceText("m_bfbc86f8f1c03a")}</span>
                               <SaveIndicator state={fieldState("execution_workspace_provision_command")} />
                             </label>
                           </div>
@@ -1027,7 +1000,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                         <div>
                           <div className="mb-1 flex items-center gap-1.5">
                             <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>Runtime provision command</span>
+                              <span>{interfaceText("m_e538baaa678ee7")}</span>
                               <SaveIndicator state={fieldState("execution_workspace_runtime_provision_command")} />
                             </label>
                           </div>
@@ -1047,14 +1020,12 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                             className="w-full rounded border border-border bg-transparent px-2 py-1 text-xs font-mono outline-none"
                             placeholder="bash ./scripts/provision-worktree-runtime.sh"
                           />
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            Runs once before the first runtime-service start (heavy setup, e.g. DB seed). Leave empty to keep eager provisioning.
-                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_bc07753c51ab11")}</p>
                         </div>
                         <div>
                           <div className="mb-1 flex items-center gap-1.5">
                             <label className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span>Teardown command</span>
+                              <span>{interfaceText("m_b6a156773cbf65")}</span>
                               <SaveIndicator state={fieldState("execution_workspace_teardown_command")} />
                             </label>
                           </div>
@@ -1075,10 +1046,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
                             placeholder="bash ./scripts/teardown-worktree.sh"
                           />
                         </div>
-                        <p className="text-(length:--text-micro) text-muted-foreground">
-                          Provision runs inside the derived worktree before agent execution. Teardown is stored here for
-                          future cleanup flows.
-                        </p>
+                        <p className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_63da1d23fd5a64")}</p>
                       </div>
                     ) : null}
                   </div>
@@ -1094,9 +1062,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
         <>
           <Separator className="my-4" />
           <div className="space-y-4 py-4">
-            <div className="text-xs font-medium text-destructive uppercase tracking-wide">
-              Danger Zone
-            </div>
+            <div className="text-xs font-medium text-destructive uppercase tracking-wide">{interfaceText("m_3c1c01b4058535")}</div>
             <ArchiveDangerZone
               project={project}
               onArchive={onArchive}
@@ -1105,7 +1071,7 @@ export function ProjectProperties({ project, repositories, onUpdate, onFieldUpda
           </div>
         </>
       )}
-        <PropertyRow label={<FieldLabel label="Created" state="idle" />}>
+        <PropertyRow label={<FieldLabel label={interfaceText("m_d70b9e24bca26b")} state="idle" />}>
           <span className="text-sm">{formatDate(project.createdAt)}</span>
         </PropertyRow>
     </div>

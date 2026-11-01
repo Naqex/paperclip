@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
@@ -44,10 +45,10 @@ const localIcons = {
 } satisfies Record<AgentLocalDetailView, typeof Sparkles>;
 
 const auditItems = [
-  { section: "activity", label: "Activity", icon: Activity },
-  { section: "runs", label: "Runs", icon: PlayCircle },
-  { section: "costs", label: "Costs", icon: ReceiptText },
-  { section: "budgets", label: "Budgets", icon: BadgeDollarSign },
+  { section: "activity", get label() { return interfaceText("m_38da1505ca8373"); }, icon: Activity },
+  { section: "runs", get label() { return interfaceText("m_848f54e89660ce"); }, icon: PlayCircle },
+  { section: "costs", get label() { return interfaceText("m_b88fc5fc476514"); }, icon: ReceiptText },
+  { section: "budgets", get label() { return interfaceText("m_a1a06e046b0b9a"); }, icon: BadgeDollarSign },
 ] as const;
 
 export function AgentContextualSidebar({
@@ -61,6 +62,7 @@ export function AgentContextualSidebar({
   agentName?: string;
   labels?: Partial<Record<AgentLocalDetailView, string>>;
 }) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const shouldResolveAgent = !agentId || !agentName;
   const { data: resolvedAgent } = useQuery({
@@ -81,7 +83,7 @@ export function AgentContextualSidebar({
       className="border-r border-border bg-background"
     >
       <nav
-        aria-label={`${resolvedName} navigation`}
+        aria-label={interfaceText("m_52b1883a2b7a62", { value0: (resolvedName) })}
         data-slot="contextual-sidebar-nav"
         className={contextualSidebarStyles.nav}
       >
@@ -115,7 +117,7 @@ export function AgentContextualSidebar({
         ))}
 
         {pluginTabs.length > 0 && <div data-slot="contextual-sidebar-section" className={contextualSidebarStyles.section}>
-          <p className={contextualSidebarStyles.sectionLabel}>Apps</p>
+          <p className={contextualSidebarStyles.sectionLabel}>{interfaceText("m_89dd748442c194")}</p>
           <div className={contextualSidebarStyles.group}>
             {pluginTabs.map(slot => <SidebarNavItem key={`${slot.pluginKey}:${slot.id}`} to={`/agents/${encodeURIComponent(agentRef)}/${encodeURIComponent(`plugin:${slot.pluginKey}:${slot.id}`)}`} label={slot.displayName} icon={Wrench} />)}
           </div>
@@ -124,9 +126,7 @@ export function AgentContextualSidebar({
           <p
             data-slot="contextual-sidebar-section-label"
             className={contextualSidebarStyles.sectionLabel}
-          >
-            Audit
-          </p>
+          >{interfaceText("m_bb6aea28739637")}</p>
           <div data-slot="contextual-sidebar-group" className={contextualSidebarStyles.group}>
             {resolvedId ? auditItems.map((item) => (
               <SidebarNavItem
@@ -136,7 +136,7 @@ export function AgentContextualSidebar({
                 icon={item.icon}
               />
             )) : (
-              <p className="px-2 py-1.5 text-xs text-muted-foreground">Loading audit links…</p>
+              <p className="px-2 py-1.5 text-xs text-muted-foreground">{interfaceText("m_041de4208fb94d")}</p>
             )}
           </div>
         </div>

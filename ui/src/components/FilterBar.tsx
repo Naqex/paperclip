@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ filters, onRemove, onClear }: FilterBarProps) {
+  useInterfaceLanguage();
   if (filters.length === 0) return null;
 
   return (
@@ -31,9 +33,7 @@ export function FilterBar({ filters, onRemove, onClear }: FilterBarProps) {
           </button>
         </Badge>
       ))}
-      <Button variant="ghost" size="sm" className="text-xs h-6" onClick={onClear}>
-        Clear all
-      </Button>
+      <Button variant="ghost" size="sm" className="text-xs h-6" onClick={onClear}>{interfaceText("m_29a390f9237e3c")}</Button>
     </div>
   );
 }

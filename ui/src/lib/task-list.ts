@@ -1,14 +1,15 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /** Ordered columns and token references shared by the proposed header and rows. */
 export const taskListColumns = [
-  { id: "task", label: "Task", width: "var(--task-list-column-task)" },
-  { id: "taskId", label: "Task ID", width: "var(--task-list-column-task-id)" },
-  { id: "createdBy", label: "Created by", width: "var(--task-list-column-created-by)" },
-  { id: "assignee", label: "Assignee", width: "var(--task-list-column-assignee)" },
-  { id: "project", label: "Project", width: "var(--task-list-column-project)" },
-  { id: "parentTask", label: "Parent Task", width: "var(--task-list-column-parent)" },
-  { id: "tags", label: "Tags", width: "var(--task-list-column-tags)" },
+  { id: "task", get label() { return interfaceText("m_4bc74b21357c6c"); }, width: "var(--task-list-column-task)" },
+  { id: "taskId", get label() { return interfaceText("m_3e0cce3aac8965"); }, width: "var(--task-list-column-task-id)" },
+  { id: "createdBy", get label() { return interfaceText("m_374cd9d220fbeb"); }, width: "var(--task-list-column-created-by)" },
+  { id: "assignee", get label() { return interfaceText("m_5e20d20e3978dc"); }, width: "var(--task-list-column-assignee)" },
+  { id: "project", get label() { return interfaceText("m_98595978531974"); }, width: "var(--task-list-column-project)" },
+  { id: "parentTask", get label() { return interfaceText("m_64d8f3c2e53800"); }, width: "var(--task-list-column-parent)" },
+  { id: "tags", get label() { return interfaceText("m_1331275bc537b4"); }, width: "var(--task-list-column-tags)" },
   { id: "worktree", label: "Worktree", width: "var(--task-list-column-worktree)" },
-  { id: "lastUpdated", label: "Last updated", width: "var(--task-list-column-updated)" },
+  { id: "lastUpdated", get label() { return interfaceText("m_382ac5f308f76c"); }, width: "var(--task-list-column-updated)" },
 ] as const;
 
 export type TaskListColumnId = (typeof taskListColumns)[number]["id"];

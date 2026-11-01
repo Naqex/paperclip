@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar, type AvatarAgent } from "@/components/AgentAvatar";
 import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
@@ -19,8 +20,8 @@ export function AgentSelect({
   agents,
   value,
   onChange,
-  placeholder = "Select agent…",
-  emptyMessage = "No agents yet.",
+  placeholder = interfaceText("m_fc1204ee98dd32"),
+  emptyMessage = interfaceText("m_8a33b2e7d85a08"),
   disabled = false,
   triggerClassName,
   id,
@@ -34,6 +35,7 @@ export function AgentSelect({
   triggerClassName?: string;
   id?: string;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const selectedAgent = agents.find((agent) => agent.id === value);
@@ -75,7 +77,7 @@ export function AgentSelect({
           <Input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Filter agents"
+            placeholder={interfaceText("m_2b2a8e180c4201")}
             className="h-8"
             autoFocus
           />
@@ -89,7 +91,7 @@ export function AgentSelect({
                 key={agent.id}
                 type="button"
                 className="flex w-full items-start gap-2 px-3 py-2 text-left hover:bg-accent/30"
-                aria-label={`Select ${agent.name}`}
+                aria-label={interfaceText("m_33de0e8b35aac1", { value0: (agent.name) })}
                 onClick={() => {
                   onChange(agent.id);
                   setOpen(false);
@@ -103,7 +105,7 @@ export function AgentSelect({
               </button>
             ))}
             {filteredAgents.length === 0 ? (
-              <div className="px-3 py-4 text-sm text-muted-foreground">No matches.</div>
+              <div className="px-3 py-4 text-sm text-muted-foreground">{interfaceText("m_d6572bd2e77380")}</div>
             ) : null}
           </div>
         )}
@@ -131,7 +133,7 @@ export function AgentMultiSelect({
   triggerClassName,
   contentAlign = "start",
   headerContent,
-  emptyMessage = "No agents yet.",
+  emptyMessage = interfaceText("m_8a33b2e7d85a08"),
   showSelectionPreview = true,
   onOpenChange,
 }: {
@@ -157,6 +159,7 @@ export function AgentMultiSelect({
   showSelectionPreview?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [draftAgentIds, setDraftAgentIds] = useState<Set<string>>(new Set(selectedAgentIds));
@@ -213,8 +216,8 @@ export function AgentMultiSelect({
               {triggerIcon}
               <span className="truncate">
                 {triggerLabel ?? (selectedCount === 0
-                  ? "Select agents"
-                  : `${selectedCount} ${selectedCount === 1 ? "agent" : "agents"} selected`)}
+                  ? interfaceText("m_9c2f5e9fd3f263")
+                  : interfaceText("m_0a2185ee6661d1", { value0: (selectedCount), value1: (selectedCount === 1 ? "agent" : "agents") }))}
               </span>
             </span>
             <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -225,7 +228,7 @@ export function AgentMultiSelect({
           <Input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Filter agents"
+            placeholder={interfaceText("m_2b2a8e180c4201")}
             className="h-8"
             autoFocus
           />
@@ -254,7 +257,7 @@ export function AgentMultiSelect({
                   <Checkbox
                     checked={workingAgentIds.has(agent.id)}
                     disabled={optionDisabled}
-                    aria-label={`Allow ${agent.name}`}
+                    aria-label={interfaceText("m_b4dbe3efd3ebcf", { value0: (agent.name) })}
                     onCheckedChange={(checked) => {
                       const next = new Set(workingAgentIds);
                       if (checked) next.add(agent.id);
@@ -274,19 +277,17 @@ export function AgentMultiSelect({
               );
             })}
             {filteredAgents.length === 0 ? (
-              <div className="px-3 py-4 text-sm text-muted-foreground">No matches.</div>
+              <div className="px-3 py-4 text-sm text-muted-foreground">{interfaceText("m_d6572bd2e77380")}</div>
             ) : null}
           </div>
         )}
           <div className="flex items-center justify-between border-t border-border px-3 py-2">
             <span className="text-xs text-muted-foreground">
-              {workingAgentIds.size === 0 ? "No agents selected" : `${workingAgentIds.size} selected`}
+              {workingAgentIds.size === 0 ? interfaceText("m_ab4f76e910c498") : interfaceText("m_a81a1ef645f4df", { value0: (workingAgentIds.size) })}
             </span>
             <div className="flex items-center gap-2">
               {staged ? (
-                <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)} disabled={pending}>
-                  Cancel
-                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)} disabled={pending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
               ) : null}
               <Button
                 type="button"
@@ -297,7 +298,7 @@ export function AgentMultiSelect({
                 }}
                 disabled={pending}
               >
-                {staged ? (pending ? "Saving…" : "Save") : "Done"}
+                {staged ? (pending ? interfaceText("m_23e39291d61358") : interfaceText("m_1509f561f24165")) : interfaceText("m_11a6767d5674c7")}
               </Button>
             </div>
           </div>
@@ -312,7 +313,7 @@ export function AgentMultiSelect({
             </div>
           ))}
           {selectedAgents.length > 3 ? (
-            <p className="px-1.5 pt-0.5 text-xs text-muted-foreground">and {selectedAgents.length - 3} more</p>
+            <p className="px-1.5 pt-0.5 text-xs text-muted-foreground">{interfaceText("m_427a379ae3e6b7")}{selectedAgents.length - 3}{interfaceText("m_226ba18bbcdb75")}</p>
           ) : null}
         </div>
       ) : null}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { CSSProperties } from "react";
 import type { LabArtifact } from "../../kit";
 import { glyphOf, isAudio, labelOf, treatmentOf } from "./kinds";
@@ -81,13 +82,14 @@ function splitName(name: string): [string, string] {
 
 /** The row on its own: a button the caller places in a list item or an inline group. */
 export function ArtifactRow({ artifact, className, style }: { artifact: LabArtifact; className?: string; style?: CSSProperties }) {
+  useInterfaceLanguage();
   const name = artifact.filename ?? artifact.title;
   const [stem, ext] = splitName(name);
   const facts = [artifact.sizeLabel, panelDateLabel(artifact.updatedAt)].filter((fact): fact is string => Boolean(fact));
   return (
     <button
       type="button"
-      aria-label={`Open ${name}`}
+      aria-label={interfaceText("m_b50808ac499900", { value0: (name) })}
       className={`flex w-full items-center gap-2 rounded-(--v1-row-radius) bg-(--v1-row) py-2 pl-2 pr-3 text-left outline-none transition-colors hover:bg-(--v1-row-hover) focus-visible:ring-2 focus-visible:ring-ring${className ? ` ${className}` : ""}`}
       style={style}
     >

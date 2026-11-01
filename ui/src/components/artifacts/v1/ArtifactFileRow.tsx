@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Download, ExternalLink } from "lucide-react";
 import { useContext, useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +41,7 @@ export function ArtifactFileRow({
   now?: Date;
   testId?: string;
 }) {
+  useInterfaceLanguage();
   const { id, attachmentId, filename, contentType, contentPath, openPath, downloadPath, byteSize } = source;
   const openGallery = useContext(IssueGalleryContext);
   const openTextAttachment = useContext(TextAttachmentContext);
@@ -63,16 +65,16 @@ export function ArtifactFileRow({
       {statusBadge}
       {localCsv && !tooLarge && !data.data && !data.isError ? (
         <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" disabled={data.isFetching} onClick={() => setCsvRequested(true)}>
-          {data.isFetching ? "Loading preview…" : "Preview data"}
+          {data.isFetching ? interfaceText("m_c4cf2b2ccb5d8d") : interfaceText("m_d526f2ae1cbe9b")}
         </Button>
       ) : null}
       {openPath ? (
-        <a href={openPath} target="_blank" rel="noreferrer" aria-label={`Open raw ${filename}`} title="Open raw" className={ROW_ACTION_CLASS}>
+        <a href={openPath} target="_blank" rel="noreferrer" aria-label={interfaceText("m_94380c97add349", { value0: (filename) })} title={interfaceText("m_7f57bf8c34f6dd")} className={ROW_ACTION_CLASS}>
           <ExternalLink className="h-3 w-3" aria-hidden />
         </a>
       ) : null}
       {downloadPath ? (
-        <a href={downloadPath} download={filename} aria-label={`Download ${filename}`} title="Download" className={ROW_ACTION_CLASS}>
+        <a href={downloadPath} download={filename} aria-label={interfaceText("m_a4924ba426cf55", { value0: (filename) })} title={interfaceText("m_d6eafe82359100")} className={ROW_ACTION_CLASS}>
           <Download className="h-3 w-3" aria-hidden />
         </a>
       ) : null}
@@ -98,11 +100,9 @@ export function ArtifactFileRow({
       ) : null}
       {csv && (tooLarge || data.isError) ? (
         <div className="px-2 text-xs text-muted-foreground" role="status">
-          {tooLarge ? "CSV is too large to preview. Download the file to view it." : data.error?.message}
+          {tooLarge ? interfaceText("m_b22a2423ce3f28") : data.error?.message}
           {data.isError ? (
-            <Button variant="ghost" size="sm" onClick={() => void data.refetch()}>
-              Retry preview
-            </Button>
+            <Button variant="ghost" size="sm" onClick={() => void data.refetch()}>{interfaceText("m_ceba3527286937")}</Button>
           ) : null}
         </div>
       ) : null}

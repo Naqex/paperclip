@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, type MouseEvent } from "react";
 import type { Issue, IssueLockedStub } from "@paperclipai/shared";
 import { Link } from "@/lib/router";
@@ -31,13 +32,14 @@ export function RemovableIssueReferencePill({
   onRemove: (issueId: string) => void;
   isMobile?: boolean;
 }) {
+  useInterfaceLanguage();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const locked = isLockedIssueStub(issue);
   const issueLabel = locked
-    ? issue.identifier ?? "Private task"
+    ? issue.identifier ?? interfaceText("m_8d52cb215e6584")
     : issue.identifier ?? issue.title;
   const confirmLabel = locked
-    ? issue.identifier ?? "this private task"
+    ? issue.identifier ?? interfaceText("m_f272465f0e386f")
     : issue.identifier
       ? `${issue.identifier}: ${issue.title}`
       : issue.title;
@@ -57,7 +59,7 @@ export function RemovableIssueReferencePill({
       <span className="truncate">{issueLabel}</span>
     </>
   );
-  const removeLabel = `Remove ${issueLabel} as blocker`;
+  const removeLabel = interfaceText("m_ff55dc7402c675", { value0: (issueLabel) });
   const openRemoveConfirmation = () => setIsConfirmOpen(true);
   const handleRemove = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -79,8 +81,8 @@ export function RemovableIssueReferencePill({
                 type="button"
                 data-mention-kind="issue"
                 className={chipClassName}
-                title={locked ? "Private task" : issue.title}
-                aria-label={`Actions for blocker ${issueLabel}`}
+                title={locked ? interfaceText("m_8d52cb215e6584") : issue.title}
+                aria-label={interfaceText("m_e74765a34e09d7", { value0: (issueLabel) })}
               >
                 {content}
               </button>
@@ -89,15 +91,11 @@ export function RemovableIssueReferencePill({
               {!locked && issue.identifier ? (
                 <DropdownMenuItem asChild>
                   <Link to={`/issues/${issue.identifier}`}>
-                    <ArrowUpRight className="h-4 w-4" />
-                    Visit task
-                  </Link>
+                    <ArrowUpRight className="h-4 w-4" />{interfaceText("m_ecacc67b009d5b")}</Link>
                 </DropdownMenuItem>
               ) : null}
               <DropdownMenuItem variant="destructive" onSelect={openRemoveConfirmation}>
-                <X className="h-4 w-4" />
-                Remove blocker
-              </DropdownMenuItem>
+                <X className="h-4 w-4" />{interfaceText("m_76792aa60019fa")}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
@@ -119,7 +117,7 @@ export function RemovableIssueReferencePill({
                 data-mention-kind="issue"
                 className={chipClassName}
                 title={issue.title}
-                aria-label={`Task ${issueLabel}: ${issue.title}`}
+                aria-label={interfaceText("m_7071c28ac50360", { value0: (issueLabel), value1: (issue.title) })}
               >
                 {content}
               </Link>
@@ -128,7 +126,7 @@ export function RemovableIssueReferencePill({
                 data-mention-kind="issue"
                 className={chipClassName}
                 title={issue.title}
-                aria-label={`Task: ${issue.title}`}
+                aria-label={interfaceText("m_60879ac2258a5e", { value0: (issue.title) })}
               >
                 {content}
               </span>
@@ -139,18 +137,14 @@ export function RemovableIssueReferencePill({
       <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Remove blocker?</DialogTitle>
-            <DialogDescription>
-              Remove {confirmLabel} as a blocker for this task.
-            </DialogDescription>
+            <DialogTitle>{interfaceText("m_b7d963b0caf9a6")}</DialogTitle>
+            <DialogDescription>{interfaceText("m_5948954e3b49be")}{confirmLabel}{interfaceText("m_3b94139c92f099")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="outline">Cancel</Button>
+              <Button type="button" variant="outline">{interfaceText("m_19766ed6ccb2f4")}</Button>
             </DialogClose>
-            <Button type="button" variant="destructive" onClick={confirmRemove}>
-              Remove blocker
-            </Button>
+            <Button type="button" variant="destructive" onClick={confirmRemove}>{interfaceText("m_76792aa60019fa")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -167,15 +161,16 @@ export function ExpandRelationListButton({
   expanded: boolean;
   onClick: () => void;
 }) {
+  useInterfaceLanguage();
   if (!expanded && hiddenCount <= 0) return null;
   return (
     <button
       type="button"
       className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
       onClick={onClick}
-      aria-label={expanded ? "Show fewer items" : `Show ${hiddenCount} more items`}
+      aria-label={expanded ? interfaceText("m_b908f492c1d301") : interfaceText("m_d8ce2dda945f76", { value0: (hiddenCount) })}
     >
-      {expanded ? "Show less" : `Show ${hiddenCount} more`}
+      {expanded ? interfaceText("m_94ea9b1d33a029") : interfaceText("m_d0c7127a6d36df", { value0: (hiddenCount) })}
     </button>
   );
 }

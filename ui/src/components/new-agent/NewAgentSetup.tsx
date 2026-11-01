@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ACCOUNT_BOUND_MODEL_DISCOVERY_QUERY_OPTIONS } from "@/lib/native-model-catalog";
 import { PAPERCLIP_RUNNER_ACPX_PROFILES } from "@paperclipai/adapter-utils";
 import { ExternalAgentInviteDialog } from "./ExternalAgentInviteDialog";
@@ -83,14 +84,13 @@ const blocking = (result: AdapterEnvironmentTestResult) =>
   result.checks.some((check) => check.code === ADAPTER_AUTH_MISSING_CHECK_CODE);
 
 export function NewAgentSetup() {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   if (!selectedCompanyId)
     return (
-      <p className="text-sm text-muted-foreground">
-        Select an organization to create an agent.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_28b980d2331ceb")}</p>
     );
   if (params.get("adapterType") === "muse" || params.get("runnerProvider") === "muse") return <ExternalAgentInviteDialog companyId={selectedCompanyId} initialPreset="muse" initialMuseName={params.get("name") ?? ""} onClose={() => navigate("/agents/all")} onBack={() => navigate("/agents/all")} />;
   return (
@@ -127,6 +127,7 @@ function Setup({
   createdAgentId: string | null;
   setupAgentId: string | null;
 }) {
+  useInterfaceLanguage();
   const navigate = useNavigate();
   const cache = useQueryClient();
   const { openNewIssue } = useDialogActions();
@@ -863,11 +864,11 @@ function Setup({
         className="text-sm text-muted-foreground"
       >
         {savedAgent.error
-          ? "Could not load the created agent. Return to Agents to view it."
-          : "Loading your agent…"}
+          ? interfaceText("m_07abe0b11e9461")
+          : interfaceText("m_48046357d49e45")}
       </p>
     );
-  if (resumeSavedChoice) return <p role="status" className="text-sm text-muted-foreground">Loading your agent setup…</p>;
+  if (resumeSavedChoice) return <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_0fddbaffa59d6a")}</p>;
   if (choosingAdapter || !name || !adapterType || (created?.metadata?.setupAdapterPending === true && !unreleasedAntigravity))
     return (
       <AgentBasicsDialog
@@ -885,8 +886,8 @@ function Setup({
       />
     );
   if (!created && connectionSettingsReady && !pendingAntigravity) return <div className="space-y-4">
-    <p role={error ? "alert" : "status"}>{error ?? "Creating your agent…"}</p>
-    {error && <Button onClick={() => setCreationAttempt(value => value + 1)}>Retry</Button>}
+    <p role={error ? "alert" : "status"}>{error ?? interfaceText("m_f9cb256797a694")}</p>
+    {error && <Button onClick={() => setCreationAttempt(value => value + 1)}>{interfaceText("m_942087cc2d41e0")}</Button>}
   </div>;
   const steps = [
     ...(connectionAdapter ? ["connect" as const] : []),
@@ -919,7 +920,7 @@ function Setup({
         ? "Hermes Gateway"
         : confirmationEnvironment
           ? environmentDisplayLabel(confirmationEnvironment)
-          : "Local machine";
+          : interfaceText("m_2424a1564127cc");
   const setupError =
     adapters.error ??
     adapterInventory.error ??
@@ -945,7 +946,7 @@ function Setup({
                 <span>
                   ·{" "}
                   {runnerProvider === "codex"
-                    ? "Native app server runner"
+                    ? interfaceText("m_6254c5e60349e9")
                     : "Paperclip Runner"}
                 </span>
               )}
@@ -957,7 +958,7 @@ function Setup({
             {environmentError}
           </p>
         )}
-        {preparingComputer && <p role="status" className="text-sm text-muted-foreground">Preparing your agent computer…</p>}
+        {preparingComputer && <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_9d62a64ecf52c3")}</p>}
         {created?.lifecycleError && <div className="space-y-2">
           <p role="alert" className="text-sm text-destructive">{created.lifecycleError}</p>
           <Button disabled={busy} onClick={() => {
@@ -968,7 +969,7 @@ function Setup({
               cache.setQueryData(queryKeys.agents.detail(agent.id), agent);
             }).catch(cause => setError(cause instanceof Error ? cause.message : "Could not retry computer preparation."))
               .finally(() => setEnvironmentSaving(false));
-          }}>Retry preparation</Button>
+          }}>{interfaceText("m_e42e093a3e4efc")}</Button>
         </div>}
         {setupError && (
           <p role="alert" className="text-sm text-destructive">
@@ -977,28 +978,21 @@ function Setup({
         )}
         {pendingAntigravity && configurationAvailable && (
           <div className="space-y-2">
-            <p role="status" className="text-sm text-muted-foreground">
-              Google Antigravity is not available yet. You can connect your Google account and review settings. This agent cannot finish setup or run tasks yet. Model and connection settings are not saved to this agent yet.
-            </p>
-            {created && <Button variant="link" className="px-0" onClick={() => setChoosingAdapter(true)}>Change adapter</Button>}
+            <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_0c6af11d95c112")}</p>
+            {created && <Button variant="link" className="px-0" onClick={() => setChoosingAdapter(true)}>{interfaceText("m_0d84fc0029e0ea")}</Button>}
           </div>
         )}
-        {antigravityCandidate && <p role="status" className="text-sm text-muted-foreground">Google Antigravity candidate is enabled for testing on this instance.</p>}
+        {antigravityCandidate && <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_0e5ede999818ed")}</p>}
         {adapterInventory.data && !configurationAvailable && (
-          <p role="alert" className="text-sm text-destructive">
-            This adapter is unavailable. Choose an enabled adapter.
-          </p>
+          <p role="alert" className="text-sm text-destructive">{interfaceText("m_36fcb6b4dee1b3")}</p>
         )}
         {(managedOnly || forced.forced) &&
           !envs.isPending &&
           !environmentId && (
-            <p role="alert" className="text-sm text-destructive">
-              No managed environment is available. Configure an environment
-              before continuing.
-            </p>
+            <p role="alert" className="text-sm text-destructive">{interfaceText("m_3dcfbcb90a7bf1")}</p>
           )}
         <div className="flex flex-col gap-8 md:flex-row">
-          <nav aria-label="Agent setup steps" className="shrink-0 md:w-44">
+          <nav aria-label={interfaceText("m_1f28c3a9138a01")} className="shrink-0 md:w-44">
             <ol className="flex flex-wrap gap-2 md:flex-col">
               {steps.map((step, index) => (
                 <li key={step}>
@@ -1039,7 +1033,7 @@ function Setup({
                   <OnboardingCard className="mx-auto">
                     <div className="mb-8">
                       <OnboardingHeading
-                        title="Connect a model"
+                        title={interfaceText("m_87bdaaf8ac10de")}
                         center
                       />
                     </div>
@@ -1104,9 +1098,9 @@ function Setup({
                           setScreen("runtime");
                         }).catch(cause => setError(cause instanceof Error ? cause.message : "Could not save agent setup."));
                       }}
-                    /></fieldset> : <p role="status" className="text-sm text-muted-foreground">Loading connection settings…</p>}
+                    /></fieldset> : <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_4613b00ad0644e")}</p>}
                     {["codex_local", "claude_local", "opencode_local", "pi_local"].includes(adapterType) && <details className="mt-5 space-y-3">
-                      <summary className="cursor-pointer text-sm text-muted-foreground">Advanced</summary>
+                      <summary className="cursor-pointer text-sm text-muted-foreground">{interfaceText("m_9f088dbebd6c3c")}</summary>
                       <AgentRunnerSelect value={runner} disabled={busy}
                         pending={adapters.isFetching} error={adapters.error?.message} onRetry={() => { void adapters.refetch(); }}
                         defaultRunner={adapters.data?.find(item => item.type === adapterType)?.defaultRunner}
@@ -1120,30 +1114,30 @@ function Setup({
                       <h2 className="flex items-center gap-3 text-lg font-semibold">
                         <Check className="size-5" />
                         {created.status === "pending_approval"
-                          ? "Agent submitted for approval"
-                          : isDot ? "Your Dot agent has been created"
-                            : finishingSetup ? "Finishing agent setup" : runtimeReady ? "Your agent is ready" : "Your agent is paused"}
+                          ? interfaceText("m_9357fe166529b0")
+                          : isDot ? interfaceText("m_2b64e542da0541")
+                            : finishingSetup ? interfaceText("m_4c48019a5e6968") : runtimeReady ? interfaceText("m_bf213d4f14f8ce") : interfaceText("m_418f91068a5f33")}
                       </h2>
                       <dl className="grid grid-cols-2 gap-4 text-sm">
                         <dt className="text-muted-foreground">Adapter</dt>
                         <dd>{getAdapterDisplay(isDot ? "openai_dot" : adapterType).label}</dd>
                         {showModel && (
                           <>
-                            <dt className="text-muted-foreground">Model</dt>
+                            <dt className="text-muted-foreground">{interfaceText("m_5e2c614c23f022")}</dt>
                             <dd className="break-all">
                               {String(confirmationModel)}
                             </dd>
                           </>
                         )}
-                        <dt className="text-muted-foreground">Environment</dt>
+                        <dt className="text-muted-foreground">{interfaceText("m_9e471951a1b410")}</dt>
                         <dd>{environmentLabel}</dd>
                       </dl>
                       <p className="text-sm text-muted-foreground">
                         {created.status === "pending_approval"
-                          ? "An organization administrator must approve this agent before it can work."
-                          : isDot ? "Pair your Dot and test event delivery in configuration before assigning work."
-                            : finishingSetup ? "Paperclip is preparing and verifying your agent. You can assign a task when it is ready."
-                              : runtimeReady ? "Assign a task when you’re ready for this agent to work." : "Review the agent’s status in configuration before assigning work."}
+                          ? interfaceText("m_77d7c0fff464d6")
+                          : isDot ? interfaceText("m_8909236066a70f")
+                            : finishingSetup ? interfaceText("m_acea527b1513db")
+                              : runtimeReady ? interfaceText("m_adbf2c57694b3d") : interfaceText("m_c07db7aa30cc49")}
                       </p>
                     </div>
                     <div className="flex flex-wrap justify-between gap-3">
@@ -1152,7 +1146,7 @@ function Setup({
                         onClick={() => navigate(isDot ? "/agents/all" : `${agentUrl(created)}/runtime`)}
                       >
                         <Settings2 className="size-4" />
-                        {isDot ? "Back to Agents" : "Edit configuration"}
+                        {isDot ? interfaceText("m_28a2018a409007") : interfaceText("m_3076810095c3d8")}
                       </Button>
                       <Button
                         disabled={created.status === "pending_approval" || (!isDot && !runtimeReady)}
@@ -1161,7 +1155,7 @@ function Setup({
                           : void assignFirstTask()
                         }
                       >
-                        {isDot ? "Pair Dot" : `Assign ${created.name} a Task`}
+                        {isDot ? interfaceText("m_af8427964b26fd") : interfaceText("m_d665d838a5329d", { value0: (created.name) })}
                         <ArrowRight className="size-4" />
                       </Button>
                     </div>
@@ -1174,15 +1168,13 @@ function Setup({
                       void finish();
                     }}
                   >
-                    <h2 className="text-xl font-semibold">
-                      Configure your agent
-                    </h2>
+                    <h2 className="text-xl font-semibold">{interfaceText("m_be9ca645b7c107")}</h2>
                     <fieldset disabled={busy} className="space-y-8">
                       <section className="space-y-5">
                         {isDot && <>
-                          <p className="text-sm text-muted-foreground">Create this agent, then copy its pairing prompt to your Dot.</p>
-                          {experimental.data?.enablePublicMcp !== true && <p className="text-sm text-muted-foreground">Enable Assistant connections (MCP) in Experimental settings before pairing.</p>}
-                          <ToggleField label="Allow externally billed provider" hint="Dot does not report token usage or cost. Paperclip cannot enforce a provider spend ceiling; known company and agent budget limits still apply."
+                          <p className="text-sm text-muted-foreground">{interfaceText("m_c21f9a6d8117d7")}</p>
+                          {experimental.data?.enablePublicMcp !== true && <p className="text-sm text-muted-foreground">{interfaceText("m_188ab5e018b4f2")}</p>}
+                          <ToggleField label={interfaceText("m_ffe83aa97b3fae")} hint={interfaceText("m_e22939899c0094")}
                             checked={allowUnmeteredProvider} onChange={value => { setAllowUnmeteredProvider(value); resetTest(); }} />
                         </>}
                         {!connectionAdapter && aiProviderForAdapter(brandType) && (
@@ -1191,7 +1183,7 @@ function Setup({
                               if (accountCatalogAvailable && hashKey([aiBinding ?? null]) === hashKey([binding ?? null])) void refreshAccountModels();
                             }} />
                         )}
-                        {(connectionModels ? connectionModels.error : models.error) && <p role="alert" className="text-sm text-destructive">Could not load models. Retry or enter a model ID manually.</p>}
+                        {(connectionModels ? connectionModels.error : models.error) && <p role="alert" className="text-sm text-destructive">{interfaceText("m_c8cad4cf31602f")}</p>}
                         {((showModel && !usingKimiApi) ||
                           efforts.length > 0) && (
                           <div className="grid items-start gap-5 sm:grid-cols-2">
@@ -1234,18 +1226,18 @@ function Setup({
                               />
                             )}
                             {efforts.length > 0 && (
-                              <Field label="Thinking effort">
-                                {brandType === "codex_local" ? <SelectPopover aria-label="Thinking effort" value={effort}
+                              <Field label={interfaceText("m_264c28cbf01ce9")}>
+                                {brandType === "codex_local" ? <SelectPopover aria-label={interfaceText("m_264c28cbf01ce9")} value={effort}
                                   onValueChange={value => { setEffort(value); resetTest(); }}
-                                  options={[{ value: "", label: "Auto" }, ...efforts.map(value => ({ value, label: value }))]} /> : <NativeSelect
-                                  aria-label="Thinking effort"
+                                  options={[{ value: "", label: interfaceText("m_0286249762f7c9") }, ...efforts.map(value => ({ value, label: value }))]} /> : <NativeSelect
+                                  aria-label={interfaceText("m_264c28cbf01ce9")}
                                   value={effort}
                                   onChange={(event) => {
                                     setEffort(event.target.value);
                                     resetTest();
                                   }}
                                 >
-                                  <option value="">Auto</option>
+                                  <option value="">{interfaceText("m_0286249762f7c9")}</option>
                                   {efforts.map((value) => (
                                     <option key={value} value={value}>
                                       {value}
@@ -1264,9 +1256,9 @@ function Setup({
                         {hasCredentialField && !aiBinding && (
                           <div className="grid gap-5 sm:grid-cols-2">
                             {chooseProvider && (
-                              <Field label="API key provider">
+                              <Field label={interfaceText("m_d8551dcfa9b4ca")}>
                                 <select
-                                  aria-label="API key provider"
+                                  aria-label={interfaceText("m_d8551dcfa9b4ca")}
                                   className={controlClass}
                                   value={provider}
                                   onChange={(event) => {
@@ -1317,13 +1309,13 @@ function Setup({
                                     }}
                                     placeholder={
                                       selectedBinding
-                                        ? "Using saved key"
+                                        ? interfaceText("m_57220904acdbbe")
                                         : (isKimi || [
                                               "cursor_cloud",
                                               "hermes_gateway",
                                             ].includes(adapterType))
-                                          ? "Required"
-                                          : "Optional if already configured"
+                                          ? interfaceText("m_4850b174b713d8")
+                                          : interfaceText("m_74f784d771ed67")
                                     }
                                   />
                                   {adapterType === "cursor_cloud" && (
@@ -1332,9 +1324,7 @@ function Setup({
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="shrink-0 text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
-                                    >
-                                      get api key
-                                    </a>
+                                    >{interfaceText("m_b2384483ca1f23")}</a>
                                   )}
                                 </div>
                               </Field>
@@ -1345,7 +1335,7 @@ function Setup({
                                   chooseProvider ? "sm:col-span-2" : undefined
                                 }
                               >
-                                <Field label="Or use an organization secret">
+                                <Field label={interfaceText("m_961df787a0b106")}>
                                   <SecretPicker
                                     secretId={
                                       selectedBinding &&
@@ -1369,18 +1359,15 @@ function Setup({
                                 </Field>
                               </div>
                             )}
-                            <p className="text-xs text-muted-foreground sm:col-span-2">
-                              New keys are saved as organization secrets when
-                              you finish setup.
-                              {isKimi && " Use a Kimi Code API key for this runner."}
-                              {multiProvider && ` Use a ${provider}/model ID.`}
+                            <p className="text-xs text-muted-foreground sm:col-span-2">{interfaceText("m_ff961302d9271c")}{isKimi && interfaceText("m_806cb5205814c3")}
+                              {multiProvider && interfaceText("m_7396dfd1e82be0", { value0: (provider) })}
                             </p>
                           </div>
                         )}
                         {adapterType === "hermes_gateway" && (
-                          <Field label="Hermes API base URL">
+                          <Field label={interfaceText("m_ccec8cd458fb93")}>
                             <Input
-                              aria-label="Hermes API base URL"
+                              aria-label={interfaceText("m_ccec8cd458fb93")}
                               value={gatewayUrl}
                               onChange={(event) => {
                                 setGatewayUrl(event.target.value);
@@ -1392,9 +1379,9 @@ function Setup({
                         )}
                         {usingKimiApi && (
                           <div className="grid gap-5 sm:grid-cols-2">
-                            <Field label="Kimi API model name">
+                            <Field label={interfaceText("m_d880c2be9c0434")}>
                               <Input
-                                aria-label="Kimi API model name"
+                                aria-label={interfaceText("m_d880c2be9c0434")}
                                 value={kimiModel}
                                 onChange={(event) => {
                                   setKimiModel(event.target.value);
@@ -1403,9 +1390,9 @@ function Setup({
                                 placeholder="kimi-for-coding"
                               />
                             </Field>
-                            <Field label="Kimi API protocol">
+                            <Field label={interfaceText("m_2fd46541e58944")}>
                               <select
-                                aria-label="Kimi API protocol"
+                                aria-label={interfaceText("m_2fd46541e58944")}
                                 className={controlClass}
                                 value={kimiProtocol}
                                 onChange={(event) => {
@@ -1421,26 +1408,26 @@ function Setup({
                               </select>
                             </Field>
                             <Field
-                              label="Kimi API base URL"
-                              hint="Optional override for your provider endpoint."
+                              label={interfaceText("m_b46e77c4df79ef")}
+                              hint={interfaceText("m_1f92d2d49e09f4")}
                             >
                               <Input
-                                aria-label="Kimi API base URL"
+                                aria-label={interfaceText("m_b46e77c4df79ef")}
                                 value={kimiBaseUrl}
                                 onChange={(event) => {
                                   setKimiBaseUrl(event.target.value);
                                   resetTest();
                                 }}
-                                placeholder="Provider default"
+                                placeholder={interfaceText("m_352a25678fb9c8")}
                               />
                             </Field>
                           </div>
                         )}
                         {adapterType === "cursor_cloud" && (
                           <div className="grid gap-5 sm:grid-cols-2">
-                            <Field label="GitHub repository">
+                            <Field label={interfaceText("m_505554929de39d")}>
                               <Input
-                                aria-label="GitHub repository"
+                                aria-label={interfaceText("m_505554929de39d")}
                                 value={repository}
                                 onChange={(event) => {
                                   setRepository(event.target.value);
@@ -1449,10 +1436,10 @@ function Setup({
                                 placeholder="https://github.com/your-org/repo"
                               />
                             </Field>
-                            <Field label="Branch">
+                            <Field label={interfaceText("m_52656e8104eef3")}>
                               <Input
-                                aria-label="Branch"
-                                placeholder="Repository default"
+                                aria-label={interfaceText("m_52656e8104eef3")}
+                                placeholder={interfaceText("m_e88cba3b99d1e5")}
                                 value={branch}
                                 onChange={(event) => {
                                   setBranch(event.target.value);
@@ -1463,7 +1450,7 @@ function Setup({
                           </div>
                         )}
                         {["codex_local", "claude_local", "opencode_local", "pi_local"].includes(adapterType) && <details className="space-y-3">
-                          <summary className="cursor-pointer text-sm text-muted-foreground">Advanced</summary>
+                          <summary className="cursor-pointer text-sm text-muted-foreground">{interfaceText("m_9f088dbebd6c3c")}</summary>
                           <AgentRunnerSelect value={runner} disabled={busy}
                             pending={adapters.isFetching} error={adapters.error?.message} onRetry={() => { void adapters.refetch(); }}
                             defaultRunner={adapters.data?.find(item => item.type === adapterType)?.defaultRunner}
@@ -1475,9 +1462,9 @@ function Setup({
                         adapterType,
                       ) && (
                         <section className="space-y-5">
-                          <h3 className="text-sm font-semibold">Environment</h3>
+                          <h3 className="text-sm font-semibold">{interfaceText("m_9e471951a1b410")}</h3>
                           <select
-                            aria-label="Environment"
+                            aria-label={interfaceText("m_9e471951a1b410")}
                             className={controlClass}
                             value={environmentOverride}
                             disabled={forced.forced}
@@ -1485,8 +1472,7 @@ function Setup({
                               void changeEnvironment(event.target.value);
                             }}
                           >
-                            <option value="">
-                              Default: {environmentLabel}
+                            <option value="">{interfaceText("m_c1f818833ef422")}{environmentLabel}
                             </option>
                             {(envs.data ?? [])
                               .filter((env) => env.status === "active" && (!managedOnly || env.driver !== "local"))
@@ -1514,10 +1500,10 @@ function Setup({
                       </p>
                     )}
                     {environmentSaveError && <p role="alert" className="text-sm text-destructive">{environmentSaveError}</p>}
-                    {environmentSaveError && !environmentSelectionSaved && <Button disabled={busy} onClick={() => void changeEnvironment()}>Retry saving environment</Button>}
+                    {environmentSaveError && !environmentSelectionSaved && <Button disabled={busy} onClick={() => void changeEnvironment()}>{interfaceText("m_971a3b0fcfba73")}</Button>}
                     <div className="flex justify-between border-t border-border py-5">
                       <div className="flex items-center gap-3">
-                        <Button type="button" variant="ghost" disabled={busy} onClick={() => void saveAndExit()}>{pendingAntigravity ? "Back to agents" : "Save & exit"}</Button>
+                        <Button type="button" variant="ghost" disabled={busy} onClick={() => void saveAndExit()}>{pendingAntigravity ? interfaceText("m_7da2164b2679ae") : interfaceText("m_0bd63bf3d32e91")}</Button>
                       {connectionAdapter ? (
                         <Button
                           type="button"
@@ -1525,9 +1511,7 @@ function Setup({
                           disabled={busy}
                           onClick={editConnection}
                         >
-                          <ArrowLeft className="size-4" />
-                          Connection
-                        </Button>
+                          <ArrowLeft className="size-4" />{interfaceText("m_639a40e82b9a96")}</Button>
                       ) : (
                         null
                       )}
@@ -1536,9 +1520,7 @@ function Setup({
                         type="button"
                         disabled={!ready || busy}
                         onClick={() => setScreen("connect")}
-                      >
-                        Connect model
-                        <ArrowRight className="size-4" />
+                      >{interfaceText("m_855d6df28d53cf")}<ArrowRight className="size-4" />
                       </Button> : <Button
                         type="submit"
                         disabled={
@@ -1549,7 +1531,7 @@ function Setup({
                           Boolean(connectionAdapter && !connection)
                         }
                       >
-                        {saving ? "Saving…" : "Finish setup"}
+                        {saving ? interfaceText("m_23e39291d61358") : interfaceText("m_bc01ae77f37cf3")}
                         <Check className="size-4" />
                       </Button>}
                     </div>

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   ToolApplication,
   ToolConnection,
@@ -103,13 +104,13 @@ export function isGatewayOn(gateway: ToolMcpGatewayWithTokens): boolean {
 
 /** Human summary of how many tools a profile allows. */
 export function allowedToolsLabel(profile: ToolProfileWithDetails | undefined): string {
-  if (!profile) return "Profile unavailable";
+  if (!profile) return interfaceText("m_158e5a22a48cd4");
   const { accessMode, allowedToolCount, totalToolCount, excludedToolCount } = profile.summary;
   const count =
     accessMode === "all_except"
       ? Math.max(totalToolCount - excludedToolCount, 0)
       : allowedToolCount;
-  if (count === 0) return "No tools allowed";
+  if (count === 0) return interfaceText("m_e8e116ae120d11");
   return `${count} ${count === 1 ? "tool" : "tools"}`;
 }
 

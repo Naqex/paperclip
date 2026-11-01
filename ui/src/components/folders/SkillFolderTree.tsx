@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import {
   useCallback,
   useEffect,
@@ -151,6 +152,7 @@ export function SkillFolderRail({
   onDeleteFolder: (folder: FolderListItem) => void;
   onEnsureMyFolder?: () => void;
 }) {
+  useInterfaceLanguage();
   const model = useMemo(() => treeFromResult(result), [result]);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -249,14 +251,12 @@ export function SkillFolderRail({
   return (
     <div className="relative hidden h-full shrink-0 md:flex" style={{ width: `${width}px` }}>
       <nav
-        aria-label="Skill folders"
+        aria-label={interfaceText("m_87294e029ecb22")}
         className="flex min-w-0 flex-1 flex-col overflow-y-auto border-r border-border pr-3"
       >
       <div className="mb-2 flex items-center justify-between gap-2 pt-0.5">
-        <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-          Folders
-        </div>
-        <Button variant="ghost" size="icon-sm" title="New folder" onClick={() => onCreateFolder(null)}>
+        <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_c4d6bb200f4c05")}</div>
+        <Button variant="ghost" size="icon-sm" title={interfaceText("m_cf28f49ec597a6")} onClick={() => onCreateFolder(null)}>
           <Plus className="h-3.5 w-3.5" />
         </Button>
       </div>
@@ -271,7 +271,7 @@ export function SkillFolderRail({
         <div className="space-y-0.5">
           <VirtualRow
             active={selection === "all"}
-            label="All skills"
+            label={interfaceText("m_78abcbbfb83097")}
             count={allCount}
             icon={<Layers className="h-3.5 w-3.5" />}
             onSelect={() => onSelect("all")}
@@ -302,7 +302,7 @@ export function SkillFolderRail({
           ) : onEnsureMyFolder ? (
             <VirtualRow
               active={false}
-              label="My Skills"
+              label={interfaceText("m_ea424d66243dff")}
               count={0}
               icon={<User className="h-3.5 w-3.5" />}
               muted
@@ -311,7 +311,7 @@ export function SkillFolderRail({
           ) : null}
 
           {/* Company — plain top-level company folders */}
-          <RailHeading label="Organization" onCreate={() => onCreateFolder(null)} />
+          <RailHeading label={interfaceText("m_d764d42592fc96")} onCreate={() => onCreateFolder(null)} />
           {model.company.length > 0 ? (
             model.company.map((node) => (
               <TreeBranch
@@ -335,7 +335,7 @@ export function SkillFolderRail({
               />
             ))
           ) : (
-            <div className="px-2 py-1 text-xs text-muted-foreground">No organization folders yet.</div>
+            <div className="px-2 py-1 text-xs text-muted-foreground">{interfaceText("m_2f476526a23441")}</div>
           )}
 
           {/* Projects — auto-managed, read-only structure */}
@@ -363,7 +363,7 @@ export function SkillFolderRail({
           ) : (
             <VirtualRow
               active={false}
-              label="Projects"
+              label={interfaceText("m_04e2a9728af758")}
               count={0}
               icon={<Boxes className="h-3.5 w-3.5" />}
               muted
@@ -396,12 +396,10 @@ export function SkillFolderRail({
             />
           ) : null}
 
-          <div className="px-2 pb-1 pt-3 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-            System
-          </div>
+          <div className="px-2 pb-1 pt-3 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_6725e7bbcd28f3")}</div>
           <VirtualRow
             active={selection === "unfiled"}
-            label="Unfiled"
+            label={interfaceText("m_d64dc9ae400c28")}
             count={unfiledCount}
             icon={<FolderSwatch color={null} />}
             onSelect={() => onSelect("unfiled")}
@@ -413,9 +411,7 @@ export function SkillFolderRail({
       {tags.length > 0 ? (
         <div className="mt-4 border-t border-border pt-3">
           <div className="mb-1.5 flex items-center gap-1.5 px-2 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-            <Hash className="h-3 w-3" />
-            Tags
-          </div>
+            <Hash className="h-3 w-3" />{interfaceText("m_1331275bc537b4")}</div>
           <div className="flex flex-wrap gap-1.5 px-1">
             {activeTag ? (
               <button
@@ -446,7 +442,7 @@ export function SkillFolderRail({
       </nav>
       <div
         role="separator"
-        aria-label="Resize skill folders"
+        aria-label={interfaceText("m_d8cb8ea6c81804")}
         aria-orientation="vertical"
         aria-valuemin={MIN_FOLDER_RAIL_WIDTH}
         aria-valuemax={MAX_FOLDER_RAIL_WIDTH}
@@ -470,6 +466,7 @@ export function SkillFolderRail({
 }
 
 function RailHeading({ label, onCreate }: { label: string; onCreate: () => void }) {
+  useInterfaceLanguage();
   return (
     <div className="group/heading flex items-center justify-between px-2 pb-0.5 pt-3">
       <span className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
@@ -478,7 +475,7 @@ function RailHeading({ label, onCreate }: { label: string; onCreate: () => void 
       <button
         type="button"
         onClick={onCreate}
-        title={`New ${label.toLowerCase()} folder`}
+        title={interfaceText("m_9eefb97374b721", { value0: (label.toLowerCase()) })}
         className="opacity-0 transition-opacity group-hover/heading:opacity-100"
       >
         <Plus className="h-3 w-3 text-muted-foreground" />
@@ -563,6 +560,7 @@ function TreeBranch({
   onRenameCommit: (folder: FolderListItem) => void;
   onRenameCancel: () => void;
 }) {
+  useInterfaceLanguage();
   const { folder, children } = node;
   const isOpen = expanded.has(folder.id);
   const active = selection === folder.id;
@@ -582,7 +580,7 @@ function TreeBranch({
       >
         <button
           type="button"
-          aria-label={isOpen ? "Collapse folder" : "Expand folder"}
+          aria-label={isOpen ? interfaceText("m_de183e2e0cd2c3") : interfaceText("m_a5e635fd384f3f")}
           className={cn(
             "flex h-6 w-4 items-center justify-center text-muted-foreground",
             children.length === 0 && "invisible",
@@ -631,7 +629,7 @@ function TreeBranch({
                 variant="ghost"
                 size="icon-sm"
                 className="h-6 w-6 opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100"
-                aria-label={`Folder actions for ${label}`}
+                aria-label={interfaceText("m_963edf4a0e2e03", { value0: (label) })}
               >
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>
@@ -639,23 +637,18 @@ function TreeBranch({
             <DropdownMenuContent align="end">
               {canNest ? (
                 <DropdownMenuItem onSelect={() => onCreateFolder(folder.id)}>
-                  <FolderPlus className="h-3.5 w-3.5" />
-                  New subfolder
-                </DropdownMenuItem>
+                  <FolderPlus className="h-3.5 w-3.5" />{interfaceText("m_1f054525307b8b")}</DropdownMenuItem>
               ) : null}
               {editable ? (
                 <>
-                  <DropdownMenuItem onSelect={() => onStartRename(folder)}>Rename</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => onEditFolder(folder)}>Edit color</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => onStartRename(folder)}>{interfaceText("m_3064d79a295cef")}</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => onEditFolder(folder)}>{interfaceText("m_0ef08627434532")}</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onMoveFolder(folder, isInMySkills ? "company" : "my")}>
-                    <MoveRight className="h-3.5 w-3.5" />
-                    Move to {isInMySkills ? "Organization" : "My Skills"}
+                    <MoveRight className="h-3.5 w-3.5" />{interfaceText("m_8e23a49a9af3f7")}{isInMySkills ? interfaceText("m_d764d42592fc96") : interfaceText("m_ea424d66243dff")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem variant="destructive" onSelect={() => onDeleteFolder(folder)}>
-                    <Trash2 className="h-3.5 w-3.5" />
-                    Delete
-                  </DropdownMenuItem>
+                    <Trash2 className="h-3.5 w-3.5" />{interfaceText("m_e2d0a54968ead2")}</DropdownMenuItem>
                 </>
               ) : null}
             </DropdownMenuContent>
@@ -706,13 +699,14 @@ export function FolderBreadcrumb({
   selection: FolderSelection;
   onSelect: (selection: FolderSelection) => void;
 }) {
+  useInterfaceLanguage();
   const model = useMemo(() => treeFromResult(result), [result]);
   const trail = selection === "all" || selection === "unfiled"
     ? []
     : folderBreadcrumbTrail(model, selection);
 
   return (
-    <nav aria-label="Folder path" className="flex flex-wrap items-center gap-1 text-sm">
+    <nav aria-label={interfaceText("m_98bca2fab915ab")} className="flex flex-wrap items-center gap-1 text-sm">
       <button
         type="button"
         onClick={() => onSelect("all")}
@@ -721,13 +715,11 @@ export function FolderBreadcrumb({
           selection === "all" ? "font-medium text-foreground" : "text-muted-foreground",
         )}
       >
-        <Home className="h-3.5 w-3.5" />
-        All skills
-      </button>
+        <Home className="h-3.5 w-3.5" />{interfaceText("m_78abcbbfb83097")}</button>
       {selection === "unfiled" ? (
         <>
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
-          <span className="rounded px-1.5 py-0.5 font-medium text-foreground">Unfiled</span>
+          <span className="rounded px-1.5 py-0.5 font-medium text-foreground">{interfaceText("m_d64dc9ae400c28")}</span>
         </>
       ) : null}
       {trail.map((folder, index) => {
@@ -767,6 +759,7 @@ export function FolderTiles({
   selection: FolderSelection;
   onOpen: (folderId: string) => void;
 }) {
+  useInterfaceLanguage();
   const model = useMemo(() => treeFromResult(result), [result]);
   const children = useMemo<FolderTreeNode[]>(() => {
     if (selection === "unfiled") return [];
@@ -778,9 +771,7 @@ export function FolderTiles({
 
   return (
     <div className="mb-4">
-      <div className="mb-2 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-        Folders
-      </div>
+      <div className="mb-2 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_c4d6bb200f4c05")}</div>
       <div className="grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(11rem,1fr))]">
         {children.map((node) => (
           <button
@@ -831,6 +822,7 @@ export function MoveToFolderDialog({
   /** Create a folder under `parentId` (null = top level); resolve to the new id. */
   onCreateFolder: (parentId: string | null, name: string) => Promise<string | null>;
 }) {
+  useInterfaceLanguage();
   const model = useMemo(() => treeFromResult(result), [result]);
   const [query, setQuery] = useState("");
   const [target, setTarget] = useState<string | null | undefined>(undefined);
@@ -904,13 +896,13 @@ export function MoveToFolderDialog({
             <FolderSwatch color={folder.color} />
           )}
           <span className="min-w-0 flex-1 truncate">{reservedRootLabel(folder)}</span>
-          {isCurrent ? <span className="text-xs text-muted-foreground">current</span> : null}
-          {bundled ? <span className="text-xs text-muted-foreground">read-only</span> : null}
+          {isCurrent ? <span className="text-xs text-muted-foreground">{interfaceText("m_97b0560280ed60")}</span> : null}
+          {bundled ? <span className="text-xs text-muted-foreground">{interfaceText("m_4fed3970dcc0d3")}</span> : null}
           {isChosen ? <Check className="h-3.5 w-3.5" /> : null}
           {nestable ? (
             <button
               type="button"
-              title="New folder inside…"
+              title={interfaceText("m_3409c55afd702c")}
               className="opacity-0 transition-opacity group-hover:opacity-100"
               onClick={(event) => {
                 event.stopPropagation();
@@ -950,7 +942,7 @@ export function MoveToFolderDialog({
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search folders"
+            placeholder={interfaceText("m_b2132d5f1a39c6")}
             className="h-8 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
@@ -964,8 +956,8 @@ export function MoveToFolderDialog({
             onClick={() => setTarget(null)}
           >
             <FolderSwatch color={null} />
-            <span className="min-w-0 flex-1 truncate">Unfiled</span>
-            {currentFolderId == null ? <span className="text-xs text-muted-foreground">current</span> : null}
+            <span className="min-w-0 flex-1 truncate">{interfaceText("m_d64dc9ae400c28")}</span>
+            {currentFolderId == null ? <span className="text-xs text-muted-foreground">{interfaceText("m_97b0560280ed60")}</span> : null}
             {chosen === null ? <Check className="h-3.5 w-3.5" /> : null}
           </div>
           {model.roots.map((node) => renderNode(node, 0))}
@@ -988,32 +980,27 @@ export function MoveToFolderDialog({
                 }}
                 className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent/40 hover:text-foreground"
               >
-                <Plus className="h-3.5 w-3.5" />
-                New top-level folder…
-              </button>
+                <Plus className="h-3.5 w-3.5" />{interfaceText("m_93d8f8e980e06c")}</button>
             )}
           </div>
         </div>
 
         <div className="min-h-5 text-xs text-muted-foreground">
           {previewPath ? (
-            <span>
-              Moving to <span className="font-mono text-foreground">{previewPath}</span>
+            <span>{interfaceText("m_f389819e991535")}<span className="font-mono text-foreground">{previewPath}</span>
             </span>
           ) : (
-            <span>Pick a destination folder.</span>
+            <span>{interfaceText("m_1b4df9890211d2")}</span>
           )}
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={pending}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={pending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button
             disabled={pending || chosen === undefined || chosen === currentFolderId}
             onClick={() => chosen !== undefined && onMove(chosen)}
           >
-            {pending ? "Moving…" : "Move here"}
+            {pending ? interfaceText("m_d6b61862221699") : interfaceText("m_56f124777749d1")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1041,13 +1028,14 @@ function InlineNewFolder({
   onSubmit: () => void;
   onCancel: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="flex items-center gap-2 py-1" style={{ paddingLeft: `${0.5 + depth * 0.9}rem` }}>
       <FolderPlus className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       <Input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Folder name"
+        placeholder={interfaceText("m_14d34edf50ef6c")}
         autoFocus
         className="h-7 flex-1 text-sm"
         onKeyDown={(event) => {
@@ -1055,12 +1043,8 @@ function InlineNewFolder({
           if (event.key === "Escape") onCancel();
         }}
       />
-      <Button size="sm" variant="ghost" onClick={onCancel} disabled={pending}>
-        Cancel
-      </Button>
-      <Button size="sm" onClick={onSubmit} disabled={pending || !value.trim()}>
-        Add
-      </Button>
+      <Button size="sm" variant="ghost" onClick={onCancel} disabled={pending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+      <Button size="sm" onClick={onSubmit} disabled={pending || !value.trim()}>{interfaceText("m_9fd728c66c9a25")}</Button>
     </div>
   );
 }

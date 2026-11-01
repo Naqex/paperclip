@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ToolConnection } from "@paperclipai/shared";
@@ -11,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export function ExecutorManagementSetup({ connection, onClose }: { connection: ToolConnection; onClose: () => void }) {
+  useInterfaceLanguage();
   const [url, setUrl] = useState(typeof connection.config?.managementUrl === "string" ? connection.config?.managementUrl : "");
   const queries = useQueryClient();
   const { userId, settled } = useAccountIdentity();
@@ -23,11 +25,11 @@ export function ExecutorManagementSetup({ connection, onClose }: { connection: T
     queries.setQueryData(queryKeys.tools.aggregatorApps(connection.id, userId), result);
   }, onSuccess: async () => { await queries.invalidateQueries({ queryKey: queryKeys.tools.connections(connection.companyId) }); onClose(); } });
   return <Dialog open onOpenChange={open => { if (!open && !save.isPending) onClose(); }}><DialogContent>
-    <DialogHeader><DialogTitle>Executor console</DialogTitle><DialogDescription>Choose where to manage accounts for “{connection.name}”. Include your workspace path.</DialogDescription></DialogHeader>
+    <DialogHeader><DialogTitle>{interfaceText("m_f02454562df32b")}</DialogTitle><DialogDescription>{interfaceText("m_d3a5eade3da1af")}{connection.name}{interfaceText("m_35546fa73f9564")}</DialogDescription></DialogHeader>
     <form className="space-y-4" onSubmit={event => { event.preventDefault(); save.mutate(); }}>
-      <div className="space-y-2"><Label htmlFor="executor-console-url">Console URL</Label><Input id="executor-console-url" type="url" required value={url} onChange={event => setUrl(event.target.value)} /></div>
+      <div className="space-y-2"><Label htmlFor="executor-console-url">{interfaceText("m_2550c53b32a5a0")}</Label><Input id="executor-console-url" type="url" required value={url} onChange={event => setUrl(event.target.value)} /></div>
       {save.isError ? <p role="alert" className="text-sm text-destructive">{save.error.message}</p> : null}
-      <DialogFooter className="sm:justify-between"><Button type="button" variant="ghost" onClick={onClose} disabled={save.isPending}>Cancel</Button><Button type="submit" disabled={!settled || save.isPending || !url.trim()}>{save.isPending ? "Saving…" : "Save"}</Button></DialogFooter>
+      <DialogFooter className="sm:justify-between"><Button type="button" variant="ghost" onClick={onClose} disabled={save.isPending}>{interfaceText("m_19766ed6ccb2f4")}</Button><Button type="submit" disabled={!settled || save.isPending || !url.trim()}>{save.isPending ? interfaceText("m_23e39291d61358") : interfaceText("m_1509f561f24165")}</Button></DialogFooter>
     </form>
   </DialogContent></Dialog>;
 }

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Layers } from "lucide-react";
 import type { To } from "react-router-dom";
 import type { CompanyArtifactGroup } from "@/api/artifacts";
@@ -19,9 +20,10 @@ interface ArtifactGroupCardProps {
  * than one artifact.
  */
 export function ArtifactGroupCard({ group, to }: ArtifactGroupCardProps) {
+  useInterfaceLanguage();
   const stacked = group.count > 1;
   const preview = group.previewArtifacts[0];
-  const countLabel = `${group.count} artifact${group.count === 1 ? "" : "s"}`;
+  const countLabel = interfaceText("m_b54903ae0e3cd8", { value0: (group.count), value1: (group.count === 1 ? "" : interfaceText("m_043a718774c572")) });
 
   return (
     <div className="relative">
@@ -80,7 +82,7 @@ export function ArtifactGroupCard({ group, to }: ArtifactGroupCardProps) {
           <div className="mt-0.5 flex items-center gap-1.5 text-(length:--text-micro) text-muted-foreground/65">
             <span>{countLabel}</span>
             <span className="text-muted-foreground/50">·</span>
-            <span>Updated {formatDate(group.updatedAt)}</span>
+            <span>{interfaceText("m_a919c7c2d1a486")}{formatDate(group.updatedAt)}</span>
           </div>
         </div>
       </Link>

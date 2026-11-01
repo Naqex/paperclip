@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 
 import { Link } from "@/lib/router";
@@ -111,13 +112,14 @@ function ResourceActionButton({
   onConfirm: () => void;
   pending: boolean;
 }) {
+  useInterfaceLanguage();
   const copy = resourceActionCopy(resource, label);
   if (!copy) return null;
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline" size="sm" disabled={pending}>
-          {pending ? "Working…" : copy.triggerLabel}
+          {pending ? interfaceText("m_5474eef8d0f179") : copy.triggerLabel}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -126,7 +128,7 @@ function ResourceActionButton({
           <AlertDialogDescription>{copy.body}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{interfaceText("m_19766ed6ccb2f4")}</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>{copy.confirmLabel}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -149,11 +151,12 @@ function ConfirmActionButton({
   pending: boolean;
   onConfirm: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline" size="sm" disabled={pending}>
-          {pending ? "Working…" : triggerLabel}
+          {pending ? interfaceText("m_5474eef8d0f179") : triggerLabel}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -162,7 +165,7 @@ function ConfirmActionButton({
           <AlertDialogDescription>{body}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{interfaceText("m_19766ed6ccb2f4")}</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>{confirmLabel}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -251,6 +254,7 @@ export function BuiltInBundlePanel({
   routineActionPending = null,
   className,
 }: BuiltInBundlePanelProps) {
+  useInterfaceLanguage();
   const { status, definition, resources } = state;
   const bundle = definition.bundle;
   if (!bundle) return null;
@@ -273,7 +277,7 @@ export function BuiltInBundlePanel({
   const routine = findResource(resources, "routine");
   const scheduleEnabled = routine?.scheduleEnabled === true;
   const routineKey = bundle.routine.routineKey;
-  const scheduleLabel = bundle.routine.scheduleLabel ?? "Weekly schedule";
+  const scheduleLabel = bundle.routine.scheduleLabel ?? interfaceText("m_6cbc7c2647d517");
   const proposalIssueRef = routine?.pendingUpdateIssueIdentifier ?? routine?.pendingUpdateIssueId ?? null;
   const proposalHref = proposalIssueRef && routine?.pendingUpdateInteractionId
     ? `/issues/${proposalIssueRef}#interaction-${routine.pendingUpdateInteractionId}`
@@ -302,7 +306,7 @@ export function BuiltInBundlePanel({
         actions={
           <>
             <Button asChild variant="link" size="sm">
-              <Link to={viewHref}>View</Link>
+              <Link to={viewHref}>{interfaceText("m_dcc839a4015c4b")}</Link>
             </Button>
             <ResourceActionButton
               resource={resource}
@@ -317,8 +321,8 @@ export function BuiltInBundlePanel({
   };
 
   return (
-    <section className={cn("space-y-2", className)} aria-label="Bundle status">
-      <h3 className="text-sm font-medium">Bundle status</h3>
+    <section className={cn("space-y-2", className)} aria-label={interfaceText("m_7d35c70373addf")}>
+      <h3 className="text-sm font-medium">{interfaceText("m_7d35c70373addf")}</h3>
 
       <div className="divide-y rounded-lg border px-4">
         {/* Adapter — no resource entry; readiness is the agent lifecycle. */}
@@ -327,9 +331,7 @@ export function BuiltInBundlePanel({
           chips={<ResourceStatusChip variant={adapterChip} />}
           detail={adapterDetail}
           actions={
-            <Button variant="outline" size="sm" onClick={onConfigure}>
-              Configure
-            </Button>
+            <Button variant="outline" size="sm" onClick={onConfigure}>{interfaceText("m_6defafa2caa653")}</Button>
           }
         />
 
@@ -353,7 +355,7 @@ export function BuiltInBundlePanel({
 
         {/* Routine — zero-token-by-default; the weekly schedule ships off. */}
         <BundleRow
-          label="Routine"
+          label={interfaceText("m_0b5baf309897ec")}
           secondary={bundle.routine.title}
           chips={
             <>
@@ -376,10 +378,10 @@ export function BuiltInBundlePanel({
               <>
                 {onRunRoutine && (
                   <ConfirmActionButton
-                    title="Run Reflection Coach once?"
+                    title={interfaceText("m_4cb5c954c165c5")}
                     body="Paperclip will create one routine task now. This does not enable the weekly schedule or turn on background work."
                     triggerLabel="Run once"
-                    confirmLabel="Run once"
+                    confirmLabel={interfaceText("m_5f041f4be2d3be")}
                     pending={routineActionPending === "run"}
                     onConfirm={() => onRunRoutine(routineKey)}
                   />
@@ -387,20 +389,20 @@ export function BuiltInBundlePanel({
                 {scheduleEnabled
                   ? onDisableSchedule && (
                     <ConfirmActionButton
-                      title="Disable the weekly schedule?"
+                      title={interfaceText("m_dc2e4df7a45fa8")}
                       body="Paperclip will stop future scheduled Reflection Coach runs. Manual Run once remains available."
                       triggerLabel="Disable schedule"
-                      confirmLabel="Disable schedule"
+                      confirmLabel={interfaceText("m_514c1707c58b4e")}
                       pending={routineActionPending === "disable"}
                       onConfirm={() => onDisableSchedule(routineKey)}
                     />
                   )
                   : onEnableSchedule && (
                     <ConfirmActionButton
-                      title="Enable the weekly schedule?"
+                      title={interfaceText("m_639afd2782aec3")}
                       body="Paperclip will allow Reflection Coach to create routine tasks on the weekly schedule. It can spend tokens when those tasks run."
                       triggerLabel="Enable weekly"
-                      confirmLabel="Enable weekly"
+                      confirmLabel={interfaceText("m_c35f144a9c8f4c")}
                       pending={routineActionPending === "enable"}
                       onConfirm={() => onEnableSchedule(routineKey)}
                     />
@@ -408,7 +410,7 @@ export function BuiltInBundlePanel({
                 {driftVariant(routine) && (
                   <ResourceActionButton
                     resource={routine}
-                    label="routine"
+                    label={interfaceText("m_fde55b36ec36cb")}
                     onConfirm={() => onResetResource("routine")}
                     pending={resettingResource === "routine"}
                   />
@@ -419,12 +421,12 @@ export function BuiltInBundlePanel({
         />
         {proposalHref && (
           <BundleRow
-            label="Proposal"
+            label={interfaceText("m_5d42766c7ecac4")}
             chips={<ResourceStatusChip variant="proposal_pending" />}
             detail="A proposed Reflection Coach update is waiting for review."
             actions={
               <Button asChild variant="link" size="sm">
-                <Link to={proposalHref}>Review proposal</Link>
+                <Link to={proposalHref}>{interfaceText("m_fc3188f4404639")}</Link>
               </Button>
             }
           />

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { Link } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
@@ -71,6 +72,7 @@ function PickerButton({
 }
 
 export function GoalProperties({ goal, onUpdate }: GoalPropertiesProps) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
 
   const { data: agents } = useQuery({
@@ -96,7 +98,7 @@ export function GoalProperties({ goal, onUpdate }: GoalPropertiesProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <PropertyRow label="Status">
+        <PropertyRow label={interfaceText("m_920e413c7d411b")}>
           {onUpdate ? (
             <PickerButton
               current={goal.status}
@@ -110,7 +112,7 @@ export function GoalProperties({ goal, onUpdate }: GoalPropertiesProps) {
           )}
         </PropertyRow>
 
-        <PropertyRow label="Level">
+        <PropertyRow label={interfaceText("m_1709305c9fa966")}>
           {onUpdate ? (
             <PickerButton
               current={goal.level}
@@ -124,7 +126,7 @@ export function GoalProperties({ goal, onUpdate }: GoalPropertiesProps) {
           )}
         </PropertyRow>
 
-        <PropertyRow label="Owner">
+        <PropertyRow label={interfaceText("m_4b1b8aa3608a26")}>
           {ownerAgent ? (
             <Link
               to={agentUrl(ownerAgent)}
@@ -133,12 +135,12 @@ export function GoalProperties({ goal, onUpdate }: GoalPropertiesProps) {
               {ownerAgent.name}
             </Link>
           ) : (
-            <span className="text-sm text-muted-foreground">None</span>
+            <span className="text-sm text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
           )}
         </PropertyRow>
 
         {goal.parentId && (
-          <PropertyRow label="Parent Goal">
+          <PropertyRow label={interfaceText("m_3c66fbe18d2f2c")}>
             <Link
               to={`/goals/${goal.parentId}`}
               className="text-sm hover:underline"
@@ -152,10 +154,10 @@ export function GoalProperties({ goal, onUpdate }: GoalPropertiesProps) {
       <Separator />
 
       <div className="space-y-1">
-        <PropertyRow label="Created">
+        <PropertyRow label={interfaceText("m_d70b9e24bca26b")}>
           <span className="text-sm">{formatDate(goal.createdAt)}</span>
         </PropertyRow>
-        <PropertyRow label="Updated">
+        <PropertyRow label={interfaceText("m_3a5ecca188c057")}>
           <span className="text-sm">{formatDate(goal.updatedAt)}</span>
         </PropertyRow>
       </div>

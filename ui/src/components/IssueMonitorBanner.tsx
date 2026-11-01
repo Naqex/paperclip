@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { Clock, X } from "lucide-react";
 import type { Issue, IssueWorkProduct } from "@paperclipai/shared";
@@ -160,8 +161,8 @@ export function buildMonitorSurfaceCopy(
       break;
   }
 
-  const attemptLabel = derived.attemptCount >= 1 ? `Attempt ${derived.attemptCount}` : null;
-  const serviceLabel = derived.serviceName ? `Watching: ${derived.serviceName}` : null;
+  const attemptLabel = derived.attemptCount >= 1 ? interfaceText("m_03b460dd016062", { value0: (derived.attemptCount) }) : null;
+  const serviceLabel = derived.serviceName ? interfaceText("m_13a1c482719efb", { value0: (derived.serviceName) }) : null;
 
   const bannerMeta = [statusHint, `${absolute} (your time)`, attemptLabel, serviceLabel].filter(
     (piece): piece is string => Boolean(piece),
@@ -200,6 +201,7 @@ function CheckNowButton({
   checkingNow: boolean;
   reviewRequested?: boolean;
 }) {
+  useInterfaceLanguage();
   return (
     <Button
       type="button"
@@ -209,12 +211,13 @@ function CheckNowButton({
       onClick={onCheckNow}
       disabled={checkingNow}
     >
-      {checkingNow ? "Checking…" : reviewRequested ? "Check status" : "Check now"}
+      {checkingNow ? interfaceText("m_ec963ffc911b84") : reviewRequested ? interfaceText("m_69cd3590300a68") : interfaceText("m_2937cffb37abce")}
     </Button>
   );
 }
 
 function CancelMonitorButton({ onCancel }: { onCancel: () => Promise<unknown> }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -233,19 +236,19 @@ function CancelMonitorButton({ onCancel }: { onCancel: () => Promise<unknown> })
   return (
     <AlertDialog open={open} onOpenChange={(next) => { if (!pending) { setOpen(next); setError(null); } }}>
       <AlertDialogTrigger asChild>
-        <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-2" aria-label="Cancel monitor" title="Cancel monitor">
+        <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-2" aria-label={interfaceText("m_725cf6ee4f2f39")} title={interfaceText("m_725cf6ee4f2f39")}>
           <X className="h-4 w-4" aria-hidden="true" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Cancel monitor?</AlertDialogTitle>
-          <AlertDialogDescription>This removes the scheduled monitor check. The agent will no longer resume from this monitor. You can send a message to continue the task.</AlertDialogDescription>
+          <AlertDialogTitle>{interfaceText("m_ed370fae543f69")}</AlertDialogTitle>
+          <AlertDialogDescription>{interfaceText("m_4317d6f1d2b11b")}</AlertDialogDescription>
         </AlertDialogHeader>
         {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={pending}>Keep monitor</AlertDialogCancel>
-          <Button type="button" variant="destructive" disabled={pending} onClick={() => void cancel()}>{pending ? "Cancelling…" : "Cancel monitor"}</Button>
+          <AlertDialogCancel disabled={pending}>{interfaceText("m_a498617d740334")}</AlertDialogCancel>
+          <Button type="button" variant="destructive" disabled={pending} onClick={() => void cancel()}>{pending ? interfaceText("m_91b104db05da1b") : interfaceText("m_725cf6ee4f2f39")}</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -311,6 +314,7 @@ export function IssueMonitorComposerStrip({
   checkError,
   className,
 }: IssueMonitorSurfaceProps & { className?: string }) {
+  useInterfaceLanguage();
   const reviews = getIssuePullRequests(workProducts).filter(pullRequestNeedsReview);
   const copy = useMonitorSurfaceCopy(issue, reviews.length);
   if (!copy) return null;
@@ -335,10 +339,10 @@ export function IssueMonitorComposerStrip({
       {!copy.automaticChecksPaused ? (
         <p className="mt-1.5 text-xs text-muted-foreground">
           {copy.pullRequestReview
-            ? "Review on GitHub, then check status to have the agent verify the result."
+            ? interfaceText("m_138c837aa5e147")
             : copy.workspaceWait
-            ? "You can keep sending instructions while the agent waits."
-            : "Sending a reply wakes the agent now — before the scheduled check."}
+            ? interfaceText("m_863825ba30571f")
+            : interfaceText("m_c39c874e08165a")}
         </p>
       ) : null}
       {checkError ? <p role="alert" className="text-sm text-destructive">{checkError}</p> : null}

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { InboxTab } from "./inbox";
 
 /**
@@ -49,22 +50,22 @@ export interface TaskViewGroup {
 
 export const TASK_VIEW_GROUPS: TaskViewGroup[] = [
   {
-    label: "My work",
+    get label() { return interfaceText("m_b4b9c68509b915"); },
     views: [
-      { key: "mine", label: "Mine", surface: "inbox", inboxTab: "mine", hint: "Assigned to you or waiting on you" },
-      { key: "unread", label: "Unread", surface: "inbox", inboxTab: "unread", hint: "Tasks you touched with new activity" },
-      { key: "blocked", label: "Blocked", surface: "inbox", inboxTab: "blocked", hint: "Blocked tasks, grouped by blocker" },
-      { key: "recent", label: "Recent", surface: "inbox", inboxTab: "recent", hint: "Everything you touched lately" },
-      { key: "everything", label: "Everything", surface: "inbox", inboxTab: "all", hint: "Tasks, approvals, failed runs and join requests" },
+      { key: "mine", get label() { return interfaceText("m_f57afb7d275a26"); }, surface: "inbox", inboxTab: "mine", hint: "Assigned to you or waiting on you" },
+      { key: "unread", get label() { return interfaceText("m_1b9f384c1436f6"); }, surface: "inbox", inboxTab: "unread", hint: "Tasks you touched with new activity" },
+      { key: "blocked", get label() { return interfaceText("m_18f2a0947f9d65"); }, surface: "inbox", inboxTab: "blocked", hint: "Blocked tasks, grouped by blocker" },
+      { key: "recent", get label() { return interfaceText("m_690dbe9dc0993c"); }, surface: "inbox", inboxTab: "recent", hint: "Everything you touched lately" },
+      { key: "everything", get label() { return interfaceText("m_75304cf77db08b"); }, surface: "inbox", inboxTab: "all", hint: "Tasks, approvals, failed runs and join requests" },
     ],
   },
   {
-    label: "Organization",
+    get label() { return interfaceText("m_d764d42592fc96"); },
     views: [
-      { key: "all", label: "All tasks", surface: "issues", statuses: [], hint: "Every task in the organization" },
-      { key: "active", label: "Active", surface: "issues", statuses: ["todo", "in_progress", "in_review", "blocked"], hint: "Open tasks, running or not" },
-      { key: "backlog", label: "Backlog", surface: "issues", statuses: ["backlog"], hint: "Not started yet" },
-      { key: "done", label: "Done", surface: "issues", statuses: ["done", "cancelled"], hint: "Completed and cancelled" },
+      { key: "all", get label() { return interfaceText("m_cb66482383df9e"); }, surface: "issues", statuses: [], hint: "Every task in the organization" },
+      { key: "active", get label() { return interfaceText("m_92340695899bd2"); }, surface: "issues", statuses: ["todo", "in_progress", "in_review", "blocked"], hint: "Open tasks, running or not" },
+      { key: "backlog", get label() { return interfaceText("m_bf986e9a4f860e"); }, surface: "issues", statuses: ["backlog"], hint: "Not started yet" },
+      { key: "done", get label() { return interfaceText("m_11a6767d5674c7"); }, surface: "issues", statuses: ["done", "cancelled"], hint: "Completed and cancelled" },
     ],
   },
 ];

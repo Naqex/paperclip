@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "../lib/utils";
 
@@ -152,6 +153,7 @@ export function CompanyPatternIcon({
   className,
   logoFit = "cover",
 }: CompanyPatternIconProps) {
+  useInterfaceLanguage();
   const initial = companyName.trim().charAt(0).toUpperCase() || "?";
   const [imageError, setImageError] = useState(false);
   const logo = !imageError && typeof logoUrl === "string" && logoUrl.trim().length > 0 ? logoUrl : null;
@@ -173,7 +175,7 @@ export function CompanyPatternIcon({
       {logo ? (
         <img
           src={logo}
-          alt={`${companyName} logo`}
+          alt={interfaceText("m_c398e2f88380bb", { value0: (companyName) })}
           onError={() => setImageError(true)}
           className={cn(
             "absolute inset-0 h-full w-full",

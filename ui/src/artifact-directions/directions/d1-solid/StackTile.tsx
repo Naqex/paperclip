@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LabGroup } from "../../kit";
@@ -91,6 +92,7 @@ function Mosaic({ group }: { group: LabGroup }) {
 }
 
 export function StackTile({ group }: { group: LabGroup }) {
+  useInterfaceLanguage();
   const depth = pileDepth(group.count);
   const count = plural(group.count, "artifact");
   return (
@@ -109,13 +111,13 @@ export function StackTile({ group }: { group: LabGroup }) {
             {/* Always two lines — what is in it, then when — so the feet of a row line up; a long count wraps inside its own line. */}
             <p className={cn(META_TEXT, "flex min-w-0 flex-1 flex-col text-(--solid-meta)")}>
               <Counts lead={count} of={group.artifacts} />
-              <span className="truncate">Updated {group.updatedLabel}</span>
+              <span className="truncate">{interfaceText("m_a919c7c2d1a486")}{group.updatedLabel}</span>
             </p>
             <a
               data-primary
               href={`#stack-${group.taskIdentifier}`}
-              aria-label={`Open stack ${group.taskIdentifier}: ${group.title}, ${count}`}
-              title={`Open stack ${group.taskIdentifier}: ${group.title}\n${count} · Updated ${group.updatedLabel}`}
+              aria-label={interfaceText("m_06cdde322eadf9", { value0: (group.taskIdentifier), value1: (group.title), value2: (count) })}
+              title={interfaceText("m_064ada3080dc92", { value0: (group.taskIdentifier), value1: (group.title), value2: (count), value3: (group.updatedLabel) })}
               // The cover reaches up over the pile, so the whole object is one target.
               className={cn(BUTTON, BUTTON_PRIMARY, COVER, "w-7 cursor-pointer px-0 after:-top-7 after:cursor-pointer")}
             >

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useMemo, useState } from "react";
 import {
   analyzeFrontmatterBlock,
@@ -225,6 +226,7 @@ export function FrontmatterPanel({
   onChange,
   className,
 }: FrontmatterPanelProps) {
+  useInterfaceLanguage();
   const isSkillFile = isSkillMarkdown(fileName);
 
   // `yamlText` is the canonical raw block — always equal to whatever we've last
@@ -344,7 +346,7 @@ export function FrontmatterPanel({
               <span className="truncate text-xs text-muted-foreground">{summary}</span>
             ) : null}
             {!open && !present ? (
-              <span className="text-xs text-muted-foreground">None</span>
+              <span className="text-xs text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
             ) : null}
           </button>
 
@@ -355,9 +357,7 @@ export function FrontmatterPanel({
             >
               <TabsList variant="line" className="h-7">
                 {canUseFields ? (
-                  <TabsTrigger value="fields" className="px-2 py-0.5 text-xs">
-                    Fields
-                  </TabsTrigger>
+                  <TabsTrigger value="fields" className="px-2 py-0.5 text-xs">{interfaceText("m_616f48c1db195b")}</TabsTrigger>
                 ) : (
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -367,16 +367,10 @@ export function FrontmatterPanel({
                           disabled
                           aria-disabled="true"
                           className="px-2 py-0.5 text-xs opacity-50"
-                        >
-                          Fields
-                        </TabsTrigger>
+                        >{interfaceText("m_616f48c1db195b")}</TabsTrigger>
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-60">
-                      Switch to YAML to edit. This frontmatter uses YAML features the form can't safely
-                      round-trip (e.g. comments, anchors, or custom ordering). Editing here keeps it
-                      byte-for-byte.
-                    </TooltipContent>
+                    <TooltipContent className="max-w-60">{interfaceText("m_6a7af0aa94347f")}</TooltipContent>
                   </Tooltip>
                 )}
                 <TabsTrigger value="yaml" className="px-2 py-0.5 text-xs">
@@ -386,15 +380,13 @@ export function FrontmatterPanel({
             </Tabs>
           ) : !readOnly ? (
             <Button variant="ghost" size="sm" onClick={addFrontmatter} data-testid="add-frontmatter">
-              <Plus className="mr-1 h-3.5 w-3.5" />
-              Add frontmatter
-            </Button>
+              <Plus className="mr-1 h-3.5 w-3.5" />{interfaceText("m_d3629db00997af")}</Button>
           ) : null}
 
           {present && effectiveMode === "fields" && warningCount > 0 ? (
             <Badge variant="outline" className="gap-1 text-amber-500" data-testid="frontmatter-warning-chip">
               <AlertTriangle className="h-3.5 w-3.5" />
-              {warningCount} {warningCount === 1 ? "issue" : "issues"}
+              {warningCount} {warningCount === 1 ? interfaceText("m_4a502846d070e2") : interfaceText("m_02e3fe5aad80ca")}
             </Badge>
           ) : null}
         </div>
@@ -420,9 +412,7 @@ export function FrontmatterPanel({
               )}
             </div>
           ) : (
-            <div className="px-3 pb-2 text-xs text-muted-foreground">
-              This file has no frontmatter.
-            </div>
+            <div className="px-3 pb-2 text-xs text-muted-foreground">{interfaceText("m_e9f9a8566309c8")}</div>
           )}
         </CollapsibleContent>
       </Collapsible>
@@ -466,6 +456,7 @@ function FieldsForm({
   readOnly: boolean;
   onCommit: (form: FormModel) => void;
 }) {
+  useInterfaceLanguage();
   const nameWarning = fieldWarning(validation, "name");
   const descriptionWarning = fieldWarning(validation, "description");
   const toolsWarning = fieldWarning(validation, "allowed-tools");
@@ -474,9 +465,7 @@ function FieldsForm({
     <div className="space-y-3 pt-1">
       {form.hasName ? (
         <div>
-          <Label htmlFor="fm-name" className="text-xs text-muted-foreground">
-            name
-          </Label>
+          <Label htmlFor="fm-name" className="text-xs text-muted-foreground">{interfaceText("m_82a3537ff0dbce")}</Label>
           <Input
             id="fm-name"
             value={form.name}
@@ -491,9 +480,7 @@ function FieldsForm({
 
       {form.hasDescription ? (
         <div>
-          <Label htmlFor="fm-description" className="text-xs text-muted-foreground">
-            description
-          </Label>
+          <Label htmlFor="fm-description" className="text-xs text-muted-foreground">{interfaceText("m_c9046f7a37ad0e")}</Label>
           <Textarea
             id="fm-description"
             value={form.description}
@@ -508,16 +495,16 @@ function FieldsForm({
 
       {form.allowedToolsPresent ? (
         <div>
-          <Label className="text-xs text-muted-foreground">allowed-tools</Label>
+          <Label className="text-xs text-muted-foreground">{interfaceText("m_e3b05e680d8b7b")}</Label>
           {form.allowedTools === null ? (
             <p className="mt-1 text-xs text-amber-500">
-              {toolsWarning ?? "Expected a list — edit in YAML."}
+              {toolsWarning ?? interfaceText("m_9a18330db170f8")}
             </p>
           ) : (
             <ChipInput
               values={form.allowedTools}
               readOnly={readOnly}
-              placeholder="Add a tool…"
+              placeholder={interfaceText("m_b048875c20cabf")}
               onChange={(next) => onCommit({ ...form, allowedTools: next })}
             />
           )}
@@ -526,9 +513,9 @@ function FieldsForm({
 
       {form.metadataPresent ? (
         <div>
-          <Label className="text-xs text-muted-foreground">metadata</Label>
+          <Label className="text-xs text-muted-foreground">{interfaceText("m_45447b7afbd5e5")}</Label>
           {form.metadataComplex !== null ? (
-            <p className="mt-1 text-xs text-muted-foreground">Complex value — edit in YAML.</p>
+            <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_122b742aabea5a")}</p>
           ) : (
             <MetadataRows
               rows={form.metaRows}
@@ -560,7 +547,7 @@ function FieldsForm({
         ) : (
           <div key={row.id}>
             <Label className="text-xs text-muted-foreground">{row.key}</Label>
-            <p className="mt-1 text-xs text-muted-foreground">Complex value — edit in YAML.</p>
+            <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_122b742aabea5a")}</p>
           </div>
         ),
       )}
@@ -577,6 +564,7 @@ function MetadataRows({
   readOnly: boolean;
   onChange: (rows: ScalarRow[]) => void;
 }) {
+  useInterfaceLanguage();
   const update = (index: number, patch: Partial<ScalarRow>) => {
     const next = rows.slice();
     next[index] = { ...next[index]!, ...patch, edited: true };
@@ -597,15 +585,15 @@ function MetadataRows({
       {rows.map((row, index) => (
         <div key={row.id} className="flex items-center gap-1.5">
           <Input
-            aria-label={`Metadata key ${index + 1}`}
+            aria-label={interfaceText("m_b83b185c1d7b48", { value0: (index + 1) })}
             value={row.key}
             readOnly={readOnly}
-            placeholder="key"
+            placeholder={interfaceText("m_2c70e12b7a0646")}
             onChange={(event) => update(index, { key: event.target.value })}
             className="h-8 flex-1 font-mono text-xs"
           />
           <Input
-            aria-label={`Value for ${row.key || `field ${index + 1}`}`}
+            aria-label={interfaceText("m_6937517a774c9b", { value0: (row.key || `field ${index + 1}`) })}
             value={row.text}
             readOnly={readOnly}
             placeholder="value"
@@ -617,7 +605,7 @@ function MetadataRows({
               variant="ghost"
               size="icon"
               className="h-8 w-8 shrink-0"
-              aria-label={`Remove ${row.key || `field ${index + 1}`}`}
+              aria-label={interfaceText("m_e224cf245aada5", { value0: (row.key || `field ${index + 1}`) })}
               onClick={() => remove(index)}
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -627,9 +615,7 @@ function MetadataRows({
       ))}
       {!readOnly ? (
         <Button variant="ghost" size="sm" onClick={add} className="text-xs">
-          <Plus className="mr-1 h-3.5 w-3.5" />
-          add field
-        </Button>
+          <Plus className="mr-1 h-3.5 w-3.5" />{interfaceText("m_2af202ccb34446")}</Button>
       ) : null}
     </div>
   );
@@ -646,6 +632,7 @@ function ChipInput({
   placeholder?: string;
   onChange: (values: string[]) => void;
 }) {
+  useInterfaceLanguage();
   const [draft, setDraft] = useState("");
 
   const commit = () => {
@@ -663,7 +650,7 @@ function ChipInput({
           {!readOnly ? (
             <button
               type="button"
-              aria-label={`Remove ${value}`}
+              aria-label={interfaceText("m_e224cf245aada5", { value0: (value) })}
               onClick={() => onChange(values.filter((_, i) => i !== index))}
               className="hover:text-foreground"
             >
@@ -686,7 +673,7 @@ function ChipInput({
             }
           }}
           onBlur={commit}
-          aria-label="Add tool"
+          aria-label={interfaceText("m_3076805f860711")}
           className="min-w-24 flex-1 bg-transparent text-xs outline-none"
         />
       ) : null}
@@ -707,12 +694,13 @@ function YamlEditor({
   parseError: boolean;
   onChange: (value: string) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="pt-1">
       {!canReturnToFields && !parseError ? (
         <div className="mb-1.5 flex items-start gap-2 rounded-md bg-muted/40 px-2 py-1.5 text-xs text-muted-foreground">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span>Editing raw YAML to preserve formatting the form can't reconstruct.</span>
+          <span>{interfaceText("m_995aee50c2a871")}</span>
         </div>
       ) : null}
       <Textarea
@@ -724,9 +712,7 @@ function YamlEditor({
         className="font-mono text-xs"
         aria-label="Frontmatter YAML"
       />
-      <p className="mt-1 text-xs text-muted-foreground">
-        Raw YAML is the source of truth in this mode.
-      </p>
+      <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_2b3b3fb24f8876")}</p>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /** Redacted presentation contracts shared with the production API. */
 import type { AiProvider, AiAuthMethod, AiManagedConnectionSummary, AiConnectionBinding } from "@paperclipai/shared";
 export type { AiProvider, AiAuthMethod, AiConnectionBinding } from "@paperclipai/shared";
@@ -53,8 +54,8 @@ export function defaultAiConnectionName(ownerName: string | undefined, provider:
 
 export function aiMethodLabel(provider: AiProvider, method: AiAuthMethod) {
   return method === "subscription"
-    ? (AI_PROVIDERS[provider].subscriptionName ?? "Subscription unavailable")
-    : provider === "github" ? "Personal access token" : "API key";
+    ? (AI_PROVIDERS[provider].subscriptionName ?? interfaceText("m_bc3442fff4d214"))
+    : provider === "github" ? interfaceText("m_a6d0f740e426f4") : interfaceText("m_16f0ee47f993d6");
 }
 
 export function aiConnectionDisplayLabel(connection: AiConnectionSummary) {

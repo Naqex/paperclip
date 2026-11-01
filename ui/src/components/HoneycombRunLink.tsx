@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ export function HoneycombRunLink({
   runId: string;
   enabled: boolean;
 }) {
+  useInterfaceLanguage();
   const [href, setHref] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,11 +44,9 @@ export function HoneycombRunLink({
         href={href}
         target="_blank"
         rel="noreferrer"
-        title="Open this run's task.run trace query in Honeycomb"
+        title={interfaceText("m_b056c2702cac3e")}
       >
-        <ExternalLink />
-        View in Honeycomb
-      </a>
+        <ExternalLink />{interfaceText("m_358cde948ef1e4")}</a>
     </Button>
   );
 }

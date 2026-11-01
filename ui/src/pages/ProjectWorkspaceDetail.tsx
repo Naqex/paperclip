@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "@/lib/router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -53,7 +54,7 @@ type OrderedProjectWorkspaceTabItem = {
 
 const DEFAULT_PLUGIN_DETAIL_TAB_ORDER = 100;
 const PROJECT_WORKSPACE_BASE_TAB_ITEMS: OrderedProjectWorkspaceTabItem[] = [
-  { value: "configuration", label: "Configuration", order: 30 },
+  { value: "configuration", get label() { return interfaceText("m_b332c3492d5eb1"); }, order: 30 },
 ];
 
 function isProjectWorkspacePluginTab(value: string | null): value is ProjectWorkspacePluginTab {
@@ -74,15 +75,15 @@ function orderProjectWorkspaceTabItems(items: OrderedProjectWorkspaceTabItem[]) 
 }
 
 const SOURCE_TYPE_OPTIONS: Array<{ value: ProjectWorkspaceSourceType; label: string; description: string }> = [
-  { value: "local_path", label: "Local git checkout", description: "A local path Paperclip can use directly." },
-  { value: "non_git_path", label: "Local non-git path", description: "A local folder without git semantics." },
-  { value: "git_repo", label: "Remote git repo", description: "A repo URL with optional refs and local checkout." },
-  { value: "remote_managed", label: "Remote-managed workspace", description: "A hosted workspace tracked by external reference." },
+  { value: "local_path", get label() { return interfaceText("m_a12b368fe63830"); }, description: "A local path Paperclip can use directly." },
+  { value: "non_git_path", get label() { return interfaceText("m_8c1755dafe78f5"); }, description: "A local folder without git semantics." },
+  { value: "git_repo", get label() { return interfaceText("m_b5ea0d022c21ae"); }, description: "A repo URL with optional refs and local checkout." },
+  { value: "remote_managed", get label() { return interfaceText("m_9b8562b1089218"); }, description: "A hosted workspace tracked by external reference." },
 ];
 
 const VISIBILITY_OPTIONS: Array<{ value: ProjectWorkspaceVisibility; label: string }> = [
-  { value: "default", label: "Default" },
-  { value: "advanced", label: "Advanced" },
+  { value: "default", get label() { return interfaceText("m_21b111cbfe6e8f"); } },
+  { value: "advanced", get label() { return interfaceText("m_9f088dbebd6c3c"); } },
 ];
 
 function isSafeExternalUrl(value: string | null | undefined) {
@@ -247,6 +248,7 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
 }
 
 export function ProjectWorkspaceDetail() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { companyPrefix, projectId, workspaceId } = useParams<{
     companyPrefix?: string;
     projectId: string;
@@ -326,12 +328,12 @@ export function ProjectWorkspaceDetail() {
   useEffect(() => {
     if (!project) return;
     setBreadcrumbs([
-      { label: "Projects", href: "/projects" },
+      { label: interfaceText("m_04e2a9728af758"), href: "/projects" },
       { label: project.name, href: `/projects/${canonicalProjectRef}` },
-      { label: "Workspaces", href: `/projects/${canonicalProjectRef}/workspaces` },
+      { label: interfaceText("m_1377264ba3b0a7"), href: `/projects/${canonicalProjectRef}/workspaces` },
       { label: workspace?.name ?? routeWorkspaceId },
     ]);
-  }, [setBreadcrumbs, project, canonicalProjectRef, workspace?.name, routeWorkspaceId]);
+  }, [setBreadcrumbs, project, canonicalProjectRef, workspace?.name, routeWorkspaceId, interfaceLanguage]);
 
   useEffect(() => {
     if (!project) return;
@@ -394,21 +396,21 @@ export function ProjectWorkspaceDetail() {
   });
 
   if (projectQuery.isLoading || projectView.kind === "reconnecting") {
-    return <p className="text-sm text-muted-foreground">Loading workspace…</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_86ffadbbcc8f0e")}</p>;
   }
   if (projectView.kind === "error") {
     return (
       <QueryErrorState
         size="page"
         error={projectQuery.error}
-        action="load this workspace"
+        action={interfaceText("m_4e8682b249c43a")}
         onRetry={projectView.retry}
         retrying={projectView.isFetching}
       />
     );
   }
   if (!project || !workspace || !form || !initialState) {
-    return <p className="text-sm text-muted-foreground">Workspace not found for this project.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_8b1b2a72adf532")}</p>;
   }
 
   const canRunWorkspaceCommands = Boolean(workspace.cwd);
@@ -448,17 +450,13 @@ export function ProjectWorkspaceDetail() {
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="ghost" size="sm" asChild>
           <Link to={`/projects/${canonicalProjectRef}/workspaces`}>
-            <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to workspaces
-          </Link>
+            <ArrowLeft className="mr-1 h-4 w-4" />{interfaceText("m_174743719f05df")}</Link>
         </Button>
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
-          <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-            Project workspace
-          </div>
+          <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_ce016e7f0a41c4")}</div>
           <h1 className="truncate text-xl font-semibold sm:text-2xl">{workspace.name}</h1>
         </div>
         {!workspace.isPrimary ? (
@@ -470,14 +468,10 @@ export function ProjectWorkspaceDetail() {
           >
             {setPrimaryWorkspace.isPending
               ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              : <Check className="mr-2 h-4 w-4" />}
-            Make primary
-          </Button>
+              : <Check className="mr-2 h-4 w-4" />}{interfaceText("m_07d68ed8fbd766")}</Button>
         ) : (
           <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300 sm:max-w-sm">
-            <Sparkles className="h-4 w-4" />
-            This is the project’s primary codebase workspace.
-          </div>
+            <Sparkles className="h-4 w-4" />{interfaceText("m_e52dc69b1290ea")}</div>
         )}
       </div>
 
@@ -494,25 +488,21 @@ export function ProjectWorkspaceDetail() {
       <div className="grid gap-6 lg:grid-cols-(--gtc-53)">
         <div className="space-y-6">
           <Card className="block p-5">
-            <p className="max-w-2xl text-sm text-muted-foreground">
-              Configure the concrete workspace Paperclip attaches to this project. These values drive per-workspace
-              checkout behavior, default runtime services for child execution workspaces, and let you override setup
-              or cleanup commands when one workspace needs special handling.
-            </p>
+            <p className="max-w-2xl text-sm text-muted-foreground">{interfaceText("m_a31090fda7ba74")}</p>
 
             <Separator className="my-5" />
 
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Workspace name">
+              <Field label={interfaceText("m_9619649d8dc139")}>
                 <input
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none"
                   value={form.name}
                   onChange={(event) => setForm((current) => current ? { ...current, name: event.target.value } : current)}
-                  placeholder="Workspace name"
+                  placeholder={interfaceText("m_9619649d8dc139")}
                 />
               </Field>
 
-              <Field label="Visibility">
+              <Field label={interfaceText("m_7448611d5f93aa")}>
                 <select
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none"
                   value={form.visibility}
@@ -528,7 +518,7 @@ export function ProjectWorkspaceDetail() {
             </div>
 
             <div className="mt-4 grid gap-4">
-              <Field label="Source type" hint={sourceTypeDescription ?? undefined}>
+              <Field label={interfaceText("m_24e59ff38c6b90")} hint={sourceTypeDescription ?? undefined}>
                 <select
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none"
                   value={form.sourceType}
@@ -550,12 +540,12 @@ export function ProjectWorkspaceDetail() {
               */}
               {!hideHostPaths && (
                 <div className="grid gap-4 md:grid-cols-(--gtc-13)">
-                  <Field label="Local path">
+                  <Field label={interfaceText("m_e335847f885ede")}>
                     <input
                       className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                       value={form.cwd}
                       onChange={(event) => setForm((current) => current ? { ...current, cwd: event.target.value } : current)}
-                      placeholder="/absolute/path/to/workspace"
+                      placeholder={interfaceText("m_f8bdc2305f39d5")}
                     />
                   </Field>
                   <div className="flex items-end">
@@ -565,7 +555,7 @@ export function ProjectWorkspaceDetail() {
               )}
 
               <div className="grid gap-4 md:grid-cols-2">
-                <Field label="Repo URL">
+                <Field label={interfaceText("m_de5c1d1e3353a3")}>
                   <input
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none"
                     value={form.repoUrl}
@@ -573,7 +563,7 @@ export function ProjectWorkspaceDetail() {
                     placeholder="https://github.com/org/repo"
                   />
                 </Field>
-                <Field label="Repo ref">
+                <Field label={interfaceText("m_c79be6d1c2a5bb")}>
                   <input
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                     value={form.repoRef}
@@ -584,7 +574,7 @@ export function ProjectWorkspaceDetail() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <Field label="Default ref">
+                <Field label={interfaceText("m_b6e3242fdf9a9f")}>
                   <input
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                     value={form.defaultRef}
@@ -592,7 +582,7 @@ export function ProjectWorkspaceDetail() {
                     placeholder="origin/main"
                   />
                 </Field>
-                <Field label="Shared workspace key">
+                <Field label={interfaceText("m_efb2ff5f7a8208")}>
                   <input
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                     value={form.sharedWorkspaceKey}
@@ -603,7 +593,7 @@ export function ProjectWorkspaceDetail() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <Field label="Remote provider">
+                <Field label={interfaceText("m_04ecc2164b9916")}>
                   <input
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none"
                     value={form.remoteProvider}
@@ -611,7 +601,7 @@ export function ProjectWorkspaceDetail() {
                     placeholder="codespaces"
                   />
                 </Field>
-                <Field label="Remote workspace ref">
+                <Field label={interfaceText("m_942ecb0796a741")}>
                   <input
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                     value={form.remoteWorkspaceRef}
@@ -622,7 +612,7 @@ export function ProjectWorkspaceDetail() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <Field label="Setup command" hint="Runs when this workspace needs custom bootstrap">
+                <Field label={interfaceText("m_6300595b1dfda2")} hint={interfaceText("m_78c7d692b1ed6c")}>
                   <textarea
                     className="min-h-28 w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                     value={form.setupCommand}
@@ -630,7 +620,7 @@ export function ProjectWorkspaceDetail() {
                     placeholder="pnpm install && pnpm dev"
                   />
                 </Field>
-                <Field label="Cleanup command" hint="Runs before project-level execution workspace teardown">
+                <Field label={interfaceText("m_062a91a9fb17b4")} hint={interfaceText("m_79b63225cd9e26")}>
                   <textarea
                     className="min-h-28 w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                     value={form.cleanupCommand}
@@ -641,12 +631,10 @@ export function ProjectWorkspaceDetail() {
               </div>
 
               <details className="rounded-xl border border-dashed border-border/70 bg-background px-3 py-3">
-                <summary className="cursor-pointer text-sm font-medium">Advanced runtime JSON</summary>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Paperclip derives Services and Jobs from this JSON. Prefer editing named commands first; use raw JSON for advanced lifecycle, port, readiness, or environment settings.
-                </p>
+                <summary className="cursor-pointer text-sm font-medium">{interfaceText("m_8dfbbbbc159186")}</summary>
+                <p className="mt-2 text-sm text-muted-foreground">{interfaceText("m_dedd41d8638e73")}</p>
                 <div className="mt-3">
-                  <Field label="Workspace commands JSON" hint="Execution workspaces inherit this config unless they override it. Legacy `services` arrays still work, but `commands` supports both services and jobs.">
+                  <Field label={interfaceText("m_bd7ac36ac97f16")} hint={interfaceText("m_cf62e415fa2333")}>
                     <textarea
                       className="min-h-96 w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm outline-none"
                       value={form.runtimeConfig}
@@ -660,9 +648,7 @@ export function ProjectWorkspaceDetail() {
 
             <div className="mt-5 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Button className="w-full sm:w-auto" disabled={!isDirty || updateWorkspace.isPending} onClick={saveChanges}>
-                {updateWorkspace.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Save changes
-              </Button>
+                {updateWorkspace.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}{interfaceText("m_dd0ae7a5cbcf23")}</Button>
               <Button
                 variant="outline"
                 className="w-full sm:w-auto"
@@ -671,12 +657,10 @@ export function ProjectWorkspaceDetail() {
                   setForm(initialState);
                   setErrorMessage(null);
                 }}
-              >
-                Reset
-              </Button>
+              >{interfaceText("m_daee7606b339f3")}</Button>
               {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
               {!errorMessage && runtimeActionMessage ? <p className="text-sm text-muted-foreground">{runtimeActionMessage}</p> : null}
-              {!errorMessage && !isDirty ? <p className="text-sm text-muted-foreground">No unsaved changes.</p> : null}
+              {!errorMessage && !isDirty ? <p className="text-sm text-muted-foreground">{interfaceText("m_75d79f0a2f2e48")}</p> : null}
             </div>
           </Card>
         </div>
@@ -684,22 +668,22 @@ export function ProjectWorkspaceDetail() {
         <div className="space-y-6">
           <Card className="block p-5">
             <div className="space-y-1">
-              <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">Workspace facts</div>
-              <h2 className="text-lg font-semibold">Current state</h2>
+              <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_f98c41069e7daa")}</div>
+              <h2 className="text-lg font-semibold">{interfaceText("m_760732d82a0918")}</h2>
             </div>
             <Separator className="my-4" />
-            <DetailRow label="Project">
+            <DetailRow label={interfaceText("m_98595978531974")}>
               <Link to={`/projects/${canonicalProjectRef}`} className="hover:underline">{project.name}</Link>
             </DetailRow>
-            <DetailRow label="Workspace ID">
+            <DetailRow label={interfaceText("m_889d892993c3e5")}>
               <span className="break-all font-mono text-xs">{workspace.id}</span>
             </DetailRow>
             {hideHostPaths ? null : (
-              <DetailRow label="Local path">
-                <span className="break-all font-mono text-xs">{workspace.cwd ?? "None"}</span>
+              <DetailRow label={interfaceText("m_e335847f885ede")}>
+                <span className="break-all font-mono text-xs">{workspace.cwd ?? interfaceText("m_dc937b59892604")}</span>
               </DetailRow>
             )}
-            <DetailRow label="Repo">
+            <DetailRow label={interfaceText("m_91dba14806ebf9")}>
               {workspace.repoUrl && isSafeExternalUrl(workspace.repoUrl) ? (
                 <a href={workspace.repoUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
                   {workspace.repoUrl}
@@ -707,20 +691,18 @@ export function ProjectWorkspaceDetail() {
                 </a>
               ) : workspace.repoUrl ? (
                 <span className="break-all font-mono text-xs">{workspace.repoUrl}</span>
-              ) : "None"}
+              ) : interfaceText("m_dc937b59892604")}
             </DetailRow>
-            <DetailRow label="Default ref">{workspace.defaultRef ?? "None"}</DetailRow>
-            <DetailRow label="Updated">{new Date(workspace.updatedAt).toLocaleString()}</DetailRow>
+            <DetailRow label={interfaceText("m_b6e3242fdf9a9f")}>{workspace.defaultRef ?? interfaceText("m_dc937b59892604")}</DetailRow>
+            <DetailRow label={interfaceText("m_3a5ecca188c057")}>{new Date(workspace.updatedAt).toLocaleString()}</DetailRow>
           </Card>
 
           <Card className="block p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-1">
-                <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">Workspace commands</div>
-                <h2 className="text-lg font-semibold">Services and jobs</h2>
-                <p className="text-sm text-muted-foreground">
-                  Long-running services stay supervised here, while one-shot jobs run on demand against this workspace. Execution workspaces inherit this config unless they override it.
-                </p>
+                <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_6cc6282c5ab303")}</div>
+                <h2 className="text-lg font-semibold">{interfaceText("m_4165c310f33625")}</h2>
+                <p className="text-sm text-muted-foreground">{interfaceText("m_21e32d6d4e3111")}</p>
               </div>
             </div>
             <WorkspaceRuntimeControls
@@ -757,7 +739,7 @@ export function ProjectWorkspaceDetail() {
           />
         ) : pluginDetailSlotsLoading || pluginDetailSlotsError ? (
           <div className="rounded-lg border border-dashed border-border bg-background px-4 py-8 text-sm text-muted-foreground">
-            {pluginDetailSlotsError ? pluginDetailSlotsError : "Loading workspace plugin..."}
+            {pluginDetailSlotsError ? pluginDetailSlotsError : interfaceText("m_dc194cb61576c9")}
           </div>
         ) : (
           <MissingPluginTabPlaceholder

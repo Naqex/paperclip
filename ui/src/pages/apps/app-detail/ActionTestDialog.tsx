@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -88,6 +89,7 @@ export function ActionTestDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  useInterfaceLanguage();
   const testAgentsQuery = useQuery({
     queryKey: queryKeys.tools.testAgents(connectionId),
     queryFn: () => toolsApi.listTestAgents(connectionId),
@@ -129,38 +131,32 @@ export function ActionTestDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-(--sz-85vh) overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Test {title}</DialogTitle>
-          <DialogDescription>
-            Run a real action with the same permissions and credentials an agent would use.
-          </DialogDescription>
+          <DialogTitle>{interfaceText("m_58ce68e6a62175")}{title}</DialogTitle>
+          <DialogDescription>{interfaceText("m_c96dff7a78991f")}</DialogDescription>
         </DialogHeader>
 
         {testAgentsQuery.isLoading ? (
           <div className="flex items-center gap-2 py-6 text-sm text-muted-foreground" role="status">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Loading agents…
-          </div>
+            <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_ae0c1414f42139")}</div>
         ) : testAgentsQuery.isError ? (
           <TestLoadError
-            message="We couldn't load the agents available for testing."
+            message={interfaceText("m_30f10d0652771a")}
             onRetry={() => { void testAgentsQuery.refetch(); }}
           />
         ) : agents.length === 0 ? (
-          <p className="py-6 text-sm text-muted-foreground">No agents are available to test as.</p>
+          <p className="py-6 text-sm text-muted-foreground">{interfaceText("m_3d77dc6dc0b902")}</p>
         ) : accessQuery.isError && !accessQuery.data ? (
           <TestLoadError
-            message={`We couldn't load ${selectedAgentBase?.name ?? "this agent"}'s permissions.`}
+            message={interfaceText("m_63e94616406f3d", { value0: (selectedAgentBase?.name ?? "this agent") })}
             onRetry={() => { void accessQuery.refetch(); }}
           />
         ) : !selectedAgent ? (
           <div className="flex items-center gap-2 py-6 text-sm text-muted-foreground" role="status">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Loading agent permissions…
-          </div>
+            <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_f8def289c7b050")}</div>
         ) : (
           <div className="space-y-5">
             <div className="rounded-md border border-border bg-muted/30 p-4">
-              <p className="text-xs font-medium text-muted-foreground">Act as</p>
+              <p className="text-xs font-medium text-muted-foreground">{interfaceText("m_66ad5e25f51f86")}</p>
               <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
                 <AgentPicker
                   agents={agents}
@@ -191,15 +187,15 @@ export function ActionTestDialog({
 
 const DECISION_META: Record<ToolConnectionTestDecision, DecisionMeta> = {
   allowed: {
-    label: "Allowed",
+    get label() { return interfaceText("m_1bb201d188352e"); },
     className: "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
   },
   ask_first: {
-    label: "Ask first",
+    get label() { return interfaceText("m_4a9e8cf39abb59"); },
     className: "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
   },
   off: {
-    label: "Off",
+    get label() { return interfaceText("m_ca7981b46ecf2c"); },
     className: "border-border bg-muted text-muted-foreground",
   },
 };
@@ -219,12 +215,11 @@ function DecisionBadge({ decision }: { decision: ToolConnectionTestDecision }) {
 }
 
 function TestLoadError({ message, onRetry }: { message: string; onRetry: () => void }) {
+  useInterfaceLanguage();
   return (
     <div className="py-8 text-center">
       <p className="text-sm font-medium text-foreground">{message}</p>
-      <Button className="mt-3" size="sm" variant="outline" onClick={onRetry}>
-        Try again
-      </Button>
+      <Button className="mt-3" size="sm" variant="outline" onClick={onRetry}>{interfaceText("m_d8b8392e2c5429")}</Button>
     </div>
   );
 }
@@ -246,6 +241,7 @@ function AgentPicker({
   connectionId: string;
   appName: string;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -259,7 +255,7 @@ function AgentPicker({
         <button
           type="button"
           className="inline-flex items-center gap-1.5 font-semibold text-foreground underline-offset-2 outline-none hover:text-primary hover:underline focus-visible:text-primary"
-          aria-label="Choose which agent to test as"
+          aria-label={interfaceText("m_2072e751dcf212")}
         >
           {selectedAgent.name}
           <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
@@ -270,8 +266,8 @@ function AgentPicker({
           <div className="relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
-              aria-label="Search agents"
-              placeholder="Search agents…"
+              aria-label={interfaceText("m_212fd04a1d202b")}
+              placeholder={interfaceText("m_e05cb78e973da3")}
               className="h-8 pl-8 text-sm"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -281,7 +277,7 @@ function AgentPicker({
         </div>
         <div className="max-h-60 overflow-y-auto p-1">
           {filtered.length === 0 ? (
-            <p className="px-3 py-4 text-center text-xs text-muted-foreground">No agents match.</p>
+            <p className="px-3 py-4 text-center text-xs text-muted-foreground">{interfaceText("m_8927413ab41d88")}</p>
           ) : (
             filtered.map((agent) => {
               const detail = agent.title?.trim() || agent.role;
@@ -315,24 +311,20 @@ function AgentPicker({
           )}
         </div>
         <div className="border-t border-border px-3 py-2 text-(length:--text-micro) text-muted-foreground">
-          <p>Only agents you can assign tasks to are listed.</p>
-          <p>Pick one to preview what they'd see in {appName}.</p>
+          <p>{interfaceText("m_b4ee96c69eb6d3")}</p>
+          <p>{interfaceText("m_670ca8f2af99ea")}{appName}.</p>
         </div>
         <div className="border-t border-border p-3">
-          <p className="text-xs font-semibold text-foreground">What the badges mean</p>
+          <p className="text-xs font-semibold text-foreground">{interfaceText("m_acd5ccb3fcbbfd")}</p>
           <ul className="mt-1.5 space-y-1 text-xs text-muted-foreground">
-            <li><span className="font-medium text-foreground">Allowed</span> — runs immediately when you press Run.</li>
-            <li><span className="font-medium text-foreground">Ask first</span> — Run is parked in Review for your OK.</li>
+            <li><span className="font-medium text-foreground">{interfaceText("m_1bb201d188352e")}</span>{interfaceText("m_2749d8d10bbb5e")}</li>
+            <li><span className="font-medium text-foreground">{interfaceText("m_4a9e8cf39abb59")}</span>{interfaceText("m_b984cd5ddee3c8")}</li>
             <li>
-              <span className="font-medium text-foreground">Off</span> — won't run. Change it in{" "}
-              <Link className="text-primary hover:underline" to={appTabHref(connectionId, "permissions")}>
-                Permissions
-              </Link>.
+              <span className="font-medium text-foreground">{interfaceText("m_ca7981b46ecf2c")}</span>{interfaceText("m_095b4b422b1fb2")}{" "}
+              <Link className="text-primary hover:underline" to={appTabHref(connectionId, "permissions")}>{interfaceText("m_abccc78cc93c07")}</Link>.
             </li>
           </ul>
-          <p className="mt-2 text-(length:--text-micro) text-muted-foreground">
-            Badges reflect this agent's current settings, not yours. Swap agents to see how an action would behave for each.
-          </p>
+          <p className="mt-2 text-(length:--text-micro) text-muted-foreground">{interfaceText("m_ff41d981dca5e1")}</p>
         </div>
       </PopoverContent>
     </Popover>
@@ -429,6 +421,7 @@ function ActionTester({
   allAgents: ToolConnectionTestAgent[];
   onSelectAgent: (agentId: string) => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { selectedCompanyId } = useCompany();
   const rawSchema = (entry.inputSchema ?? { type: "object", properties: {} }) as JsonSchemaNode;
@@ -540,7 +533,7 @@ function ActionTester({
           advancedLabel="More options"
         />
       ) : (
-        <p className="text-xs text-muted-foreground">This action takes no inputs.</p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_53b634e4b73c10")}</p>
       )}
 
       <p className="text-xs text-muted-foreground">{GUT_CHECK[decision](appName, agent.name)}</p>
@@ -549,28 +542,24 @@ function ActionTester({
         <Button onClick={onRun} disabled={running || !!outcome?.result.upstreamPending?.resumeTool || outcome?.result.decision === "ask_first"} size="sm">
           {running ? (
             <>
-              <Loader2 className="h-3.5 w-3.5 animate-spin" /> Running…
-            </>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />{interfaceText("m_3bb38305730345")}</>
           ) : (
             <>
-              <Play className="h-3.5 w-3.5" /> {outcome ? "Run again" : "Run"}
+              <Play className="h-3.5 w-3.5" /> {outcome ? interfaceText("m_3e310b75051c78") : interfaceText("m_00d60e31a4e6b8")}
             </>
           )}
         </Button>
-        <Button onClick={onReset} disabled={running} size="sm" variant="ghost">
-          Reset
-        </Button>
+        <Button onClick={onReset} disabled={running} size="sm" variant="ghost">{interfaceText("m_daee7606b339f3")}</Button>
       </div>
 
-      {(outcome?.result.decision === "ask_first" || outcome?.result.upstreamPending?.resumeTool) && <p className="text-xs text-muted-foreground">Finish the existing request below. Use Reset only when you intend to start a new call.</p>}
+      {(outcome?.result.decision === "ask_first" || outcome?.result.upstreamPending?.resumeTool) && <p className="text-xs text-muted-foreground">{interfaceText("m_3fdd9c79ef1fba")}</p>}
 
       {running && (
         <RunningCard entry={entry} appName={appName} agentName={agent.name} elapsedMs={elapsedMs} onCancel={onCancelRunning} />
       )}
 
       {run.isError && !running && (
-        <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
-          Couldn't reach {agent.name}. {run.error instanceof Error ? run.error.message : "Please try again."}
+        <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">{interfaceText("m_18974f327e04d1")}{agent.name}. {run.error instanceof Error ? run.error.message : interfaceText("m_eea4fb33efd382")}
         </div>
       )}
 
@@ -598,21 +587,20 @@ function RunningCard({
   elapsedMs: number;
   onCancel: () => void;
 }) {
+  useInterfaceLanguage();
   const verb = entry.isReadOnly ? "Reading from" : entry.isWrite ? "Writing to" : "Calling";
   return (
     <div className="rounded-md border border-border bg-muted/30 p-4">
       <div className="flex items-center gap-2">
         <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-        <span className="text-sm font-medium text-foreground">Running…</span>
+        <span className="text-sm font-medium text-foreground">{interfaceText("m_46c541363b0253")}</span>
       </div>
       <p className="mt-1 text-xs text-muted-foreground">
-        {verb} {appName} as {agentName}.
+        {verb} {appName}{interfaceText("m_fa21f62f1f1ff9")}{agentName}.
       </p>
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">Started {seconds(elapsedMs)} ago · Press cancel to stop</span>
-        <Button onClick={onCancel} size="sm" variant="outline">
-          Cancel
-        </Button>
+        <span className="text-xs text-muted-foreground">{interfaceText("m_fdc85156a1e21f")}{seconds(elapsedMs)}{interfaceText("m_1166a60cce9fdc")}</span>
+        <Button onClick={onCancel} size="sm" variant="outline">{interfaceText("m_19766ed6ccb2f4")}</Button>
       </div>
     </div>
   );
@@ -635,6 +623,7 @@ function ResultPanel({
   connectionId: string;
   agent?: TestAgentWithAccess;
 }) {
+  useInterfaceLanguage();
   const { result } = outcome;
   if (result.upstreamPending) return <ProviderPendingResult pending={result.upstreamPending} appName={appName} connectionId={connectionId} agent={agent} />;
   if (result.decision === "ask_first") {
@@ -643,7 +632,7 @@ function ResultPanel({
   if (result.decision === "off") {
     return (
       <div className="rounded-md border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
-        {result.error?.message ?? "This action is off and won't run."}
+        {result.error?.message ?? interfaceText("m_78cf41dbb43dbf")}
       </div>
     );
   }
@@ -658,35 +647,36 @@ function ResultPanel({
 }
 
 function ProviderPendingResult({ pending, appName, connectionId, agent }: { pending: ToolUpstreamPending; appName: string; connectionId: string; agent?: TestAgentWithAccess }) {
+  useInterfaceLanguage();
   const [resumed, setResumed] = useState<{ outcome: RunOutcome; entry: ToolCatalogEntry; action: "accept" | "decline" | "cancel" } | null>(null);
   const resumeError = resumed && (resumed.outcome.result.error ?? mcpToolError(resumed.outcome.result.result));
   const stoppedByUser = resumed && resumeError?.reasonCode === "tool_error" &&
     ((resumed.action === "decline" && /request was declined by the user/i.test(resumeError.message)) ||
       (resumed.action === "cancel" && /request was cancelled by the user/i.test(resumeError.message)));
   if (stoppedByUser) return <div role="status" className="space-y-2 rounded-md border border-border bg-muted/40 p-4 text-sm">
-    <p className="font-medium">{resumed.action === "decline" ? "Request declined" : "Request cancelled"}</p>
+    <p className="font-medium">{resumed.action === "decline" ? interfaceText("m_1df48b2da038a8") : interfaceText("m_7108183f1888b7")}</p>
     <p>{resumeError.message}</p>
-    <p className="text-muted-foreground">The original call was not repeated.</p>
-    {pending.executionId && <p>Execution: <code className="break-all">{pending.executionId}</code></p>}
+    <p className="text-muted-foreground">{interfaceText("m_01984966c698bd")}</p>
+    {pending.executionId && <p>{interfaceText("m_969511d6f9cf58")}<code className="break-all">{pending.executionId}</code></p>}
   </div>;
   if (resumed) return <ResultPanel outcome={resumed.outcome} entry={resumed.entry} appName={appName} connectionId={connectionId} agent={agent} />;
   return (
     <div role="status" className="space-y-3 rounded-md border border-border bg-muted/40 p-4 text-sm">
-      <p className="font-medium">{pending.kind === "approval" ? "Approval needed" : "Authorization needed"} in {appName}</p>
-      <p className="text-muted-foreground">Paperclip allowed this call. The provider needs your input before it can continue.</p>
+      <p className="font-medium">{pending.kind === "approval" ? interfaceText("m_9928dd82f38fb0") : interfaceText("m_a82e13a4fc4ce1")}{interfaceText("m_2eb9d0d30d4cea")}{appName}</p>
+      <p className="text-muted-foreground">{interfaceText("m_2b9d26de2ed969")}</p>
       {pending.links.map((link) => {
         const checked = checkOAuthEndpointUrl(link.url);
-        return checked.ok ? <Button key={checked.url} variant="outline" asChild><a href={checked.url} target="_blank" rel="noopener noreferrer">Continue at {checked.host}</a></Button> : null;
+        return checked.ok ? <Button key={checked.url} variant="outline" asChild><a href={checked.url} target="_blank" rel="noopener noreferrer">{interfaceText("m_a9d283c3028b21")}{checked.host}</a></Button> : null;
       })}
       {pending.message && <p className="whitespace-pre-wrap break-words">{pending.message}</p>}
-      {pending.links.length === 0 && !pending.resumeTool && <p>Open the provider dashboard to complete this request.</p>}
-      {pending.executionId && <p>Execution: <code className="break-all">{pending.executionId}</code></p>}
-      {pending.elicitationId && <p>Request: <code className="break-all">{pending.elicitationId}</code></p>}
-      {pending.expiresAt && <p>Approval expires {new Date(pending.expiresAt).toLocaleTimeString()}.</p>}
+      {pending.links.length === 0 && !pending.resumeTool && <p>{interfaceText("m_a3a5acdb0167e9")}</p>}
+      {pending.executionId && <p>{interfaceText("m_969511d6f9cf58")}<code className="break-all">{pending.executionId}</code></p>}
+      {pending.elicitationId && <p>{interfaceText("m_46e575f84f1268")}<code className="break-all">{pending.elicitationId}</code></p>}
+      {pending.expiresAt && <p>{interfaceText("m_c00f173123b05b")}{new Date(pending.expiresAt).toLocaleTimeString()}.</p>}
       {pending.resumeTool && agent ? <ProviderResumeControls pending={pending} connectionId={connectionId} agent={agent} onResult={setResumed} /> :
       <p className="text-muted-foreground">{pending.resumeTool
-        ? `After approval, test the ${pending.resumeTool} action with this execution ID. Do not start the original action again.`
-        : "After authorizing, check the provider's result before using Run again. Paperclip will not repeat the call automatically."}</p>}
+        ? interfaceText("m_2e93219f2a1252", { value0: (pending.resumeTool) })
+        : interfaceText("m_fda63e4f955b1a")}</p>}
     </div>
   );
 }
@@ -695,6 +685,7 @@ function ProviderResumeControls({ pending, connectionId, agent, onResult }: {
   pending: ToolUpstreamPending; connectionId: string; agent: TestAgentWithAccess;
   onResult: (result: { outcome: RunOutcome; entry: ToolCatalogEntry; action: "accept" | "decline" | "cancel" }) => void;
 }) {
+  useInterfaceLanguage();
   const catalog = useQuery({ queryKey: queryKeys.tools.catalog(connectionId), queryFn: () => toolsApi.listCatalog(connectionId) });
   const entry = catalog.data?.catalog.find((item) => item.toolName === pending.resumeTool && item.status === "active");
   const schema = (pending.requestedSchema ?? { type: "object", properties: {} }) as JsonSchemaNode;
@@ -716,18 +707,18 @@ function ProviderResumeControls({ pending, connectionId, agent, onResult }: {
     if (!Object.keys(validation).length) resume.mutate(action);
   };
   return <div className="space-y-3">
-    <p className="text-muted-foreground">Review the provider's request, then resume this execution as {agent.name}. The original action will not be started again.</p>
-    <div className="flex items-center gap-2"><span>Resume permission</span><DecisionBadge decision={permission} /></div>
+    <p className="text-muted-foreground">{interfaceText("m_ff1220b94e69fe")}{agent.name}{interfaceText("m_917c260358de22")}</p>
+    <div className="flex items-center gap-2"><span>{interfaceText("m_8dd708985e6534")}</span><DecisionBadge decision={permission} /></div>
     {Object.keys(schema.properties ?? {}).length > 0 && <JsonSchemaForm schema={schema} values={content} onChange={setContent} errors={errors} disabled={resume.isPending} />}
     <div className="flex flex-wrap gap-2">
-      <Button disabled={!entry || expired || permission === "off" || resume.isPending} onClick={() => submit("accept")}>{resume.isPending ? "Resuming…" : "Approve and resume"}</Button>
-      <Button variant="outline" disabled={!entry || expired || permission === "off" || resume.isPending} onClick={() => submit("decline")}>Decline</Button>
-      <Button variant="ghost" disabled={!entry || expired || permission === "off" || resume.isPending} onClick={() => submit("cancel")}>Cancel request</Button>
+      <Button disabled={!entry || expired || permission === "off" || resume.isPending} onClick={() => submit("accept")}>{resume.isPending ? interfaceText("m_c494e3ca3e3b04") : interfaceText("m_d052399ec796a8")}</Button>
+      <Button variant="outline" disabled={!entry || expired || permission === "off" || resume.isPending} onClick={() => submit("decline")}>{interfaceText("m_a2d285b3528734")}</Button>
+      <Button variant="ghost" disabled={!entry || expired || permission === "off" || resume.isPending} onClick={() => submit("cancel")}>{interfaceText("m_56196683592dab")}</Button>
     </div>
-    {expired && <p>This provider approval expired. Check the provider before starting a new action.</p>}
-    {permission === "off" && <p>Allow the resume action in Permissions before continuing.</p>}
-    {catalog.isError && <p role="alert">Could not load the resume action. Close this test and try again.</p>}
-    {resume.isError && <p role="alert">{resume.error instanceof Error ? resume.error.message : "Could not resume. Check the provider before trying again."}</p>}
+    {expired && <p>{interfaceText("m_6de678d70a17e8")}</p>}
+    {permission === "off" && <p>{interfaceText("m_7f7e0ef9e03fd2")}</p>}
+    {catalog.isError && <p role="alert">{interfaceText("m_0049bd249732df")}</p>}
+    {resume.isError && <p role="alert">{resume.error instanceof Error ? resume.error.message : interfaceText("m_f0ab463e6db9b9")}</p>}
   </div>;
 }
 
@@ -748,7 +739,7 @@ function mcpToolError(value: unknown): { message: string; reasonCode: string | n
   const message =
     (typeof envelope.content === "string" && envelope.content.trim() !== "" && envelope.content)
     || (typeof envelope.error === "string" && envelope.error.trim() !== "" && envelope.error)
-    || "The app returned an error result.";
+    || interfaceText("m_92bcfd522957f9");
   return { message, reasonCode: "tool_error" };
 }
 
@@ -815,10 +806,10 @@ function resultPreview(value: unknown): { items: Array<{ label: string | null; v
     } else if (content.type === "image" || content.type === "audio") {
       items.push({ label: content.type === "image" ? "Image" : "Audio", value: typeof content.mimeType === "string" ? content.mimeType : "Media attachment" });
     } else if (content.type === "resource_link") {
-      items.push({ label: "Resource", value: content.title ?? content.name ?? content.uri ?? "Resource link" });
+      items.push({ label: interfaceText("m_eb7a842ff958c4"), value: content.title ?? content.name ?? content.uri ?? "Resource link" });
     } else if (content.type === "resource" && content.resource && typeof content.resource === "object") {
       const resource = content.resource as Record<string, unknown>;
-      items.push({ label: "Resource", value: typeof resource.text === "string" ? parseText(resource.text) : resource.uri ?? "Embedded resource" });
+      items.push({ label: interfaceText("m_eb7a842ff958c4"), value: typeof resource.text === "string" ? parseText(resource.text) : resource.uri ?? "Embedded resource" });
     } else {
       return { items: [{ label: null, value }], summary: value, rawFallback: true };
     }
@@ -857,6 +848,7 @@ function AllowedResult({
   appName: string;
   connectionId: string;
 }) {
+  useInterfaceLanguage();
   const value = outcome.result.result;
   const preview = resultPreview(value);
   return (
@@ -866,13 +858,12 @@ function AllowedResult({
         <span className="text-sm font-medium text-foreground">{successHeadline(preview.summary, entry, appName)}</span>
       </div>
       <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Clock className="h-3 w-3" />
-        Ran as {outcome.agentName} · {seconds(outcome.durationMs)} · {relTime(outcome.ranAt)}
+        <Clock className="h-3 w-3" />{interfaceText("m_300ff28f58274c")}{outcome.agentName} · {seconds(outcome.durationMs)} · {relTime(outcome.ranAt)}
       </p>
 
       {preview.items.some((item) => !isEmptyResult(item.value)) && (
         <div className="mt-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Preview</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_324b134f57c70c")}</p>
           <div className="mt-1.5">
             <div className="space-y-2">
               {preview.items.map((item, index) => (
@@ -888,20 +879,18 @@ function AllowedResult({
 
       <RawResponseDisclosure value={value} initiallyOpen={preview.rawFallback} />
 
-      <p className="mt-3 text-xs text-muted-foreground">
-        This call is in the{" "}
-        <Link className="text-primary hover:underline" to="/activity?mode=agents&action=tool_">
-          Audit log
-        </Link>
+      <p className="mt-3 text-xs text-muted-foreground">{interfaceText("m_882a49e7ccfa10")}{" "}
+        <Link className="text-primary hover:underline" to="/activity?mode=agents&action=tool_">{interfaceText("m_e4d36f9a4e22d3")}</Link>
         .
       </p>
-      <p className="mt-1 text-xs text-muted-foreground">Last run finished in {seconds(outcome.durationMs)}.</p>
+      <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_4008ab0ac507cf")}{seconds(outcome.durationMs)}.</p>
     </div>
   );
 }
 
 /** Pretty preview: tables for row arrays, labeled fields for objects, plain text for prose. */
 function PrettyPreview({ value }: { value: unknown }) {
+  useInterfaceLanguage();
   const rows = asRows(value);
   if (rows) {
     const columns = Array.from(new Set(rows.flatMap((r) => Object.keys(r)))).slice(0, 6);
@@ -914,7 +903,7 @@ function PrettyPreview({ value }: { value: unknown }) {
         <div className="space-y-2">
           {shown.map((row, index) => <PreviewRowCard key={index} row={row} index={index} />)}
           {rows.length > shown.length && (
-            <p className="text-(length:--text-micro) text-muted-foreground">… {rows.length - shown.length} more rows in the raw response</p>
+            <p className="text-(length:--text-micro) text-muted-foreground">… {rows.length - shown.length}{interfaceText("m_688ffd091a6eb6")}</p>
           )}
         </div>
       );
@@ -940,7 +929,7 @@ function PrettyPreview({ value }: { value: unknown }) {
           </tbody>
         </table>
         {rows.length > shown.length && (
-          <p className="px-2.5 py-1.5 text-(length:--text-micro) text-muted-foreground">… {rows.length - shown.length} more rows</p>
+          <p className="px-2.5 py-1.5 text-(length:--text-micro) text-muted-foreground">… {rows.length - shown.length}{interfaceText("m_a71054e6752acc")}</p>
         )}
       </div>
     );
@@ -968,6 +957,7 @@ function PrettyPreview({ value }: { value: unknown }) {
 }
 
 function PreviewRowCard({ row, index }: { row: Record<string, unknown>; index: number }) {
+  useInterfaceLanguage();
   const titleKey = ["title", "name", "label"].find((key) => typeof row[key] === "string" && row[key] !== "");
   const summaryKey = ["highlight", "description", "summary"].find((key) => typeof row[key] === "string" && row[key] !== "");
   const url = typeof row.url === "string" && /^https?:\/\//i.test(row.url) ? row.url : null;
@@ -983,9 +973,9 @@ function PreviewRowCard({ row, index }: { row: Record<string, unknown>; index: n
     <div className="min-w-0 rounded-md border border-border bg-background p-3 text-xs">
       <div className="flex min-w-0 items-start justify-between gap-3">
         <p className="min-w-0 break-words text-sm font-medium text-foreground">
-          {titleKey ? cellText(row[titleKey]) : `Result ${index + 1}`}
+          {titleKey ? cellText(row[titleKey]) : interfaceText("m_8a4536ef22c2e1", { value0: (index + 1) })}
         </p>
-        {url && <a className="shrink-0 text-primary hover:underline" href={url} target="_blank" rel="noopener noreferrer">Open link</a>}
+        {url && <a className="shrink-0 text-primary hover:underline" href={url} target="_blank" rel="noopener noreferrer">{interfaceText("m_aab63f85c7f1cd")}</a>}
       </div>
       {summaryKey && <p className="mt-1 line-clamp-2 break-words text-muted-foreground">{cellText(row[summaryKey]).replace(/\*\*(.*?)\*\*/g, "$1")}</p>}
       {details.length > 0 && (
@@ -998,7 +988,7 @@ function PreviewRowCard({ row, index }: { row: Record<string, unknown>; index: n
           ))}
         </dl>
       )}
-      {details.length > 3 && <p className="mt-2 text-muted-foreground">{details.length - 3} more {details.length === 4 ? "field" : "fields"} in the raw response</p>}
+      {details.length > 3 && <p className="mt-2 text-muted-foreground">{details.length - 3}{interfaceText("m_ca1231ab640ad2")}{details.length === 4 ? interfaceText("m_c0d2856b74d0df") : interfaceText("m_bfe5d697162d90")}{interfaceText("m_e42f27cecb7182")}</p>}
     </div>
   );
 }
@@ -1022,6 +1012,7 @@ function collapseDeep(value: unknown, maxDepth: number, depth = 0): unknown {
 }
 
 function RawResponseDisclosure({ value, initiallyOpen = false }: { value: unknown; initiallyOpen?: boolean }) {
+  useInterfaceLanguage();
   const [showRaw, setShowRaw] = useState(initiallyOpen);
   if (value === undefined || value === null) return null;
   return (
@@ -1031,7 +1022,7 @@ function RawResponseDisclosure({ value, initiallyOpen = false }: { value: unknow
         onClick={() => setShowRaw((prev) => !prev)}
         className="text-xs font-semibold uppercase tracking-wide text-primary hover:underline"
       >
-        {showRaw ? "Hide raw response" : "Show raw response"}
+        {showRaw ? interfaceText("m_914909c499333e") : interfaceText("m_f63a30b5dc690a")}
       </button>
       {showRaw && (
         <pre className="mt-2 max-h-64 overflow-auto rounded-md border border-border bg-background p-3 text-xs text-foreground">
@@ -1055,25 +1046,25 @@ function ErrorResult({
   connectionId: string;
   error: { message: string; reasonCode: string | null };
 }) {
+  useInterfaceLanguage();
   const hints = errorHints(error.message, error.reasonCode);
   const needsReconnect = isReconnectError(error.reasonCode);
   return (
     <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-4">
       <div className="flex items-center gap-2">
         <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-        <span className="text-sm font-medium text-foreground">It didn't work.</span>
+        <span className="text-sm font-medium text-foreground">{interfaceText("m_24edd2c737d678")}</span>
       </div>
       <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Clock className="h-3 w-3" />
-        Tried as {outcome.agentName} · {seconds(outcome.durationMs)} · {relTime(outcome.ranAt)}
+        <Clock className="h-3 w-3" />{interfaceText("m_9da6d47c5465a4")}{outcome.agentName} · {seconds(outcome.durationMs)} · {relTime(outcome.ranAt)}
       </p>
       <div className="mt-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What {appName} said</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_fa616952c2c3d6")}{appName}{interfaceText("m_915f0fd4904a45")}</p>
         <p className="mt-1 break-words text-sm text-foreground">{error.message}</p>
-        {error.reasonCode && <p className="mt-0.5 text-xs text-muted-foreground">code: {error.reasonCode}</p>}
+        {error.reasonCode && <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_f7eb46ae0f96c4")}{error.reasonCode}</p>}
       </div>
       <div className="mt-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What to try</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_86fe6080ab0b93")}</p>
         <ul className="mt-1 list-disc space-y-0.5 pl-4 text-sm text-foreground">
           {hints.map((hint) => (
             <li key={hint}>{hint}</li>
@@ -1082,13 +1073,10 @@ function ErrorResult({
       </div>
       {outcome.result.result !== undefined && <RawResponseDisclosure value={outcome.result.result} initiallyOpen />}
       <p className="mt-3 text-xs text-muted-foreground">
-        {needsReconnect ? "After reconnecting, run this action again." : "Adjust the input above and try again."}
+        {needsReconnect ? interfaceText("m_5a7fe6d4960fb4") : interfaceText("m_ea1603a1404c16")}
       </p>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Also visible in the{" "}
-        <Link className="text-primary hover:underline" to="/activity?mode=agents&action=tool_">
-          Audit log
-        </Link>
+      <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_caab8e41e20b45")}{" "}
+        <Link className="text-primary hover:underline" to="/activity?mode=agents&action=tool_">{interfaceText("m_e4d36f9a4e22d3")}</Link>
         .
       </p>
     </div>
@@ -1131,6 +1119,7 @@ function AskFirstResult({
   connectionId: string;
   agent?: TestAgentWithAccess;
 }) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const queryClient = useQueryClient();
   const actionRequestId = outcome.result.actionRequestId;
@@ -1188,37 +1177,37 @@ function AskFirstResult({
   const where = formatWhere(status?.parameters);
   const statusLabel =
     phase === "running"
-      ? "Approved · running"
+      ? interfaceText("m_5efaff522a4164")
       : phase === "denied"
-        ? "Denied — see Review for why"
+        ? interfaceText("m_1d4dee36993be9")
         : phase === "cancelled"
-          ? "Cancelled"
+          ? interfaceText("m_d353a99eb45568")
           : phase === "expired"
-            ? "Expired — send it again"
-            : `Waiting · ${relTime(requestedAt)}`;
+            ? interfaceText("m_284e6519da3213")
+            : interfaceText("m_4ca89699784878", { value0: (relTime(requestedAt)) });
   const settled = phase === "denied" || phase === "cancelled" || phase === "expired";
 
   return (
     <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-4">
       <div className="flex items-center gap-2">
         <ShieldQuestion className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-        <span className="text-sm font-medium text-foreground">Sent for your OK.</span>
+        <span className="text-sm font-medium text-foreground">{interfaceText("m_0e6726130676e1")}</span>
       </div>
-      <p className="mt-0.5 text-xs text-muted-foreground">{outcome.agentName} needs your approval before this runs.</p>
+      <p className="mt-0.5 text-xs text-muted-foreground">{outcome.agentName}{interfaceText("m_08321d9e8e6c52")}</p>
 
       <dl className="mt-3 space-y-1.5 text-sm">
         <div className="flex gap-3">
-          <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Action</dt>
+          <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_64cff1319d2fd2")}</dt>
           <dd className="text-foreground">{entry.title ?? entry.toolName}</dd>
         </div>
         {where && (
           <div className="flex gap-3">
-            <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Where</dt>
+            <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_1daaa38f33cd86")}</dt>
             <dd className="break-words text-foreground">{where}</dd>
           </div>
         )}
         <div className="flex gap-3">
-          <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</dt>
+          <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_920e413c7d411b")}</dt>
           <dd className={cn("flex items-center gap-1.5 text-foreground", settled && "text-muted-foreground")}>
             {phase === "running" && <Loader2 className="h-3 w-3 animate-spin" />}
             {statusLabel}
@@ -1227,22 +1216,17 @@ function AskFirstResult({
       </dl>
 
       {!settled && (
-        <p className="mt-3 text-sm text-foreground">
-          Approve it in the{" "}
-          <Link className="font-medium text-primary hover:underline" to={appTabHref(connectionId, "review")}>
-            Review tab
-          </Link>{" "}
-          to finish the test. You can also cancel the request.
-        </p>
+        <p className="mt-3 text-sm text-foreground">{interfaceText("m_08d0bddbc1f0bc")}{" "}
+          <Link className="font-medium text-primary hover:underline" to={appTabHref(connectionId, "review")}>{interfaceText("m_d397f91a22dc48")}</Link>{" "}{interfaceText("m_f71ae5a8b980c8")}</p>
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <Button asChild size="sm" variant="outline">
-          <Link to={appTabHref(connectionId, "review")}>Open Review tab</Link>
+          <Link to={appTabHref(connectionId, "review")}>{interfaceText("m_711039fd7eab17")}</Link>
         </Button>
         {phase === "waiting" && actionRequestId && selectedCompanyId && (
           <Button size="sm" variant="ghost" onClick={() => cancel.mutate()} disabled={cancel.isPending}>
-            {cancel.isPending ? "Cancelling…" : "Cancel this request"}
+            {cancel.isPending ? interfaceText("m_91b104db05da1b") : interfaceText("m_5a0551a43cb3af")}
           </Button>
         )}
       </div>
@@ -1266,6 +1250,7 @@ function OffExplanation({
   allAgents: ToolConnectionTestAgent[];
   onSelectAgent: (agentId: string) => void;
 }) {
+  useInterfaceLanguage();
   const title = entry.title ?? entry.toolName;
   const permHref = `${appTabHref(connectionId, "permissions")}?focus=${encodeURIComponent(entry.id)}`;
 
@@ -1293,30 +1278,25 @@ function OffExplanation({
         <div className="flex items-start gap-2">
           <Ban className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
           <div className="text-sm text-muted-foreground">
-            <p className="font-medium text-foreground">{title} is off for {agent.name}.</p>
-            <p className="mt-0.5">It won't run here, and it won't run from a task either.</p>
-            <p className="mt-2">
-              Want to test it? Turn it on for {agent.name} in{" "}
-              <Link className="font-medium text-primary hover:underline" to={appTabHref(connectionId, "permissions")}>
-                Permissions
-              </Link>{" "}
-              — set it to Allowed or Ask first.
-            </p>
+            <p className="font-medium text-foreground">{title}{interfaceText("m_e599bb8bb262da")}{agent.name}.</p>
+            <p className="mt-0.5">{interfaceText("m_9b8d2fd994bd56")}</p>
+            <p className="mt-2">{interfaceText("m_3ce2e3a1138850")}{agent.name}{interfaceText("m_8f6b9ac6b27608")}{" "}
+              <Link className="font-medium text-primary hover:underline" to={appTabHref(connectionId, "permissions")}>{interfaceText("m_abccc78cc93c07")}</Link>{" "}{interfaceText("m_611031345ad439")}</p>
           </div>
         </div>
         <Button asChild size="sm">
-          <Link to={permHref}>Open Permissions →</Link>
+          <Link to={permHref}>{interfaceText("m_1ac1cf8c7cd71a")}</Link>
         </Button>
-        <p className="text-xs text-muted-foreground">No call will be made — this action is off for {agent.name}.</p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_eba7a73de37778")}{agent.name}.</p>
       </div>
 
       <aside>
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Why this is off</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_d9e4665369cac9")}</p>
         <p className="mt-1.5 text-xs text-muted-foreground">{whyBody}</p>
         {auditHint && <p className="mt-1.5 text-(length:--text-micro) text-muted-foreground">{auditHint}</p>}
         {others.length > 0 && (
           <div className="mt-3">
-            <p className="text-(length:--text-micro) font-medium text-muted-foreground">Try as a different agent:</p>
+            <p className="text-(length:--text-micro) font-medium text-muted-foreground">{interfaceText("m_d143ee44c17b1d")}</p>
             <div className="mt-1 flex flex-wrap gap-1.5">
               {others.slice(0, 4).map((other) => (
                 <button

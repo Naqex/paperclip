@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { fileKindForName } from "@/components/task-chat/task-chat-attachments";
 import type { LabArtifact, LabKind } from "../../kit";
 
@@ -53,13 +54,13 @@ const KIND_NOUN: Partial<Record<LabKind, string>> = {
 
 /** The first word of the meta line, in the product's wording. */
 export function kindLabel(a: LabArtifact): string {
-  if (isTaskDocument(a)) return "Document";
-  if (a.kind === "image") return "Image";
+  if (isTaskDocument(a)) return interfaceText("m_d6bd8c0aeee80f");
+  if (a.kind === "image") return interfaceText("m_1aa4cb0bcca76e");
   if (a.kind === "video") return "Video";
-  if (a.kind === "link") return "Link preview";
-  if (a.kind === "slides") return "Slides";
+  if (a.kind === "link") return interfaceText("m_165e9250b5115e");
+  if (a.kind === "slides") return interfaceText("m_a0ffe3818444d9");
   const byName = a.filename ? fileKindForName(a.filename).label : "File";
-  return byName === "File" ? (KIND_NOUN[a.kind] ?? "File") : byName;
+  return byName === "File" ? (KIND_NOUN[a.kind] ?? interfaceText("m_50009ce1da4d15")) : byName;
 }
 
 /** A link's address without the scheme: "preview.acmehats.example/storefront". */

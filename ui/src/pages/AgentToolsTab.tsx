@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { HelpCircle, PackageCheck } from "lucide-react";
@@ -52,6 +53,7 @@ function GitHubIdentitySection({
   loadError: boolean;
   onRetry: () => void;
 }) {
+  useInterfaceLanguage();
   const dedicatedLogin = dedicatedIdentity?.grant.providerTenant?.github?.login;
   const personalLogin = personalIdentity?.grant.providerTenant?.github?.login;
 
@@ -63,34 +65,27 @@ function GitHubIdentitySection({
             <GithubIcon className="h-4 w-4" />
           </div>
           <div className="min-w-0">
-            <h3 className="text-sm font-semibold text-foreground">GitHub identity</h3>
+            <h3 className="text-sm font-semibold text-foreground">{interfaceText("m_c043831d870fa5")}</h3>
             {loading ? (
-              <p className="mt-0.5 text-xs text-muted-foreground">Checking GitHub identity…</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_f26298b995b14e")}</p>
             ) : loadError ? (
               <>
-                <p className="mt-0.5 text-sm font-medium text-foreground">Could not load GitHub identity</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Paperclip could not verify this agent&apos;s current connection. Your existing setup was not changed.
-                </p>
+                <p className="mt-0.5 text-sm font-medium text-foreground">{interfaceText("m_ac77985d5c3c23")}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_112d33c2905b90")}</p>
               </>
             ) : dedicatedIdentity ? (
               <>
                 <p className="mt-0.5 text-sm font-medium text-foreground">
-                  {dedicatedLogin ? `@${dedicatedLogin}` : "Dedicated GitHub account"}
+                  {dedicatedLogin ? `@${dedicatedLogin}` : interfaceText("m_55fb115cee43ef")}
                 </p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Used only by {agentName}. This dedicated connection takes precedence over the responsible person&apos;s GitHub.
-                </p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_4bf518f8efaadd")}{agentName}{interfaceText("m_be21f65b9de67c")}</p>
               </>
             ) : (
               <>
-                <p className="mt-0.5 text-sm font-medium text-foreground">Use responsible person&apos;s GitHub</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  At run start, Paperclip uses the personal GitHub connection of the person responsible for the task.
-                </p>
+                <p className="mt-0.5 text-sm font-medium text-foreground">{interfaceText("m_d33270d6791172")}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_562d694ff1f1e3")}</p>
                 {personalIdentity ? (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Your account is connected{personalLogin ? ` as @${personalLogin}` : ""}.
+                  <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_46b2b01801057d")}{personalLogin ? interfaceText("m_24a702790eca46", { value0: (personalLogin) }) : ""}.
                   </p>
                 ) : null}
               </>
@@ -101,24 +96,24 @@ function GitHubIdentitySection({
         {!loading ? (
           <div className="flex flex-wrap items-center gap-2">
             {loadError ? (
-              <Button variant="outline" size="sm" onClick={onRetry}>Retry</Button>
+              <Button variant="outline" size="sm" onClick={onRetry}>{interfaceText("m_942087cc2d41e0")}</Button>
             ) : dedicatedIdentity ? (
               <Button variant="outline" size="sm" asChild>
-                <Link to={`/apps/${dedicatedIdentity.connection.id}/permissions`}>Manage GitHub identity</Link>
+                <Link to={`/apps/${dedicatedIdentity.connection.id}/permissions`}>{interfaceText("m_16fdfea3760de3")}</Link>
               </Button>
             ) : (
               <>
                 {personalIdentity ? (
                   <Button variant="outline" size="sm" asChild>
-                    <Link to={`/apps/${personalIdentity.connection.id}/permissions`}>Manage my GitHub</Link>
+                    <Link to={`/apps/${personalIdentity.connection.id}/permissions`}>{interfaceText("m_1559c8ac8ed3ad")}</Link>
                   </Button>
                 ) : (
                   <Button size="sm" asChild>
-                    <Link to="/apps/connect?source=github">Connect my GitHub</Link>
+                    <Link to="/apps/connect?source=github">{interfaceText("m_ffb05af05f35ef")}</Link>
                   </Button>
                 )}
                 <Button variant="outline" size="sm" asChild>
-                  <Link to="/apps/connect?source=github">Use a dedicated account</Link>
+                  <Link to="/apps/connect?source=github">{interfaceText("m_efd607dec0dc41")}</Link>
                 </Button>
               </>
             )}
@@ -196,27 +191,22 @@ function InstalledAppsSection({
   error: boolean;
   onChange: (connectionId: string, installed: boolean) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <section className="rounded-lg border border-border bg-card">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-3 py-2.5">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">Installed apps</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Installed apps load tools into {agentName}'s context on every run. Permitted-only apps do not add context cost.
-          </p>
+          <h3 className="text-sm font-semibold text-foreground">{interfaceText("m_df76d7f1e93cc2")}</h3>
+          <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_678d32ebfbe7d8")}{agentName}{interfaceText("m_0536f9283b975d")}</p>
         </div>
         <InstallSaveStatusChip pending={saving} unsaved={unsaved} error={error} />
       </div>
 
       <div className="space-y-3 p-3">
-        <InlineBanner tone="info" compact>
-          Has access means the app is permitted. Installed means its tools are added to this agent's runtime context.
-        </InlineBanner>
+        <InlineBanner tone="info" compact>{interfaceText("m_59c905c19aa25b")}</InlineBanner>
 
         {connections.length === 0 ? (
-          <p className="rounded-md border border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground">
-            No permitted apps yet. Bind an access profile to make apps available here.
-          </p>
+          <p className="rounded-md border border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground">{interfaceText("m_a42e3e0dd48946")}</p>
         ) : (
           <div className="divide-y divide-border rounded-md border border-border">
             {connections.map((connection) => {
@@ -231,20 +221,20 @@ function InstalledAppsSection({
                     <Checkbox
                       checked={checked}
                       disabled={installedForAll || rowPending}
-                      aria-label={`Install ${connection.name} on ${agentName}`}
+                      aria-label={interfaceText("m_2fcd57eda313fe", { value0: (connection.name), value1: (agentName) })}
                       onCheckedChange={(next) => onChange(connection.id, Boolean(next))}
                     />
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
                         <span className="truncate text-sm font-medium text-foreground">{connection.name}</span>
                         <InstallBadge installed={checked} installedForAll={installedForAll} permitted={permitted} />
-                        {rowPending ? <span className="text-xs text-muted-foreground">Saving...</span> : null}
+                        {rowPending ? <span className="text-xs text-muted-foreground">{interfaceText("m_dc85af8f2b1d0d")}</span> : null}
                       </span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">
                         {installedForAll
-                          ? "Installed from the app page for every agent. Remove the all-agents install there."
+                          ? interfaceText("m_7b88d855b15640")
                           : checked
-                            ? "Loaded into this agent's runtime context."
+                            ? interfaceText("m_dc9c15c1443f26")
                             : INSTALLED_HINT}
                       </span>
                     </span>
@@ -258,13 +248,9 @@ function InstalledAppsSection({
                         <Link
                           to={`/apps/${connection.id}/permissions`}
                           className="text-xs font-medium text-primary hover:underline"
-                        >
-                          Open permissions
-                        </Link>
+                        >{interfaceText("m_2fbb36e15bd17d")}</Link>
                       )}
-                    >
-                      Permitted but not installed — tools will not appear in runs.
-                    </InlineBanner>
+                    >{interfaceText("m_6e05920b46f44b")}</InlineBanner>
                   ) : null}
                 </div>
               );
@@ -285,7 +271,8 @@ function InstallBadge({
   installedForAll: boolean;
   permitted: boolean;
 }) {
-  const label = installed ? (installedForAll ? "Installed for all" : "Installed") : permitted ? "Permitted only" : "Not permitted";
+  useInterfaceLanguage();
+  const label = installed ? (installedForAll ? interfaceText("m_763535aaab47ed") : interfaceText("m_f8b32f4e92bd84")) : permitted ? interfaceText("m_b66efe0f88122b") : interfaceText("m_8ec5f4b7a4d4db");
   return (
     <span
       className={cn(
@@ -308,10 +295,11 @@ function InstallSaveStatusChip({
   unsaved: boolean;
   error: boolean;
 }) {
-  if (pending) return <span className="text-xs text-muted-foreground">Saving...</span>;
-  if (error) return <span className="text-xs text-destructive">Could not save</span>;
-  if (unsaved) return <span className="text-xs text-muted-foreground">Unsaved changes</span>;
-  return <span className="text-xs text-muted-foreground">Saved</span>;
+  useInterfaceLanguage();
+  if (pending) return <span className="text-xs text-muted-foreground">{interfaceText("m_dc85af8f2b1d0d")}</span>;
+  if (error) return <span className="text-xs text-destructive">{interfaceText("m_16efcd21d74fc1")}</span>;
+  if (unsaved) return <span className="text-xs text-muted-foreground">{interfaceText("m_a710c2b90913b5")}</span>;
+  return <span className="text-xs text-muted-foreground">{interfaceText("m_b5c120b316c237")}</span>;
 }
 
 const POLICY_EFFECT_LABEL: Record<string, string> = {
@@ -333,6 +321,7 @@ const DENIED_TOOLS_DISPLAY_LIMIT = 30;
  * which access profiles and rules shape the final list.
  */
 export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; companyId: string }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [installDraft, setInstallDraft] = useState<Record<string, boolean>>({});
   const lastSavedInstallRef = useRef<Record<string, boolean>>({});
@@ -552,7 +541,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
   const profiles = effective.data?.profiles ?? [];
   const catalogLoading = catalogQueries.some((q) => q.isLoading);
 
-  if (effective.isLoading) return <ToolsLoadingState label="Resolving effective access…" />;
+  if (effective.isLoading) return <ToolsLoadingState label={interfaceText("m_84e7e40cc93409")} />;
   if (effective.error) {
     return <ToolsErrorState error={effective.error} onRetry={() => effective.refetch()} />;
   }
@@ -563,15 +552,11 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
     <div className="space-y-4">
       <EnforcementBanner
         tone="info"
-        title="Effective access"
+        title={interfaceText("m_46d8c205fa6a51")}
         body={
-          <>
-            This is exactly the tool set Paperclip will accept for{" "}
-            <span className="font-medium">{agent.name}</span>. Profile and policy edits are
-            reflected within ~5 seconds. The agent's prompt can narrow this list but{" "}
-            <span className="font-medium">cannot expand it</span> — everything else is blocked by
-            default.
-          </>
+          <>{interfaceText("m_b3f014fc3cbdc5")}{" "}
+            <span className="font-medium">{agent.name}</span>{interfaceText("m_e71af07815c55c")}{" "}
+            <span className="font-medium">{interfaceText("m_a298f2bb30d2cc")}</span>{interfaceText("m_ec323acedb9d17")}</>
         }
       />
 
@@ -610,23 +595,21 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
         <div className="lg:col-span-2">
           <div className="rounded-lg border border-border">
             <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2.5">
-              <h3 className="text-sm font-semibold text-foreground">Allowed tools</h3>
+              <h3 className="text-sm font-semibold text-foreground">{interfaceText("m_73f3619da32094")}</h3>
               <span className="text-xs text-muted-foreground tabular-nums">
-                {allowedTools.length} {allowedTools.length === 1 ? "tool" : "tools"}
+                {allowedTools.length} {allowedTools.length === 1 ? interfaceText("m_7c9bbe5ec9b3fb") : interfaceText("m_f9d35d43770d39")}
               </span>
             </div>
             {allowedTools.length === 0 ? (
-              <p className="px-3 py-6 text-sm text-muted-foreground">
-                No tools are allowed for this agent. Bind a tool profile to grant access.
-              </p>
+              <p className="px-3 py-6 text-sm text-muted-foreground">{interfaceText("m_cad3bcb38951e9")}</p>
             ) : (
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                    <th className="px-3 py-2 font-medium">Tool</th>
-                    <th className="px-3 py-2 font-medium">Capability</th>
-                    <th className="px-3 py-2 font-medium">Risk</th>
-                    <th className="px-3 py-2 font-medium">Source</th>
+                    <th className="px-3 py-2 font-medium">{interfaceText("m_2e53bdcd074086")}</th>
+                    <th className="px-3 py-2 font-medium">{interfaceText("m_5faf58a69db590")}</th>
+                    <th className="px-3 py-2 font-medium">{interfaceText("m_0711a8d636e4c0")}</th>
+                    <th className="px-3 py-2 font-medium">{interfaceText("m_0e570ca6fabe24")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -663,27 +646,19 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
         <aside className="space-y-4">
           <div className="rounded-lg border border-border bg-background/60 p-3">
             <h3 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-              Why these tools?
-            </h3>
+              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />{interfaceText("m_1c9d4652b457ff")}</h3>
 
             {/* Access profiles */}
             <div className="mt-3 space-y-1.5">
               <div className="flex items-center justify-between gap-2">
-                <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-                  Access profiles
-                </div>
+                <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_2471292ff715cc")}</div>
                 <Link
                   to={`${profilesHref}?check=1`}
                   className="text-(length:--text-micro) font-medium text-primary hover:underline"
-                >
-                  Check access
-                </Link>
+                >{interfaceText("m_abb9a172a69bbc")}</Link>
               </div>
               {profiles.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  No active profile applies to this agent, so it has no allowed tools.
-                </p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_50b16433b49604")}</p>
               ) : (
                 profiles.map((profile) => {
                   return (
@@ -696,9 +671,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
                       </Link>
                       {profile.summary.isCompanyDefault ? (
                         <div className="mt-1">
-                          <span className="rounded border border-border px-1.5 py-0.5 text-(length:--text-nano) uppercase text-muted-foreground">
-                            Organization default
-                          </span>
+                          <span className="rounded border border-border px-1.5 py-0.5 text-(length:--text-nano) uppercase text-muted-foreground">{interfaceText("m_804a1f086aecaf")}</span>
                         </div>
                       ) : null}
                     </div>
@@ -709,22 +682,18 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
 
             {/* Policies mutating the allow list */}
             <div className="mt-3 space-y-1.5">
-              <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-                Active policies
-              </div>
+              <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_5361fe56d75d8d")}</div>
               {policiesQuery.isLoading ? (
-                <p className="text-xs text-muted-foreground">Loading policies…</p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_4b856670f2d7bc")}</p>
               ) : governingPolicies.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  No enabled policy currently mutates this agent's allow list.
-                </p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_854cf0ca64f5e2")}</p>
               ) : (
                 governingPolicies.map(({ policy, order }) => (
                   <div key={policy.id} className="rounded-md border border-border/70 px-2.5 py-2">
                     <div className="flex items-center justify-between gap-2">
                       <span
                         className="truncate text-xs font-medium text-foreground"
-                        title={`Policy #${order}: ${policy.name}`}
+                        title={interfaceText("m_745e15b0a71ba3", { value0: (order), value1: (policy.name) })}
                       >
                         #{order} {policy.name}
                       </span>
@@ -744,20 +713,14 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
 
             {/* Unavailable tools */}
             <div className="mt-3 space-y-1.5">
-              <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-                Unavailable tools
-              </div>
+              <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_d13855c69bc5ff")}</div>
               {catalogLoading ? (
-                <p className="text-xs text-muted-foreground">Checking tools…</p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_87c6ff9afacd45")}</p>
               ) : deniedTools.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
-                  Every known tool this agent could name is allowed.
-                </p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_81d2070cf46122")}</p>
               ) : (
                 <>
-                  <p className="text-(length:--text-micro) text-muted-foreground">
-                    Tools the agent could name but Paperclip would block:
-                  </p>
+                  <p className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_97708267221953")}</p>
                   <div className="flex flex-wrap gap-1">
                     {deniedTools.slice(0, DENIED_TOOLS_DISPLAY_LIMIT).map((tool) => (
                       <span
@@ -771,8 +734,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
                   </div>
                   {deniedTools.length > DENIED_TOOLS_DISPLAY_LIMIT ? (
                     <p className="text-(length:--text-micro) text-muted-foreground">
-                      +{deniedTools.length - DENIED_TOOLS_DISPLAY_LIMIT} more
-                    </p>
+                      +{deniedTools.length - DENIED_TOOLS_DISPLAY_LIMIT}{interfaceText("m_226ba18bbcdb75")}</p>
                   ) : null}
                 </>
               )}

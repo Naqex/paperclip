@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, type ReactNode } from "react";
 import type { ExecutionProjection } from "@paperclipai/shared";
 import { useSecondTick } from "@/hooks/useSecondTick";
@@ -75,6 +76,7 @@ function RunnerTurnStatus({
   continuedAfterSteering?: boolean;
   waitingLabel?: string | null;
 }) {
+  useInterfaceLanguage();
   const terminal = isTerminalRunStatus(status);
   useSecondTick(!terminal && startedAtMs != null);
   const elapsedMs =
@@ -87,7 +89,7 @@ function RunnerTurnStatus({
   const elapsed = formatCompactDuration(elapsedMs);
 
   const failed = terminalStatusFailed(status);
-  const label = terminal ? (failed ? "Stopped" : "Worked") : waitingLabel ?? "Working";
+  const label = terminal ? (failed ? interfaceText("m_1a4f630ac1b69f") : interfaceText("m_e7f93aad5026ee")) : waitingLabel ?? interfaceText("m_a92f0449a9f723");
   const suffix = terminal
     ? elapsed ? ` ${failed ? "after" : "for"} ${elapsed}` : ""
     : waitingLabel ? elapsed ? ` · ${elapsed}` : "" : ` for ${elapsed ?? "0s"}`;
@@ -100,17 +102,18 @@ function RunnerTurnStatus({
       aria-live="polite"
       aria-atomic="true"
     >
-      {continuedAfterSteering ? <span data-conversation-meta="">Continued after steering · </span> : null}
+      {continuedAfterSteering ? <span data-conversation-meta="">{interfaceText("m_9d15c1341d5763")}</span> : null}
       {label}<span data-conversation-meta="">{suffix}</span>
     </span>
   );
 }
 
 function RunnerCurrentActivityTail({ status, waitingLabel }: { status: string; waitingLabel?: string | null }) {
+  useInterfaceLanguage();
   const shimmer = useTaskChatShimmer("working");
   if (isTerminalRunStatus(status)) return null;
   return <div className="mt-2 flex min-h-8 min-w-0 items-center gap-2 px-1 py-1 text-xs text-muted-foreground" data-testid="task-chat-current-activity" data-turn-position="tail">
-    <span className={cn(!waitingLabel && shimmer && "shimmer-text shimmer-text-muted")} aria-live="polite" data-testid="task-chat-current-activity-label">{waitingLabel ?? "Thinking"}</span>
+    <span className={cn(!waitingLabel && shimmer && "shimmer-text shimmer-text-muted")} aria-live="polite" data-testid="task-chat-current-activity-label">{waitingLabel ?? interfaceText("m_a20d12c5e9c428")}</span>
   </div>;
 }
 
@@ -131,7 +134,7 @@ function runnerWaitingLabel({ runId, status, execution, preparationLabel }: Runn
   if (isTerminalRunStatus(status)) return null;
   if (execution?.phase === "waiting_for_provider") return execution.label;
   if (!runId && preparationLabel) return preparationLabel;
-  return status === "queued" ? execution?.label ?? "Queued" : null;
+  return status === "queued" ? execution?.label ?? interfaceText("m_661ff40a07e037") : null;
 }
 
 /** One identity stays mounted while admission discovers the run's renderer. */
@@ -186,6 +189,7 @@ export function TaskChatRunnerTurn({
     decision: TaskChatRuntimeRequestDecision,
   ) => void | Promise<void>;
 }) {
+  useInterfaceLanguage();
   const terminal = isTerminalRunStatus(status);
   const waitingLabel = runnerWaitingLabel({ runId, status, execution, preparationLabel, startedAtMs });
   const yielded = items.some(
@@ -254,9 +258,7 @@ export function TaskChatRunnerTurn({
           className="px-1 py-1 text-xs text-muted-foreground"
           role="status"
           data-testid="task-chat-activity-unavailable"
-        >
-          Live runner activity is temporarily unavailable. Retrying…
-        </div>
+        >{interfaceText("m_2e96977e51efe0")}</div>
       ) : null}
       {timelineRows.length > 0 ? (
         <div

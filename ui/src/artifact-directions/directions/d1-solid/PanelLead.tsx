@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, useState } from "react";
 import type { LabArtifact } from "../../kit";
 import { KindTag, PlatePicture } from "./KindBlock";
@@ -16,6 +17,7 @@ import { KindTag, PlatePicture } from "./KindBlock";
 const LEAD = "relative aspect-(--solid-lead-ratio) w-full overflow-hidden rounded-md bg-(--solid-sheet)";
 
 function VideoLead({ artifact }: { artifact: LabArtifact }) {
+  useInterfaceLanguage();
   const video = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
   return (
@@ -33,8 +35,8 @@ function VideoLead({ artifact }: { artifact: LabArtifact }) {
       {started ? null : (
         <button
           type="button"
-          aria-label={`Play video: ${artifact.title}`}
-          title="Play video"
+          aria-label={interfaceText("m_75fba36e6d4726", { value0: (artifact.title) })}
+          title={interfaceText("m_43e3c3b1379bb8")}
           onClick={() => {
             setStarted(true);
             void video.current?.play();

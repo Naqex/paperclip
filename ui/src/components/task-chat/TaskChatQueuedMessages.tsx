@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   DndContext,
@@ -96,6 +97,7 @@ function SortableQueuedMessage({
   onInterrupt?: () => void;
   onDiscard: () => void;
 }) {
+  useInterfaceLanguage();
   const immutableResponse = entry.source?.kind === "interaction";
   const label = immutableResponse ? entry.comment.body.split("\n")[0] : entry.comment.body;
   const sortable = useSortable({
@@ -110,10 +112,10 @@ function SortableQueuedMessage({
     queueMutationDisabled || queue.steeringDisposition !== "available";
   const steerTitle =
     queue.steeringDisposition === "unsupported"
-      ? "This runner does not support steering"
+      ? interfaceText("m_505010ade4f47a")
       : queue.steeringDisposition === "temporarily_unavailable"
-        ? "Steering is temporarily unavailable"
-        : "Steer this message into the active turn";
+        ? interfaceText("m_9c1409bdbb1fc2")
+        : interfaceText("m_c6a4160182a7d5");
 
   return (
     <div
@@ -132,7 +134,7 @@ function SortableQueuedMessage({
         {...sortable.attributes}
         {...sortable.listeners}
         disabled={queueMutationDisabled || immutableResponse}
-        aria-label={`Reorder queued message: ${entry.comment.body}`}
+        aria-label={interfaceText("m_30805180c8d900", { value0: (entry.comment.body) })}
         className="flex h-7 w-7 shrink-0 cursor-grab items-center justify-center rounded-md text-muted-foreground/70 transition-colors hover:bg-accent hover:text-foreground active:cursor-grabbing disabled:cursor-default disabled:opacity-40"
       >
         <GripVertical className="h-3.5 w-3.5" aria-hidden />
@@ -150,9 +152,9 @@ function SortableQueuedMessage({
         <button
           type="button"
           onClick={onInterrupt}
-          aria-label={!queue.targetRunId ? "Send queued messages" : undefined}
+          aria-label={!queue.targetRunId ? interfaceText("m_c5433dc3eca1c2") : undefined}
           disabled={busy || !queue.queueId || !onInterrupt}
-          title={queue.targetRunId ? "Interrupt the active turn and send queued messages" : "Send queued messages now"}
+          title={queue.targetRunId ? interfaceText("m_1f9a3486a94dc9") : interfaceText("m_2c78b046f4615e")}
           className="flex h-7 shrink-0 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
           data-testid={`task-chat-queued-interrupt-${entry.comment.id}`}
         >
@@ -161,7 +163,7 @@ function SortableQueuedMessage({
           ) : (
             <CornerDownRight className="h-3.5 w-3.5" aria-hidden />
           )}
-          {queue.targetRunId ? "Interrupt" : "Send"}
+          {queue.targetRunId ? interfaceText("m_b62523141249e0") : interfaceText("m_f6f4688ff23d50")}
         </button>
       ) : (
         <button
@@ -176,9 +178,7 @@ function SortableQueuedMessage({
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
           ) : (
             <CornerDownRight className="h-3.5 w-3.5" aria-hidden />
-          )}
-          Steer
-        </button>
+          )}{interfaceText("m_1cf39ed452541d")}</button>
       ))}
 
       <button
@@ -189,8 +189,8 @@ function SortableQueuedMessage({
           (!queue.queueId && !entry.comment.id.startsWith("optimistic-")) ||
           !entry.canDiscard
         }
-        title="Discard queued message"
-        aria-label={`Discard queued message: ${entry.comment.body}`}
+        title={interfaceText("m_eb289c4f1a50f1")}
+        aria-label={interfaceText("m_f2718972171cc5", { value0: (entry.comment.body) })}
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-40"
         data-testid={`task-chat-queued-discard-${entry.comment.id}`}
       >
@@ -206,8 +206,8 @@ function SortableQueuedMessage({
           <button
             type="button"
             disabled={queueMutationDisabled || immutableResponse}
-            title="Queued message actions"
-            aria-label={`Queued message actions: ${entry.comment.body}`}
+            title={interfaceText("m_85ac386e5d1bda")}
+            aria-label={interfaceText("m_ccb17ae12e5017", { value0: (entry.comment.body) })}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
           >
             <MoreHorizontal className="h-4 w-4" aria-hidden />
@@ -215,9 +215,7 @@ function SortableQueuedMessage({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-44">
           <DropdownMenuItem disabled={!entry.canEdit} onSelect={onEdit}>
-            <Pencil className="h-4 w-4" aria-hidden />
-            Edit message
-          </DropdownMenuItem>
+            <Pencil className="h-4 w-4" aria-hidden />{interfaceText("m_9757ccd5ef1235")}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -233,6 +231,7 @@ export function TaskChatQueuedMessages({
   onInterrupt,
   onDiscard,
 }: TaskChatQueuedMessagesProps) {
+  const interfaceLanguage = useInterfaceLanguage();
   const [entries, setEntries] = useState(queue.entries);
   const latestQueue = useRef(queue);
   latestQueue.current = queue;
@@ -263,10 +262,10 @@ export function TaskChatQueuedMessages({
     setDeferredStatus(current => {
       if (!current) return null;
       if (queue.state !== "deferred" || queue.queueId !== current.queueId || !queue.entries.length) return null;
-      const message = queue.executionWait?.message ?? "Messages are still queued. They will send when the task is ready.";
+      const message = queue.executionWait?.message ?? interfaceText("m_470af6eb9fb7ac");
       return current.message === message ? current : { ...current, message };
     });
-  }, [queue.state, queue.queueId, queue.entries.length, queue.executionWait?.message]);
+  }, [queue.state, queue.queueId, queue.entries.length, queue.executionWait?.message, interfaceLanguage]);
 
   const ids = useMemo(
     () => entries.map((entry) => entry.comment.id),
@@ -402,7 +401,7 @@ export function TaskChatQueuedMessages({
   return (
     <TaskChatComposerBar
       data-testid="task-chat-queued-messages"
-      aria-label="Queued messages"
+      aria-label={interfaceText("m_f8e64a37950a97")}
     >
       <DndContext
         sensors={sensors}

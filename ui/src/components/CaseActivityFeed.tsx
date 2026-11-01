@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { Link } from "@/lib/router";
 import { Bot, User, Cog, ChevronDown, ListFilter } from "lucide-react";
@@ -37,8 +38,8 @@ const EVENT_LABEL: Record<CaseEventKind, string> = {
 /** Human label for the actor, preferring the resolved agent name. */
 function actorLabel(event: CaseEvent): string {
   if (event.actorType === "agent") return event.actorAgentName ?? "Agent";
-  if (event.actorType === "user") return "User";
-  return "System";
+  if (event.actorType === "user") return interfaceText("m_b512d97e7cbf97");
+  return interfaceText("m_6725e7bbcd28f3");
 }
 
 function ActorIcon({ event }: { event: CaseEvent }) {
@@ -47,7 +48,7 @@ function ActorIcon({ event }: { event: CaseEvent }) {
 }
 
 function issueRelationLabel(event: CaseEvent): string {
-  return event.kind === "issue_linked" || event.kind === "issue_unlinked" ? "issue" : "via";
+  return event.kind === "issue_linked" || event.kind === "issue_unlinked" ? interfaceText("m_4a502846d070e2") : interfaceText("m_4d327af41f96c2");
 }
 
 /** One event with actor + run→issue attribution (P4 §1). */
@@ -91,6 +92,7 @@ export function CaseEventRow({ event, compact = false }: { event: CaseEvent; com
 
 /** The full activity feed with kind filters (detail-page Activity tab). */
 export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
+  useInterfaceLanguage();
   const [active, setActive] = useState<Set<CaseEventKind>>(new Set());
 
   // Only offer filters for kinds actually present, in first-seen order.
@@ -115,21 +117,20 @@ export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
   }
 
   const filterLabel = active.size === 0
-    ? "All activity"
+    ? interfaceText("m_29ebb2ef2da630")
     : active.size === 1
       ? EVENT_LABEL[[...active][0]!] ?? [...active][0]!
-      : `${active.size} filters`;
+      : interfaceText("m_3bd59fea3076ff", { value0: (active.size) });
 
   if (events.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">No activity yet.</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">{interfaceText("m_a288d2d0a21eed")}</p>;
   }
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs text-muted-foreground">
-          {filtered.length} of {events.length} events
-        </p>
+          {filtered.length}{interfaceText("m_a4282e4b2298b9")}{events.length}{interfaceText("m_76f8b07e2a7ff8")}</p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="h-8 gap-1.5">
@@ -139,10 +140,8 @@ export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Activity filter</DropdownMenuLabel>
-            <DropdownMenuItem onSelect={() => setActive(new Set())}>
-              All activity
-            </DropdownMenuItem>
+            <DropdownMenuLabel>{interfaceText("m_0472750d0c2345")}</DropdownMenuLabel>
+            <DropdownMenuItem onSelect={() => setActive(new Set())}>{interfaceText("m_29ebb2ef2da630")}</DropdownMenuItem>
             <DropdownMenuSeparator />
             {presentKinds.map((kind) => (
               <DropdownMenuCheckboxItem
@@ -157,7 +156,7 @@ export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
         </DropdownMenu>
       </div>
       {filtered.length === 0 ? (
-        <p className="py-6 text-center text-sm text-muted-foreground">No events match this filter.</p>
+        <p className="py-6 text-center text-sm text-muted-foreground">{interfaceText("m_f5044d66598740")}</p>
       ) : (
         <div className="divide-y divide-border">
           {filtered.map((event) => (

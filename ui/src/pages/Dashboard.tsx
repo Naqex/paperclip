@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentIdentity } from "../components/AgentIdentity";
 import { TaskSummaryList } from "../components/TaskSummaryList";
 import { useDesignSandbox } from "../context/DesignSandboxContext";
@@ -74,6 +75,7 @@ export function derivePausedAgentBanner(agents: Agent[] | undefined): PausedAgen
 }
 
 export function Dashboard() {
+  const interfaceLanguage = useInterfaceLanguage();
   const designSandbox = useDesignSandbox();
   const { selectedCompanyId, companies } = useCompany();
   const { openOnboarding } = useDialogActions();
@@ -159,8 +161,8 @@ export function Dashboard() {
   }, [shouldOpenOnboarding, selectedCompanyId, openOnboarding]);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Dashboard" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_67b696468610b8") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const dashboardQueryKey = queryKeys.dashboard(selectedCompanyId!);
   const sharedDashboard = useSharedPollingQuery({
@@ -301,14 +303,14 @@ export function Dashboard() {
       return (
         <EmptyState
           icon={LayoutDashboard}
-          message="Welcome to Paperclip. Set up your first organization and agent to get started."
-          action="Get Started"
+          message={interfaceText("m_f0d4dd07eed6a5")}
+          action={interfaceText("m_983f311018642b")}
           onAction={openOnboarding}
         />
       );
     }
     return (
-      <EmptyState icon={LayoutDashboard} message="Create or select an organization to view the dashboard." />
+      <EmptyState icon={LayoutDashboard} message={interfaceText("m_ae638c14901927")} />
     );
   }
 
@@ -332,7 +334,7 @@ export function Dashboard() {
         <InlineBanner
           tone="warning"
           icon={PauseCircle}
-          title={`${pausedImportedCount} imported agent${pausedImportedCount === 1 ? " is" : "s are"} paused and will not run.`}
+          title={interfaceText("m_3e198c1bd56d21", { value0: (pausedImportedCount), value1: (pausedImportedCount === 1 ? " is" : "s are") })}
           actions={
             <Button
               size="sm"
@@ -340,41 +342,33 @@ export function Dashboard() {
               disabled={resumeImportedAgents.isPending}
               data-testid="dashboard-resume-imported-agents"
             >
-              {resumeImportedAgents.isPending ? "Resuming…" : "Resume all"}
+              {resumeImportedAgents.isPending ? interfaceText("m_c494e3ca3e3b04") : interfaceText("m_43e673c5503d43")}
             </Button>
           }
-        >
-          Agents from an organization import arrive paused as a safety default. Resume them so assigned tasks can start.
-        </InlineBanner>
+        >{interfaceText("m_c23636748a7780")}</InlineBanner>
       ) : pausedBanner?.kind === "all-paused" ? (
         <InlineBanner
           tone="warning"
           icon={PauseCircle}
-          title="All agents in this organization are paused — nothing will run."
+          title={interfaceText("m_b048943699134a")}
           actions={
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/agents">Review agents</Link>
+              <Link to="/agents">{interfaceText("m_13c1e3e0b6b00c")}</Link>
             </Button>
           }
-        >
-          Resume at least one agent to let assigned tasks start.
-        </InlineBanner>
+        >{interfaceText("m_e3f2dc7d3663a3")}</InlineBanner>
       ) : null}
 
       {hasNoAgents && (
         <div className="flex items-center justify-between gap-3 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-500/25 dark:bg-amber-950/60">
           <div className="flex items-center gap-2.5">
             <Bot className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
-            <p className="text-sm text-amber-900 dark:text-amber-100">
-              You have no agents.
-            </p>
+            <p className="text-sm text-amber-900 dark:text-amber-100">{interfaceText("m_6461ce7cef7953")}</p>
           </div>
           <button
             onClick={() => openOnboarding({ initialStep: 3, companyId: selectedCompanyId! })}
             className="text-sm font-medium text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100 underline underline-offset-2 shrink-0"
-          >
-            Create one here
-          </button>
+          >{interfaceText("m_8c89c0c5dc3ed2")}</button>
         </div>
       )}
 
@@ -388,16 +382,13 @@ export function Dashboard() {
                 <PauseCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-700 dark:text-red-300" />
                 <div>
                   <p className="text-sm font-medium text-red-950 dark:text-red-50">
-                    {data.budgets.activeIncidents} active budget incident{data.budgets.activeIncidents === 1 ? "" : "s"}
+                    {data.budgets.activeIncidents}{interfaceText("m_4cb19c9ab4cd15")}{data.budgets.activeIncidents === 1 ? "" : interfaceText("m_043a718774c572")}
                   </p>
                   <p className="text-xs text-red-900/70 dark:text-red-100/70">
-                    {data.budgets.pausedAgents} agents paused · {data.budgets.pausedProjects} projects paused · {data.budgets.pendingApprovals} pending budget approvals
-                  </p>
+                    {data.budgets.pausedAgents}{interfaceText("m_fbaa317b122402")}{data.budgets.pausedProjects}{interfaceText("m_fb1c7459daad4c")}{data.budgets.pendingApprovals}{interfaceText("m_c3cd74b19f4a96")}</p>
                 </div>
               </div>
-              <Link to="/costs" className="text-sm underline underline-offset-2 text-red-900 dark:text-red-100">
-                Open budgets
-              </Link>
+              <Link to="/costs" className="text-sm underline underline-offset-2 text-red-900 dark:text-red-100">{interfaceText("m_f5376c2582f72e")}</Link>
             </div>
           ) : null}
 
@@ -406,40 +397,38 @@ export function Dashboard() {
               appearance={designSandbox ? "card" : "plain"}
               icon={Bot}
               value={data.agents.active + data.agents.running + data.agents.paused + data.agents.error}
-              label="Agents Enabled"
+              label={interfaceText("m_868836bd07e6cc")}
               to="/agents"
               description={
                 <span>
-                  {data.agents.running} running{", "}
-                  {data.agents.paused} paused{", "}
-                  {data.agents.error} errors
-                </span>
+                  {data.agents.running}{interfaceText("m_934b35e4b1b32d")}{", "}
+                  {data.agents.paused}{interfaceText("m_b64980c3bb043c")}{", "}
+                  {data.agents.error}{interfaceText("m_ffb2f0afdfc4ed")}</span>
               }
             />
             <MetricCard
               appearance={designSandbox ? "card" : "plain"}
               icon={CircleDot}
               value={data.tasks.inProgress}
-              label="Tasks In Progress"
+              label={interfaceText("m_63bf7d342080af")}
               to="/issues"
               description={
                 <span>
-                  {data.tasks.open} open{", "}
-                  {data.tasks.blocked} blocked
-                </span>
+                  {data.tasks.open}{interfaceText("m_dee82cf50f327f")}{", "}
+                  {data.tasks.blocked}{interfaceText("m_1b30e46cb30f0b")}</span>
               }
             />
             <MetricCard
               appearance={designSandbox ? "card" : "plain"}
               icon={DollarSign}
               value={formatCents(data.costs.monthSpendCents)}
-              label="Month Spend"
+              label={interfaceText("m_b10177a40c608f")}
               to="/costs"
               description={
                 <span>
                   {data.costs.monthBudgetCents > 0
-                    ? `${data.costs.monthUtilizationPercent}% of ${formatCents(data.costs.monthBudgetCents)} budget`
-                    : "Unlimited budget"}
+                    ? interfaceText("m_bb3f60a3ed6a2b", { value0: (data.costs.monthUtilizationPercent), value1: (formatCents(data.costs.monthBudgetCents)) })
+                    : interfaceText("m_3c7719943f33a6")}
                 </span>
               }
             />
@@ -447,13 +436,13 @@ export function Dashboard() {
               appearance={designSandbox ? "card" : "plain"}
               icon={ShieldCheck}
               value={data.pendingApprovals + data.budgets.pendingApprovals}
-              label="Pending Approvals"
+              label={interfaceText("m_495aae902643b7")}
               to="/approvals"
               description={
                 <span>
                   {data.budgets.pendingApprovals > 0
-                    ? `${data.budgets.pendingApprovals} budget overrides awaiting board review`
-                    : "Awaiting board review"}
+                    ? interfaceText("m_1c5af40d1f964e", { value0: (data.budgets.pendingApprovals) })
+                    : interfaceText("m_19d0be454cbc07")}
                 </span>
               }
             />
@@ -462,19 +451,19 @@ export function Dashboard() {
           <SmokeLabDashboardCard companyId={selectedCompanyId!} />
 
           <div className={cn("grid grid-cols-2 gap-4", SHOW_TASK_PRIORITY_UI ? "lg:grid-cols-4" : "lg:grid-cols-3")}>
-            <ChartCard title="Run Activity" subtitle="Last 14 days">
+            <ChartCard title={interfaceText("m_fe11724808acbe")} subtitle={interfaceText("m_d9f1e16176a554")}>
               <RunActivityChart activity={data.runActivity} />
             </ChartCard>
             {/* PAP-411: "Tasks by Priority" chart hidden behind SHOW_TASK_PRIORITY_UI. */}
             {SHOW_TASK_PRIORITY_UI && (
-              <ChartCard title="Tasks by Priority" subtitle="Last 14 days">
+              <ChartCard title={interfaceText("m_19d3129acccc32")} subtitle={interfaceText("m_d9f1e16176a554")}>
                 <PriorityChart issues={issues ?? []} />
               </ChartCard>
             )}
-            <ChartCard title="Tasks by Status" subtitle="Last 14 days">
+            <ChartCard title={interfaceText("m_4b4be15a426db9")} subtitle={interfaceText("m_d9f1e16176a554")}>
               <IssueStatusChart issues={issues ?? []} />
             </ChartCard>
-            <ChartCard title="Success Rate" subtitle="Last 14 days">
+            <ChartCard title={interfaceText("m_5068c6c343ffda")} subtitle={interfaceText("m_d9f1e16176a554")}>
               <SuccessRateChart activity={data.runActivity} />
             </ChartCard>
           </div>
@@ -491,9 +480,7 @@ export function Dashboard() {
             {/* Recent Activity */}
             {recentActivity.length > 0 && (
               <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                  Recent Activity
-                </h3>
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{interfaceText("m_9ef7d438ce5b0a")}</h3>
                 <Card className="@container block py-0 divide-y divide-border overflow-hidden">
                   {designSandbox ? <ActivityList events={recentActivity} agentMap={agentMap} userProfileMap={userProfileMap} entityNameMap={entityNameMap} entityTitleMap={entityTitleMap} rowClassName={event => animatedActivityIds.has(event.id) ? "activity-row-enter" : undefined} /> : recentActivity.map((event) => (
                     <ActivityRow
@@ -512,12 +499,10 @@ export function Dashboard() {
 
             {/* Recent Tasks */}
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                Recent Tasks
-              </h3>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{interfaceText("m_49a027ddc61602")}</h3>
               {recentIssues.length === 0 ? (
                 <Card className="block p-4">
-                  <p className="text-sm text-muted-foreground">No tasks yet.</p>
+                  <p className="text-sm text-muted-foreground">{interfaceText("m_5a889457d27958")}</p>
                 </Card>
               ) : (
                 designSandbox ? <Card className="block overflow-hidden py-0">

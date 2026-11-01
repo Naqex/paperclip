@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { History as HistoryIcon, RotateCcw, Search } from "lucide-react";
@@ -71,6 +72,7 @@ export function RoutineHistoryTab({
   onRestoreSecretMaterials,
   onRestored,
 }: Props) {
+  useInterfaceLanguage();
   const secretLookup = useMemo<SecretLookup>(
     () => new Map((secrets ?? []).map((secret) => [secret.id, secret])),
     [secrets],
@@ -124,7 +126,7 @@ export function RoutineHistoryTab({
       const restoredFromNumber = data.restoredFromRevisionNumber;
       const newNumber = data.revision.revisionNumber;
       pushToast({
-        title: `Restored revision ${restoredFromNumber} as revision ${newNumber}`,
+        title: interfaceText("m_54d3afb9536c21", { value0: (restoredFromNumber), value1: (newNumber) }),
         body: data.secretMaterials.length > 0
           ? "Trigger enabled state was restored from the snapshot. New webhook secrets are available in the banner above."
           : "Trigger enabled state was restored from the snapshot.",
@@ -153,8 +155,8 @@ export function RoutineHistoryTab({
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to restore revision",
-        body: error instanceof Error ? error.message : "Paperclip could not restore the revision.",
+        title: interfaceText("m_2dcf4f54fb056d"),
+        body: error instanceof Error ? error.message : interfaceText("m_a4aa014d3d681d"),
         tone: "error",
       });
     },
@@ -200,16 +202,14 @@ export function RoutineHistoryTab({
     return (
       <div className="rounded-md border border-l-2 border-l-destructive border-border p-4 space-y-3">
         <div>
-          <p className="text-sm font-medium">Could not load revisions</p>
+          <p className="text-sm font-medium">{interfaceText("m_d92d345b9d4261")}</p>
           <p className="text-xs text-muted-foreground">
             {revisionsQuery.error instanceof Error
               ? revisionsQuery.error.message
-              : "Unknown error loading revisions."}
+              : interfaceText("m_943246311f92fc")}
           </p>
         </div>
-        <Button size="sm" variant="outline" onClick={() => revisionsQuery.refetch()}>
-          Retry
-        </Button>
+        <Button size="sm" variant="outline" onClick={() => revisionsQuery.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button>
       </div>
     );
   }
@@ -241,12 +241,9 @@ export function RoutineHistoryTab({
           <div className="space-y-2">
             <EmptyState
               icon={HistoryIcon}
-              message="No edits yet"
+              message={interfaceText("m_961468d7848536")}
             />
-            <p className="text-center text-xs text-muted-foreground">
-              Revision 1 is the only history this routine has. Saving an edit creates the first
-              additional revision.
-            </p>
+            <p className="text-center text-xs text-muted-foreground">{interfaceText("m_44654bed6b6b55")}</p>
           </div>
         ) : (
           selectedRevision && (
@@ -332,26 +329,18 @@ function HistoricalPreviewBanner({
   onRestore: () => void;
   pending: boolean;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-4 py-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-            Viewing revision {revisionNumber} (read-only)
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Restoring this revision creates a new revision {nextRevisionNumber} with the same content.
-            History stays append-only.
-          </p>
+          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">{interfaceText("m_2ccec4dc51175b")}{revisionNumber}{interfaceText("m_7fed954de4e044")}</p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_03a4ee9cdf4dbd")}{nextRevisionNumber}{interfaceText("m_6bea244e8c0faf")}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onReturn} disabled={pending}>
-            Return to current
-          </Button>
+          <Button variant="outline" size="sm" onClick={onReturn} disabled={pending}>{interfaceText("m_2e6cf99a5c67ba")}</Button>
           <Button size="sm" onClick={onRestore} disabled={pending}>
-            <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-            Restore as new revision
-          </Button>
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_b5a5664049a6b9")}</Button>
         </div>
       </div>
     </div>
@@ -367,6 +356,7 @@ function ConflictBanner({
   onDiscard: () => void;
   onSave: () => void;
 }) {
+  useInterfaceLanguage();
   const labels = dirtyFields.length > 0
     ? dirtyFields.map((field) => field.label)
     : ["the routine"];
@@ -375,19 +365,12 @@ function ConflictBanner({
     <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-4 py-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">Unsaved routine edits</p>
-          <p className="text-xs text-muted-foreground">
-            You changed {fieldsText} but haven&apos;t saved yet. Save or discard before previewing or
-            restoring an older revision.
-          </p>
+          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">{interfaceText("m_16e483983d72a5")}</p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_d16ff4814abec3")}{fieldsText}{interfaceText("m_5b1e6b1a9b64c8")}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onDiscard}>
-            Discard changes
-          </Button>
-          <Button size="sm" onClick={onSave}>
-            Save and continue
-          </Button>
+          <Button variant="outline" size="sm" onClick={onDiscard}>{interfaceText("m_f9bfa3dc7c8fcd")}</Button>
+          <Button size="sm" onClick={onSave}>{interfaceText("m_6880daf172a2e6")}</Button>
         </div>
       </div>
       {dirtyFields.length > 0 && (
@@ -425,13 +408,12 @@ function RevisionList({
   onShowOlder: () => void;
   showOlder: boolean;
 }) {
+  useInterfaceLanguage();
   return (
     <aside className="space-y-1">
       <header className="flex items-center justify-between pb-2">
-        <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Revisions
-        </p>
-        <span className="text-(length:--text-micro) text-muted-foreground">{totalRevisions} total</span>
+        <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_da80b1d5740caa")}</p>
+        <span className="text-(length:--text-micro) text-muted-foreground">{totalRevisions}{interfaceText("m_88c4fa9611792c")}</span>
       </header>
       {revisions.map((revision) => {
         const isSelected = revision.id === selectedRevisionId;
@@ -459,16 +441,12 @@ function RevisionList({
             data-testid={`revision-row-${revision.revisionNumber}`}
           >
             <div className="flex items-center gap-2 text-sm font-medium">
-              <span>rev {revision.revisionNumber}</span>
+              <span>{interfaceText("m_efd46cd7c40429")}{revision.revisionNumber}</span>
               {isCurrent && (
-                <Badge variant="outline" className="border-border px-1.5 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-                  Current
-                </Badge>
+                <Badge variant="outline" className="border-border px-1.5 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_e0d1b68224bf0b")}</Badge>
               )}
               {revision.restoredFromRevisionId && (
-                <Badge variant="outline" className="border-amber-500/40 bg-amber-500/10 px-1.5 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-amber-800 dark:text-amber-200">
-                  Restored
-                </Badge>
+                <Badge variant="outline" className="border-amber-500/40 bg-amber-500/10 px-1.5 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-amber-800 dark:text-amber-200">{interfaceText("m_5d561a1e3f1707")}</Badge>
               )}
             </div>
             <div className="text-xs text-muted-foreground truncate">
@@ -479,9 +457,7 @@ function RevisionList({
         );
       })}
       {totalRevisions > revisions.length && !showOlder && (
-        <Button variant="ghost" size="sm" className="w-full" onClick={onShowOlder}>
-          Show {totalRevisions - revisions.length} older…
-        </Button>
+        <Button variant="ghost" size="sm" className="w-full" onClick={onShowOlder}>{interfaceText("m_dd0fcd29c826be")}{totalRevisions - revisions.length}{interfaceText("m_093ea828098eb3")}</Button>
       )}
     </aside>
   );
@@ -508,10 +484,11 @@ function RevisionPreview({
   restorePending: boolean;
   highlighted: boolean;
 }) {
+  useInterfaceLanguage();
   const snapshot = revision.snapshot.routine;
   const triggers = revision.snapshot.triggers;
   const currentSnapshot = currentRevision?.snapshot.routine ?? null;
-  const restoreLabel = isHistorical ? "Restore this revision" : "Restore this revision";
+  const restoreLabel = isHistorical ? interfaceText("m_e0a9d24c3b5e5f") : interfaceText("m_e0a9d24c3b5e5f");
   const cardWrapper = `rounded-md border transition-colors duration-1000 ${
     highlighted ? "border-emerald-500/40 bg-emerald-500/10" : "border-border"
   }`;
@@ -523,49 +500,49 @@ function RevisionPreview({
   const fieldRows: Array<{ key: string; label: string; value: string; differs: boolean }> = [
     {
       key: "title",
-      label: "Title",
+      label: interfaceText("m_7e8cd2056da73a"),
       value: snapshot.title,
       differs: !!currentSnapshot && currentSnapshot.title !== snapshot.title,
     },
     {
       key: "priority",
-      label: "Priority",
+      label: interfaceText("m_d60dbba0792232"),
       value: snapshot.priority,
       differs: !!currentSnapshot && currentSnapshot.priority !== snapshot.priority,
     },
     {
       key: "status",
-      label: "Status",
+      label: interfaceText("m_920e413c7d411b"),
       value: snapshot.status,
       differs: !!currentSnapshot && currentSnapshot.status !== snapshot.status,
     },
     {
       key: "assigneeAgentId",
-      label: "Default agent",
+      label: interfaceText("m_94da52ecd6c5c3"),
       value: resolveAgentName(snapshot.assigneeAgentId, agents),
       differs: !!currentSnapshot && currentSnapshot.assigneeAgentId !== snapshot.assigneeAgentId,
     },
     {
       key: "projectId",
-      label: "Project",
+      label: interfaceText("m_98595978531974"),
       value: resolveProjectName(snapshot.projectId, projects),
       differs: !!currentSnapshot && currentSnapshot.projectId !== snapshot.projectId,
     },
     {
       key: "concurrencyPolicy",
-      label: "Concurrency",
+      label: interfaceText("m_8708492f3ef5c1"),
       value: snapshot.concurrencyPolicy.replaceAll("_", " "),
       differs: !!currentSnapshot && currentSnapshot.concurrencyPolicy !== snapshot.concurrencyPolicy,
     },
     {
       key: "catchUpPolicy",
-      label: "Catch-up",
+      label: interfaceText("m_1c2d0f8e6b923c"),
       value: snapshot.catchUpPolicy.replaceAll("_", " "),
       differs: !!currentSnapshot && currentSnapshot.catchUpPolicy !== snapshot.catchUpPolicy,
     },
     {
       key: "env",
-      label: "Env",
+      label: interfaceText("m_494d9aa0c06844"),
       value: envSummary,
       differs: envDiffers,
     },
@@ -576,17 +553,14 @@ function RevisionPreview({
       <header className={`${cardWrapper} p-4 space-y-2`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1 min-w-0">
-            <p className="text-sm font-medium">rev {revision.revisionNumber}</p>
-            <p className="text-xs text-muted-foreground truncate">
-              Saved {relativeTime(revision.createdAt)} by {getActorLabel(revision)}
+            <p className="text-sm font-medium">{interfaceText("m_efd46cd7c40429")}{revision.revisionNumber}</p>
+            <p className="text-xs text-muted-foreground truncate">{interfaceText("m_3fb96660cf5750")}{relativeTime(revision.createdAt)}{interfaceText("m_52e86deffb8999")}{getActorLabel(revision)}
               {revision.changeSummary ? ` · ${revision.changeSummary}` : ""}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="outline" size="sm" onClick={onCompare}>
-              <Search className="mr-1.5 h-3.5 w-3.5" />
-              Compare with current
-            </Button>
+              <Search className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_095f9ab764ce8b")}</Button>
             <Button
               size="sm"
               onClick={onRestore}
@@ -602,9 +576,7 @@ function RevisionPreview({
       </header>
 
       <div className={`${cardWrapper} p-3`}>
-        <p className="pb-2 text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Structured fields
-        </p>
+        <p className="pb-2 text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_9ad6fd5800a95d")}</p>
         <div className="grid gap-3 md:grid-cols-2 divide-y md:divide-y-0 divide-border">
           {fieldRows.map((row) => (
             <div key={row.key} className="space-y-1 p-2">
@@ -612,9 +584,7 @@ function RevisionPreview({
               <p className="text-sm">
                 {row.value || <span className="text-muted-foreground">—</span>}
                 {row.differs && (
-                  <Badge variant="outline" className="ml-2 border-amber-500/40 bg-amber-500/10 px-1.5 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-amber-800 dark:text-amber-200">
-                    differs from current
-                  </Badge>
+                  <Badge variant="outline" className="ml-2 border-amber-500/40 bg-amber-500/10 px-1.5 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-amber-800 dark:text-amber-200">{interfaceText("m_6f73b4b9666fc9")}</Badge>
                 )}
               </p>
             </div>
@@ -623,24 +593,21 @@ function RevisionPreview({
       </div>
 
       <div className={`${cardWrapper} p-3 space-y-2`}>
-        <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Description
-        </p>
+        <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_526e0087cc3f25")}</p>
         <div className="rounded-md bg-background/40 p-3 text-sm leading-7">
           {snapshot.description ? (
             <MarkdownBody>{snapshot.description}</MarkdownBody>
           ) : (
-            <span className="text-muted-foreground">No description</span>
+            <span className="text-muted-foreground">{interfaceText("m_bcd8cc53f40e3d")}</span>
           )}
         </div>
       </div>
 
       <div className={`${cardWrapper} p-3 space-y-2`}>
-        <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Triggers ({triggers.length})
+        <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_7acda2fcb041e5")}{triggers.length})
         </p>
         {triggers.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No triggers in this revision.</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_30a4fef6bcdfdd")}</p>
         ) : (
           <ul className="divide-y divide-border">
             {triggers.map((trigger) => (
@@ -655,29 +622,24 @@ function RevisionPreview({
                 <span
                   className={`ml-auto text-xs ${trigger.enabled ? "text-emerald-400" : "text-muted-foreground"}`}
                 >
-                  {trigger.enabled ? "enabled" : "disabled"}
+                  {trigger.enabled ? interfaceText("m_fb9cf75606b407") : interfaceText("m_17eb3c0168d0d7")}
                 </span>
               </li>
             ))}
           </ul>
         )}
-        <p className="text-xs text-muted-foreground">
-          Webhook secrets are not stored in revisions. If a restored webhook trigger needs re-creation,
-          Paperclip mints fresh secret material at restore time.
-        </p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_a2c8439f07cd92")}</p>
       </div>
 
       {snapshot.variables.length > 0 && (
         <div className={`${cardWrapper} p-3 space-y-2`}>
-          <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-            Variables ({snapshot.variables.length})
+          <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_9256243b554015")}{snapshot.variables.length})
           </p>
           <ul className="divide-y divide-border">
             {snapshot.variables.map((variable) => (
               <li key={variable.name} className="py-2 flex items-center justify-between text-sm">
                 <span className="font-mono text-xs">{variable.name}</span>
-                <span className="text-xs text-muted-foreground">
-                  default: {formatVariableDefault(variable)}
+                <span className="text-xs text-muted-foreground">{interfaceText("m_b0577051c59af4")}{formatVariableDefault(variable)}
                 </span>
               </li>
             ))}
@@ -711,59 +673,45 @@ function RestoreConfirmDialog({
   recreatedWebhookLabels: string[];
   envDiffCounts: EnvDiffCounts;
 }) {
+  useInterfaceLanguage();
   const newRevisionNumber = currentRevisionNumber + 1;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Restore revision {target.revisionNumber}?</DialogTitle>
-          <DialogDescription>
-            This creates a new revision {newRevisionNumber} with the same content as revision{" "}
-            {target.revisionNumber}. Revisions {target.revisionNumber}–{currentRevisionNumber} stay
-            in history and are not modified.
-          </DialogDescription>
+          <DialogTitle>{interfaceText("m_0f79a792db5e05")}{target.revisionNumber}?</DialogTitle>
+          <DialogDescription>{interfaceText("m_4172c0e13eacda")}{newRevisionNumber}{interfaceText("m_f36bb074eef480")}{" "}
+            {target.revisionNumber}{interfaceText("m_9c282cb488e9d8")}{target.revisionNumber}–{currentRevisionNumber}{interfaceText("m_1b3bce834fa9b6")}</DialogDescription>
         </DialogHeader>
         <ul className="space-y-2 text-sm">
           <li className="flex items-start gap-2">
-            <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Routine field values, variables, and schedule cron will revert.
-          </li>
+            <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />{interfaceText("m_4e1b2bb68b5686")}</li>
           {envDiffCounts.total > 0 && (
             <li className="flex items-start gap-2">
-              <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Routine secrets will revert: {formatEnvDiffCounts(envDiffCounts)}.
+              <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />{interfaceText("m_f1c7949ea9972a")}{formatEnvDiffCounts(envDiffCounts)}.
             </li>
           )}
           <li className="flex items-start gap-2">
-            <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Previous run history is preserved.
-          </li>
+            <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />{interfaceText("m_37857ccf715a3a")}</li>
           {recreatedWebhookLabels.map((label) => (
             <li key={label} className="flex items-start gap-2 text-amber-800 dark:text-amber-200">
-              <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
-              The webhook trigger {label} will be recreated with a new URL and secret. Paperclip will
-              show the secret once after restore — copy it before closing.
-            </li>
+              <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />{interfaceText("m_9ff4414ec220b6")}{label}{interfaceText("m_f398302a13d049")}</li>
           ))}
         </ul>
         <div className="space-y-1.5">
-          <Label htmlFor="restore-change-summary" className="text-xs">
-            Change summary (optional)
-          </Label>
+          <Label htmlFor="restore-change-summary" className="text-xs">{interfaceText("m_704fc4c00d56e0")}</Label>
           <Input
             id="restore-change-summary"
             value={changeSummary}
-            placeholder="Why are you restoring? Visible in history."
+            placeholder={interfaceText("m_9093cbf22a7bca")}
             onChange={(event) => onChangeSummaryChange(event.target.value)}
           />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={pending}>
-            Cancel
-          </Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={pending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button onClick={onConfirm} disabled={pending}>
             <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-            {pending ? "Restoring…" : `Restore as revision ${newRevisionNumber}`}
+            {pending ? interfaceText("m_5a4918e0201c87") : interfaceText("m_8595158303a5e9", { value0: (newRevisionNumber) })}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -792,6 +740,7 @@ function RoutineRevisionDiffModal({
   secrets: SecretLookup;
   onRestore: (revision: RoutineRevision) => void;
 }) {
+  useInterfaceLanguage();
   const [leftId, setLeftId] = useState<string>(initialOldRevisionId);
   const [rightId, setRightId] = useState<string>(initialNewRevisionId);
 
@@ -821,18 +770,18 @@ function RoutineRevisionDiffModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="!max-w-(--pct-90) w-full max-h-(--sz-85vh) overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Compare routine revisions</DialogTitle>
+          <DialogTitle>{interfaceText("m_53caf5e97797bd")}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-wrap items-center gap-3">
           <RevisionPicker
-            label="Old"
+            label={interfaceText("m_bca97160f4e121")}
             value={leftId}
             onChange={setLeftId}
             revisions={revisions}
             tone="red"
           />
           <RevisionPicker
-            label="New"
+            label={interfaceText("m_18fdd549b2ed36")}
             value={rightId}
             onChange={setRightId}
             revisions={revisions}
@@ -841,18 +790,16 @@ function RoutineRevisionDiffModal({
         </div>
         <div className="overflow-auto flex-1 space-y-4">
           <section className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-              Field changes
-            </p>
+            <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_ecfa72a243c182")}</p>
             {fieldChanges.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No structural field changes.</p>
+              <p className="text-sm text-muted-foreground">{interfaceText("m_d9af89b8c7ac96")}</p>
             ) : (
               <table className="w-full text-sm border border-border rounded-md overflow-hidden">
                 <thead>
                   <tr className="text-xs uppercase tracking-wide bg-muted/30 text-muted-foreground">
-                    <th className="px-3 py-2 text-left">Field</th>
-                    <th className="px-3 py-2 text-left">Old value</th>
-                    <th className="px-3 py-2 text-left">New value</th>
+                    <th className="px-3 py-2 text-left">{interfaceText("m_f45fc1dfdc96db")}</th>
+                    <th className="px-3 py-2 text-left">{interfaceText("m_a7c253b4a31108")}</th>
+                    <th className="px-3 py-2 text-left">{interfaceText("m_7ca9b97db8e5fe")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -872,21 +819,15 @@ function RoutineRevisionDiffModal({
             )}
           </section>
           <section className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-              Description diff
-            </p>
+            <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_0ec05d9619fd15")}</p>
             <DiffTable rows={descriptionDiff} />
           </section>
         </div>
         <DialogFooter className="justify-between sm:justify-between">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
-          </Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{interfaceText("m_7d9eb7acb13e24")}</Button>
           {leftIsHistorical && left && (
             <Button onClick={() => onRestore(left)}>
-              <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-              Restore rev {left.revisionNumber} as new revision
-            </Button>
+              <RotateCcw className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_08b6d55ff37601")}{left.revisionNumber}{interfaceText("m_af98a167ec265b")}</Button>
           )}
         </DialogFooter>
       </DialogContent>
@@ -907,6 +848,7 @@ function RevisionPicker({
   revisions: RoutineRevision[];
   tone: "red" | "green";
 }) {
+  useInterfaceLanguage();
   const toneClass = tone === "red"
     ? "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300"
     : "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-300";
@@ -923,8 +865,7 @@ function RevisionPicker({
         className="h-8 min-w-(--sz-12rem) rounded-md border border-border/60 bg-background px-2 text-xs"
       >
         {revisions.map((revision) => (
-          <option key={revision.id} value={revision.id}>
-            rev {revision.revisionNumber} — {relativeTime(revision.createdAt)}
+          <option key={revision.id} value={revision.id}>{interfaceText("m_efd46cd7c40429")}{revision.revisionNumber} — {relativeTime(revision.createdAt)}
             {revision.changeSummary ? ` • ${revision.changeSummary}` : ""}
           </option>
         ))}
@@ -934,11 +875,12 @@ function RevisionPicker({
 }
 
 function DiffTable({ rows }: { rows: DiffRow[] }) {
+  useInterfaceLanguage();
   if (rows.length === 0) {
-    return <p className="text-sm text-muted-foreground">No description on either revision.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_010f554facc9c4")}</p>;
   }
   if (rows.every((row) => row.kind === "context")) {
-    return <p className="text-sm text-muted-foreground">Descriptions are identical.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_5982a8d28870ce")}</p>;
   }
   const lineClassesByKind: Record<DiffRow["kind"], string> = {
     context: "bg-transparent",
@@ -953,10 +895,10 @@ function DiffTable({ rows }: { rows: DiffRow[] }) {
   return (
     <div className="rounded-md border border-border text-xs font-mono leading-6 overflow-hidden">
       <div className="grid grid-cols-(--gtc-1) border-b border-border/60 bg-muted/30 px-3 py-2 text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">
-        <span>Old</span>
-        <span>New</span>
+        <span>{interfaceText("m_bca97160f4e121")}</span>
+        <span>{interfaceText("m_18fdd549b2ed36")}</span>
         <span />
-        <span>Content</span>
+        <span>{interfaceText("m_47bd29075f8b80")}</span>
       </div>
       {rows.map((row, index) => (
         <div
@@ -982,9 +924,9 @@ function DiffTable({ rows }: { rows: DiffRow[] }) {
 }
 
 function getActorLabel(revision: RoutineRevision): string {
-  if (revision.createdByUserId) return "board";
+  if (revision.createdByUserId) return interfaceText("m_859169b3818578");
   if (revision.createdByAgentId) return "agent";
-  return "system";
+  return interfaceText("m_bbc5e661e106c6");
 }
 
 function resolveAgentName(agentId: string | null, lookup: AgentLookup) {
@@ -1129,7 +1071,7 @@ function summarizeEnv(env: RoutineEnvConfig | null): string {
   const entries = Object.entries(normalizeEnv(env));
   if (entries.length === 0) return "";
   const secretCount = entries.filter(([, binding]) => envBindingKind(binding) === "secret_ref").length;
-  const keyLabel = entries.length === 1 ? "key" : "keys";
+  const keyLabel = entries.length === 1 ? interfaceText("m_2c70e12b7a0646") : interfaceText("m_48a53f0774c8ce");
   if (secretCount === 0) return `${entries.length} ${keyLabel}`;
   return `${entries.length} ${keyLabel} (${secretCount} secret ${secretCount === 1 ? "ref" : "refs"})`;
 }

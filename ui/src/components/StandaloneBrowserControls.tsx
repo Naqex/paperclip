@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { ExternalLink, RefreshCw, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ function ControlButton({
 }
 
 export function StandaloneBrowserControls({ mobile }: { mobile: boolean }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const [chromeless, setChromeless] = useState(() =>
     typeof window !== "undefined" && mobile ? isChromelessDisplayMode() : false,
   );
@@ -73,12 +75,12 @@ export function StandaloneBrowserControls({ mobile }: { mobile: boolean }) {
         return;
       }
       await copyTextToClipboard(url);
-      toastActions?.pushToast({ title: "Link copied", tone: "success" });
+      toastActions?.pushToast({ title: interfaceText("m_d12860c21e78ba"), tone: "success" });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-      toastActions?.pushToast({ title: "Share failed", body: "Try opening the page in your browser.", tone: "error" });
+      toastActions?.pushToast({ title: interfaceText("m_609fbf097c2976"), body: interfaceText("m_702a3e7b5901ae"), tone: "error" });
     }
-  }, [toastActions]);
+  }, [toastActions, interfaceLanguage]);
 
   const openInBrowser = useCallback(() => {
     window.open(window.location.href, "_blank", "noopener,noreferrer");
@@ -88,13 +90,13 @@ export function StandaloneBrowserControls({ mobile }: { mobile: boolean }) {
 
   return (
     <div className="flex h-10 items-center justify-end gap-1 border-b border-border bg-background/95 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/85">
-      <ControlButton label="Refresh" onClick={refresh}>
+      <ControlButton label={interfaceText("m_0e91610117029a")} onClick={refresh}>
         <RefreshCw className="h-4 w-4" />
       </ControlButton>
-      <ControlButton label="Share" onClick={share}>
+      <ControlButton label={interfaceText("m_29887a5ff9846c")} onClick={share}>
         <Share2 className="h-4 w-4" />
       </ControlButton>
-      <ControlButton label="Open in Browser" onClick={openInBrowser}>
+      <ControlButton label={interfaceText("m_32f8dcaafb6cca")} onClick={openInBrowser}>
         <ExternalLink className="h-4 w-4" />
       </ControlButton>
     </div>

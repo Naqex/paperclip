@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type {
@@ -15,41 +16,30 @@ export function SlackCapabilitiesView({
   capabilities?: SlackToolCapabilities;
   error?: string;
 }) {
+  useInterfaceLanguage();
   return (
     <section className="space-y-3">
-      <p className="text-sm text-muted-foreground">
-        Read, search, and act in Slack. Some actions require approval.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_b6aa05e9ee5459")}</p>
       {error && (
         <p role="alert" className="text-sm text-destructive">
           {error}
         </p>
       )}
       {!capabilities && !error && (
-        <p role="status" className="text-sm text-muted-foreground">
-          Checking Slack permissions…
-        </p>
+        <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_d85521cb24d0af")}</p>
       )}
       {capabilities && (
         <>
           {capabilities.missingScopes.length > 0 && (
             <div className="rounded-lg border border-border bg-muted p-3 space-y-2">
-              <p className="text-sm font-medium">
-                Add permissions to unlock more tools
-              </p>
-              <p className="text-sm">
-                Your existing connection still works. In{" "}
+              <p className="text-sm font-medium">{interfaceText("m_a716eb3e29fb06")}</p>
+              <p className="text-sm">{interfaceText("m_090a1069c85c39")}{" "}
                 <a
                   className="underline underline-offset-4"
                   href="https://api.slack.com/apps"
                   target="_blank"
                   rel="noreferrer"
-                >
-                  Slack app settings
-                </a>
-                , choose your app, open OAuth &amp; Permissions, add these Bot
-                Token Scopes, then reinstall the app to your workspace.
-              </p>
+                >{interfaceText("m_d811efd520ae97")}</a>{interfaceText("m_4e7c59382e8c02")}</p>
               <p className="text-xs font-mono break-words">
                 {capabilities.missingScopes.join(", ")}
               </p>
@@ -75,6 +65,7 @@ export function SlackSearchView({
     clientSecret: string;
   }) => Promise<void>;
 }) {
+  useInterfaceLanguage();
   const id = useId();
   const [clientId, setClientId] = useState(status.clientId ?? "");
   const [clientSecret, setClientSecret] = useState("");
@@ -95,12 +86,8 @@ export function SlackSearchView({
   };
   return (
     <section className="space-y-3">
-      <h3 className="text-sm font-semibold">Your Slack search access</h3>
-      <p className="text-sm text-muted-foreground">
-        Optional personal authorization enables private search on supported
-        runtimes. It cannot read channels the bot hasn’t joined or let the bot
-        write as you. Basic channel reading works without it.
-      </p>
+      <h3 className="text-sm font-semibold">{interfaceText("m_c49a014b0e92ab")}</h3>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_5d5b66af49902a")}</p>
       {!status.nativeSearchAvailable && (
         <p role="status" className="text-sm text-muted-foreground">
           {status.limitation}
@@ -108,36 +95,27 @@ export function SlackSearchView({
       )}
       {status.connected ? (
         <div className="flex items-center justify-between gap-3">
-          <span className="text-sm">Slack search connected</span>
+          <span className="text-sm">{interfaceText("m_7ce7998d7058af")}</span>
           <Button
             variant="outline"
             size="sm"
             disabled={pending}
             onClick={() => void perform(onDisconnect)}
-          >
-            Disconnect search
-          </Button>
+          >{interfaceText("m_1ae291964c7b01")}</Button>
         </div>
       ) : (
         <Button
           variant="outline"
           disabled={pending || !status.configured}
           onClick={() => void perform(onConnect)}
-        >
-          Connect Slack search
-        </Button>
+        >{interfaceText("m_e8b57c084f02cc")}</Button>
       )}
       {!status.configured && (
-        <p className="text-sm text-muted-foreground">
-          A connection manager needs to configure your Slack app’s OAuth
-          credentials first.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_c83c40760e295e")}</p>
       )}
       {status.canConfigure && (
         <details className="text-sm">
-          <summary className="cursor-pointer text-muted-foreground">
-            OAuth app configuration for connection managers
-          </summary>
+          <summary className="cursor-pointer text-muted-foreground">{interfaceText("m_ee4c0f2a349c1e")}</summary>
           <form
             className="mt-3 space-y-3"
             onSubmit={(event) => {
@@ -148,18 +126,14 @@ export function SlackSearchView({
               });
             }}
           >
-            <p className="text-sm">
-              In Slack app settings, add this redirect URL under OAuth &amp;
-              Permissions. Add user scopes <code>search:read.public</code>,{" "}
-              <code>search:read.private</code> and{" "}
-              <code>search:read.files</code>. Find Client ID and Client Secret
-              under Basic Information.
-            </p>
+            <p className="text-sm">{interfaceText("m_b38c90d79da644")}<code>search:read.public</code>,{" "}
+              <code>search:read.private</code>{interfaceText("m_2e5f769687c773")}{" "}
+              <code>search:read.files</code>{interfaceText("m_43c6d5ed9aa868")}</p>
             <p className="text-xs font-mono break-all">
-              {status.redirectUri ?? "Configure a public HTTPS URL first."}
+              {status.redirectUri ?? interfaceText("m_a5716c99bdb749")}
             </p>
             <div className="space-y-2">
-              <label htmlFor={`${id}-client`}>Client ID</label>
+              <label htmlFor={`${id}-client`}>{interfaceText("m_8726db013948f0")}</label>
               <Input
                 id={`${id}-client`}
                 value={clientId}
@@ -181,9 +155,7 @@ export function SlackSearchView({
                 type="submit"
                 size="sm"
                 disabled={pending || !clientId || !clientSecret}
-              >
-                Save OAuth configuration
-              </Button>
+              >{interfaceText("m_37b1484853783c")}</Button>
             </div>
           </form>
         </details>
@@ -225,6 +197,7 @@ export function SlackSearchAccess({
   companyId: string;
   endpointId: string;
 }) {
+  useInterfaceLanguage();
   const query = useQuery({
     queryKey: ["slack-search", companyId, endpointId],
     queryFn: () => slackToolsApi.search(companyId, endpointId),
@@ -237,9 +210,7 @@ export function SlackSearchAccess({
     );
   if (!query.data)
     return (
-      <p role="status" className="text-sm text-muted-foreground">
-        Loading search access…
-      </p>
+      <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_20c6a0280b6b69")}</p>
     );
   return (
     <SlackSearchView

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Loader2 } from "lucide-react";
@@ -20,6 +21,7 @@ const providerNames: Record<ChatProvider, string> = {
 };
 
 export function ChatIdentityConfirm() {
+  useInterfaceLanguage();
   const [params] = useSearchParams();
   const token = params.get("token") ?? "";
   const [confirmed, setConfirmed] = useState(false);
@@ -45,27 +47,22 @@ export function ChatIdentityConfirm() {
   const requestAccess = useMutation({
     mutationFn: () => chatEndpointsApi.requestIdentityAccess(token),
   });
-  if (health.isError || (!local && session.isError)) return <main className="mx-auto max-w-lg px-6 py-12 text-sm text-destructive">Couldn&apos;t load your account. Refresh to try again.</main>;
+  if (health.isError || (!local && session.isError)) return <main className="mx-auto max-w-lg px-6 py-12 text-sm text-destructive">{interfaceText("m_8f5cf3dfc468fe")}</main>;
   if (health.isSuccess && !local && session.isSuccess && !session.data) {
     return <Navigate to={`/auth?next=${encodeURIComponent(`/chat-identity/confirm?token=${token}`)}`} replace />;
   }
   if (token.length < 32 || (!confirmed && preview.isError)) {
     return (
       <main className="mx-auto max-w-lg space-y-4 px-6 py-12">
-        <h1 className="text-xl font-bold">This identity link is unavailable</h1>
-        <p className="text-sm text-muted-foreground">
-          The link is invalid, expired, already used, or belongs to another
-          Paperclip organization.
-        </p>
+        <h1 className="text-xl font-bold">{interfaceText("m_4f759618376d45")}</h1>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_1278a4a2aad5f2")}</p>
       </main>
     );
   }
   if (health.isPending || preview.isLoading || (!local && session.isLoading) || !preview.data) {
     return (
       <main className="flex items-center justify-center gap-2 px-6 py-12 text-sm text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        Checking identity link…
-      </main>
+        <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_b27af017f568b4")}</main>
     );
   }
   const identity = preview.data;
@@ -79,13 +76,11 @@ export function ChatIdentityConfirm() {
       <main className="mx-auto max-w-lg space-y-5 px-6 py-12">
         <CheckCircle2 className="h-8 w-8" />
         <div>
-          <h1 className="text-xl font-bold">Identity linked</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Future messages from {identity.externalLabel} use your current
-            Paperclip permissions in {identity.companyName}.
+          <h1 className="text-xl font-bold">{interfaceText("m_ce755132aac6fe")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_8ae381d39bda72")}{identity.externalLabel}{interfaceText("m_ccb5010863dec4")}{identity.companyName}.
           </p>
         </div>
-        {identity.provider === "slack" && <Button asChild><a href="https://app.slack.com/" target="_blank" rel="noopener noreferrer">Return to Slack</a></Button>}
+        {identity.provider === "slack" && <Button asChild><a href="https://app.slack.com/" target="_blank" rel="noopener noreferrer">{interfaceText("m_b460e2df41b2c5")}</a></Button>}
       </main>
     );
   }
@@ -93,24 +88,24 @@ export function ChatIdentityConfirm() {
     <main className="mx-auto max-w-lg space-y-6 px-6 py-12">
       <div>
         <p className="text-sm text-muted-foreground">{identity.companyName}</p>
-        <h1 className="mt-1 text-xl font-bold">Link your external identity</h1>
+        <h1 className="mt-1 text-xl font-bold">{interfaceText("m_61da1fc184b014")}</h1>
       </div>
       <dl className="divide-y divide-border border-y border-border">
         <div className="flex items-center justify-between gap-4 py-3">
-          <dt className="text-sm text-muted-foreground">Provider</dt>
+          <dt className="text-sm text-muted-foreground">{interfaceText("m_472590ae974d4c")}</dt>
           <dd className="text-sm font-medium">
             {providerNames[identity.provider]}
           </dd>
         </div>
         <div className="flex items-center justify-between gap-4 py-3">
-          <dt className="text-sm text-muted-foreground">External identity</dt>
+          <dt className="text-sm text-muted-foreground">{interfaceText("m_22da5353297279")}</dt>
           <dd className="text-right text-sm font-medium">
             {identity.externalLabel}
             {identity.externalDetail ? ` · ${identity.externalDetail}` : ""}
           </dd>
         </div>
         <div className="flex items-center justify-between gap-4 py-3">
-          <dt className="text-sm text-muted-foreground">Paperclip account</dt>
+          <dt className="text-sm text-muted-foreground">{interfaceText("m_deb2783e82b116")}</dt>
           <dd className="text-right text-sm font-medium">{paperclipAccount}</dd>
         </div>
         <div className="flex items-center justify-between gap-4 py-3">
@@ -120,27 +115,19 @@ export function ChatIdentityConfirm() {
           </dd>
         </div>
       </dl>
-      <p className="text-sm text-muted-foreground">
-        Confirm only if this is your {providerNames[identity.provider]}{" "}
-        identity. Paperclip will check your current organization membership on
-        every action.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_0473e1cf489ef0")}{providerNames[identity.provider]}{" "}{interfaceText("m_5ae51bfb89a71e")}</p>
       {confirm.isError && (
-        <p className="text-sm text-destructive">
-          This link could not be confirmed. It may have expired or been revoked.
-        </p>
+        <p className="text-sm text-destructive">{interfaceText("m_bdb905e514f381")}</p>
       )}
       {identity.canConfirm === false ? (
         <div className="space-y-3">
-          <p className="text-sm">You need membership in {identity.companyName} before linking this account.</p>
-          {requestAccess.isSuccess ? <p role="status" className="text-sm">Access requested. An admin can approve it in Paperclip. After approval, return here to confirm; if this link expires, send the connect command in Slack again.</p>
-            : <Button disabled={requestAccess.isPending || !identity.selfService} onClick={() => requestAccess.mutate()}>Request access</Button>}
-          {requestAccess.isError && <p role="alert" className="text-sm text-destructive">Couldn&apos;t request access. The link may have expired. Send the connect command again and retry.</p>}
+          <p className="text-sm">{interfaceText("m_5ed924a4908f2b")}{identity.companyName}{interfaceText("m_a0017ec7db6078")}</p>
+          {requestAccess.isSuccess ? <p role="status" className="text-sm">{interfaceText("m_817b7731dd8bfc")}</p>
+            : <Button disabled={requestAccess.isPending || !identity.selfService} onClick={() => requestAccess.mutate()}>{interfaceText("m_b06f1662da4a13")}</Button>}
+          {requestAccess.isError && <p role="alert" className="text-sm text-destructive">{interfaceText("m_c37a83301f30ae")}</p>}
         </div>
       ) : <Button disabled={confirm.isPending} onClick={() => confirm.mutate()}>
-        {confirm.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-        Confirm identity
-      </Button>}
+        {confirm.isPending && <Loader2 className="h-4 w-4 animate-spin" />}{interfaceText("m_094d10c2dc1fb3")}</Button>}
     </main>
   );
 }

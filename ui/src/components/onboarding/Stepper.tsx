@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { cn } from "../../lib/utils";
 
 /**
@@ -107,6 +108,7 @@ export function Stepper({
   canJumpToStep?: (target: number) => boolean;
   onJumpToStep?: (target: number) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="mb-11 flex items-center justify-center gap-2">
       {Array.from({ length: total }, (_, index) => index + 1).map((segment) => {
@@ -115,7 +117,7 @@ export function Stepper({
           <button
             key={segment}
             type="button"
-            aria-label={labels[segment - 1] ?? `Step ${segment}`}
+            aria-label={labels[segment - 1] ?? interfaceText("m_41d4955a106c6d", { value0: (segment) })}
             aria-current={segment === step ? "step" : undefined}
             disabled={!jumpable}
             onClick={() => jumpable && onJumpToStep?.(segment)}
@@ -133,8 +135,7 @@ export function Stepper({
         );
       })}
       {/* Out of flow, so it neither takes a row nor picks up the gap. */}
-      <span className="sr-only">
-        Step {step} of {total}
+      <span className="sr-only">{interfaceText("m_474a987f3bbe57")}{step}{interfaceText("m_a4282e4b2298b9")}{total}
       </span>
     </div>
   );

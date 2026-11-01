@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect } from "react";
 import { useParams } from "@/lib/router";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
@@ -7,6 +8,7 @@ import { ToolsAdminGate } from "./ToolsAdminGate";
 import { ProfileDetail } from "./ProfileDetail";
 
 export function ProfileDetailRoute() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompany, selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const params = useParams<{ profileId?: string }>();
@@ -14,15 +16,15 @@ export function ProfileDetailRoute() {
   useEffect(() => {
     setBreadcrumbs([
       { label: selectedCompany?.name ?? "Company", href: "/dashboard" },
-      { label: "Apps", href: "/apps" },
-      { label: "Access profiles", href: advancedTabHref("profiles") },
-      { label: "Profile detail" },
+      { label: interfaceText("m_89dd748442c194"), href: "/apps" },
+      { label: interfaceText("m_2471292ff715cc"), href: advancedTabHref("profiles") },
+      { label: interfaceText("m_584ea58b60d4b6") },
     ]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs, selectedCompany?.name]);
+  }, [setBreadcrumbs, selectedCompany?.name, interfaceLanguage]);
 
   if (!selectedCompanyId || !params.profileId) {
-    return <div className="p-6 text-sm text-muted-foreground">Select an organization and profile.</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{interfaceText("m_aac2b9e3b46cfc")}</div>;
   }
 
   return (

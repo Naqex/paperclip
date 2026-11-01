@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { StatusCard, StatusCardRefreshPolicy } from "@paperclipai/shared";
 
 /**
@@ -52,21 +53,21 @@ export const STATUS_CARD_LIFECYCLE_PRESENTATION: Record<
   StatusCardLifecyclePresentation
 > = {
   compiling: {
-    label: "Setting up",
+    get label() { return interfaceText("m_dbdf27e5db8d8c"); },
     dotClassName: "bg-cyan-400 animate-pulse",
     description: "Just created; setting up and generating the first summary.",
     dashedBorder: true,
     keepsLastSummary: false,
   },
   fresh: {
-    label: "Fresh",
+    get label() { return interfaceText("m_f810b66877419c"); },
     dotClassName: "bg-emerald-400",
     description: "Summary reflects all known changes; nothing pending.",
     dashedBorder: false,
     keepsLastSummary: true,
   },
   stale: {
-    label: "Stale",
+    get label() { return interfaceText("m_40c9e59c5e152b"); },
     dotClassName: "bg-amber-400",
     description: "Changes are pending since the last update.",
     dashedBorder: false,
@@ -75,35 +76,35 @@ export const STATUS_CARD_LIFECYCLE_PRESENTATION: Record<
   updating: {
     // Blue (distinct from fresh-emerald and compiling-cyan) so an in-flight
     // update never reads as "fresh" on a glance-scan of the board.
-    label: "Updating",
+    get label() { return interfaceText("m_0b5260e1b4054f"); },
     dotClassName: "bg-blue-500 animate-pulse",
     description: "An update is streaming in now.",
     dashedBorder: false,
     keepsLastSummary: true,
   },
   error: {
-    label: "Error",
+    get label() { return interfaceText("m_54a0e8c17ebb21"); },
     dotClassName: "bg-red-500",
     description: "The last run failed; the last good summary stays visible.",
     dashedBorder: false,
     keepsLastSummary: true,
   },
   paused_budget: {
-    label: "Paused — budget",
+    get label() { return interfaceText("m_62ae66772ab177"); },
     dotClassName: "bg-orange-400",
     description: "The daily token cap was hit; auto-updates are suspended.",
     dashedBorder: false,
     keepsLastSummary: true,
   },
   paused_hours: {
-    label: "Paused — hours",
+    get label() { return interfaceText("m_9e02926799bef4"); },
     dotClassName: "bg-orange-400",
     description: "Outside active hours; changes batch into one update at window open.",
     dashedBorder: false,
     keepsLastSummary: true,
   },
   archived: {
-    label: "Archived",
+    get label() { return interfaceText("m_bdb86505f8062d"); },
     dotClassName: "bg-muted-foreground/50",
     description: "No auto-updates and no watches. Restore to start watching again.",
     dashedBorder: false,

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { LiveTranscriptInterests, DISCONNECTED_TRANSCRIPT_STREAM } from "../lib/live-transcript-interests";
 import { resolveAgentAppearance } from "@paperclipai/shared";
 import { getPageVisibility, usePageVisibility } from "../lib/page-visibility";
@@ -269,12 +270,12 @@ function resolveActorLabel(
       `Agent ${shortId(actorId)}`
     );
   }
-  if (actorType === "system") return "System";
+  if (actorType === "system") return interfaceText("m_6725e7bbcd28f3");
   if (actorType === "user" && actorId) {
     return resolveUserName(queryClient, companyId, actorId) ??
-      (actorId === "board" || actorId === "local-board" ? "Board" : `User ${shortId(actorId)}`);
+      (actorId === "board" || actorId === "local-board" ? interfaceText("m_4816cbfd74aa82") : interfaceText("m_caa640f2cdc280", { value0: (shortId(actorId)) }));
   }
-  return actorType === "plugin" ? "Plugin" : "Unknown actor";
+  return actorType === "plugin" ? "Plugin" : interfaceText("m_9b3fd9d8cef2ec");
 }
 
 interface IssueToastContext {
@@ -1110,14 +1111,14 @@ function buildActivityToast(
   const reopenedFrom = readString(details?.reopenedFrom);
   const reopenedLabel = reopened
     ? reopenedFrom
-      ? `reopened from ${reopenedFrom.replace(/_/g, " ")}`
-      : "reopened"
+      ? interfaceText("m_a1e87d09cca2b3", { value0: (reopenedFrom.replace(/_/g, " ")) })
+      : interfaceText("m_d050aeb86e2df9")
     : null;
   const title = reopened
-    ? `${actor} reopened and commented on ${issue.ref}`
+    ? interfaceText("m_eddbaba85dec8d", { value0: (actor), value1: (issue.ref) })
     : updated
-      ? `${actor} commented and updated ${issue.ref}`
-      : `${actor} commented on ${issue.ref}`;
+      ? interfaceText("m_ed5438dfe73254", { value0: (actor), value1: (issue.ref) })
+      : interfaceText("m_f1d939aa213b69", { value0: (actor), value1: (issue.ref) });
   const body = bodySnippet
     ? reopenedLabel
       ? `${reopenedLabel} - ${bodySnippet.replace(/^#+\s*/m, "").replace(/\n/g, " ")}`
@@ -1150,13 +1151,13 @@ function buildJoinRequestToast(
     return null;
 
   const requestType = readString(details?.requestType);
-  const label = requestType === "agent" ? "Agent" : "Someone";
+  const label = requestType === "agent" ? "Agent" : interfaceText("m_864c855e3d6439");
 
   return {
     title: `${label} wants to join`,
     body: "A new join request is waiting for approval.",
     tone: "info",
-    action: { label: "View inbox", href: "/inbox/mine" },
+    action: { label: interfaceText("m_1c8264bf1b95e9"), href: "/inbox/mine" },
     dedupeKey: `join-request:${entityId}`,
   };
 }
@@ -1173,7 +1174,7 @@ function buildAgentStatusToast(
 
   const tone = status === "error" ? "error" : "info";
   const name = nameOf(agentId) ?? `Agent ${shortId(agentId)}`;
-  const title = status === "running" ? `${name} started` : `${name} errored`;
+  const title = status === "running" ? interfaceText("m_d446bb1928d647", { value0: (name) }) : interfaceText("m_f88e7d5ae6bd1c", { value0: (name) });
 
   const agents = queryClient.getQueryData<Agent[]>(
     queryKeys.agents.list(companyId),
@@ -1185,7 +1186,7 @@ function buildAgentStatusToast(
     title,
     body,
     tone,
-    action: { label: "View agent", href: `/agents/${agentId}` },
+    action: { label: interfaceText("m_7ce7832e35e85d"), href: `/agents/${agentId}` },
     dedupeKey: `agent-status:${agentId}:${status}`,
   };
 }
@@ -1220,7 +1221,7 @@ function buildRunStatusToast(
       body: "This external chat identity isn't linked, and isolated guest workspaces are disabled. Link the identity in Connectors or enable isolated workspaces, then start a new task.",
       tone: "warn",
       ttlMs: 10_000,
-      action: { label: "Open chat connections", href: "/apps" },
+      action: { label: interfaceText("m_9f7e518a1c2d2a"), href: "/apps" },
       dedupeKey: `run-status:${runId}:${status}`,
     };
   }
@@ -1232,13 +1233,13 @@ function buildRunStatusToast(
         : "error";
   const statusLabel =
     status === "succeeded"
-      ? "succeeded"
+      ? interfaceText("m_5dceaeceb6d8a4")
       : status === "failed"
-        ? "failed"
+        ? interfaceText("m_5d28a90f4498a8")
         : status === "timed_out"
-          ? "timed out"
-          : "cancelled";
-  const title = `${name} run ${statusLabel}`;
+          ? interfaceText("m_3dcd80f1b15f79")
+          : interfaceText("m_8b47045eb7b8ca");
+  const title = interfaceText("m_ba2bdcf807d611", { value0: (name), value1: (statusLabel) });
 
   let body: string | undefined;
   if (error) {
@@ -1252,7 +1253,7 @@ function buildRunStatusToast(
     body,
     tone,
     ttlMs: status === "succeeded" ? 5000 : 7000,
-    action: { label: "View run", href: `/agents/${agentId}/runs/${runId}` },
+    action: { label: interfaceText("m_aaf7fccc7d1315"), href: `/agents/${agentId}/runs/${runId}` },
     dedupeKey: `run-status:${runId}:${status}`,
   };
 }

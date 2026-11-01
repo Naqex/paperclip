@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback } from "react";
 import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 import type { IssueRetryNowOutcome, IssueRetryNowResponse } from "@paperclipai/shared";
@@ -15,10 +16,10 @@ export type RetryNowError = {
 function readErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     if (typeof error.message === "string" && error.message.trim().length > 0) return error.message;
-    return `Request failed (${error.status})`;
+    return interfaceText("m_ae1430555ae588", { value0: (error.status) });
   }
   if (error instanceof Error && error.message) return error.message;
-  return "The request failed. Try again in a moment.";
+  return interfaceText("m_f6446c53c3fcb3");
 }
 
 export const RETRY_NOW_OUTCOME_HEADLINE: Record<IssueRetryNowOutcome, string> = {
@@ -34,6 +35,7 @@ export function useRetryNowMutation(
 ): UseMutationResult<IssueRetryNowResponse, unknown, void, unknown> & {
   lastError: RetryNowError | null;
 } {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
 
@@ -66,7 +68,7 @@ export function useRetryNowMutation(
     },
     onError: (error) => {
       pushToast({
-        title: "Couldn't retry now",
+        title: interfaceText("m_7452a71d0f62b3"),
         body: readErrorMessage(error),
         tone: "error",
       });

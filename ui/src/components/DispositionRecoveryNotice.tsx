@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { createContext, useContext, useId, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronDown, Loader2, RotateCcw, TriangleAlert } from "lucide-react";
 import type { Agent, Issue, IssueCommentMetadata, IssueRecoveryAction } from "@paperclipai/shared";
@@ -73,6 +74,7 @@ export function DispositionRecoveryNotice({ snapshot, createdAt, defaultExpanded
   createdAt?: string;
   defaultExpanded?: boolean;
 }) {
+  useInterfaceLanguage();
   const context = useContext(RecoveryContext);
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [pending, setPending] = useState(false);
@@ -109,27 +111,27 @@ export function DispositionRecoveryNotice({ snapshot, createdAt, defaultExpanded
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex flex-col gap-1" role="status" aria-live="polite">
           <h2 id={titleId} className="break-words text-sm font-medium text-foreground">
-            {requested ? "Retry requested" : historical ? "Agent needed attention" : "Agent needs attention"}
+            {requested ? interfaceText("m_6ef56fa452062d") : historical ? interfaceText("m_cf12a1b65a74b3") : interfaceText("m_fca5d0b0b10c63")}
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {requested ? `The task was returned to To do for ${agentName}.` : descriptionFor(snapshot)}
+            {requested ? interfaceText("m_18a29edcc9a88b", { value0: (agentName) }) : descriptionFor(snapshot)}
           </p>
         </div>
         {unavailableReason && !requested ? (
           <p id={unavailableId} className="text-xs leading-relaxed text-muted-foreground">
-            {!historical && <span className="font-medium text-foreground">Retry unavailable. </span>}{unavailableReason}
+            {!historical && <span className="font-medium text-foreground">{interfaceText("m_ed926025accfb0")}</span>}{unavailableReason}
           </p>
         ) : null}
-        {error ? <p role="alert" className="text-sm text-destructive">Couldn’t confirm the retry. {error}</p> : null}
+        {error ? <p role="alert" className="text-sm text-destructive">{interfaceText("m_cae5fe7fb42026")}{error}</p> : null}
         <div className="flex flex-wrap items-center gap-2">
           {!requested && !historical ? (
             <Button size="xs" variant="outline" disabled={pending || Boolean(unavailableReason)} aria-describedby={unavailableReason ? unavailableId : undefined} onClick={() => void retry()}>
               {pending ? <Loader2 aria-hidden="true" className="size-3 animate-spin motion-reduce:animate-none" /> : <RotateCcw aria-hidden="true" className="size-3" />}
-              {pending ? "Requesting retry…" : "Retry agent"}
+              {pending ? interfaceText("m_bb24a4403a1d51") : interfaceText("m_542baccf00ef38")}
             </Button>
           ) : null}
           <Button size="xs" variant="ghost" className="text-muted-foreground" aria-expanded={expanded} aria-controls={detailsId} onClick={() => setExpanded(current => !current)}>
-            {expanded ? "Hide details" : "View details"}
+            {expanded ? interfaceText("m_c9722a7a962a84") : interfaceText("m_d1bf045bb524da")}
             <ChevronDown aria-hidden="true" className={cn("size-3", expanded && "rotate-180")} />
           </Button>
           {createdAt ? <time dateTime={createdAt} className="font-mono text-xs text-muted-foreground sm:ml-auto">{timeAgo(createdAt)}</time> : null}
@@ -137,12 +139,12 @@ export function DispositionRecoveryNotice({ snapshot, createdAt, defaultExpanded
         {expanded ? (
           <div id={detailsId} className="flex flex-col gap-3 rounded-lg border border-border bg-muted/20 p-3">
             <dl className="flex flex-col gap-2 text-xs">
-              <div className="flex flex-wrap justify-between gap-1"><dt className="text-muted-foreground">Assigned when recovery stopped</dt><dd>{agentName}</dd></div>
-              <div className="flex flex-wrap justify-between gap-1"><dt className="text-muted-foreground">Automatic attempts</dt><dd className="font-mono">{snapshot.attemptCount} of {snapshot.maxAttempts}</dd></div>
-              <div className="flex flex-wrap justify-between gap-1"><dt className="text-muted-foreground">Automatic retries for this recovery</dt><dd>Stopped</dd></div>
+              <div className="flex flex-wrap justify-between gap-1"><dt className="text-muted-foreground">{interfaceText("m_38214f4d016242")}</dt><dd>{agentName}</dd></div>
+              <div className="flex flex-wrap justify-between gap-1"><dt className="text-muted-foreground">{interfaceText("m_35a02e3bfa3ac4")}</dt><dd className="font-mono">{snapshot.attemptCount}{interfaceText("m_a4282e4b2298b9")}{snapshot.maxAttempts}</dd></div>
+              <div className="flex flex-wrap justify-between gap-1"><dt className="text-muted-foreground">{interfaceText("m_1ac4415a116b30")}</dt><dd>{interfaceText("m_1a4f630ac1b69f")}</dd></div>
             </dl>
-            <p className="text-xs leading-relaxed text-muted-foreground">Recovery asked the assigned agent to record an outcome or a next step. Retrying keeps the same task and agent, and checks the task’s current controls before continuing.</p>
-            <div className="flex flex-col gap-1"><span className="text-xs text-muted-foreground">Technical reason</span><code className="break-all font-mono text-xs">{snapshot.reason}</code></div>
+            <p className="text-xs leading-relaxed text-muted-foreground">{interfaceText("m_4970e64938b4e8")}</p>
+            <div className="flex flex-col gap-1"><span className="text-xs text-muted-foreground">{interfaceText("m_8469882d915baa")}</span><code className="break-all font-mono text-xs">{snapshot.reason}</code></div>
           </div>
         ) : null}
       </div>

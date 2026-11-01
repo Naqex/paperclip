@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Navigate, Outlet, useLocation } from "@/lib/router";
@@ -30,23 +31,24 @@ export function CloudAccessError({
   retrying: boolean;
   onRetry: () => void;
 }) {
+  useInterfaceLanguage();
   useSuppressConnectionBanner(temporary);
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-4 px-4 py-16">
       <RefreshCw className="size-6 text-muted-foreground" aria-hidden="true" />
       <div className="flex flex-col gap-2" role="status">
         <h1 className="text-xl font-semibold">
-          {temporary ? "Reconnecting to Paperclip" : "Unable to load Paperclip"}
+          {temporary ? interfaceText("m_b11ca004872dae") : interfaceText("m_e28227a9a2805a")}
         </h1>
         <p className="text-sm text-muted-foreground">
           {temporary
-            ? "The server may be restarting or your connection was interrupted. We’ll try again every few seconds and reconnect automatically."
-            : "We couldn’t check your access to this instance. Try again, or contact your instance administrator if this continues."}
+            ? interfaceText("m_a0bc2bfcc5c4e7")
+            : interfaceText("m_c7f5fa9bd72337")}
         </p>
       </div>
       <div>
         <Button variant="outline" onClick={onRetry} disabled={retrying}>
-          {retrying ? "Connecting…" : "Try again"}
+          {retrying ? interfaceText("m_72021eb70e91b4") : interfaceText("m_d8b8392e2c5429")}
         </Button>
       </div>
     </div>
@@ -54,17 +56,13 @@ export function CloudAccessError({
 }
 
 function NoBoardAccessPage() {
+  useInterfaceLanguage();
   return (
     <div className="mx-auto max-w-xl py-10">
       <Card className="block p-6">
-        <h1 className="text-xl font-semibold">No organization access</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          This account is signed in, but it does not have an active organization membership or instance-admin access on
-          this Paperclip instance.
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Use an organization invite or sign in with an account that already belongs to this org.
-        </p>
+        <h1 className="text-xl font-semibold">{interfaceText("m_c613620672050b")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{interfaceText("m_628f031d5c87d6")}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{interfaceText("m_1473bb229c6a3c")}</p>
       </Card>
     </div>
   );

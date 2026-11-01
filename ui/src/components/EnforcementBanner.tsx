@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -101,6 +102,7 @@ function PresentationalBanner({
 }
 
 export function EnforcementBanner(props: EnforcementBannerProps) {
+  useInterfaceLanguage();
   const { companyId, className, forceVariant, recentDenialCount, tone, title, body, icon, action } = props;
 
   // Presentational mode short-circuits the data hook below.
@@ -151,16 +153,9 @@ export function EnforcementBanner(props: EnforcementBannerProps) {
       <div className="min-w-0 flex-1">
         {variant === "denied-detected" ? (
           <p>
-            <span className="font-medium">{computedCount}</span> governed tool call
-            {computedCount === 1 ? " was" : "s were"} denied or failed in the last hour. Access is enforced
-            server-side by the tool gateway — open the affected connector to review what was blocked and why.
-          </p>
+            <span className="font-medium">{computedCount}</span>{interfaceText("m_d8454dc6e38033")}{computedCount === 1 ? interfaceText("m_cc82604211b7f7") : interfaceText("m_fe223f7b3f0c58")}{interfaceText("m_d1de1bffb84cc0")}</p>
         ) : (
-          <p>
-            Tool access is enforced server-side by the tool gateway. These screens configure and observe that
-            enforcement — they do not replace it. Agents see and call only the tools their profiles and policies
-            allow; everything else is denied by default.
-          </p>
+          <p>{interfaceText("m_eb68447cf2185c")}</p>
         )}
       </div>
     </div>

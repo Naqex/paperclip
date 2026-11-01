@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 /**
  * Plugin bridge initialization.
  *
@@ -347,15 +348,16 @@ function PluginSdkAssigneePicker({
   companyId,
   value,
   onChange,
-  placeholder = "Responsible",
+  placeholder = interfaceText("m_bc110a6d072209"),
   noneLabel = "No responsible",
   searchPlaceholder = "Search responsible...",
-  emptyMessage = "No responsible found.",
+  emptyMessage = interfaceText("m_045a8ffe4067d6"),
   includeUsers = true,
   includeTerminatedAgents = false,
   className,
   onConfirm,
 }: PluginAssigneePickerProps) {
+  useInterfaceLanguage();
   const hostContext = useHostContext();
   const resolvedCompanyId = companyId ?? hostContext.companyId ?? null;
   const { data: session } = useQuery({
@@ -457,14 +459,15 @@ function PluginSdkProjectPicker({
   companyId,
   value,
   onChange,
-  placeholder = "Project",
+  placeholder = interfaceText("m_98595978531974"),
   noneLabel = "No project",
   searchPlaceholder = "Search projects...",
-  emptyMessage = "No projects found.",
+  emptyMessage = interfaceText("m_26e92309ba5b0c"),
   includeArchived = false,
   className,
   onConfirm,
 }: PluginProjectPickerProps) {
+  useInterfaceLanguage();
   const hostContext = useHostContext();
   const resolvedCompanyId = companyId ?? hostContext.companyId ?? null;
   const { data: session } = useQuery({
@@ -579,7 +582,8 @@ type PluginDataTableProps = {
   emptyMessage?: string;
 };
 
-function PluginSdkDataTable({ columns, rows, loading, emptyMessage = "No rows." }: PluginDataTableProps) {
+function PluginSdkDataTable({ columns, rows, loading, emptyMessage = interfaceText("m_1c6c8e7cac2f3c") }: PluginDataTableProps) {
+  useInterfaceLanguage();
   if (loading) return createElement("div", { className: "text-sm text-muted-foreground" }, "Loading...");
   if (!rows.length) return createElement("div", { className: "text-sm text-muted-foreground" }, emptyMessage);
   const gridColumns = columns.map((column) => column.width ?? "minmax(0, 1fr)").join(" ");
@@ -643,7 +647,8 @@ function PluginSdkJsonTree({ data }: { data: unknown }) {
   return createElement("pre", { className: "max-h-80 overflow-auto rounded-md border bg-muted/30 p-2 text-xs" }, JSON.stringify(data, null, 2));
 }
 
-function PluginSdkSpinner({ label = "Loading" }: { size?: "sm" | "md" | "lg"; label?: string }) {
+function PluginSdkSpinner({ label = interfaceText("m_dc380888c4e2c7") }: { size?: "sm" | "md" | "lg"; label?: string }) {
+  useInterfaceLanguage();
   return createElement("span", {
     className: "inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground align-middle",
     role: "status",

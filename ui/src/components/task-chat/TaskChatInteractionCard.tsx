@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ComponentProps } from "react";
 import type { IssueDocument } from "@paperclipai/shared";
 import type { MentionOption } from "@/components/MarkdownEditor";
@@ -47,6 +48,7 @@ export function TaskChatInteractionCard({
   draftKey,
   ...cardProps
 }: TaskChatInteractionCardProps) {
+  useInterfaceLanguage();
   const { enabled: coordinatorEnabled } = useCoordinatorWorkspaceEnabled();
   const interaction = item.interaction;
   if (coordinatorEnabled && interaction.kind === "suggest_tasks" && !shouldHideInteractionCard(interaction)) {
@@ -61,13 +63,13 @@ export function TaskChatInteractionCard({
         type="button"
         id={`interaction-${interaction.id}`}
         data-testid="task-chat-unanswered-question"
-        aria-label={`Answer question: ${prompt}`}
+        aria-label={interfaceText("m_62d590ff588e7b", { value0: (prompt) })}
         disabled={!onReviewRequest}
         onClick={() => onReviewRequest?.(interaction.id)}
         className="group flex w-full items-center gap-2 rounded-sm px-1 py-1.5 text-left text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <CircleHelp aria-hidden className="h-3.5 w-3.5 shrink-0" />
-        <span className="min-w-0 flex-1"><span className="block text-xs">Unanswered question</span><span className="block truncate">{prompt}</span></span>
+        <span className="min-w-0 flex-1"><span className="block text-xs">{interfaceText("m_a36c3c6b4b6b79")}</span><span className="block truncate">{prompt}</span></span>
         <ChevronRight aria-hidden className="h-3 w-3 shrink-0" />
       </button>
     );
@@ -83,7 +85,7 @@ export function TaskChatInteractionCard({
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <AppLogo name={action.appDisplayName || action.toolDisplayName} size={36} />
             <div className="min-w-0 flex-1"><MarkdownBody>{action.previewMarkdown.split(/\n\s*\n/)[0] || action.toolDisplayName}</MarkdownBody></div>
-            <Button className="ml-auto" size="sm" variant="outline" disabled={!onReviewRequest} onClick={() => onReviewRequest?.(interaction.id)}>Review request</Button>
+            <Button className="ml-auto" size="sm" variant="outline" disabled={!onReviewRequest} onClick={() => onReviewRequest?.(interaction.id)}>{interfaceText("m_dcea8abbdff035")}</Button>
           </div>
         ) : (
           <IssueThreadInteractionCard interaction={interaction} {...cardProps} />
@@ -94,7 +96,7 @@ export function TaskChatInteractionCard({
   if (presentation === "timeline" && showPendingRequest && interaction.status === "pending"
     && interaction.kind !== "connection_intent" && interaction.kind !== "ask_user_questions"
     && !shouldHideInteractionCard(interaction)) {
-    const label = interaction.title ?? (interaction.kind === "suggest_tasks" ? "Suggested tasks" : "Review request");
+    const label = interaction.title ?? (interaction.kind === "suggest_tasks" ? interfaceText("m_5addd6fff8dd79") : interfaceText("m_dcea8abbdff035"));
     const showPlan = interaction.kind === "request_confirmation"
       && interaction.payload.target?.type === "issue_document" && interaction.payload.target.key === "plan"
       && planDocument && showPlanPreview
@@ -105,7 +107,7 @@ export function TaskChatInteractionCard({
       <div className="w-full space-y-2">
         {showPlan ? <TaskChatPlanPreviewCard source={{ kind: "saved", document: planDocument }} testId="plan-review-preview" /> : null}
         <button type="button" id={`interaction-${interaction.id}`} data-testid="task-chat-pending-request"
-          aria-label={`Open request: ${label}`} disabled={!onReviewRequest}
+          aria-label={interfaceText("m_de2cedccf83e11", { value0: (label) })} disabled={!onReviewRequest}
           onClick={() => onReviewRequest?.(interaction.id)}
           className="group flex w-full items-center gap-2 rounded-sm px-1 py-1.5 text-left text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <CircleHelp aria-hidden className="h-3.5 w-3.5 shrink-0" />

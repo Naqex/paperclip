@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { revealWordProgress } from "./word-reveal";
 import type { HeartbeatRunEvent } from "@paperclipai/shared";
 import type { TranscriptEntry } from "../../adapters";
@@ -79,10 +80,10 @@ const permission = (status: "pending" | "resolved" | "expired" | "cancelled", in
   kind: "runtime_request", ts: ts(15), requestId: `preview-${input ? "question" : "permission"}`, requestKind: input ? "elicitation" : "command_approval",
   turnId: "synthetic-turn", requestType: input ? "input" : "permission", status,
   prompt: input ? "Which reconnect behavior should I verify?" : "Allow running the focused reconnect tests?",
-  choices: input ? [] : [{ key: "accept", label: "Allow once" }, { key: "decline", label: "Deny" }], fields: [],
+  choices: input ? [] : [{ key: "accept", label: interfaceText("m_168511d24d9ee0") }, { key: "decline", label: interfaceText("m_05a2d7332eb9d8") }], fields: [],
   questionSet: input ? { schema: "paperclip.question_set.v1", title: "Choose a reconnect policy", questions: [{
     id: "policy", prompt: "Which reconnect policy should I test?", required: true, answerMode: "single_select",
-    options: [{ id: "bounded", label: "Bounded retry", description: "Stop after three attempts." }, { id: "manual", label: "Manual recovery", description: "Ask before reconnecting." }],
+    options: [{ id: "bounded", label: interfaceText("m_108088e50beee8"), description: "Stop after three attempts." }, { id: "manual", label: interfaceText("m_11a49494369e96"), description: "Ask before reconnecting." }],
   }] } : null,
   resolvedAction: status === "resolved" ? "accept" : null,
 });
@@ -91,7 +92,7 @@ const providerFamilies = ["plan", "tool_execution", "research", "delegation", "m
 export const THREAD_PREVIEW_CASES: ThreadPreviewCase[] = [
   example("staging-conversation", "Conversation · live work (staging layout)", "Conversation", () => snapshot(workingEvents())),
   example("session-start", "Starting · waiting for activity", "Conversation", () => snapshot([], "running")),
-  example("runner-queued", "Queued · waiting to start", "Conversation", () => snapshot([], "queued", { emptyMessage: "Waiting to start…" })),
+  example("runner-queued", "Queued · waiting to start", "Conversation", () => snapshot([], "queued", { emptyMessage: interfaceText("m_7438fef97be71f") })),
   example("thinking", "Thinking · live reasoning", "Conversation", () => snapshot(reasoning(false))),
   ...(["summary", "detail", "unknown"] as const).map(channel => example(`reasoning-${channel}`, `Reasoning · ${channel === "unknown" ? "lifecycle only" : channel}`, "Reasoning and tools", () => snapshot(reasoning(false, channel, channel === "unknown" ? "" : undefined)))),
   example("tool-call", "Tool · reading files", "Reasoning and tools", () => snapshot([...reasoning(), commentary(4, progressText), ...tool(5, "read_file", false)])),
@@ -120,10 +121,10 @@ export const THREAD_PREVIEW_CASES: ThreadPreviewCase[] = [
   ...(["pending", "queued"] as const).map(messageState => example(`message-${messageState}`, `Human message · ${messageState}`, "Messages and composer", () => snapshot([], "queued", { messageState }))),
   ...(["leaf", "subtree"] as const).map(paused => example(`paused-${paused}`, paused === "leaf" ? "Task paused · draft preserved" : "Subtree paused · draft preserved", "Messages and composer", () => snapshot([], "cancelled", { paused }))),
   ...(["neutral", "info", "success", "warning", "danger"] as const).map(notice => example(`notice-${notice}`, `System notice · ${notice}`, "Messages and composer", () => snapshot([], "succeeded", { notice }))),
-  ...(["pending", "resolved", "expired", "cancelled"] as const).map(status => direct(`permission-${status}`, `Permission request · ${status}`, "Requests and results", [permission("pending"), ...(status !== "pending" ? [permission(status)] : [])], { emptyMessage: "Waiting for permission…" })),
+  ...(["pending", "resolved", "expired", "cancelled"] as const).map(status => direct(`permission-${status}`, `Permission request · ${status}`, "Requests and results", [permission("pending"), ...(status !== "pending" ? [permission(status)] : [])], { emptyMessage: interfaceText("m_d8a7070382cce7") })),
   direct("permission-denied", "Permission request · denied", "Requests and results", [{ ...permission("resolved"), resolvedAction: "decline" }]),
-  direct("question-text", "Question · free-text input", "Requests and results", [{ ...permission("pending", true), questionSet: null, fields: [{ name: "delay", label: "Reconnect delay", placeholder: "For example, 30 seconds" }] }], { emptyMessage: "Waiting for your answer…" }),
-  ...(["pending", "resolved", "expired", "cancelled"] as const).map(status => direct(`question-${status}`, `Question · ${status}`, "Requests and results", [permission("pending", true), ...(status !== "pending" ? [{ ...permission(status, true), response: status === "resolved" ? { schema: "paperclip.question_response.v1" as const, answers: { policy: { selectedOptionIds: ["bounded"] } } } : null }] : [])], { emptyMessage: "Waiting for your answer…" })),
+  direct("question-text", "Question · free-text input", "Requests and results", [{ ...permission("pending", true), questionSet: null, fields: [{ name: "delay", get label() { return interfaceText("m_5fb249c7b91054"); }, get placeholder() { return interfaceText("m_58c6482254667e"); } }] }], { get emptyMessage() { return interfaceText("m_63f8a6c4ebad5c"); } }),
+  ...(["pending", "resolved", "expired", "cancelled"] as const).map(status => direct(`question-${status}`, `Question · ${status}`, "Requests and results", [permission("pending", true), ...(status !== "pending" ? [{ ...permission(status, true), response: status === "resolved" ? { schema: "paperclip.question_response.v1" as const, answers: { policy: { selectedOptionIds: ["bounded"] } } } : null }] : [])], { emptyMessage: interfaceText("m_63f8a6c4ebad5c") })),
   ...(["done", "blocked", "needs_review", "yielded"] as const).map(disposition => direct(`result-${disposition}`, `Run result · ${disposition.replaceAll("_", " ")}`, "Requests and results", [{
     kind: "run_result", ts: ts(20), disposition, summary: "The reconnect implementation is ready for review.", objectiveSatisfied: disposition === "done",
     verification: [{ commandOrCheck: "Reconnect tests", status: "passed", detail: "12 cases passed" }, { commandOrCheck: "Live provider smoke test", status: "not_run", detail: "No provider is contacted by this preview" }],
@@ -157,24 +158,24 @@ export const THREAD_PREVIEW_ALIASES: Record<string, string> = {
 /** One cumulative, successful conversation for the watchable preview. Timing
  * uses units of --motion-sandbox-playback-step; no agent/provider is contacted. */
 export const CONVERSATION_PLAYBACK_STAGES = [
-  { label: "Starting", units: 0.25 },
-  { label: "Thinking", units: 0.5 },
-  { label: "Commentary", units: 0.5 },
-  { label: "Reading files", units: 0.5 },
-  { label: "Reviewing the component list", units: 0.5 },
-  { label: "Running a command", units: 0.75 },
-  { label: "Writing the answer", units: 1 },
-  { label: "Follow-up · queued", units: 0.5 },
-  { label: "Planning the verification", units: 0.5 },
-  { label: "Clarification · demo answer follows automatically", units: 0.75 },
-  { label: "Answered · bounded retry", units: 0.5 },
-  { label: "Permission · demo approval follows automatically", units: 0.75 },
-  { label: "Running focused tests", units: 0.75 },
-  { label: "Test failed · inspecting the timeout", units: 0.75 },
-  { label: "Explaining the retry", units: 0.5 },
-  { label: "Retrying the focused test", units: 0.75 },
-  { label: "Reviewing the file preview and usage", units: 0.75 },
-  { label: "Writing the verification result", units: 1 },
+  { get label() { return interfaceText("m_aeed4d26bb5f0c"); }, units: 0.25 },
+  { get label() { return interfaceText("m_a20d12c5e9c428"); }, units: 0.5 },
+  { get label() { return interfaceText("m_4a7a75ab79cde0"); }, units: 0.5 },
+  { get label() { return interfaceText("m_5f1be312be1b73"); }, units: 0.5 },
+  { get label() { return interfaceText("m_f3f57596d635f1"); }, units: 0.5 },
+  { get label() { return interfaceText("m_1216a55213e648"); }, units: 0.75 },
+  { get label() { return interfaceText("m_105d5a56019121"); }, units: 1 },
+  { get label() { return interfaceText("m_a942950ad2c090"); }, units: 0.5 },
+  { get label() { return interfaceText("m_0d5606e7c2eb25"); }, units: 0.5 },
+  { get label() { return interfaceText("m_6a3ff38d2c799a"); }, units: 0.75 },
+  { get label() { return interfaceText("m_415716c24f82e1"); }, units: 0.5 },
+  { get label() { return interfaceText("m_cd9636a64f66ef"); }, units: 0.75 },
+  { get label() { return interfaceText("m_a4d94791b4127f"); }, units: 0.75 },
+  { get label() { return interfaceText("m_a30b59c306efc2"); }, units: 0.75 },
+  { get label() { return interfaceText("m_f55bb0f3081a18"); }, units: 0.5 },
+  { get label() { return interfaceText("m_09f0f06d0ee97f"); }, units: 0.75 },
+  { get label() { return interfaceText("m_2007bd3bb3532e"); }, units: 0.75 },
+  { get label() { return interfaceText("m_cd83ed64af8ba9"); }, units: 1 },
 ] as const;
 
 export const PLAYBACK_FOLLOW_UP_STAGE = 7;
@@ -190,7 +191,7 @@ export function conversationPlaybackSnapshot(stage: number, progress: number): T
   // deltas themselves are not guaranteed to align with word boundaries.
   const text = (value: string) => revealWordProgress(value, Math.min(1, progress * 2));
   if (stage >= PLAYBACK_FOLLOW_UP_STAGE) {
-    if (stage === 7) return snapshot([], "queued", { emptyMessage: "Waiting to start…" });
+    if (stage === 7) return snapshot([], "queued", { emptyMessage: interfaceText("m_7438fef97be71f") });
     const entries: TranscriptEntry[] = [...THREAD_PREVIEW_CASES.find(item => item.id === "provider-plan")!.build().entries];
     if (stage >= 9) entries.push({ ...permission(stage > 9 ? "resolved" : "pending", true), response: stage > 9 ? { schema: "paperclip.question_response.v1", answers: { policy: { selectedOptionIds: ["bounded"] } } } : null });
     if (stage >= 11) entries.push(permission(stage > 11 ? "resolved" : "pending"));

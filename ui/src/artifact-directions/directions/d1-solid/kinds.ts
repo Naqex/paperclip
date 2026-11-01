@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { Archive, CodeXml, File, FilePenLine, FileText, Film, Globe, Image, NotebookText, Presentation, Table2, type LucideIcon } from "lucide-react";
 import { fileKindForName } from "@/components/task-chat/task-chat-attachments";
 import type { LabArtifact, LabKind } from "../../kit";
@@ -49,14 +50,14 @@ export const kindGlyph = (a: LabArtifact): LucideIcon => (isTaskDocument(a) ? No
  */
 export function blockLabel(a: LabArtifact): string {
   if (a.kind === "link") return KINDS.link.block;
-  if (isTaskDocument(a)) return `REV ${a.revision}`;
+  if (isTaskDocument(a)) return interfaceText("m_7d09bff28c195b", { value0: (a.revision) });
   const ext = a.ext?.replace(/[^a-z0-9]/gi, "");
   return ext ? ext.slice(0, 4).toUpperCase() : KINDS[a.kind].block;
 }
 
 /** The first word of the meta line, in production wording where production has one. */
 export function metaLabel(a: LabArtifact): string {
-  if (isTaskDocument(a)) return "Document";
+  if (isTaskDocument(a)) return interfaceText("m_d6bd8c0aeee80f");
   if (a.kind === "link") return KINDS.link.meta;
   if (a.kind === "image" || a.kind === "video") return KINDS[a.kind].meta;
   const shipped = a.filename ? fileKindForName(a.filename).label : "File";

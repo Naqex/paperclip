@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   ConnectionGrantKind,
   ConnectionAudienceMember,
@@ -15,17 +16,15 @@ import type {
  * card cannot drift into three different names for the same thing.
  */
 
-export type ConnectionTypeLabel = "Personal" | "Dedicated agent" | "Organization";
-
-/** The two connection types shown throughout the product. */
+/** Display vocabulary only; credential policies remain language-independent. */
 export function connectionTypeLabel(
   credentialPolicy: ToolConnectionCredentialPolicy,
-): ConnectionTypeLabel {
+): string {
   return credentialPolicy === "per_user"
-    ? "Personal"
+    ? interfaceText("m_845f9286400f42")
     : credentialPolicy === "per_agent"
-      ? "Dedicated agent"
-      : "Organization";
+      ? interfaceText("m_91807e3f9a9a85")
+      : interfaceText("m_d764d42592fc96");
 }
 
 const ORGANIZATION_NAME_SUFFIX = " for the organization";
@@ -61,7 +60,7 @@ export function connectionNameForCredentialPolicy(
 ): string {
   return connectionNameForGrantKind(
     name,
-    connectionTypeLabel(credentialPolicy) === "Organization" ? "organization" : "user",
+    credentialPolicy === "shared" || credentialPolicy === "per_user_with_fallback" ? "organization" : "user",
   );
 }
 
@@ -73,15 +72,15 @@ export function connectionNameForCredentialPolicy(
 export function grantStatusLabel(status: ConnectionGrantStatus | null): string {
   switch (status) {
     case "active":
-      return "Connected";
+      return interfaceText("m_22965568d22a14");
     case "needs_reauthorization":
-      return "Needs attention";
+      return interfaceText("m_c1ebc7817870e5");
     case "expired":
-      return "Expired";
+      return interfaceText("m_424a2551d35675");
     case "revoked":
-      return "Revoked";
+      return interfaceText("m_f6f738d043929f");
     default:
-      return "Not connected";
+      return interfaceText("m_0303e182467081");
   }
 }
 
@@ -112,9 +111,9 @@ export function grantAccountLabel(
 ): string {
   const tenantName = grant?.providerTenant?.name?.trim();
   if (tenantName) return tenantName;
-  if (grant?.kind === "user") return options.subjectLabel?.trim() || "Connected account";
-  if (grant?.kind === "agent") return options.subjectLabel?.trim() || "Dedicated account";
-  return "Shared credential";
+  if (grant?.kind === "user") return options.subjectLabel?.trim() || interfaceText("m_3903f0e1aeef43");
+  if (grant?.kind === "agent") return options.subjectLabel?.trim() || interfaceText("m_eeda128273b379");
+  return interfaceText("m_d38adc7888abc1");
 }
 
 /**

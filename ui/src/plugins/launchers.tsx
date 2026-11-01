@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import {
   Component,
   createContext,
@@ -423,8 +424,7 @@ class LauncherErrorBoundary extends Component<LauncherErrorBoundaryProps, Launch
     if (this.state.hasError) {
       return (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-          {this.props.launcher.pluginDisplayName}: failed to render
-        </div>
+          {this.props.launcher.pluginDisplayName}{interfaceText("m_40815c1018fe52")}</div>
       );
     }
     return this.props.children;
@@ -438,6 +438,7 @@ function LauncherRenderContent({
   instance: LauncherInstance;
   renderEnvironment: PluginRenderEnvironmentContext;
 }) {
+  useInterfaceLanguage();
   const component = instance.component;
   const { data: session } = useQuery({
     queryKey: queryKeys.auth.session,
@@ -462,7 +463,7 @@ function LauncherRenderContent({
 
     return (
       <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-        {instance.launcher.pluginDisplayName}: could not resolve launcher target "{instance.launcher.action.target}".
+        {instance.launcher.pluginDisplayName}{interfaceText("m_d1a6d026a2c454")}{instance.launcher.action.target}".
       </div>
     );
   }
@@ -502,6 +503,7 @@ function LauncherModalShell({
   requestBounds: (key: string, request: PluginModalBoundsRequest) => Promise<void>;
   closeLauncher: (key: string, event: PluginRenderCloseEvent) => Promise<void>;
 }) {
+  useInterfaceLanguage();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const titleId = useId();
 
@@ -601,9 +603,7 @@ function LauncherModalShell({
             size="sm"
             className="ml-auto"
             onClick={() => void closeLauncher(instance.key, { reason: "programmatic" })}
-          >
-            Close
-          </Button>
+          >{interfaceText("m_7d9eb7acb13e24")}</Button>
         </div>
         <div
           className={cn(

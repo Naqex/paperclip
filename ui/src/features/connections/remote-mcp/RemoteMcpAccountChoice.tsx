@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Button } from "@/components/ui/button";
 import { InlineBanner } from "@/components/InlineBanner";
 import { ConnectionChoiceList } from "../ConnectionChoiceList";
@@ -22,26 +23,20 @@ export function RemoteMcpAccountChoice({
   onCancel?: () => void;
   onConnectNew: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="space-y-5">
       <div>
         <h1 className="text-xl font-bold">
           {upstreamServiceName
-            ? `Connect ${upstreamServiceName} through ${providerName}`
-            : `Connect ${providerName}`}
+            ? interfaceText("m_8db1053f06b168", { value0: (upstreamServiceName), value1: (providerName) })
+            : interfaceText("m_aeb7ebc7447ae0", { value0: (providerName) })}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Use an existing connection or connect a new account. Existing access
-          stays unchanged.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{interfaceText("m_a6155ab1377665")}</p>
       </div>
       {upstreamServiceName && (
         <InlineBanner compact>
-          {providerName} is an external service that handles the connection and
-          requests to {upstreamServiceName}. Reusing this account does not yet
-          verify app access; the agent will check it and guide any additional
-          authorization.
-        </InlineBanner>
+          {providerName}{interfaceText("m_b026810705e461")}{upstreamServiceName}{interfaceText("m_eab284612b447e")}</InlineBanner>
       )}
       <ConnectionChoiceList
         choices={connections.map((connection) => ({
@@ -61,12 +56,8 @@ export function RemoteMcpAccountChoice({
           variant="ghost"
           disabled={Boolean(pendingId)}
           onClick={onCancel}
-        >
-          Cancel
-        </Button>
-        <Button disabled={Boolean(pendingId)} onClick={onConnectNew}>
-          Connect new
-        </Button>
+        >{interfaceText("m_19766ed6ccb2f4")}</Button>
+        <Button disabled={Boolean(pendingId)} onClick={onConnectNew}>{interfaceText("m_99ecd0a950e7ea")}</Button>
       </div>
     </div>
   );

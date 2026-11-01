@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -79,6 +80,7 @@ function CopyableCompactValue({
   children: ReactNode;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const text = stringifyCopyValue(value);
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -109,9 +111,7 @@ function CopyableCompactValue({
           aria-live="polite"
           className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 inline-flex -translate-x-1/2 items-center gap-1 rounded-md bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background"
         >
-          <Check className="h-3 w-3 shrink-0" />
-          Copied
-        </span>
+          <Check className="h-3 w-3 shrink-0" />{interfaceText("m_8d525e5f158b9a")}</span>
       ) : null}
     </span>
   );
@@ -325,12 +325,13 @@ function TableFieldValue({ value, fieldKey }: { value: unknown; fieldKey: string
 
 /** Compact read-only field rows for case detail, including nested JSON paths. */
 export function CaseFieldsTable({ fields }: { fields: Record<string, unknown> }) {
+  useInterfaceLanguage();
   const rows = flattenCaseFields(fields);
   if (rows.length === 0) {
-    return <p className="text-sm text-muted-foreground">No fields set</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_602596ab840b24")}</p>;
   }
   return (
-    <table aria-label="Case fields" className="w-full table-fixed border-collapse font-mono text-xs leading-5">
+    <table aria-label={interfaceText("m_c96e58ee2a9f13")} className="w-full table-fixed border-collapse font-mono text-xs leading-5">
       <tbody>
         {rows.map(({ id, path, value }) => (
           <tr key={id} className="even:bg-muted/50">
@@ -348,17 +349,18 @@ export function CaseFieldsTable({ fields }: { fields: Record<string, unknown> })
 }
 
 export function CaseFieldsPanel({ fields }: { fields: Record<string, unknown> }) {
+  useInterfaceLanguage();
   const entries = Object.entries(fields ?? {});
 
   return (
     <section className="space-y-2">
       <div className="flex items-baseline gap-2">
-        <h2 className="text-sm font-semibold">Fields</h2>
-        <span className="text-xs text-muted-foreground">from the skill&apos;s schema — rendered generically</span>
+        <h2 className="text-sm font-semibold">{interfaceText("m_616f48c1db195b")}</h2>
+        <span className="text-xs text-muted-foreground">{interfaceText("m_cb31f7f295e563")}</span>
       </div>
       <Card className="gap-0 py-0">
         {entries.length === 0 ? (
-          <div className="px-4 py-3 text-sm text-muted-foreground">No fields set</div>
+          <div className="px-4 py-3 text-sm text-muted-foreground">{interfaceText("m_602596ab840b24")}</div>
         ) : (
           <dl className="divide-y divide-border">
             {entries.map(([key, value]) => (

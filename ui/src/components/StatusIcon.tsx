@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import type { IssueBlockerAttention } from "@paperclipai/shared";
 import { cn } from "../lib/utils";
@@ -25,32 +26,32 @@ interface StatusIconProps {
 }
 
 function blockedAttentionLabel(blockerAttention: IssueBlockerAttention | null | undefined) {
-  if (!blockerAttention || blockerAttention.state === "none") return "Blocked";
+  if (!blockerAttention || blockerAttention.state === "none") return interfaceText("m_18f2a0947f9d65");
 
   if (blockerAttention.reason === "active_child") {
     const count = blockerAttention.coveredBlockerCount;
     if (count === 1 && blockerAttention.sampleBlockerIdentifier) {
-      return `Blocked · waiting on active sub-task ${blockerAttention.sampleBlockerIdentifier}`;
+      return interfaceText("m_3c1c30b8a847d7", { value0: (blockerAttention.sampleBlockerIdentifier) });
     }
-    if (count === 1) return "Blocked · waiting on 1 active sub-task";
-    return `Blocked · waiting on ${count} active sub-tasks`;
+    if (count === 1) return interfaceText("m_5878bbf4332d97");
+    return interfaceText("m_f64274592813d4", { value0: (count) });
   }
 
   if (blockerAttention.reason === "active_dependency") {
     const count = blockerAttention.coveredBlockerCount;
     if (count === 1 && blockerAttention.sampleBlockerIdentifier) {
-      return `Blocked · covered by active dependency ${blockerAttention.sampleBlockerIdentifier}`;
+      return interfaceText("m_90153e7c41ad92", { value0: (blockerAttention.sampleBlockerIdentifier) });
     }
-    if (count === 1) return "Blocked · covered by 1 active dependency";
-    return `Blocked · covered by ${count} active dependencies`;
+    if (count === 1) return interfaceText("m_319c949ca19629");
+    return interfaceText("m_ad5d4872e852d0", { value0: (count) });
   }
 
   if (blockerAttention.reason === "stalled_review") {
     const count = blockerAttention.stalledBlockerCount;
     const leaf = blockerAttention.sampleStalledBlockerIdentifier ?? blockerAttention.sampleBlockerIdentifier;
-    if (count === 1 && leaf) return `Blocked · review stalled on ${leaf}`;
-    if (count === 1) return "Blocked · review stalled with no clear next step";
-    return `Blocked · ${count} reviews stalled with no clear next step`;
+    if (count === 1 && leaf) return interfaceText("m_f48d12b230dde1", { value0: (leaf) });
+    if (count === 1) return interfaceText("m_4978f3d52ca0f8");
+    return interfaceText("m_4dbe6c2ddf6198", { value0: (count) });
   }
 
   if (blockerAttention.reason === "attention_required") {
@@ -58,12 +59,12 @@ function blockedAttentionLabel(blockerAttention: IssueBlockerAttention | null | 
     const attentionCopy = `${count} ${count === 1 ? "blocker needs" : "blockers need"} attention`;
     const coveredCount = blockerAttention.coveredBlockerCount;
     if (coveredCount > 0) {
-      return `Blocked · ${attentionCopy}; ${coveredCount} covered by active work`;
+      return interfaceText("m_a0747921c9e425", { value0: (attentionCopy), value1: (coveredCount) });
     }
-    return `Blocked · ${attentionCopy}`;
+    return interfaceText("m_9c9822e9acfd5a", { value0: (attentionCopy) });
   }
 
-  return "Blocked";
+  return interfaceText("m_18f2a0947f9d65");
 }
 
 /** Shared accessible/tooltip copy, including waiting and covered-blocker states. */
@@ -85,6 +86,7 @@ export function getStatusIconLabel(status: string, externalConversationState?: "
  * still rides on the accessible label.
  */
 export function StatusIcon({ status, externalConversationState, blockerAttention, onChange, className, glyphContainerClassName, showLabel, size = "md" }: StatusIconProps) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const displayStatus = status === "in_review" && externalConversationState === "waiting" ? "idle" : status;
   const isCoveredBlocked = status === "blocked" && blockerAttention?.state === "covered";
@@ -119,7 +121,7 @@ export function StatusIcon({ status, externalConversationState, blockerAttention
   const trigger = showLabel ? (
     <button
       type="button"
-      aria-label={`Change status (current: ${ariaLabel})`}
+      aria-label={interfaceText("m_7b543e2843723e", { value0: (ariaLabel) })}
       className="inline-flex min-h-5 items-center gap-1.5 cursor-pointer hover:bg-accent/50 rounded px-1 -mx-1 py-0.5 transition-colors"
     >
       {glyph}
@@ -129,7 +131,7 @@ export function StatusIcon({ status, externalConversationState, blockerAttention
     <button
       type="button"
       data-slot="icon-button"
-      aria-label={`Change status (current: ${ariaLabel})`}
+      aria-label={interfaceText("m_7b543e2843723e", { value0: (ariaLabel) })}
       className="inline-flex cursor-pointer items-center justify-center rounded-sm focus-visible:outline-none focus-visible:ring-(length:--rad-3) focus-visible:ring-ring"
     >
       {glyph}

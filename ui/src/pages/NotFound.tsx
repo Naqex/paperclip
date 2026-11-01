@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect } from "react";
 import { Link, useLocation } from "@/lib/router";
 import { AlertTriangle, Compass } from "lucide-react";
@@ -14,24 +15,26 @@ interface NotFoundPageProps {
 }
 
 export function NotFoundPage({ scope = "global", requestedPrefix }: NotFoundPageProps) {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const location = useLocation();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { companies, selectedCompany } = useCompany();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Not Found" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_0019dfc4b32d63") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const fallbackCompany = selectedCompany ?? companies[0] ?? null;
   const dashboardHref = fallbackCompany ? `/${fallbackCompany.issuePrefix}/dashboard` : "/";
   const currentPath = `${location.pathname}${location.search}${location.hash}`;
   const normalizedPrefix = requestedPrefix?.toUpperCase();
 
-  const title = scope === "invalid_company_prefix" ? "Organization not found" : "Page not found";
+  const title = scope === "invalid_company_prefix" ? interfaceText("m_00c50f7a040462") : interfaceText("m_a469ab4ca4e55b");
   const description =
     scope === "invalid_company_prefix"
-      ? `No organization matches prefix "${normalizedPrefix ?? "unknown"}".`
-      : "This route does not exist.";
+      ? interfaceText("m_607df2b4dce283", { value0: (normalizedPrefix ?? "unknown") })
+      : interfaceText("m_80eced63616862");
 
   return (
     <div className="mx-auto max-w-2xl py-10">
@@ -46,19 +49,16 @@ export function NotFoundPage({ scope = "global", requestedPrefix }: NotFoundPage
           </div>
         </div>
 
-        <div className="mt-4 rounded-md border border-border bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
-          Requested path: <code className="font-mono">{currentPath}</code>
+        <div className="mt-4 rounded-md border border-border bg-muted/20 px-3 py-2 text-xs text-muted-foreground">{interfaceText("m_4b84b327a445b1")}<code className="font-mono">{currentPath}</code>
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
           <Button asChild>
             <Link to={dashboardHref}>
-              <Compass className="mr-1.5 h-4 w-4" />
-              Open dashboard
-            </Link>
+              <Compass className="mr-1.5 h-4 w-4" />{interfaceText("m_803f2313cdf442")}</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link to="/">Go home</Link>
+            <Link to="/">{interfaceText("m_a0aac9145249f1")}</Link>
           </Button>
         </div>
       </Card>

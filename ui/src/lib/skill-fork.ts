@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   CompanySkillForkSummary,
   CompanySkillOriginalSummary,
@@ -33,13 +34,13 @@ function sourceTypeFallbackLabel(sourceType: CompanySkillSourceType): string {
     case "skills_sh":
       return "skills.sh";
     case "url":
-      return "a URL";
+      return interfaceText("m_a86ba76bdf015a");
     case "catalog":
-      return "the catalog";
+      return interfaceText("m_5e5eb74534841d");
     case "local_path":
-      return "a local path";
+      return interfaceText("m_f42810b5a6bc1e");
     default:
-      return "its source";
+      return interfaceText("m_664810fb16a005");
   }
 }
 

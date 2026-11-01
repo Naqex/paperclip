@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Agent } from "@paperclipai/shared";
 import { toolsApi } from "@/api/tools";
@@ -14,6 +15,7 @@ export function EmailConnectionAccess({
   connectionId: string;
   agents: Agent[];
 }) {
+  useInterfaceLanguage();
   const cache = useQueryClient();
   const grants = useQuery({
     queryKey: queryKeys.tools.connectionGrants(connectionId),
@@ -34,23 +36,21 @@ export function EmailConnectionAccess({
     },
   });
   if (grants.isLoading || installs.isLoading)
-    return <p className="text-sm text-muted-foreground">Loading access…</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_a55b4d69fcfdff")}</p>;
   if (grants.error || installs.error)
     return (
-      <p role="alert" className="text-sm text-destructive">
-        Connection access could not be loaded.
-      </p>
+      <p role="alert" className="text-sm text-destructive">{interfaceText("m_95339012793d24")}</p>
     );
   const active = grants.data?.grants.filter((g) => g.status === "active") ?? [];
   const everyone = active.some((g) => g.kind === "organization");
   const personal = active.find((g) => g.kind === "user");
   const humanLabel = everyone
-    ? "Any human in the organization"
+    ? interfaceText("m_e6b1c6693f543a")
     : personal
       ? personal.subjectUserId === grants.data?.currentUserId
-        ? "Just me"
-        : "Only the credential owner"
-      : "Access revoked";
+        ? interfaceText("m_3a4b4df869c76a")
+        : interfaceText("m_78987d6f8d9ff5")
+      : interfaceText("m_42849e0bea5947");
   const allAgents =
     installs.data?.installs.some((i) => i.targetType === "company") ?? false;
   const selected = new Set(
@@ -62,15 +62,11 @@ export function EmailConnectionAccess({
   return (
     <div className="space-y-8">
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold">
-          Which humans can use this credential?
-        </h2>
+        <h2 className="text-sm font-semibold">{interfaceText("m_df3c5fa3fb9fdb")}</h2>
         <p className="text-sm">{humanLabel}</p>
       </section>
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">
-          Which agents can use this connection?
-        </h2>
+        <h2 className="text-sm font-semibold">{interfaceText("m_a315e64c5835cd")}</h2>
         <RadioCardGroup
           ariaLabel="Which agents can use this connection"
           value={allAgents ? "all" : "selected"}
@@ -106,9 +102,7 @@ export function EmailConnectionAccess({
             }
           />
         )}
-        <p className="text-xs text-muted-foreground">
-          Removing an assigned agent stops receiving and sending from its inbox.
-        </p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_e816d5d69a2438")}</p>
         {save.error && (
           <p role="alert" className="text-sm text-destructive">
             {save.error.message}

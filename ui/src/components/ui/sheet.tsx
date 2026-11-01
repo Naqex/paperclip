@@ -1,5 +1,7 @@
 "use client"
 
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
+
 import * as React from "react"
 import { XIcon } from "lucide-react"
 import { Dialog as SheetPrimitive } from "radix-ui"
@@ -54,6 +56,7 @@ function SheetContent({
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }) {
+  useInterfaceLanguage();
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -77,7 +80,7 @@ function SheetContent({
         {showCloseButton && (
           <SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
             <XIcon className="size-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{interfaceText("m_7d9eb7acb13e24")}</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Content>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useTranslation } from "@/i18n";
 import {
   Inbox,
@@ -46,6 +47,7 @@ import { PluginLauncherOutlet } from "@/plugins/launchers";
 import { SidebarCompanyMenu } from "./SidebarCompanyMenu.production";
 
 export function Sidebar() {
+  useInterfaceLanguage();
   const { t } = useTranslation("workspace");
   const { openNewIssue } = useDialogActions();
   // Every labeled section is collapsible (session-scoped, default open) —
@@ -226,7 +228,7 @@ export function Sidebar() {
 
         <SidebarAgents streamlined={streamlined} />
 
-        <SidebarSection label="Company" collapsible={{ open: companyOpen, onOpenChange: setCompanyOpen }}>
+        <SidebarSection label={interfaceText("m_de4743c879734d")} collapsible={{ open: companyOpen, onOpenChange: setCompanyOpen }}>
           <SidebarNavItem to="/org" label={t("nav.org")} icon={Network} />
           {showApps ? <SidebarNavItem to="/apps" label={t("nav.connectors")} icon={Unplug} /> : null}
           <SidebarNavItem to="/timeline" label={t("nav.timeline")} icon={GanttChartSquare} />

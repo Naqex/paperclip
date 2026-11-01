@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState, type ReactNode } from "react";
 import type { IssueExternalObjectGroup } from "../../hooks/useIssueExternalObjects";
 import {
@@ -167,6 +168,7 @@ export function ExternalObjectRows({
   externalObjectsError?: boolean;
   onRetryExternalObjects?: () => void;
 }) {
+  useInterfaceLanguage();
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -175,19 +177,15 @@ export function ExternalObjectRows({
 
   if (externalObjectsError) {
     return (
-      <PropertyRow label="External objects">
-        <span className="text-xs text-muted-foreground">
-          Couldn't load external objects.
-          {onRetryExternalObjects ? (
+      <PropertyRow label={interfaceText("m_9279c11de25294")}>
+        <span className="text-xs text-muted-foreground">{interfaceText("m_42d33ac2522ca0")}{onRetryExternalObjects ? (
             <>
               {" "}
               <button
                 type="button"
                 className="text-primary underline-offset-2 hover:underline"
                 onClick={onRetryExternalObjects}
-              >
-                Retry
-              </button>
+              >{interfaceText("m_942087cc2d41e0")}</button>
             </>
           ) : null}
         </span>
@@ -197,7 +195,7 @@ export function ExternalObjectRows({
 
   if (externalObjectsLoading) {
     return (
-      <PropertyRow label="External objects">
+      <PropertyRow label={interfaceText("m_9279c11de25294")}>
         <span className="h-4 w-24 animate-pulse rounded bg-muted/40" />
       </PropertyRow>
     );
@@ -226,7 +224,7 @@ export function ExternalObjectRows({
           );
         })}
       {expanded || hiddenExternalObjectCount > 0 ? (
-        <PropertyRow label="References">
+        <PropertyRow label={interfaceText("m_69824d3b0e70ca")}>
           <ExpandRelationListButton
             hiddenCount={hiddenExternalObjectCount}
             expanded={expanded}

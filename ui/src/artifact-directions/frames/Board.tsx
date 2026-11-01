@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DIRECTION_IDS, KIT_META, type DirectionId } from "../kit";
 import { labSearch, type LabTheme, type LabView } from "../lab-state";
@@ -24,6 +25,7 @@ interface TileProps {
 }
 
 function Tile({ direction, view, theme, anim, maxHeight }: TileProps) {
+  useInterfaceLanguage();
   const wrapRef = useRef<HTMLAnchorElement>(null);
   const contentObserver = useRef<ResizeObserver | null>(null);
   const [scale, setScale] = useState(0);
@@ -57,7 +59,7 @@ function Tile({ direction, view, theme, anim, maxHeight }: TileProps) {
     <a
       ref={wrapRef}
       href={labSearch({ direction, view, theme, chrome: true, anim })}
-      title={`Open ${KIT_META[direction].name} · ${view}`}
+      title={interfaceText("m_f4feb4221dff6e", { value0: (KIT_META[direction].name), value1: (view) })}
       className="block overflow-hidden rounded-sm border border-border outline-none focus-visible:ring-2 focus-visible:ring-ring"
       style={{ height: scale ? shown * scale : undefined }}
     >
@@ -95,12 +97,13 @@ function KitBoard({ direction, theme, anim }: { direction: DirectionId; theme: L
 
 /** Every kit: one row each, one column per surface. */
 function AllBoard({ theme, anim }: { theme: LabTheme; anim: boolean }) {
+  useInterfaceLanguage();
   return (
     <div className="grid grid-cols-(--gtc-board) items-start gap-x-4 gap-y-8" style={{ "--gtc-board": "7rem repeat(3, minmax(0, 1fr))" } as React.CSSProperties}>
       <span />
-      <ColumnHead>Thread</ColumnHead>
-      <ColumnHead>Panel</ColumnHead>
-      <ColumnHead>Gallery + stack</ColumnHead>
+      <ColumnHead>{interfaceText("m_5373c7f8a5a690")}</ColumnHead>
+      <ColumnHead>{interfaceText("m_d0d91173008b6f")}</ColumnHead>
+      <ColumnHead>{interfaceText("m_4932da94063a84")}</ColumnHead>
       {DIRECTION_IDS.map((direction) => (
         <div key={direction} className="contents">
           <div className="flex flex-col gap-1">
@@ -120,11 +123,12 @@ function AllBoard({ theme, anim }: { theme: LabTheme; anim: boolean }) {
 }
 
 export function Board({ direction, theme, anim }: { direction: DirectionId | "all"; theme: LabTheme; anim: boolean }) {
+  useInterfaceLanguage();
   return (
     <div className="flex min-h-225 flex-col gap-6 bg-background p-6 text-foreground">
       <header className="flex flex-col gap-1">
-        <p className={LABEL}>Contact sheet · {theme}</p>
-        <h1 className="text-lg font-semibold">{direction === "all" ? "All directions" : KIT_META[direction].name}</h1>
+        <p className={LABEL}>{interfaceText("m_ba68a3fecffe8d")}{theme}</p>
+        <h1 className="text-lg font-semibold">{direction === "all" ? interfaceText("m_6cc0f99954b869") : KIT_META[direction].name}</h1>
       </header>
       {direction === "all" ? <AllBoard theme={theme} anim={anim} /> : <KitBoard direction={direction} theme={theme} anim={anim} />}
     </div>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { TextAttachmentContext } from "@/context/TextAttachmentContext";
 import { useContext, useEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { ArtifactUploadContent, type ArtifactUploadEntry } from "@/components/artifacts/ArtifactUploadControls";
@@ -87,16 +88,16 @@ function workProductStatusBadge(
   switch (status) {
     case "active":
     case "draft":
-      return { label: "In progress", cssVar: "--status-task-in_progress" };
+      return { label: interfaceText("m_c1f88e9d6c4145"), cssVar: "--status-task-in_progress" };
     case "ready_for_review":
-      return { label: "For review", cssVar: "--status-task-in_review" };
+      return { label: interfaceText("m_1afa6050587eb7"), cssVar: "--status-task-in_review" };
     case "approved":
     case "merged":
-      return { label: "Done", cssVar: "--status-task-done" };
+      return { label: interfaceText("m_11a6767d5674c7"), cssVar: "--status-task-done" };
     case "changes_requested":
-      return { label: "Changes requested", cssVar: "--status-task-todo" };
+      return { label: interfaceText("m_10a92a8ad3ee58"), cssVar: "--status-task-todo" };
     case "failed":
-      return { label: "Failed", cssVar: "--status-task-blocked" };
+      return { label: interfaceText("m_031a8f0f659df8"), cssVar: "--status-task-blocked" };
     default:
       return null;
   }
@@ -153,6 +154,7 @@ function MarkdownWorkProductRow({
   openRequestId?: number;
   face?: ArtifactFace;
 }) {
+  useInterfaceLanguage();
   const openTextAttachment = useContext(TextAttachmentContext);
   const [expanded, setExpanded] = useState(false);
   const [annotationPanelOpen, setAnnotationPanelOpen] = useState(false);
@@ -208,9 +210,7 @@ function MarkdownWorkProductRow({
   let expandedBody: React.ReactNode;
   if (tooLarge) {
     expandedBody = (
-      <p className="text-sm text-muted-foreground">
-        This Markdown file is too large to preview. Use Raw or Download instead.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_c4195ee524aeaa")}</p>
     );
   } else if (reviewDoc) {
     expandedBody =
@@ -230,15 +230,15 @@ function MarkdownWorkProductRow({
           <MarkdownBody>{reviewDoc.body}</MarkdownBody>
         </IssueDocumentAnnotations>
       ) : (
-        <p className="text-sm text-muted-foreground">Document is empty.</p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_149458228eeb7e")}</p>
       );
   } else if (ensure.isError) {
     expandedBody = (
       <div className="flex flex-col items-start gap-1.5">
         <p className="text-sm text-muted-foreground">
           {unsupportedError
-            ? "This file can't be previewed as Markdown. Use Raw or Download instead."
-            : "Preview failed to load."}
+            ? interfaceText("m_e2d6081f997869")
+            : interfaceText("m_83edf741d02e01")}
         </p>
         {!unsupportedError ? (
           <button
@@ -248,15 +248,13 @@ function MarkdownWorkProductRow({
               ensure.reset();
               ensure.mutate();
             }}
-          >
-            Retry
-          </button>
+          >{interfaceText("m_942087cc2d41e0")}</button>
         ) : null}
       </div>
     );
   } else {
     expandedBody = (
-      <p className="text-sm text-muted-foreground">Preparing preview…</p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_11e66e1bb9b762")}</p>
     );
   }
 
@@ -282,8 +280,8 @@ function MarkdownWorkProductRow({
                 <button
                   type="button"
                   onClick={() => openTextAttachment(metadata.attachmentId, metadata.originalFilename ?? workProduct.title)}
-                  aria-label={`Open in tab: ${workProduct.title}`}
-                  title="Open in tab"
+                  aria-label={interfaceText("m_4348acc72c260d", { value0: (workProduct.title) })}
+                  title={interfaceText("m_0e5d95967de31c")}
                   className={face ? ROW_ACTION_CLASS : "shrink-0 px-1.5 py-1.5 text-muted-foreground hover:text-foreground"}
                 >
                   <FileText className="h-3 w-3" />
@@ -293,16 +291,16 @@ function MarkdownWorkProductRow({
                 href={metadata.openPath}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={`Open raw ${workProduct.title}`}
-                title="Open raw"
+                aria-label={interfaceText("m_94380c97add349", { value0: (workProduct.title) })}
+                title={interfaceText("m_7f57bf8c34f6dd")}
                 className={face ? ROW_ACTION_CLASS : "shrink-0 px-1.5 py-1.5 text-muted-foreground hover:text-foreground"}
               >
                 <ExternalLink className="h-3 w-3" />
               </a>
               <a
                 href={metadata.downloadPath}
-                aria-label={`Download ${workProduct.title}`}
-                title="Download"
+                aria-label={interfaceText("m_a4924ba426cf55", { value0: (workProduct.title) })}
+                title={interfaceText("m_d6eafe82359100")}
                 className={face ? ROW_ACTION_CLASS : "shrink-0 py-1.5 pr-2 pl-0.5 text-muted-foreground hover:text-foreground"}
               >
                 <Download className="h-3 w-3" />
@@ -352,6 +350,7 @@ function DocumentRow({
   onOpen?: () => void;
   face?: ArtifactFace;
 }) {
+  useInterfaceLanguage();
   const [expanded, setExpanded] = useState(false);
   const [annotationPanelOpen, setAnnotationPanelOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement | null>(null);
@@ -412,7 +411,7 @@ function DocumentRow({
               <MarkdownBody>{doc.body}</MarkdownBody>
             </IssueDocumentAnnotations>
           ) : (
-            <p className="text-sm text-muted-foreground">Document is empty.</p>
+            <p className="text-sm text-muted-foreground">{interfaceText("m_149458228eeb7e")}</p>
           )}
         </div>
       ) : null}
@@ -435,6 +434,7 @@ export function IssuePropertiesArtifactsTab({
   onOpenDocument,
   uploadState,
 }: IssuePropertiesArtifactsTabProps) {
+  useInterfaceLanguage();
   const { enabled: v1 } = useArtifactsV1Enabled();
   const documentAuthoring = documentEditor !== undefined;
   const {
@@ -564,23 +564,17 @@ export function IssuePropertiesArtifactsTab({
   const loadError = attachmentsError || productsError || documentsError;
   const loading = attachmentsPending || productsPending || documentsPending;
   const feedback = loadError ? (
-    <div role="alert" className="px-1 py-3 text-sm text-muted-foreground">
-      Some artifacts could not be loaded.
-      <button
+    <div role="alert" className="px-1 py-3 text-sm text-muted-foreground">{interfaceText("m_b440c18e313d53")}<button
         className="ml-2 underline"
         onClick={() => {
           void refetchAttachments();
           void refetchProducts();
           void refetchDocuments();
         }}
-      >
-        Retry
-      </button>
+      >{interfaceText("m_942087cc2d41e0")}</button>
     </div>
   ) : loading ? (
-    <p role="status" className="px-1 py-3 text-sm text-muted-foreground">
-      Loading artifacts…
-    </p>
+    <p role="status" className="px-1 py-3 text-sm text-muted-foreground">{interfaceText("m_11580619f554d2")}</p>
   ) : null;
 
   const withUploads = (content: ReactNode, empty = false) => {
@@ -608,10 +602,7 @@ export function IssuePropertiesArtifactsTab({
       return withUploads(null);
     }
     return withUploads(
-      <div className="px-1 py-6 text-sm text-muted-foreground">
-        No artifacts yet. Work products, documents, and agent-produced files
-        will appear here.
-      </div>,
+      <div className="px-1 py-6 text-sm text-muted-foreground">{interfaceText("m_b032412c097b00")}</div>,
       true,
     );
   }
@@ -701,7 +692,7 @@ export function IssuePropertiesArtifactsTab({
             {group.runId !== "other" ? (
               <header className="flex items-baseline justify-between gap-2 px-1">
                 <h3 className="truncate text-xs font-medium text-foreground">
-                  {agent?.name ?? `Run ${group.runId.slice(0, 8)}`}
+                  {agent?.name ?? interfaceText("m_9914ffb7eae7c8", { value0: (group.runId.slice(0, 8)) })}
                 </h3>
                 <time
                   className="shrink-0 text-(length:--text-micro) text-muted-foreground"

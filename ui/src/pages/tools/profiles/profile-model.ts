@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   ToolCatalogEntry,
   ToolProfileDefaultAction,
@@ -131,16 +132,16 @@ export function appCheckState(group: AppGroup, selection: AppSelection | undefin
 export function appSelectionLabel(group: AppGroup, selection: AppSelection | undefined): string {
   const total = group.tools.length;
   const state = appCheckState(group, selection);
-  if (state === "unchecked") return "None selected";
+  if (state === "unchecked") return interfaceText("m_557832355c8534");
   if (selection?.kind === "all" || (selection?.kind === "all_except" && selection.excluded.length === 0)) {
-    return `All ${group.name} tools (${total})`;
+    return interfaceText("m_c56cec6dca91bc", { value0: (group.name), value1: (total) });
   }
   if (selection?.kind === "all_except") {
     const n = selection.excluded.length;
-    return `All ${group.name} except ${n}`;
+    return interfaceText("m_55d5320ddb60c2", { value0: (group.name), value1: (n) });
   }
   const n = selectedToolIds(group, selection).size;
-  return `${n} of ${total} ${group.name} tools`;
+  return interfaceText("m_4d5fd85c19a283", { value0: (n), value1: (total), value2: (group.name) });
 }
 
 // --- Checkbox reducers -----------------------------------------------------

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Sparkles } from "lucide-react";
 import { Link } from "@/lib/router";
 import { cn, relativeTime } from "@/lib/utils";
@@ -48,6 +49,7 @@ export function SourceResolvedFoldCallout({
   finalizedAt,
   className,
 }: SourceResolvedFoldCalloutProps) {
+  useInterfaceLanguage();
   const sourceLabel = fold.sourceIssueIdentifier ?? fold.sourceIssueId.slice(0, 8);
   const evidenceShort = shortenEvidenceId(fold.sameRunEvidenceId);
   const evidenceAt = isoOrLocaleString(fold.sameRunEvidenceAt);
@@ -60,7 +62,7 @@ export function SourceResolvedFoldCallout({
   return (
     <section
       role="status"
-      aria-label="Source-resolved watchdog fold"
+      aria-label={interfaceText("m_b1780fd40397a2")}
       data-source-resolved-fold
       className={cn(
         "relative w-full overflow-hidden rounded-lg border text-sm shadow-(--shadow-extract-8)",
@@ -81,11 +83,9 @@ export function SourceResolvedFoldCallout({
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow)">
-            <span className="text-emerald-900 dark:text-emerald-200">SOURCE-RESOLVED FOLD</span>
+            <span className="text-emerald-900 dark:text-emerald-200">{interfaceText("m_b2eafb16daf0c8")}</span>
             <span className="text-muted-foreground/60" aria-hidden>·</span>
-            <span className="font-medium normal-case tracking-normal text-muted-foreground">
-              system audit
-            </span>
+            <span className="font-medium normal-case tracking-normal text-muted-foreground">{interfaceText("m_057523181b45a0")}</span>
             {finalizedRelative ? (
               <>
                 <span className="text-muted-foreground/60" aria-hidden>·</span>
@@ -95,9 +95,7 @@ export function SourceResolvedFoldCallout({
               </>
             ) : null}
           </div>
-          <p className="mt-1 text-sm leading-6">
-            This run was folded as a source-resolved false positive.
-          </p>
+          <p className="mt-1 text-sm leading-6">{interfaceText("m_25e03a9693d373")}</p>
         </div>
       </header>
       <dl
@@ -107,7 +105,7 @@ export function SourceResolvedFoldCallout({
           "[&>*]:border-emerald-300/40 dark:[&>*]:border-emerald-500/20",
         )}
       >
-        <MetaRow label="Source task">
+        <MetaRow label={interfaceText("m_d0e467ea7a90ea")}>
           <span className="inline-flex flex-wrap items-center gap-1.5">
             <Link
               to={issueLink(fold.sourceIssueId, fold.sourceIssueIdentifier)}
@@ -120,7 +118,7 @@ export function SourceResolvedFoldCallout({
             </span>
           </span>
         </MetaRow>
-        <MetaRow label="Same-run evidence">
+        <MetaRow label={interfaceText("m_434922c97cf376")}>
           <span className="inline-flex flex-wrap items-baseline gap-1.5">
             <span className="rounded bg-background/70 px-1.5 py-0.5 font-mono text-(length:--text-micro) text-emerald-900 dark:bg-background/40 dark:text-emerald-100">
               {fold.sameRunEvidenceKind}
@@ -132,23 +130,23 @@ export function SourceResolvedFoldCallout({
               {evidenceShort}
             </code>
             {evidenceAt ? (
-              <span className="text-(length:--text-micro) text-muted-foreground">at {evidenceAt}</span>
+              <span className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_c6841a08f37db3")}{evidenceAt}</span>
             ) : null}
           </span>
         </MetaRow>
-        <MetaRow label="Silence age before fold">
+        <MetaRow label={interfaceText("m_f1af4dc6e87476")}>
           {silenceAgeLabel ? (
             <span>
               {silenceAgeLabel}
               {silenceStartedLabel ? (
-                <span className="text-muted-foreground"> (silence started {silenceStartedLabel})</span>
+                <span className="text-muted-foreground">{interfaceText("m_c29cf53e261b8c")}{silenceStartedLabel})</span>
               ) : null}
             </span>
           ) : (
-            <span className="text-muted-foreground">unknown</span>
+            <span className="text-muted-foreground">{interfaceText("m_b23a6a8439c0dd")}</span>
           )}
         </MetaRow>
-        <MetaRow label="Process cleanup">
+        <MetaRow label={interfaceText("m_2e6ef1815056bf")}>
           <span
             className="inline-flex flex-wrap items-baseline gap-1.5"
             title={fold.cleanup.outcome}
@@ -160,7 +158,7 @@ export function SourceResolvedFoldCallout({
           </span>
         </MetaRow>
         {fold.evaluationIssueId ? (
-          <MetaRow label="Evaluation task">
+          <MetaRow label={interfaceText("m_b2d2b7e6b39970")}>
             <Link
               to={issueLink(fold.evaluationIssueId, fold.evaluationIssueIdentifier)}
               className="rounded-sm font-medium underline-offset-2 hover:underline"

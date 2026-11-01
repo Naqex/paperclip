@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { parseAgentMentionHref } from "@paperclipai/shared";
 
 /**
@@ -71,7 +72,7 @@ export function resolveRunStatusPresentation(
 ): RunStatusPresentation {
   if (status === "cancelled" && opts.operatorInterrupted) {
     return {
-      label: "interrupted",
+      label: interfaceText("m_d512d96ea31ab0"),
       className: "text-amber-700 dark:text-amber-300",
       srHint: "interrupted by board comment",
     };

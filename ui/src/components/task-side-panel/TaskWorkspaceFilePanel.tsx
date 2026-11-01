@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { isCsvFile } from "@/lib/csv-preview";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +24,7 @@ export function TaskWorkspaceFilePanel({
   payload: WorkspaceFilePayload;
   onFallbackToProject?: () => void;
 }) {
+  useInterfaceLanguage();
   const [previewMode, setPreviewMode] = useState<"raw" | "rendered">("rendered");
   useEffect(() => setPreviewMode("rendered"), [payload.path, payload.workspace, payload.workspaceId, payload.projectId]);
   const [copied, setCopied] = useState(false);
@@ -67,8 +69,8 @@ export function TaskWorkspaceFilePanel({
               type="button"
               variant="ghost"
               size="icon-sm"
-              aria-label="Copy file contents"
-              title={copied ? "Copied" : "Copy file contents"}
+              aria-label={interfaceText("m_b3278e5f53cc34")}
+              title={copied ? interfaceText("m_8d525e5f158b9a") : interfaceText("m_b3278e5f53cc34")}
               onClick={() => {
                 void copyTextToClipboard(contentQuery.data!.content.data).then(() => {
                   setCopied(true);
@@ -79,10 +81,10 @@ export function TaskWorkspaceFilePanel({
               {copied ? <Check aria-hidden /> : <Copy aria-hidden />}
             </Button>
           ) : null}
-          {renderedPreview && contentQuery.data ? <FilePreviewModeToggle mode={previewMode} onChange={setPreviewMode} label="File preview mode" /> : null}
+          {renderedPreview && contentQuery.data ? <FilePreviewModeToggle mode={previewMode} onChange={setPreviewMode} label={interfaceText("m_ba7ca35405b7ba")} /> : null}
           {downloadUrl ? (
             <Button asChild variant="ghost" size="icon-sm">
-              <a href={downloadUrl} download={resource?.title} aria-label="Download file" title="Download file">
+              <a href={downloadUrl} download={resource?.title} aria-label={interfaceText("m_9de4149fb9716c")} title={interfaceText("m_9de4149fb9716c")}>
                 <Download aria-hidden />
               </a>
             </Button>

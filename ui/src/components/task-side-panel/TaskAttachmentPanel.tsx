@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
@@ -49,6 +50,7 @@ export function TextAttachmentPreview({ title, text, markdown, html = false, csv
   csv?: boolean;
   downloadUrl: string;
 }) {
+  useInterfaceLanguage();
   const [mode, setMode] = useState<FilePreviewMode>("rendered");
   useEffect(() => setMode("rendered"), [title]);
   const renderCsv = csv && mode === "rendered" && text.length > 0;
@@ -57,23 +59,24 @@ export function TextAttachmentPreview({ title, text, markdown, html = false, csv
     <div className="flex h-full min-h-0 flex-col">
       <header className="flex items-center gap-2 border-b border-border px-3 py-2">
         <h2 className="min-w-0 flex-1 truncate text-sm font-medium" title={title}>{title}</h2>
-        {markdown || html || csv ? <FilePreviewModeToggle mode={mode} onChange={setMode} label={html ? "HTML view" : csv ? "CSV view" : "Markdown view"} /> : null}
+        {markdown || html || csv ? <FilePreviewModeToggle mode={mode} onChange={setMode} label={html ? interfaceText("m_765d02e62d8a71") : csv ? interfaceText("m_cc2c8ad3f7dd98") : interfaceText("m_4baf040eff22d2")} /> : null}
         <Button asChild variant="ghost" size="icon-sm">
-          <a href={downloadUrl} download aria-label={`Download ${title}`} title={`Download ${title}`}><Download aria-hidden /></a>
+          <a href={downloadUrl} download aria-label={interfaceText("m_a4924ba426cf55", { value0: (title) })} title={interfaceText("m_a4924ba426cf55", { value0: (title) })}><Download aria-hidden /></a>
         </Button>
       </header>
       <div className={renderHtml || renderCsv ? "flex min-h-0 flex-1 flex-col overflow-hidden" : "min-h-0 flex-1 overflow-auto p-4"}>
-        {text.length === 0 ? <p className="text-sm text-muted-foreground">File is empty.</p>
+        {text.length === 0 ? <p className="text-sm text-muted-foreground">{interfaceText("m_912dda303fa818")}</p>
           : renderCsv ? <CsvPreview text={text} title={title} />
           : renderHtml ? <HtmlArtifactPreview html={text} title={title} />
           : markdown && mode === "rendered" ? <MarkdownBody mediaMode="reference">{text}</MarkdownBody>
-          : <pre className="whitespace-pre-wrap break-words font-mono text-sm" aria-label={`${title} raw text`}>{text}</pre>}
+          : <pre className="whitespace-pre-wrap break-words font-mono text-sm" aria-label={interfaceText("m_404450387e830b", { value0: (title) })}>{text}</pre>}
       </div>
     </div>
   );
 }
 
 export function TaskAttachmentPanel({ issueId, attachmentId }: { issueId: string; attachmentId: string }) {
+  useInterfaceLanguage();
   const attachments = useQuery({
     queryKey: queryKeys.issues.attachments(issueId),
     queryFn: () => issuesApi.listAttachments(issueId),
@@ -91,29 +94,29 @@ export function TaskAttachmentPanel({ issueId, attachmentId }: { issueId: string
   });
   const attachmentsView = useQueryView(attachments);
   const contentView = useQueryView(content);
-  if (attachments.isLoading || attachmentsView.kind === "reconnecting") return <p className="p-4 text-sm" role="status">Loading file…</p>;
+  if (attachments.isLoading || attachmentsView.kind === "reconnecting") return <p className="p-4 text-sm" role="status">{interfaceText("m_e937adaa3f447c")}</p>;
   if (attachmentsView.kind === "error") {
     return (
       <QueryErrorState
         className="m-4"
         error={attachments.error}
-        action="load attachment details"
+        action={interfaceText("m_027cfe45747ec5")}
         onRetry={attachmentsView.retry}
         retrying={attachmentsView.isFetching}
       />
     );
   }
-  if (!attachment) return <p className="p-4 text-sm" role="status">File no longer available. Close this tab or choose another file.</p>;
+  if (!attachment) return <p className="p-4 text-sm" role="status">{interfaceText("m_e33f3900faa504")}</p>;
   const downloadUrl = attachmentDownloadPath(attachment);
   if (!eligible || contentView.kind === "error") {
     return (
       <div className="space-y-3 p-4" role="alert">
-        <p className="text-sm">{contentView.kind === "error" ? "Could not preview this file. Retry or download it." : "This file is too large or is not supported for text preview. Download it instead."}</p>
-        {eligible ? <Button onClick={() => void content.refetch()}>Retry</Button> : null}
-        <Button asChild variant="outline"><a href={downloadUrl} download>Download file</a></Button>
+        <p className="text-sm">{contentView.kind === "error" ? interfaceText("m_d928e7da957285") : interfaceText("m_ff7f7c37c41d8a")}</p>
+        {eligible ? <Button onClick={() => void content.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button> : null}
+        <Button asChild variant="outline"><a href={downloadUrl} download>{interfaceText("m_9de4149fb9716c")}</a></Button>
       </div>
     );
   }
-  if (content.data === undefined) return <p className="p-4 text-sm" role="status">Loading file…</p>;
+  if (content.data === undefined) return <p className="p-4 text-sm" role="status">{interfaceText("m_e937adaa3f447c")}</p>;
   return <TextAttachmentPreview key={attachment.id} title={attachment.originalFilename ?? attachment.id} text={content.data} csv={isCsvFile(attachment.originalFilename ?? "", attachment.contentType)} markdown={isMarkdownAttachment(attachment)} html={isHtmlPreview(attachment.contentType, attachment.originalFilename)} downloadUrl={downloadUrl} />;
 }

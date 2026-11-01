@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * Shared error classification and user-facing copy.
  *
@@ -277,7 +278,7 @@ export function describeError(err: unknown, options: DescribeErrorOptions = {}):
   else body = readableServerMessage(err) ?? fallback.body;
 
   const title = options.action && kind !== "transient"
-    ? `Couldn't ${options.action}`
+    ? interfaceText("m_c3f6632ac9fb92", { value0: (options.action) })
     : (coded?.title ?? fallback.title);
   return { title, body, retryable };
 }

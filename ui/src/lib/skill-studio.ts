@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   CompanySkillLastEditor,
   CompanySkillListItem,
@@ -357,9 +358,9 @@ export interface RunMediaGalleryItem {
 }
 
 function runHarnessUnavailableTitle(reason: CompanySkillTestRunHarnessContentUnavailableReason | null) {
-  if (reason === "expired") return "Test task expired";
-  if (reason === "deleted") return "Test task deleted";
-  return "Test task unavailable";
+  if (reason === "expired") return interfaceText("m_f2a8da3a97219a");
+  if (reason === "deleted") return interfaceText("m_7dd137d84ef2e5");
+  return interfaceText("m_4a87a05ad74008");
 }
 
 export function runHarnessUnavailableCopy(

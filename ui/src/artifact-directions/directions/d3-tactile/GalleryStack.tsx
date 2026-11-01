@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { LabGroup } from "../../kit";
 import { countLabel, daysOf, reviewCountOf } from "./gallery-model";
 import { GalleryItem } from "./GalleryItem";
@@ -21,6 +22,7 @@ import { StateFlag } from "./StateFlag";
  */
 
 function Summary({ group }: { group: LabGroup }) {
+  useInterfaceLanguage();
   const review = reviewCountOf(group.artifacts);
   return (
     <header className="flex items-end gap-5">
@@ -41,10 +43,9 @@ function Summary({ group }: { group: LabGroup }) {
           <span className="font-medium text-foreground">
             <span className="font-mono text-(length:--tac-mono-scale)">{group.count}</span> {countLabel(group.count)}
           </span>
-          <span>
-            Updated <span className="font-mono text-(length:--tac-mono-scale)">{group.updatedLabel}</span>
+          <span>{interfaceText("m_a919c7c2d1a486")}<span className="font-mono text-(length:--tac-mono-scale)">{group.updatedLabel}</span>
           </span>
-          {review > 0 ? <span className="sr-only">{review} to review</span> : null}
+          {review > 0 ? <span className="sr-only">{review}{interfaceText("m_343e792fcd3845")}</span> : null}
         </p>
         <KindTally artifacts={group.artifacts} className="flex flex-wrap items-baseline gap-y-0.5 text-xs leading-4 text-(--tac-meta)" />
       </div>
@@ -53,8 +54,9 @@ function Summary({ group }: { group: LabGroup }) {
 }
 
 export function GalleryStack({ group }: { group: LabGroup }) {
+  useInterfaceLanguage();
   const days = daysOf(group.artifacts);
-  if (group.artifacts.length === 0) return <p className="py-16 text-center text-sm font-medium text-foreground">No artifacts in this stack match the current filters.</p>;
+  if (group.artifacts.length === 0) return <p className="py-16 text-center text-sm font-medium text-foreground">{interfaceText("m_16f4a28e29bb6e")}</p>;
   return (
     <div className="flex flex-col gap-7 pt-1">
       <Summary group={group} />

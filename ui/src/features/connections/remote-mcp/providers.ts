@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /** Presentation metadata only. Each provider will have its own catalog entry and connection. */
 export type RemoteMcpProviderId = "zapier" | "arcade" | "composio" | "executor";
 
@@ -22,7 +23,7 @@ export const remoteMcpProviders: Record<RemoteMcpProviderId, RemoteMcpProvider> 
     instructions: ["Create an MCP server in Zapier and choose Other as the client.", "Connect your apps and select the actions to expose.", "Open Connect, generate a token, and copy the full server URL."],
     setupUrl: "https://docs.zapier.com/mcp/get-started/connect/other",
     dashboardUrl: "https://mcp.zapier.com",
-    defaultUrl: "", placeholder: "Paste the full URL from Zapier",
+    defaultUrl: "", get placeholder() { return interfaceText("m_2b71b0cfafae22"); },
     urlHelp: "The full server URL can contain a secret token. Paste it exactly as Zapier provides it.",
     authHelp: "For a separate token, use https://mcp.zapier.com/api/v1/connect and choose Bearer token.",
   },
@@ -52,7 +53,7 @@ export const remoteMcpProviders: Record<RemoteMcpProviderId, RemoteMcpProvider> 
     instructions: ["Connect your apps and configure action policies in Executor.", "Open Integrations and copy the URL under “Connect an agent”.", "Paste it here and sign in when prompted."],
     setupUrl: "https://executor.sh/docs/mcp-proxy",
     dashboardUrl: "https://executor.sh",
-    defaultUrl: "", placeholder: "Paste your Executor workspace MCP URL",
+    defaultUrl: "", get placeholder() { return interfaceText("m_aa2d8df30fbcbb"); },
     urlHelp: "Use the hosted workspace URL or a self-hosted HTTP endpoint reachable from Paperclip. The server’s endpoint policy also applies.",
     authHelp: "Keep any options in the copied URL. If using an API key, use a user key; workspace and organization keys cannot open an MCP session.",
   },

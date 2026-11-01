@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { usePrimaryAgentPresentation } from "@/components/primary-agent/PrimaryAgentPresentation";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -68,9 +69,9 @@ const RECENT_AGENT_LIMIT = 3;
 const LIVE_AGENT_LINGER_MS = 120_000;
 
 const AGENT_SORT_CHOICES: SidebarSectionRadioChoice[] = [
-  { value: "top", label: "Top" },
-  { value: "alphabetical", label: "Alphabetical" },
-  { value: "recent", label: "Recent" },
+  { value: "top", get label() { return interfaceText("m_d5cdfcf7ff7533"); } },
+  { value: "alphabetical", get label() { return interfaceText("m_a49d631f8c6cf6"); } },
+  { value: "recent", get label() { return interfaceText("m_690dbe9dc0993c"); } },
 ];
 
 function agentTimestamp(agent: Agent, field: "lastHeartbeatAt" | "updatedAt" | "createdAt"): number {
@@ -139,6 +140,7 @@ function SidebarAgentItem({
   onToggleStar?: (agent: Agent, starred: boolean) => void;
   starPending?: boolean;
 }) {
+  useInterfaceLanguage();
   const routeRef = agentRouteRef(agent);
   const href = activeTab ? `${agentUrl(agent)}/${activeTab}` : agentUrl(agent);
   const editHref = `${agentUrl(agent)}/configuration`;
@@ -146,14 +148,14 @@ function SidebarAgentItem({
   const isPaused = agent.status === "paused";
   const isBudgetPaused = isPaused && agent.pauseReason === "budget";
   const hasInvalidOrgChain = agent.orgChainHealth?.status === "invalid_org_chain";
-  const pauseResumeLabel = isPaused ? "Resume agent" : "Pause agent";
+  const pauseResumeLabel = isPaused ? interfaceText("m_0bb60c4501919e") : interfaceText("m_51ca75d39c8784");
   const pauseResumeDisabled = disabled || agent.status === "pending_approval" || isBudgetPaused || (isPaused && hasInvalidOrgChain);
   const pauseResumeDisabledLabel = disabled
-    ? "Updating..."
+    ? interfaceText("m_0a4e0b71b7f358")
     : isBudgetPaused
-      ? "Budget paused"
+      ? interfaceText("m_0ee20bcfce9843")
       : isPaused && hasInvalidOrgChain
-        ? "Invalid org chain"
+        ? interfaceText("m_5443c0aa5001d7")
       : pauseResumeLabel;
   const showBuiltInLifecycle = builtInStatus === "needs_setup" || builtInStatus === "pending_approval";
   const trailingLabel = [
@@ -182,14 +184,14 @@ function SidebarAgentItem({
           <span className="ml-1 flex shrink-0 items-center gap-1">
             {showBuiltInLifecycle ? <BuiltInLifecycleChip status={builtInStatus} compact /> : null}
             {hasInvalidOrgChain ? (
-              <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-label="Invalid reporting chain" />
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-label={interfaceText("m_bf9c6d9dc8a902")} />
             ) : null}
           </span>
         ) : undefined
       }
       trailingLabel={trailingLabel}
       liveAccessory={
-        agent.pauseReason === "budget" ? <BudgetSidebarMarker title="Agent paused by budget" /> : undefined
+        agent.pauseReason === "budget" ? <BudgetSidebarMarker title={interfaceText("m_2a32d0ef07d1c0")} /> : undefined
       }
     />
   );
@@ -229,7 +231,7 @@ function SidebarAgentItem({
                 ? "opacity-100"
                 : "pointer-events-none opacity-0 group-hover/agent:pointer-events-auto group-hover/agent:opacity-100 group-focus-within/agent:pointer-events-auto group-focus-within/agent:opacity-100",
             )}
-            aria-label={`Open actions for ${agent.name}`}
+            aria-label={interfaceText("m_c4ad765739a668", { value0: (agent.name) })}
           >
             <MoreHorizontal className="h-3.5 w-3.5" />
           </Button>
@@ -249,7 +251,7 @@ function SidebarAgentItem({
                 ) : (
                   <Star className={cn("size-4", starred && "fill-amber-500 text-amber-500")} />
                 )}
-                <span>{starred ? "Remove from starred" : "Star agent"}</span>
+                <span>{starred ? interfaceText("m_f1133f6566cd10") : interfaceText("m_97bfe49d7bf2e9")}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>
@@ -262,7 +264,7 @@ function SidebarAgentItem({
               }}
             >
               <Pencil className="size-4" />
-              <span>Edit agent</span>
+              <span>{interfaceText("m_6ff5e7a9477a6e")}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -272,7 +274,7 @@ function SidebarAgentItem({
               onPauseResume(agent, isPaused ? "resume" : "pause");
             }}
             disabled={pauseResumeDisabled}
-            title={isBudgetPaused ? "Agent was paused by budget limits" : undefined}
+            title={isBudgetPaused ? interfaceText("m_242f981a779856") : undefined}
           >
             {isPaused ? <PlayCircle className="size-4" /> : <PauseCircle className="size-4" />}
             <span>{pauseResumeDisabledLabel}</span>
@@ -286,7 +288,7 @@ function SidebarAgentItem({
             disabled={leaving}
           >
             {leaving ? <Loader2 className="size-4 motion-safe:animate-spin" /> : <LogOut className="size-4" />}
-            <span>{leaving ? "Leaving..." : "Leave agent"}</span>
+            <span>{leaving ? interfaceText("m_9b6b4fb63c666d") : interfaceText("m_a6befc7af0c086")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -295,6 +297,7 @@ function SidebarAgentItem({
 }
 
 export function SidebarAgents({ streamlined = false }: { streamlined?: boolean } = {}) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(true);
   const [pendingAgentIds, setPendingAgentIds] = useState<Set<string>>(() => new Set());
   const [liveLingerVersion, setLiveLingerVersion] = useState(0);
@@ -539,14 +542,14 @@ export function SidebarAgents({ streamlined = false }: { streamlined?: boolean }
         queryClient.invalidateQueries({ queryKey: queryKeys.agents.detail(agentRouteRef(agent)) }),
       ]);
       pushToast({
-        title: action === "pause" ? "Agent paused" : "Agent resumed",
+        title: action === "pause" ? interfaceText("m_ce663b910032c9") : interfaceText("m_921b327661b381"),
         body: agent.name,
         tone: "success",
       });
     },
     onError: (error, { agent, action }) => {
       pushToast({
-        title: action === "pause" ? "Could not pause agent" : "Could not resume agent",
+        title: action === "pause" ? interfaceText("m_b9e9ce1aeb50b2") : interfaceText("m_aa66c83368cdaf"),
         body: error instanceof Error ? error.message : agent.name,
         tone: "error",
       });
@@ -637,7 +640,7 @@ export function SidebarAgents({ streamlined = false }: { streamlined?: boolean }
 
   return (
     <SidebarSection
-      label="Agents"
+      label={interfaceText("m_279b44d2ab4b40")}
       collapsible={{ open, onOpenChange: setOpen }}
       headerAction={{
         ariaLabel: "New agent",
@@ -647,7 +650,7 @@ export function SidebarAgents({ streamlined = false }: { streamlined?: boolean }
       menu={{
         ariaLabel: "Agents section actions",
         actions: [
-          { type: "item", label: "Browse agents", icon: Users, href: "/agents/all" },
+          { type: "item", label: interfaceText("m_9c6a7d961b50eb"), icon: Users, href: "/agents/all" },
           { type: "separator" },
         ],
         radioLabel: "Agent sort",
@@ -668,20 +671,20 @@ export function SidebarAgents({ streamlined = false }: { streamlined?: boolean }
           <Link
             to="/agents/all"
             state={SIDEBAR_SCROLL_RESET_STATE}
-            aria-label={rail ? "See all agents" : undefined}
+            aria-label={rail ? interfaceText("m_f632e9d4173abe") : undefined}
             onClick={() => {
               if (isMobile) setSidebarOpen(false);
             }}
             className="flex items-center gap-2.5 mx-2 rounded-lg px-2 py-1.5 pointer-coarse:py-1 text-(length:--text-compact) font-medium text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
           >
             <Users className="shrink-0 h-4 w-4" />
-            <span className={rail ? SIDEBAR_RAIL_HIDDEN_LABEL : undefined}>See all agents</span>
+            <span className={rail ? SIDEBAR_RAIL_HIDDEN_LABEL : undefined}>{interfaceText("m_f632e9d4173abe")}</span>
           </Link>
         );
         return rail ? (
           <Tooltip>
             <TooltipTrigger asChild>{seeAllLink}</TooltipTrigger>
-            <TooltipContent side="right">See all agents</TooltipContent>
+            <TooltipContent side="right">{interfaceText("m_f632e9d4173abe")}</TooltipContent>
           </Tooltip>
         ) : (
           seeAllLink

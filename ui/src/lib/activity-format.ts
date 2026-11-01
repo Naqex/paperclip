@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { Agent } from "@paperclipai/shared";
 import type { CompanyUserProfile } from "./company-members";
 import { formatReviewPolicyValue } from "./review-policy";
@@ -288,11 +289,11 @@ function readIssueReferences(details: ActivityDetails, key: string): ActivityIss
 }
 
 function formatUserLabel(userId: string | null | undefined, options: ActivityFormatOptions = {}): string {
-  if (!userId || userId === "local-board") return "Board";
-  if (options.currentUserId && userId === options.currentUserId) return "You";
+  if (!userId || userId === "local-board") return interfaceText("m_4816cbfd74aa82");
+  if (options.currentUserId && userId === options.currentUserId) return interfaceText("m_08b041935798fb");
   const profile = options.userProfileMap?.get(userId);
   if (profile) return profile.label;
-  return `user ${userId.slice(0, 5)}`;
+  return interfaceText("m_9ce8aab95c7d3f", { value0: (userId.slice(0, 5)) });
 }
 
 function formatParticipantLabel(participant: ActivityParticipant, options: ActivityFormatOptions): string {
@@ -307,7 +308,7 @@ function formatIssueReferenceLabel(reference: ActivityIssueReference): string {
   if (reference.identifier) return reference.identifier;
   if (reference.title) return reference.title;
   if (reference.id) return reference.id.slice(0, 8);
-  return "task";
+  return interfaceText("m_0ebb429fa86d48");
 }
 
 function formatChangedEntityLabel(

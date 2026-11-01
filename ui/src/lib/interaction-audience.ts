@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * Plain-language presentation of *who may resolve* an issue-thread interaction
  * (PAP-17280, Phase 3 of the open-default resolver contract in
@@ -37,9 +38,9 @@ export const DEFAULT_RESOLVER_POLICY: IssueThreadInteractionCanonicalResolverPol
 
 /** Short label for a resolver audience — badges, select options, table cells. */
 const RESOLVER_POLICY_LABELS: Record<IssueThreadInteractionCanonicalResolverPolicy, string> = {
-  anyone: "Anyone",
-  not_creator: "Anyone except creator",
-  human_only: "Human only",
+  get anyone() { return interfaceText("m_8d486bb2d3f85d"); },
+  get not_creator() { return interfaceText("m_23c0899b543cf0"); },
+  get human_only() { return interfaceText("m_de7c8fff477b3c"); },
 };
 
 /**
@@ -49,11 +50,9 @@ const RESOLVER_POLICY_LABELS: Record<IssueThreadInteractionCanonicalResolverPoli
  * {@link describeInteractionAudience}.
  */
 const RESOLVER_POLICY_EFFECTS: Record<IssueThreadInteractionCanonicalResolverPolicy, string> = {
-  anyone:
-    "Anyone in the organization can respond — the board or any agent, including the one that asked.",
-  not_creator:
-    "Anyone in the organization except the agent that created the card, and its run. Use this when the answer has to come from someone else.",
-  human_only: "Only a person on the board can respond. Agents are turned away.",
+  get anyone() { return interfaceText("m_fcde294ab8776f"); },
+  get not_creator() { return interfaceText("m_cf2197fbe7413b"); },
+  get human_only() { return interfaceText("m_cc9148dda26b98"); },
 };
 
 /** Accepts canonical values and the deprecated `board_*` compatibility aliases. */
@@ -78,8 +77,8 @@ export const RESOLVER_POLICY_CHOICES: readonly {
   isDefault: boolean;
 }[] = ISSUE_THREAD_INTERACTION_CANONICAL_RESOLVER_POLICIES.map((value) => ({
   value,
-  label: RESOLVER_POLICY_LABELS[value],
-  effect: RESOLVER_POLICY_EFFECTS[value],
+  get label() { return RESOLVER_POLICY_LABELS[value]; },
+  get effect() { return RESOLVER_POLICY_EFFECTS[value]; },
   isDefault: value === DEFAULT_RESOLVER_POLICY,
 }));
 

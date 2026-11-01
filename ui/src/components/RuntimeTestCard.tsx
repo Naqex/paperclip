@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import {
   CircleCheck,
   CircleAlert,
@@ -63,6 +64,7 @@ export function RuntimeTestCard({
   variant?: "connection" | "prerequisites";
   metadataOnly?: boolean;
 }) {
+  useInterfaceLanguage();
   const missingRuntime = state === "fail"
     ? result?.checks.find(check => check.code === "acpx_runtime_package_missing")
     : undefined;
@@ -70,9 +72,9 @@ export function RuntimeTestCard({
     ? { ...copy.fail, title: "Runtime missing", description: missingRuntime.message }
     : (variant === "prerequisites" ? prerequisiteCopy : copy)[state];
   const description = metadataOnly && state === "idle"
-    ? "Verify your saved token, runtime installation, and selected model without sending a model prompt."
+    ? interfaceText("m_1618aa2b5136af")
     : metadataOnly && state === "running"
-      ? "Checking the saved token, runtime, and selected model…"
+      ? interfaceText("m_9df0383ae096f0")
       : content.description;
   const Icon =
     state === "running"
@@ -84,7 +86,7 @@ export function RuntimeTestCard({
           : Play;
   return (
     <section
-      aria-label="Runtime test"
+      aria-label={interfaceText("m_a3b5b9078336bc")}
       className="rounded-lg border border-border bg-card"
     >
       <div className="flex items-start gap-3 p-4 sm:items-center">
@@ -138,9 +140,7 @@ export function RuntimeTestCard({
             <ChevronRight
               aria-hidden="true"
               className="size-3 transition-transform group-open:rotate-90"
-            />
-            Test details
-          </summary>
+            />{interfaceText("m_7cc561a55b3b31")}</summary>
           <ul className="space-y-3 px-4 pb-4">
             {result.checks.map((check) => (
               <li

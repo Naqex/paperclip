@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { AgentCommentaryEntry, AgentCommentaryKind } from "@paperclipai/shared";
@@ -20,20 +21,22 @@ const PAGE_SIZE = 50;
 const ALL = "all";
 
 function MessageKind({ kind }: { kind: AgentCommentaryKind }) {
+  useInterfaceLanguage();
   const Icon = kind === "suggestion" ? Lightbulb : MessageSquareWarning;
-  return <Badge variant="outline" className="gap-1.5 font-normal"><Icon className="size-3" />{kind === "suggestion" ? "Suggestion" : "Complaint"}</Badge>;
+  return <Badge variant="outline" className="gap-1.5 font-normal"><Icon className="size-3" />{kind === "suggestion" ? interfaceText("m_527f6bc857ad18") : interfaceText("m_f5a84a3c39e9d9")}</Badge>;
 }
 
 function CommentaryRow({ entry, onOpen }: { entry: AgentCommentaryEntry; onOpen: (trigger: HTMLButtonElement) => void }) {
+  useInterfaceLanguage();
   return (
     <li>
-      <button type="button" onClick={(event) => onOpen(event.currentTarget)} aria-label={`Read ${entry.kind} from ${entry.agent.name}`}
+      <button type="button" onClick={(event) => onOpen(event.currentTarget)} aria-label={interfaceText("m_8e802f71e388c3", { value0: (entry.kind), value1: (entry.agent.name) })}
         className="group flex w-full flex-col gap-2 rounded-md px-3 py-4 text-left transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:grid md:grid-cols-12 md:items-start md:gap-4">
         <div className="flex items-center justify-between gap-3 md:col-span-2"><AgentIdentity agent={entry.agent} size="sm" /><span className="md:hidden"><MessageKind kind={entry.kind} /></span></div>
         <div className="hidden md:col-span-2 md:block"><MessageKind kind={entry.kind} /></div>
         <div className="flex min-w-0 flex-col gap-2 md:col-span-6">
           <p className="line-clamp-2 whitespace-pre-line break-words text-sm leading-relaxed text-foreground">{entry.preview.trim()}{entry.preview.length >= 280 ? "…" : ""}</p>
-          {entry.task && <span className="truncate text-xs text-muted-foreground"><span className="font-mono">{entry.task.identifier ?? "Task"}</span> · {entry.task.title}</span>}
+          {entry.task && <span className="truncate text-xs text-muted-foreground"><span className="font-mono">{entry.task.identifier ?? interfaceText("m_4bc74b21357c6c")}</span> · {entry.task.title}</span>}
         </div>
         <time dateTime={entry.createdAt} title={new Date(entry.createdAt).toLocaleString()} className="font-mono text-xs text-muted-foreground md:col-span-2 md:text-right">{relativeTime(entry.createdAt)}</time>
       </button>
@@ -42,6 +45,7 @@ function CommentaryRow({ entry, onOpen }: { entry: AgentCommentaryEntry; onOpen:
 }
 
 function CommentaryDetail({ companyId, id, onClose, triggerRef }: { companyId: string; id: string | null; onClose: () => void; triggerRef: RefObject<HTMLButtonElement | null> }) {
+  useInterfaceLanguage();
   const detail = useQuery({
     queryKey: queryKeys.agentCommentary.detail(companyId, id),
     queryFn: ({ signal }) => agentCommentaryApi.get(companyId, id!, signal),
@@ -57,17 +61,17 @@ function CommentaryDetail({ companyId, id, onClose, triggerRef }: { companyId: s
         }
       }}>
         <DialogHeader className="shrink-0 pr-6">
-          <DialogTitle>{entry?.kind === "complaint" ? "Complaint" : entry ? "Suggestion" : "Commentary"}</DialogTitle>
-          <DialogDescription>{entry ? `Submitted ${new Date(entry.createdAt).toLocaleString()}` : "Message details and source context."}</DialogDescription>
+          <DialogTitle>{entry?.kind === "complaint" ? interfaceText("m_f5a84a3c39e9d9") : entry ? interfaceText("m_527f6bc857ad18") : interfaceText("m_4a7a75ab79cde0")}</DialogTitle>
+          <DialogDescription>{entry ? interfaceText("m_ba52b695cbc64f", { value0: (new Date(entry.createdAt).toLocaleString()) }) : interfaceText("m_9961ce70305866")}</DialogDescription>
         </DialogHeader>
-        {detail.isPending ? <p role="status" className="text-sm text-muted-foreground">Loading message…</p> : detail.error ? (
-          <div role="alert" className="flex flex-col items-start gap-3"><p className="text-sm text-destructive">{detail.error.message}</p><Button variant="outline" size="sm" onClick={() => void detail.refetch()}>Try again</Button></div>
+        {detail.isPending ? <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_865a0106ae9aa8")}</p> : detail.error ? (
+          <div role="alert" className="flex flex-col items-start gap-3"><p className="text-sm text-destructive">{detail.error.message}</p><Button variant="outline" size="sm" onClick={() => void detail.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button></div>
         ) : entry ? <>
           <div className="flex shrink-0 flex-wrap items-center gap-3"><Link to={`/agents/${entry.agent.id}`}><AgentIdentity agent={entry.agent} size="sm" /></Link><MessageKind kind={entry.kind} /></div>
           <div className="min-h-0 overflow-y-auto overscroll-contain break-words pr-2"><MarkdownBody>{entry.body}</MarkdownBody></div>
           <div className="flex shrink-0 flex-wrap items-center gap-4 border-t border-border pt-4 text-sm">
-            {entry.task && <Link to={`/issues/${entry.task.identifier ?? entry.task.id}`} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"><span className="font-mono">{entry.task.identifier ?? "Source task"}</span><ArrowUpRight className="size-3.5" /></Link>}
-            <Link to={`/agents/${entry.agent.id}/runs/${entry.runId}`} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">View run<ArrowUpRight className="size-3.5" /></Link>
+            {entry.task && <Link to={`/issues/${entry.task.identifier ?? entry.task.id}`} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"><span className="font-mono">{entry.task.identifier ?? interfaceText("m_d0e467ea7a90ea")}</span><ArrowUpRight className="size-3.5" /></Link>}
+            <Link to={`/agents/${entry.agent.id}/runs/${entry.runId}`} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">{interfaceText("m_aaf7fccc7d1315")}<ArrowUpRight className="size-3.5" /></Link>
           </div>
         </> : null}
       </DialogContent>
@@ -76,6 +80,7 @@ function CommentaryDetail({ companyId, id, onClose, triggerRef }: { companyId: s
 }
 
 export function AgentCommentary({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const [params, setParams] = useSearchParams();
   const q = params.get("q") ?? "";
   const agentId = params.get("agentId") ?? ALL;
@@ -116,27 +121,27 @@ export function AgentCommentary({ companyId }: { companyId: string }) {
   const clearFilters = () => updateFilters({ q: "", agentId: "", kind: "" });
 
   return (
-    <section className="flex flex-col gap-5" aria-label="Commentary">
-      <div className="flex flex-col gap-1"><h2 className="text-lg font-semibold">Commentary</h2><p className="text-sm text-muted-foreground">Suggestions and complaints from your agents.</p></div>
+    <section className="flex flex-col gap-5" aria-label={interfaceText("m_4a7a75ab79cde0")}>
+      <div className="flex flex-col gap-1"><h2 className="text-lg font-semibold">{interfaceText("m_4a7a75ab79cde0")}</h2><p className="text-sm text-muted-foreground">{interfaceText("m_2b0efed1e53f59")}</p></div>
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-48 flex-1 sm:max-w-sm"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label="Search commentary" placeholder="Search messages…" maxLength={200} value={search} onChange={(event) => setSearch(event.target.value)} className="pl-9" /></div>
-        <Select value={agentId} onValueChange={(value) => updateFilters({ agentId: value })}><SelectTrigger aria-label="Filter by agent" className="min-w-40"><SelectValue placeholder="All agents" /></SelectTrigger><SelectContent><SelectItem value={ALL}>All agents</SelectItem>{agents.data?.map((agent) => <SelectItem key={agent.id} value={agent.id}><AgentIdentity agent={agent} size="xs" /></SelectItem>)}</SelectContent></Select>
-        <Select value={kind ?? ALL} onValueChange={(value) => updateFilters({ kind: value })}><SelectTrigger aria-label="Filter by message type" className="min-w-36"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>All types</SelectItem><SelectItem value="suggestion">Suggestions</SelectItem><SelectItem value="complaint">Complaints</SelectItem></SelectContent></Select>
-        {hasFilters && <Button variant="ghost" size="sm" onClick={clearFilters}>Clear filters</Button>}
+        <div className="relative min-w-48 flex-1 sm:max-w-sm"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input aria-label={interfaceText("m_ac721197b9678c")} placeholder={interfaceText("m_cd889ff473992e")} maxLength={200} value={search} onChange={(event) => setSearch(event.target.value)} className="pl-9" /></div>
+        <Select value={agentId} onValueChange={(value) => updateFilters({ agentId: value })}><SelectTrigger aria-label={interfaceText("m_94dc2569edb014")} className="min-w-40"><SelectValue placeholder={interfaceText("m_54c32d3e2cfa1c")} /></SelectTrigger><SelectContent><SelectItem value={ALL}>{interfaceText("m_54c32d3e2cfa1c")}</SelectItem>{agents.data?.map((agent) => <SelectItem key={agent.id} value={agent.id}><AgentIdentity agent={agent} size="xs" /></SelectItem>)}</SelectContent></Select>
+        <Select value={kind ?? ALL} onValueChange={(value) => updateFilters({ kind: value })}><SelectTrigger aria-label={interfaceText("m_1122b3c70f8640")} className="min-w-36"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>{interfaceText("m_f10988e79e8d9a")}</SelectItem><SelectItem value="suggestion">{interfaceText("m_16c1d601fc6695")}</SelectItem><SelectItem value="complaint">{interfaceText("m_3f1c40e9f5fddf")}</SelectItem></SelectContent></Select>
+        {hasFilters && <Button variant="ghost" size="sm" onClick={clearFilters}>{interfaceText("m_7179ea0035fca7")}</Button>}
       </div>
-      {agents.error && <p role="alert" className="text-sm text-destructive">Could not load agent filters. <button type="button" className="underline" onClick={() => void agents.refetch()}>Try again</button></p>}
-      {messages.isPending ? <p role="status" className="py-12 text-center text-sm text-muted-foreground">Loading commentary…</p> : messages.error ? (
-        <div role="alert" className="flex flex-col items-center gap-3 py-12"><p className="text-sm text-destructive">{messages.error.message}</p><Button variant="outline" size="sm" onClick={() => void messages.refetch()}>Try again</Button></div>
+      {agents.error && <p role="alert" className="text-sm text-destructive">{interfaceText("m_afae802e2354da")}<button type="button" className="underline" onClick={() => void agents.refetch()}>{interfaceText("m_d8b8392e2c5429")}</button></p>}
+      {messages.isPending ? <p role="status" className="py-12 text-center text-sm text-muted-foreground">{interfaceText("m_0bea4b89bf5123")}</p> : messages.error ? (
+        <div role="alert" className="flex flex-col items-center gap-3 py-12"><p className="text-sm text-destructive">{messages.error.message}</p><Button variant="outline" size="sm" onClick={() => void messages.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button></div>
       ) : messages.data?.items.length === 0 ? (
-        <EmptyState icon={Lightbulb} message={offset > 0 ? "No messages on this page." : hasFilters ? "No messages match these filters." : "No agent commentary yet."} description={offset > 0 ? "Return to the newest messages." : hasFilters ? "Try another agent, message type, or search." : "Suggestions and complaints will appear here when agents submit them."} action={offset > 0 ? "Back to latest" : hasFilters ? "Clear filters" : undefined} onAction={offset > 0 ? () => updateFilters({ offset: "" }) : hasFilters ? clearFilters : undefined} hideActionIcon />
+        <EmptyState icon={Lightbulb} message={offset > 0 ? interfaceText("m_94d5ab08d1a76f") : hasFilters ? interfaceText("m_4d5cf3789c5fdc") : interfaceText("m_1eec6682660aa1")} description={offset > 0 ? interfaceText("m_c77fe940e6783b") : hasFilters ? interfaceText("m_93cb1981f219ab") : interfaceText("m_6a4a316fc91048")} action={offset > 0 ? interfaceText("m_86cf0aefc0c193") : hasFilters ? interfaceText("m_7179ea0035fca7") : undefined} onAction={offset > 0 ? () => updateFilters({ offset: "" }) : hasFilters ? clearFilters : undefined} hideActionIcon />
       ) : messages.data ? <>
         <div>
-          <div aria-hidden="true" className="hidden grid-cols-12 gap-4 border-b border-border px-3 pb-3 text-xs font-medium text-muted-foreground md:grid"><span className="col-span-2">Agent</span><span className="col-span-2">Type</span><span className="col-span-6">Message</span><span className="col-span-2 text-right">Submitted</span></div>
-          <ul aria-label="Commentary messages" className="divide-y divide-border">{messages.data.items.map((entry) => <CommentaryRow key={entry.id} entry={entry} onOpen={(trigger) => { triggerRef.current = trigger; selectEntry(entry.id); }} />)}</ul>
+          <div aria-hidden="true" className="hidden grid-cols-12 gap-4 border-b border-border px-3 pb-3 text-xs font-medium text-muted-foreground md:grid"><span className="col-span-2">Agent</span><span className="col-span-2">{interfaceText("m_baaddf70fb5d43")}</span><span className="col-span-6">{interfaceText("m_2f77668a9dfbf8")}</span><span className="col-span-2 text-right">{interfaceText("m_64900440a8c9a5")}</span></div>
+          <ul aria-label={interfaceText("m_df28703146b238")} className="divide-y divide-border">{messages.data.items.map((entry) => <CommentaryRow key={entry.id} entry={entry} onOpen={(trigger) => { triggerRef.current = trigger; selectEntry(entry.id); }} />)}</ul>
         </div>
         <div className="flex items-center justify-between gap-3 border-t border-border pt-4">
-          <p role="status" className="font-mono text-xs text-muted-foreground">{offset + 1}–{offset + messages.data.items.length} of {messages.data.total} messages</p>
-          <div className="flex gap-2"><Button variant="outline" size="sm" aria-label="Previous page" disabled={offset === 0} onClick={() => updateFilters({ offset: String(Math.max(0, offset - PAGE_SIZE)) })}><ChevronLeft className="size-4" />Previous</Button><Button variant="outline" size="sm" aria-label="Next page" disabled={offset + messages.data.items.length >= messages.data.total} onClick={() => updateFilters({ offset: String(offset + PAGE_SIZE) })}>Next<ChevronRight className="size-4" /></Button></div>
+          <p role="status" className="font-mono text-xs text-muted-foreground">{offset + 1}–{offset + messages.data.items.length}{interfaceText("m_a4282e4b2298b9")}{messages.data.total}{interfaceText("m_6e2fd28d0ba1ec")}</p>
+          <div className="flex gap-2"><Button variant="outline" size="sm" aria-label={interfaceText("m_1208ec01f223c6")} disabled={offset === 0} onClick={() => updateFilters({ offset: String(Math.max(0, offset - PAGE_SIZE)) })}><ChevronLeft className="size-4" />{interfaceText("m_a57b08a480b822")}</Button><Button variant="outline" size="sm" aria-label={interfaceText("m_c08ac736a5e29c")} disabled={offset + messages.data.items.length >= messages.data.total} onClick={() => updateFilters({ offset: String(offset + PAGE_SIZE) })}>{interfaceText("m_1ff57a29d7c9d1")}<ChevronRight className="size-4" /></Button></div>
         </div>
       </> : null}
       <CommentaryDetail key={companyId} companyId={companyId} id={selectedId} onClose={() => selectEntry(null)} triggerRef={triggerRef} />

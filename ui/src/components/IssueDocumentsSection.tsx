@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
@@ -366,6 +367,7 @@ function AccountIssueDocumentsSection({
   forceEditDocumentKey?: string | null;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const location = useLocation();
   const documentSubject = useMemo(() => {
@@ -1120,19 +1122,19 @@ function AccountIssueDocumentsSection({
           {extraActions}
           <Button variant="outline" size="sm" onClick={beginNewDocument} className="shrink-0">
             <Plus className="mr-1.5 h-3.5 w-3.5" />
-            <span className="hidden sm:inline">New document</span>
-            <span className="sm:hidden">New</span>
+            <span className="hidden sm:inline">{interfaceText("m_1b26844054631e")}</span>
+            <span className="sm:hidden">{interfaceText("m_18fdd549b2ed36")}</span>
           </Button>
         </div>
       ) : (
         <div className="flex flex-wrap items-center gap-2 min-w-0">
-          <h3 className="w-full text-sm font-medium text-muted-foreground shrink-0 sm:w-auto">Documents</h3>
+          <h3 className="w-full text-sm font-medium text-muted-foreground shrink-0 sm:w-auto">{interfaceText("m_b4e929d8bcfe04")}</h3>
           <div className="flex flex-wrap items-center gap-2 min-w-0 sm:ml-auto">
             {extraActions}
             <Button variant="outline" size="sm" onClick={beginNewDocument} className="shrink-0">
               <Plus className="mr-1.5 h-3.5 w-3.5" />
-              <span className="hidden sm:inline">New document</span>
-              <span className="sm:hidden">New</span>
+              <span className="hidden sm:inline">{interfaceText("m_1b26844054631e")}</span>
+              <span className="sm:hidden">{interfaceText("m_18fdd549b2ed36")}</span>
             </Button>
           </div>
         </div>
@@ -1152,7 +1154,7 @@ function AccountIssueDocumentsSection({
             onChange={(event) =>
               setDraft((current) => current ? { ...current, key: event.target.value.toLowerCase() } : current)
             }
-            placeholder="Document key"
+            placeholder={interfaceText("m_75622cdf9465d1")}
           />
           {newDocumentKeyError && (
             <p className="text-xs text-destructive">{newDocumentKeyError}</p>
@@ -1163,7 +1165,7 @@ function AccountIssueDocumentsSection({
               onChange={(event) =>
                 setDraft((current) => current ? { ...current, title: event.target.value } : current)
               }
-              placeholder="Optional title"
+              placeholder={interfaceText("m_67fc5f45e20b33")}
             />
           )}
           <MarkdownEditor
@@ -1171,7 +1173,7 @@ function AccountIssueDocumentsSection({
             onChange={(body) =>
               setDraft((current) => current ? { ...current, body } : current)
             }
-            placeholder="Markdown body"
+            placeholder={interfaceText("m_4ddfc15ba3f746")}
             bordered={false}
             className="bg-transparent"
             contentClassName="min-h-(--sz-220px) text-sm leading-7"
@@ -1181,15 +1183,13 @@ function AccountIssueDocumentsSection({
           />
           <div className="flex items-center justify-end gap-2">
             <Button variant="outline" size="sm" onClick={cancelDraft}>
-              <X className="mr-1.5 h-3.5 w-3.5" />
-              Cancel
-            </Button>
+              <X className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button
               size="sm"
               onClick={() => void commitDraft(draft, { clearAfterSave: false, trackAutosave: false })}
               disabled={upsertDocument.isPending}
             >
-              {upsertDocument.isPending ? "Saving..." : "Create document"}
+              {upsertDocument.isPending ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_ac6e978406f250")}
             </Button>
           </div>
         </div>
@@ -1298,15 +1298,15 @@ function AccountIssueDocumentsSection({
                         "text-muted-foreground transition-colors",
                         isLocked && "text-amber-700 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200",
                       )}
-                      title={isLocked ? "Unlock document" : "Lock document"}
-                      aria-label={isLocked ? `Unlock ${doc.key} document` : `Lock ${doc.key} document`}
+                      title={isLocked ? interfaceText("m_a1cf639c9e9d07") : interfaceText("m_9950ef893ee825")}
+                      aria-label={isLocked ? interfaceText("m_fba6d17e4ff63f", { value0: (doc.key) }) : interfaceText("m_4d29bbc77c3a04", { value0: (doc.key) })}
                       onClick={() => toggleDocumentLock(doc, !isLocked)}
                       disabled={lockActionPending}
                     >
                       {isLocked ? <Lock className="h-3.5 w-3.5" /> : <Unlock className="h-3.5 w-3.5" />}
                     </Button>
                     ) : isLocked ? (
-                      <span title="Locked document" aria-label="Locked document" className="inline-flex h-6 w-6 items-center justify-center text-amber-700 dark:text-amber-300">
+                      <span title={interfaceText("m_b09d58e20fc02f")} aria-label={interfaceText("m_b09d58e20fc02f")} className="inline-flex h-6 w-6 items-center justify-center text-amber-700 dark:text-amber-300">
                         <Lock className="h-3.5 w-3.5" />
                       </span>
                     ) : null}
@@ -1317,7 +1317,7 @@ function AccountIssueDocumentsSection({
                         "text-muted-foreground transition-colors",
                         copiedDocumentKey === doc.key && "text-foreground",
                       )}
-                      title={copiedDocumentKey === doc.key ? "Copied" : "Copy document"}
+                      title={copiedDocumentKey === doc.key ? interfaceText("m_8d525e5f158b9a") : interfaceText("m_c054131e44515b")}
                       onClick={() => void copyDocumentBody(doc.key, displayedBody)}
                     >
                       {copiedDocumentKey === doc.key ? (
@@ -1332,7 +1332,7 @@ function AccountIssueDocumentsSection({
                           variant="ghost"
                           size="icon-xs"
                           className="text-muted-foreground"
-                          title="Document actions"
+                          title={interfaceText("m_97fa0725b718c1")}
                         >
                           <MoreHorizontal className="h-3.5 w-3.5" />
                         </Button>
@@ -1340,22 +1340,16 @@ function AccountIssueDocumentsSection({
                       <DropdownMenuContent align="end">
                         {!isHistoricalPreview && !isLocked ? (
                           <DropdownMenuItem onClick={() => beginEdit(doc.key)}>
-                            <FilePenLine className="h-3.5 w-3.5" />
-                            Edit document
-                          </DropdownMenuItem>
+                            <FilePenLine className="h-3.5 w-3.5" />{interfaceText("m_630f2e78e1f229")}</DropdownMenuItem>
                         ) : null}
                         {!isHistoricalPreview && !isLocked ? <DropdownMenuSeparator /> : null}
                         <DropdownMenuItem
                           onClick={() => downloadDocumentFile(doc.key, displayedBody)}
                         >
-                          <Download className="h-3.5 w-3.5" />
-                          Download document
-                        </DropdownMenuItem>
+                          <Download className="h-3.5 w-3.5" />{interfaceText("m_9e250af974c824")}</DropdownMenuItem>
                         {doc.latestRevisionNumber > 1 ? (
                           <DropdownMenuItem onClick={() => setDiffViewKey(doc.key)}>
-                            <Diff className="h-3.5 w-3.5" />
-                            View diff
-                          </DropdownMenuItem>
+                            <Diff className="h-3.5 w-3.5" />{interfaceText("m_0e5d6873018e6c")}</DropdownMenuItem>
                         ) : null}
                         {canDeleteDocuments && !isLocked ? <DropdownMenuSeparator /> : null}
                         {canDeleteDocuments && !isLocked ? (
@@ -1363,9 +1357,7 @@ function AccountIssueDocumentsSection({
                             variant="destructive"
                             onClick={() => setConfirmDeleteKey(doc.key)}
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            Delete document
-                          </DropdownMenuItem>
+                            <Trash2 className="h-3.5 w-3.5" />{interfaceText("m_04f6d09aa840de")}</DropdownMenuItem>
                         ) : null}
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -1393,28 +1385,23 @@ function AccountIssueDocumentsSection({
                 >
                   {waitingForLinkedRevision ? (
                     <p role="status" className="text-sm text-muted-foreground">
-                      {error ?? "Loading reviewed revision…"}
+                      {error ?? interfaceText("m_cdbb7a9a455baf")}
                     </p>
                   ) : null}
                   {isHistoricalPreview && selectedHistoricalRevision && (
                     <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-3">
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div className="space-y-1">
-                          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                            Viewing revision {selectedHistoricalRevision.revisionNumber}
+                          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">{interfaceText("m_2ccec4dc51175b")}{selectedHistoricalRevision.revisionNumber}
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            This is a historical preview. Restoring it creates a new latest revision and keeps history append-only.
-                          </p>
+                          <p className="text-xs text-muted-foreground">{interfaceText("m_8c15312663e5ea")}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => returnToLatestRevision(doc.key)}
-                          >
-                            Return to latest
-                          </Button>
+                          >{interfaceText("m_f6b3b853ed2085")}</Button>
                           {!isLocked ? (
                             <Button
                               size="sm"
@@ -1425,8 +1412,8 @@ function AccountIssueDocumentsSection({
                               disabled={restoreDocumentRevision.isPending}
                             >
                               {restoreDocumentRevision.isPending && restoreDocumentRevision.variables?.key === doc.key
-                                ? "Restoring..."
-                                : "Restore this revision"}
+                                ? interfaceText("m_fa31c224c001bb")
+                                : interfaceText("m_e0a9d24c3b5e5f")}
                             </Button>
                           ) : null}
                         </div>
@@ -1437,10 +1424,8 @@ function AccountIssueDocumentsSection({
                     <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-3">
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div className="space-y-1">
-                          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">Out of date</p>
-                          <p className="text-xs text-muted-foreground">
-                            This document changed while you were editing. Your local draft is preserved and autosave is paused.
-                          </p>
+                          <p className="text-sm font-medium text-amber-800 dark:text-amber-200">{interfaceText("m_c8f1506a7d60a3")}</p>
+                          <p className="text-xs text-muted-foreground">{interfaceText("m_fcbbd08cf5e60b")}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <Button
@@ -1454,37 +1439,33 @@ function AccountIssueDocumentsSection({
                               )
                             }
                           >
-                            {activeConflict.showRemote ? "Hide remote" : "Review remote"}
+                            {activeConflict.showRemote ? interfaceText("m_59fc5d72e3041c") : interfaceText("m_478fba4045cc99")}
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => keepConflictedDraft(doc.key)}
-                          >
-                            Keep my draft
-                          </Button>
+                          >{interfaceText("m_cdb80bb94da38a")}</Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => reloadDocumentFromServer(doc.key)}
-                          >
-                            Reload remote
-                          </Button>
+                          >{interfaceText("m_499fed1b65ad02")}</Button>
                           <Button
                             size="sm"
                             onClick={() => void overwriteDocumentFromDraft(doc.key)}
                             disabled={upsertDocument.isPending}
                           >
-                            {upsertDocument.isPending ? "Saving..." : "Overwrite remote"}
+                            {upsertDocument.isPending ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_d4fe5b8cf6057a")}
                           </Button>
                         </div>
                       </div>
                       {activeConflict.showRemote && (
                         <div className="mt-3 rounded-md border border-border/70 bg-background/60 p-3">
                           <div className="mb-2 flex items-center gap-2 text-(length:--text-micro) text-muted-foreground">
-                            <span>Remote revision {activeConflict.serverDocument.latestRevisionNumber}</span>
+                            <span>{interfaceText("m_5d51686bdf4fef")}{activeConflict.serverDocument.latestRevisionNumber}</span>
                             <span>•</span>
-                            <span>updated {relativeTime(activeConflict.serverDocument.updatedAt)}</span>
+                            <span>{interfaceText("m_53961930ab4482")}{relativeTime(activeConflict.serverDocument.updatedAt)}</span>
                           </div>
                           {!isPlanKey(doc.key) && activeConflict.serverDocument.title ? (
                             <p className="mb-2 text-sm font-medium">{activeConflict.serverDocument.title}</p>
@@ -1501,7 +1482,7 @@ function AccountIssueDocumentsSection({
                         markDocumentDirty(doc.key);
                         setDraft((current) => current ? { ...current, title: event.target.value } : current);
                       }}
-                      placeholder="Optional title"
+                      placeholder={interfaceText("m_67fc5f45e20b33")}
                     />
                   )}
                   <div
@@ -1526,7 +1507,7 @@ function AccountIssueDocumentsSection({
                               return current;
                             });
                           }}
-                          placeholder="Markdown body"
+                          placeholder={interfaceText("m_4ddfc15ba3f746")}
                           bordered={false}
                           className="bg-transparent"
                           contentClassName={documentBodyContentClassName}
@@ -1575,16 +1556,16 @@ function AccountIssueDocumentsSection({
                       } ${activeDraft || isHistoricalPreview ? "opacity-100" : "opacity-0"}`}
                     >
                       {isHistoricalPreview
-                        ? "Viewing historical revision"
+                        ? interfaceText("m_9699f8b800015b")
                         : activeDraft
                           ? activeConflict
-                          ? "Out of date"
+                          ? interfaceText("m_c8f1506a7d60a3")
                           : autosaveDocumentKey === doc.key
                             ? autosave.label ?? ""
                             : ""
                           : ""}
                     </span>
-                    {activeDraft && autosaveDocumentKey === doc.key && autosaveState === "stalled" ? <Button type="button" size="sm" variant="ghost" onClick={autosave.resendNow}>Retry saving</Button> : null}
+                    {activeDraft && autosaveDocumentKey === doc.key && autosaveState === "stalled" ? <Button type="button" size="sm" variant="ghost" onClick={autosave.resendNow}>{interfaceText("m_3adee60b233635")}</Button> : null}
                   </div>
                   {canVoteOnDocument && doc.latestRevisionId ? (
                     <OutputFeedbackButtons
@@ -1601,25 +1582,21 @@ function AccountIssueDocumentsSection({
 
               {confirmDeleteKey === doc.key && (
                 <div className="mt-3 flex items-center justify-between gap-3 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3">
-                  <p className="text-sm text-destructive font-medium">
-                    Delete this document? This cannot be undone.
-                  </p>
+                  <p className="text-sm text-destructive font-medium">{interfaceText("m_dcaf5e0d519978")}</p>
                   <div className="flex items-center gap-2 shrink-0">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setConfirmDeleteKey(null)}
                       disabled={deleteDocument.isPending}
-                    >
-                      Cancel
-                    </Button>
+                    >{interfaceText("m_19766ed6ccb2f4")}</Button>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => deleteDocument.mutate(doc.key)}
                       disabled={deleteDocument.isPending}
                     >
-                      {deleteDocument.isPending ? "Deleting..." : "Delete"}
+                      {deleteDocument.isPending ? interfaceText("m_685ecb984ac29c") : interfaceText("m_e2d0a54968ead2")}
                     </Button>
                   </div>
                 </div>

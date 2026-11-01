@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useTranslation } from "@/i18n";
 import { useShowAgentCreatedTasks } from "../hooks/useShowAgentCreatedTasks";
 import { useCoordinatorWorkspaceEnabled } from "../hooks/useCoordinatorWorkspaceEnabled";
@@ -183,6 +184,7 @@ function OrganizationIssues({
   toolbarContext,
   initialStatuses,
 }: { toolbarContext?: ReactNode; initialStatuses?: string[] } = {}) {
+  useInterfaceLanguage();
   const { enabled: streamlinedUiEnabled } = useStreamlinedUiEnabled();
   const { t } = useTranslation("workspace");
   const issuesPresentation = resolveIssuesPresentation(streamlinedUiEnabled);
@@ -333,8 +335,8 @@ function OrganizationIssues({
       <EmptyState
         icon={CircleDot}
         message={streamlinedUiEnabled
-          ? "Select an organization to view tasks."
-          : "Select a company to view tasks."}
+          ? interfaceText("m_93fc0c5a9ea223")
+          : interfaceText("m_7d3df2ae49f4c9")}
       />
     );
   }

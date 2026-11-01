@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpDown, File, FileText, Image, Search, Video } from "lucide-react";
@@ -115,6 +116,7 @@ export function AgentTasksPanel({
   /** The conversation issue itself, which is not one of the agent's tasks. */
   excludeIssueId?: string;
 }) {
+  useInterfaceLanguage();
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<IssueFilterState>(defaultIssueFilterState);
   const [sortField, setSortField] = useState<AgentTaskSortField>("updated");
@@ -152,15 +154,15 @@ export function AgentTasksPanel({
   const capped = (tasksQuery.data?.length ?? 0) >= AGENT_TASK_LIMIT;
 
   return (
-    <section className="flex flex-col gap-3" aria-label="Agent tasks">
+    <section className="flex flex-col gap-3" aria-label={interfaceText("m_07fdbcd6fb73c6")}>
       <div className="flex items-center gap-1">
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search tasks"
-            aria-label="Search tasks"
+            placeholder={interfaceText("m_46c6f1dea7e925")}
+            aria-label={interfaceText("m_46c6f1dea7e925")}
             className="h-8 pl-7 text-sm"
           />
         </div>
@@ -176,7 +178,7 @@ export function AgentTasksPanel({
         />
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title="Sort" aria-label="Sort tasks">
+            <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title={interfaceText("m_bec69036aa27e7")} aria-label={interfaceText("m_952f3831e14f63")}>
               <ArrowUpDown className="h-3.5 w-3.5" />
             </Button>
           </PopoverTrigger>
@@ -210,31 +212,29 @@ export function AgentTasksPanel({
       </div>
 
       {tasksView.kind === "loading" || tasksView.kind === "reconnecting" ? (
-        <PanelMessage>Loading tasks…</PanelMessage>
+        <PanelMessage>{interfaceText("m_9ae9f7d835d95a")}</PanelMessage>
       ) : tasksView.kind === "error" ? (
         <div className="py-4">
           <QueryErrorState
             error={tasksQuery.error}
-            action="load this agent's tasks"
+            action={interfaceText("m_267433dbb3a114")}
             onRetry={tasksView.retry}
             retrying={tasksView.isFetching}
           />
         </div>
       ) : total === 0 ? (
-        <PanelMessage>This agent hasn't worked on any tasks yet.</PanelMessage>
+        <PanelMessage>{interfaceText("m_7960d22edac82d")}</PanelMessage>
       ) : visible.length === 0 ? (
         <PanelMessage>
           {capped
-            ? `No tasks match these filters among the ${AGENT_TASK_LIMIT} most recently updated.`
-            : "No tasks match these filters."}
+            ? interfaceText("m_1712140f721583", { value0: (AGENT_TASK_LIMIT) })
+            : interfaceText("m_2772176304ce83")}
         </PanelMessage>
       ) : (
         <div className="flex flex-col gap-2">
           {visible.map((task) => <AgentTaskCard key={task.id} task={task} />)}
           {capped ? (
-            <p className="px-1 text-xs text-muted-foreground">
-              Showing the {AGENT_TASK_LIMIT} most recently updated tasks.
-            </p>
+            <p className="px-1 text-xs text-muted-foreground">{interfaceText("m_d20ab9b1fde49d")}{AGENT_TASK_LIMIT}{interfaceText("m_e04dc36eb55372")}</p>
           ) : null}
         </div>
       )}
@@ -254,6 +254,7 @@ function ArtifactKindIcon({ artifact }: { artifact: CompanyArtifact }) {
 }
 
 export function AgentArtifactCard({ artifact }: { artifact: CompanyArtifact }) {
+  useInterfaceLanguage();
   return (
     <Link
       // design-allow(card-pattern): navigation <Link> card; Card renders a div and would break anchor semantics
@@ -271,7 +272,7 @@ export function AgentArtifactCard({ artifact }: { artifact: CompanyArtifact }) {
         </span>
       </div>
       <div className="flex items-center gap-1.5 pl-6 text-xs text-muted-foreground">
-        <span>Updated {formatDate(artifact.updatedAt)}</span>
+        <span>{interfaceText("m_a919c7c2d1a486")}{formatDate(artifact.updatedAt)}</span>
         <span aria-hidden>·</span>
         <span className="font-mono">{artifact.issue.identifier}</span>
       </div>
@@ -297,6 +298,7 @@ async function listAgentArtifacts(companyId: string, agentId: string) {
 }
 
 export function AgentArtifactsPanel({ companyId, agentId }: { companyId: string; agentId: string }) {
+  useInterfaceLanguage();
   const artifactsQuery = useQuery({
     queryKey: queryKeys.artifacts.byAgent(companyId, agentId),
     queryFn: () => listAgentArtifacts(companyId, agentId),
@@ -304,13 +306,13 @@ export function AgentArtifactsPanel({ companyId, agentId }: { companyId: string;
 
   const artifactsView = useQueryView(artifactsQuery);
 
-  if (artifactsView.kind === "loading" || artifactsView.kind === "reconnecting") return <PanelMessage>Loading artifacts…</PanelMessage>;
+  if (artifactsView.kind === "loading" || artifactsView.kind === "reconnecting") return <PanelMessage>{interfaceText("m_11580619f554d2")}</PanelMessage>;
   if (artifactsView.kind === "error") {
     return (
       <div className="py-4">
         <QueryErrorState
           error={artifactsQuery.error}
-          action="load this agent's artifacts"
+          action={interfaceText("m_c756aeed2a0e29")}
           onRetry={artifactsView.retry}
           retrying={artifactsView.isFetching}
         />
@@ -320,12 +322,12 @@ export function AgentArtifactsPanel({ companyId, agentId }: { companyId: string;
   const loaded = artifactsQuery.data;
   if (!loaded) return null;
   const { artifacts, truncated } = loaded;
-  if (artifacts.length === 0) return <PanelMessage>This agent hasn't produced any artifacts yet.</PanelMessage>;
+  if (artifacts.length === 0) return <PanelMessage>{interfaceText("m_fd7148b1ac2c76")}</PanelMessage>;
   return (
-    <section className="flex flex-col gap-2" aria-label="Agent artifacts">
+    <section className="flex flex-col gap-2" aria-label={interfaceText("m_1e85a350614fa5")}>
       {artifacts.map((artifact) => <AgentArtifactCard key={artifact.id} artifact={artifact} />)}
       {truncated ? (
-        <p className="px-1 text-xs text-muted-foreground">Showing this agent's {artifacts.length} most recent artifacts.</p>
+        <p className="px-1 text-xs text-muted-foreground">{interfaceText("m_1827eda54147c1")}{artifacts.length}{interfaceText("m_98e6be2a45036a")}</p>
       ) : null}
     </section>
   );

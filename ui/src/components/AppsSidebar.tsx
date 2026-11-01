@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useLocation } from "@/lib/router";
 import { ChatDetailSidebar } from "./chat/ChatDetailSidebar";
 import { ChatSetupSidebar } from "./chat/ChatSetupNavigation";
@@ -16,6 +17,7 @@ import { contextualSidebarStyles } from "./contextual-sidebar-styles";
  * developer surfaces remain hidden unless one is explicitly enabled.
  */
 export function AppsSidebar() {
+  useInterfaceLanguage();
   const { pathname } = useLocation();
   const reviewCount = useReviewCount();
   const { enabled: smokeLabEnabled } = useSmokeLabEnabled();
@@ -33,15 +35,15 @@ export function AppsSidebar() {
   return (
     <aside className="w-full h-full min-h-0 border-r border-border bg-background flex flex-col">
       <nav
-        aria-label="Connectors"
+        aria-label={interfaceText("m_c3d2e79ebdd046")}
         data-slot="contextual-sidebar-nav"
         className={contextualSidebarStyles.nav}
       >
         <div data-slot="contextual-sidebar-group" className={contextualSidebarStyles.group}>
-          <SidebarNavItem to="/apps" label="Browse" icon={Store} end />
+          <SidebarNavItem to="/apps" label={interfaceText("m_3227aa9666253f")} icon={Store} end />
           <SidebarNavItem
             to="/apps/review"
-            label="Review"
+            label={interfaceText("m_aff0766a5290e1")}
             icon={ShieldQuestion}
             badge={reviewCount > 0 ? reviewCount : undefined}
             badgeTone="warning"
@@ -53,15 +55,11 @@ export function AppsSidebar() {
             <div
               data-slot="contextual-sidebar-section-label"
               className={contextualSidebarStyles.sectionLabel}
-            >
-              Developer
-            </div>
+            >{interfaceText("m_3fb7b39416f1d0")}</div>
             <p
               data-slot="contextual-sidebar-section-description"
               className={contextualSidebarStyles.sectionDescription}
-            >
-              Advanced setup for developers.
-            </p>
+            >{interfaceText("m_7ee7c5aabbc1b2")}</p>
             <div data-slot="contextual-sidebar-group" className={contextualSidebarStyles.group}>
               {developerTabs.map((tab) => (
                 <SidebarNavItem

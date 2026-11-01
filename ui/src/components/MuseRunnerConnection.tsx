@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Bot } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -29,6 +30,7 @@ export interface MuseConnectionDetailsProps {
 
 /** The settings view uses the same connection evidence as the invitation. */
 export function MuseConnectionDetails({ connection, pairing, busy, error, offline = false, onTest, onRepair, onPause, onDisconnect, onRefresh, onAttest, onAttestDetectorCleanup }: MuseConnectionDetailsProps) {
+  useInterfaceLanguage();
   const b = connection.binding;
   const [attestation, setAttestation] = useState<MuseAttestStopInput | null>(null);
   const [confirmed, setConfirmed] = useState(false);
@@ -49,9 +51,9 @@ export function MuseConnectionDetails({ connection, pairing, busy, error, offlin
   const configure = !offline && connection.enabled && connection.canConfigureConnection && !!connection.publicOrigin;
   const timestamp = (value: string | null) => value ? formatDateTime(value, { includeSeconds: true }) : "Not observed";
   return <div className="space-y-4">
-    <p className="text-sm text-muted-foreground">Muse uses its own tools and permissions. Paperclip coordinates company tasks and questions. Provider usage and cost are unavailable.</p>
-    {!connection.enabled && <p className="text-sm text-muted-foreground">Muse is disabled in experimental settings. Connection cleanup and stop evidence remain available.</p>}
-    {!connection.publicOrigin && <p className="text-sm text-muted-foreground">An authenticated instance with a public HTTPS URL is required to connect Muse.</p>}
+    <p className="text-sm text-muted-foreground">{interfaceText("m_9d1157e9dc2abf")}</p>
+    {!connection.enabled && <p className="text-sm text-muted-foreground">{interfaceText("m_1444d66c915a22")}</p>}
+    {!connection.publicOrigin && <p className="text-sm text-muted-foreground">{interfaceText("m_203b01ac64f2d1")}</p>}
     {b && <>
       <MuseConnectionChecks state={state} />
       <dl className="space-y-2 text-xs">
@@ -68,82 +70,83 @@ export function MuseConnectionDetails({ connection, pairing, busy, error, offlin
           ["Usage and cost", "Unavailable"],
         ].map(([label, value]) => <div key={label} className="flex flex-wrap items-baseline justify-between gap-2"><dt className="text-muted-foreground">{label}</dt><dd className="font-mono">{value}</dd></div>)}
       </dl>
-      <p className="text-xs text-muted-foreground">Receiver contact is persisted in batches and may lag by up to {Math.ceil(b.contactPersistenceLagMs / 1000)} seconds. Public receiver checks are unverified. Only an authenticated reply confirms Muse can work.</p>
-      {b.status === "revoked" && <p role="status" className="text-sm text-muted-foreground">Disconnected. Paperclip credentials and execution authority were revoked.</p>}
+      <p className="text-xs text-muted-foreground">{interfaceText("m_818cb8dd8c3c4d")}{Math.ceil(b.contactPersistenceLagMs / 1000)}{interfaceText("m_8891afb3f83c30")}</p>
+      {b.status === "revoked" && <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_409b79b3ab5f63")}</p>}
       {(b.cleanup.pending || b.status === "revoked") && <div className="space-y-2 text-sm text-muted-foreground">
-        {"detectorRemovalRequested" in b.cleanup && b.cleanup.detectorRemovalRequested === true && !b.cleanup.detectorRemoved && <p>Detector removal requested; completion is not confirmed.</p>}
-        <p>Detector removal: {b.cleanup.detectorEvidence?.source === "operator_runtime_attestation" ? "operator-attested" : b.cleanup.detectorRemoved ? "acknowledged" : "not confirmed"}. Worker quiescence: {b.cleanup.workerQuiescenceReported ? "reported" : "not confirmed"}.</p>
-        {b.cleanup.authenticatedAfterRevocation === false && <p>After disconnect, the receiver disables itself when it next reaches Paperclip. Cleanup cannot be confirmed through the revoked connection.</p>}
-        {b.cleanup.expiresAt && <p className="text-xs">Cleanup capability expires {formatDateTime(b.cleanup.expiresAt)}.</p>}
-        {b.cleanup.detectorEvidence && <p>Recorded {timestamp(b.cleanup.detectorEvidence.recordedAt)}: {b.cleanup.detectorEvidence.source === "operator_runtime_attestation" ? "operator attestation from a supported runtime hook listing" : "authenticated worker report"}. This is not independent provider confirmation.</p>}
+        {"detectorRemovalRequested" in b.cleanup && b.cleanup.detectorRemovalRequested === true && !b.cleanup.detectorRemoved && <p>{interfaceText("m_3c3e78aeda006c")}</p>}
+        <p>{interfaceText("m_ab4d4feda19990")}{b.cleanup.detectorEvidence?.source === "operator_runtime_attestation" ? interfaceText("m_58e5d31b786738") : b.cleanup.detectorRemoved ? interfaceText("m_3ef25c849197ef") : interfaceText("m_2399158583673b")}{interfaceText("m_acc29951dda604")}{b.cleanup.workerQuiescenceReported ? interfaceText("m_8e752bb9817c06") : interfaceText("m_2399158583673b")}.</p>
+        {b.cleanup.authenticatedAfterRevocation === false && <p>{interfaceText("m_97089b2ed2a898")}</p>}
+        {b.cleanup.expiresAt && <p className="text-xs">{interfaceText("m_0873f86260abcb")}{formatDateTime(b.cleanup.expiresAt)}.</p>}
+        {b.cleanup.detectorEvidence && <p>{interfaceText("m_0a8e2942da9ceb")}{timestamp(b.cleanup.detectorEvidence.recordedAt)}: {b.cleanup.detectorEvidence.source === "operator_runtime_attestation" ? interfaceText("m_fab20cadd96e80") : interfaceText("m_4c2efeae458a51")}{interfaceText("m_5b3d0fcb543169")}</p>}
         {b.cleanup.attestationEligible && onAttestDetectorCleanup && !detectorSnapshot && <Button type="button" variant="outline" disabled={busy || offline} onClick={() => {
           if (!b.cleanup.hookScript) return;
           setDetectorSnapshot({ bindingId: b.id, generation: b.generation, expectedRevision: b.revision, qualificationId: b.qualification?.id ?? null, hookScript: b.cleanup.hookScript });
-        }}>Record detector removal observation</Button>}
-        <p>Detector removal, worker stopping, and sandbox cleanup are separate. Paperclip cannot verify every private Muse tool or stop all personal Muse conversations.</p>
+        }}>{interfaceText("m_6c8fa9b23e3866")}</Button>}
+        <p>{interfaceText("m_8efa1d1a0b44bb")}</p>
       </div>}
       {b.stop.status !== "none" && <div className="space-y-3 text-sm">
-        <p className="text-muted-foreground">{b.stop.status === "operator_attested" ? "You attested that this assignment’s Muse worker stopped."
-          : b.stop.status === "worker_reported" ? "Muse reported that this assignment’s worker is quiescent. Independent private effects remain unconfirmed."
-          : "Paperclip fenced this assignment’s authority. Its external stop cannot be confirmed."}</p>
-        {b.stop.nativeEffectsUnknown && <p role="status" className="text-muted-foreground">Native effect outcomes remain unknown and block replacement work. Worker attestation does not resolve or replay those effects.</p>}
-        {b.stop.boundary && stopBindingRevision == null && b.stop.status !== "operator_attested" && <p role="status" className="text-muted-foreground">Stop binding revision is unavailable. Refresh to inspect this assignment before attesting.</p>}
+        <p className="text-muted-foreground">{b.stop.status === "operator_attested" ? interfaceText("m_527bb2606fa0f5")
+          : b.stop.status === "worker_reported" ? interfaceText("m_a5b30dade0f8a5")
+          : interfaceText("m_f5f0c7af848470")}</p>
+        {b.stop.nativeEffectsUnknown && <p role="status" className="text-muted-foreground">{interfaceText("m_177a41d81ce269")}</p>}
+        {b.stop.boundary && stopBindingRevision == null && b.stop.status !== "operator_attested" && <p role="status" className="text-muted-foreground">{interfaceText("m_9fe4f84e0099a0")}</p>}
         {b.stop.boundary && b.stop.status !== "operator_attested" && !attestation && <Button type="button" variant="outline" disabled={busy || stopBindingRevision == null} onClick={() => {
           if (!b.stop.boundary || stopBindingRevision == null) return;
           setAttestation({ boundary: { ...b.stop.boundary }, expectedRevision: stopBindingRevision, workerStopped: true }); setConfirmed(false);
-        }}>Attest this worker stopped</Button>}
+        }}>{interfaceText("m_f313921c786e57")}</Button>}
       </div>}
     </>}
-    {detectorSnapshot && <section aria-label="Record exact Muse detector removal" className="space-y-3 rounded-md border border-border p-3">
-      <p className="text-sm font-medium">Record an observation of this exact detector</p>
+    {detectorSnapshot && <section aria-label={interfaceText("m_207538d416d36e")} className="space-y-3 rounded-md border border-border p-3">
+      <p className="text-sm font-medium">{interfaceText("m_5d2438f277182c")}</p>
       <p className="break-all font-mono text-xs">{detectorSnapshot.hookScript}</p>
-      <p className="text-sm text-muted-foreground">Use Muse’s supported <code>{"hooks.list({ include_disabled: true })"}</code> after revocation to verify this exact registered script is absent. Disabled checks, silence, or a removal request are insufficient. The retained hook ID and observation are your report. Paperclip does not verify installation, query Muse, or remove the hook.</p>
-      <label className="block space-y-2 text-sm">Registered hook ID<Input aria-label="Registered Muse hook ID" value={detectorHookId} onChange={event => { setDetectorHookId(event.target.value); setDetectorConfirmed(false); }} autoComplete="off" /></label>
-      <label className="block space-y-2 text-sm">Observation SHA-256<Input aria-label="Detector removal observation SHA-256" value={observationDigest} onChange={event => { setObservationDigest(event.target.value); setDetectorConfirmed(false); }} autoComplete="off" /></label>
-      <p className="text-xs text-muted-foreground">Use the digest of the secret-free runtime observation. Do not paste the listing, a URL, credentials, or private tool output.</p>
-      <label className="block space-y-2 text-sm">Observed at (UTC)<Input aria-label="Detector removal observed at (UTC)" value={detectorObservedAt} onChange={event => { setDetectorObservedAt(event.target.value); setDetectorConfirmed(false); }} placeholder="YYYY-MM-DDTHH:mm:ss.sssZ" autoComplete="off" /></label>
-      <p className="text-xs text-muted-foreground">Enter the actual runtime listing time, not the time you submit this form. Paperclip checks it against revocation and the qualification deadline.</p>
-      <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={detectorConfirmed} onChange={event => setDetectorConfirmed(event.target.checked)} className="mt-1 accent-primary" /><span>I observed this exact hook absent in the supported runtime listing after revocation. This attests detector removal only, not worker stopping or private effects.</span></label>
-      <div className="flex items-center justify-between gap-3"><Button type="button" variant="ghost" onClick={() => setDetectorSnapshot(null)}>Cancel</Button><Button type="button" disabled={!detectorConfirmed || !detectorObservedAtValid || !/^[a-z0-9][a-z0-9_-]{0,63}$/.test(detectorHookId) || !/^[a-f0-9]{64}$/.test(observationDigest) || busy || offline} onClick={() => onAttestDetectorCleanup?.({ ...detectorSnapshot, detectorRemoved: true, observation: { method: "hooks.list", includeDisabled: true, hookId: detectorHookId, outcome: "exact_hook_absent", observedAt: detectorObservedAt, sha256: observationDigest } })}>Confirm detector observation</Button></div>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_dd24f6f1ddd893")}<code>{"hooks.list({ include_disabled: true })"}</code>{interfaceText("m_0a17f41ba1def1")}</p>
+      <label className="block space-y-2 text-sm">{interfaceText("m_465d1324376869")}<Input aria-label={interfaceText("m_a26aaf252365c8")} value={detectorHookId} onChange={event => { setDetectorHookId(event.target.value); setDetectorConfirmed(false); }} autoComplete="off" /></label>
+      <label className="block space-y-2 text-sm">{interfaceText("m_226bc7b7d20fb7")}<Input aria-label={interfaceText("m_45f3cbec4b72f3")} value={observationDigest} onChange={event => { setObservationDigest(event.target.value); setDetectorConfirmed(false); }} autoComplete="off" /></label>
+      <p className="text-xs text-muted-foreground">{interfaceText("m_4b444426589dbe")}</p>
+      <label className="block space-y-2 text-sm">{interfaceText("m_12c92d03e88ec1")}<Input aria-label={interfaceText("m_378ee8b40b0458")} value={detectorObservedAt} onChange={event => { setDetectorObservedAt(event.target.value); setDetectorConfirmed(false); }} placeholder="YYYY-MM-DDTHH:mm:ss.sssZ" autoComplete="off" /></label>
+      <p className="text-xs text-muted-foreground">{interfaceText("m_e1551b4c0c540d")}</p>
+      <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={detectorConfirmed} onChange={event => setDetectorConfirmed(event.target.checked)} className="mt-1 accent-primary" /><span>{interfaceText("m_196f0a0f61463a")}</span></label>
+      <div className="flex items-center justify-between gap-3"><Button type="button" variant="ghost" onClick={() => setDetectorSnapshot(null)}>{interfaceText("m_19766ed6ccb2f4")}</Button><Button type="button" disabled={!detectorConfirmed || !detectorObservedAtValid || !/^[a-z0-9][a-z0-9_-]{0,63}$/.test(detectorHookId) || !/^[a-f0-9]{64}$/.test(observationDigest) || busy || offline} onClick={() => onAttestDetectorCleanup?.({ ...detectorSnapshot, detectorRemoved: true, observation: { method: "hooks.list", includeDisabled: true, hookId: detectorHookId, outcome: "exact_hook_absent", observedAt: detectorObservedAt, sha256: observationDigest } })}>{interfaceText("m_c3aca3cfc73d8d")}</Button></div>
     </section>}
-    {attestation && <section aria-label="Attest this Muse worker stopped" className="space-y-3 rounded-md border border-border p-3">
-      <p className="text-sm font-medium">Confirm the worker for this exact assignment stopped</p>
+    {attestation && <section aria-label={interfaceText("m_bb08a4fc424840")} className="space-y-3 rounded-md border border-border p-3">
+      <p className="text-sm font-medium">{interfaceText("m_90d155a5bac813")}</p>
       <dl className="space-y-2 text-xs">
-        {Object.entries(attestation.boundary).map(([key, value]) => <div key={key} className="flex flex-wrap items-baseline justify-between gap-2"><dt className="text-muted-foreground">{key}</dt><dd className="break-all font-mono">{value === null ? "None" : String(value)}</dd></div>)}
+        {Object.entries(attestation.boundary).map(([key, value]) => <div key={key} className="flex flex-wrap items-baseline justify-between gap-2"><dt className="text-muted-foreground">{key}</dt><dd className="break-all font-mono">{value === null ? interfaceText("m_dc937b59892604") : String(value)}</dd></div>)}
       </dl>
-      <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)} className="mt-1 accent-primary" /><span>I have stopped this Muse worker for the named assignment and run. This does not certify independent private tools or unknown native effects.</span></label>
+      <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={confirmed} onChange={event => setConfirmed(event.target.checked)} className="mt-1 accent-primary" /><span>{interfaceText("m_2c0f8e97264dff")}</span></label>
       <div className="flex items-center justify-between gap-3">
-        <Button type="button" variant="ghost" onClick={() => setAttestation(null)}>Cancel</Button>
-        <Button type="button" disabled={!confirmed || busy} onClick={() => onAttest(attestation)}>Confirm worker stopped</Button>
+        <Button type="button" variant="ghost" onClick={() => setAttestation(null)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+        <Button type="button" disabled={!confirmed || busy} onClick={() => onAttest(attestation)}>{interfaceText("m_42a28c5d16429d")}</Button>
       </div>
     </section>}
     {pairing && !b?.paired && <div className="space-y-2">
-      <AgentSetupPrompt key={pairing.bindingId + pairing.revision} prompt={pairing.setupInstruction} label="Copy setup prompt" title="Connect your Muse" agent={{ name: "Muse", icon: <Bot className="size-5" /> }} description="Paste into your current Muse conversation. Complete Connect Paperclip if Muse asks, then approve the Paperclip hostname." />
-      <p className="text-xs text-muted-foreground">One-use setup expires {formatDateTime(pairing.expiresAt)}. Muse keeps the connection credential in its secure vault. Hostname permission applies to future requests to this Paperclip hostname.</p>
+      <AgentSetupPrompt key={pairing.bindingId + pairing.revision} prompt={pairing.setupInstruction} label={interfaceText("m_9a5d81ccb428b2")} title={interfaceText("m_3e78038c450021")} agent={{ name: "Muse", icon: <Bot className="size-5" /> }} description={interfaceText("m_e70cbf53a1cd26")} />
+      <p className="text-xs text-muted-foreground">{interfaceText("m_4a40ff1309480e")}{formatDateTime(pairing.expiresAt)}{interfaceText("m_2a2f3d6b51c41c")}</p>
     </div>}
     <div className="flex flex-wrap items-center gap-2">
-      {live && <Button type="button" variant="outline" disabled={!configure || b.credentialState !== "active" || !b.paired || busy || testing} onClick={onTest}>{testing ? "Testing background reply…" : "Test background reply"}</Button>}
-      <Button type="button" variant="outline" disabled={!configure || busy} onClick={onRepair}>{b?.credentialState === "expired" ? "Reconnect Muse" : live ? "Repair connection" : "Connect Muse"}</Button>
-      {connection.agentStatus !== "paused" && connection.agentStatus !== "terminated" && <Button type="button" variant="outline" disabled={busy} onClick={onPause}>Pause agent</Button>}
-      {live && <Button type="button" variant="outline" disabled={busy} onClick={onDisconnect}>Disconnect</Button>}
-      <Button type="button" variant="ghost" disabled={busy} onClick={onRefresh}>Refresh</Button>
-      <Button type="button" asChild variant="ghost"><a href="https://muse.ai" target="_blank" rel="noopener noreferrer">Open Muse</a></Button>
+      {live && <Button type="button" variant="outline" disabled={!configure || b.credentialState !== "active" || !b.paired || busy || testing} onClick={onTest}>{testing ? interfaceText("m_0a33c14daee7c1") : interfaceText("m_c97eb158dc61db")}</Button>}
+      <Button type="button" variant="outline" disabled={!configure || busy} onClick={onRepair}>{b?.credentialState === "expired" ? interfaceText("m_766016a6b56731") : live ? interfaceText("m_483aefecfb7116") : interfaceText("m_2e6b5b5f697872")}</Button>
+      {connection.agentStatus !== "paused" && connection.agentStatus !== "terminated" && <Button type="button" variant="outline" disabled={busy} onClick={onPause}>{interfaceText("m_51ca75d39c8784")}</Button>}
+      {live && <Button type="button" variant="outline" disabled={busy} onClick={onDisconnect}>{interfaceText("m_acfc5be785a9bb")}</Button>}
+      <Button type="button" variant="ghost" disabled={busy} onClick={onRefresh}>{interfaceText("m_0e91610117029a")}</Button>
+      <Button type="button" asChild variant="ghost"><a href="https://muse.ai" target="_blank" rel="noopener noreferrer">{interfaceText("m_bf2479752678e5")}</a></Button>
     </div>
     {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
   </div>;
 }
 
 export function MuseRunnerConnection({ companyId, agentId }: { companyId?: string; agentId?: string }) {
+  useInterfaceLanguage();
   const cache = useQueryClient();
   const muse = useMuseConnection(companyId, agentId);
   const pause = useMutation({ mutationFn: () => agentsApi.pause(agentId!, companyId), onSuccess: () => {
     void muse.refresh(); void cache.invalidateQueries({ queryKey: queryKeys.agents.detail(agentId!) });
     if (companyId) void cache.invalidateQueries({ queryKey: queryKeys.agents.list(companyId) });
   } });
-  if (!agentId) return <p className="text-sm text-muted-foreground">Save the agent, then connect your personal Muse here.</p>;
+  if (!agentId) return <p className="text-sm text-muted-foreground">{interfaceText("m_aa919f71815d3c")}</p>;
   const error = muse.state.error ?? muse.pair.error ?? muse.verify.error ?? muse.revoke.error ?? muse.attest.error ?? muse.attestDetector.error ?? pause.error;
-  if (muse.identity.failed) return <div className="space-y-3"><p role="alert" className="text-sm text-destructive">Unable to confirm your account. Refresh to inspect this Muse connection.</p><Button type="button" variant="outline" onClick={() => { void cache.invalidateQueries({ queryKey: queryKeys.auth.session }); }}>Refresh</Button></div>;
-  if (!muse.state.data) return <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">{muse.state.error ? "Unable to load the Muse connection." : "Loading Muse connection…"}</p>{error && <p role="alert" className="text-sm text-destructive">{error.message}</p>}<Button type="button" variant="outline" onClick={() => { void muse.state.refetch(); }}>Refresh</Button></div>;
+  if (muse.identity.failed) return <div className="space-y-3"><p role="alert" className="text-sm text-destructive">{interfaceText("m_6269219328768b")}</p><Button type="button" variant="outline" onClick={() => { void cache.invalidateQueries({ queryKey: queryKeys.auth.session }); }}>{interfaceText("m_0e91610117029a")}</Button></div>;
+  if (!muse.state.data) return <div className="space-y-3"><p role="status" className="text-sm text-muted-foreground">{muse.state.error ? interfaceText("m_b4d24c4b73debd") : interfaceText("m_6330655b06f88e")}</p>{error && <p role="alert" className="text-sm text-destructive">{error.message}</p>}<Button type="button" variant="outline" onClick={() => { void muse.state.refetch(); }}>{interfaceText("m_0e91610117029a")}</Button></div>;
   return <MuseConnectionDetails key={muse.identity.userId} connection={muse.state.data} pairing={muse.pairing} offline={muse.state.isError}
     busy={muse.pair.isPending || muse.verify.isPending || muse.revoke.isPending || muse.attest.isPending || muse.attestDetector.isPending || pause.isPending}
     error={error?.message} onTest={() => { if (muse.binding) muse.verify.mutate(muse.binding); }} onRepair={muse.repair}

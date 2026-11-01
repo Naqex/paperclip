@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GOOGLE_WORKSPACE_DEFAULT_SELECTION, GOOGLE_WORKSPACE_SERVICE_GROUPS, googleWorkspaceDraftRequestedScopes, googleWorkspaceSelectionForScopes, type GoogleWorkspaceServiceSelection, type ToolConnection } from "@paperclipai/shared";
@@ -12,6 +13,7 @@ export function GoogleWorkspaceServiceFields({ value, onChange }: {
   value: GoogleWorkspaceServiceSelection;
   onChange: (value: GoogleWorkspaceServiceSelection) => void;
 }) {
+  useInterfaceLanguage();
   return <div className="divide-y">
     {GOOGLE_WORKSPACE_SERVICE_GROUPS.map(group => <div key={group.id} className="flex items-center gap-3 py-3">
       <AppLogo name={group.name} brandKey={group.brandKey} size={28} />
@@ -19,10 +21,10 @@ export function GoogleWorkspaceServiceFields({ value, onChange }: {
         <label htmlFor={`workspace-service-${group.id}`} className="text-sm font-medium">{group.name}</label>
         {"description" in group && <p className="text-xs text-muted-foreground">{group.description}</p>}
       </div>
-      <NativeSelect aria-label={`${group.name} access`} disabled={!value[group.id]} value={value[group.id] ?? "write"}
+      <NativeSelect aria-label={interfaceText("m_dbccc9312165b9", { value0: (group.name) })} disabled={!value[group.id]} value={value[group.id] ?? "write"}
         className="w-auto shrink-0 disabled:opacity-50"
         onChange={event => onChange({ ...value, [group.id]: event.target.value as "read" | "write" })}>
-        <option value="read">Read only</option><option value="write">Read &amp; write</option>
+        <option value="read">{interfaceText("m_8ac767353080ea")}</option><option value="write">{interfaceText("m_5cf0e8247f3918")}</option>
       </NativeSelect>
       <ToggleSwitch id={`workspace-service-${group.id}`} aria-label={group.name} checked={Boolean(value[group.id])}
         onCheckedChange={checked => {
@@ -43,13 +45,14 @@ type DialogProps = {
 };
 
 export function GoogleWorkspaceServicesDialog(props: DialogProps) {
+  useInterfaceLanguage();
   const existing = props.connection ?? null;
   const oauth = props.connection?.config?.oauth as { pendingWorkspaceServiceRequests?: Record<string, { requestedScopes?: unknown; requestedAt?: string }> } | undefined;
   const pendingRequests = oauth?.pendingWorkspaceServiceRequests;
   const grants = useQuery({ queryKey: ["workspace-service-consent", existing?.id], queryFn: () => toolsApi.listConnectionGrants(existing!.id), enabled: Boolean(existing) });
   if (existing && !grants.data) return <Dialog open onOpenChange={open => { if (!open) props.onCancel(); }}><DialogContent>
-    <DialogTitle>Connect Google Workspace</DialogTitle><DialogDescription>{grants.isError ? "Could not load your saved service access. Your connection has not changed." : "Loading your saved service access…"}</DialogDescription>
-    <footer className="flex items-center justify-between gap-3"><Button variant="ghost" onClick={() => props.onCancel()}>Cancel</Button>{grants.isError && <Button onClick={() => void grants.refetch()}>Try again</Button>}</footer>
+    <DialogTitle>{interfaceText("m_e0d4172a19ef39")}</DialogTitle><DialogDescription>{grants.isError ? interfaceText("m_6b4223731ff746") : interfaceText("m_d4dd20429b2cd4")}</DialogDescription>
+    <footer className="flex items-center justify-between gap-3"><Button variant="ghost" onClick={() => props.onCancel()}>{interfaceText("m_19766ed6ccb2f4")}</Button>{grants.isError && <Button onClick={() => void grants.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>}</footer>
   </DialogContent></Dialog>;
   const grant = grants.data?.grants.find(grant => existing?.credentialPolicy === "per_user"
     ? grant.kind === "user" && grant.subjectUserId === grants.data?.currentUserId
@@ -76,19 +79,20 @@ export function GoogleWorkspaceServicesDialog(props: DialogProps) {
 }
 
 function ServicePicker({ onContinue, onCancel, initial = GOOGLE_WORKSPACE_DEFAULT_SELECTION }: DialogProps) {
+  useInterfaceLanguage();
   const [selection, setSelection] = useState(initial);
   const empty = Object.keys(selection).length === 0;
   return <Dialog open onOpenChange={open => { if (!open) onCancel(selection); }}>
     <DialogContent className="sm:max-w-3xl">
       <DialogHeader className="text-left">
-        <div className="flex items-center gap-3"><AppLogo name="Google Workspace" brandKey="google" size={40} /><DialogTitle>Connect Google Workspace</DialogTitle></div>
-        <DialogDescription className="sr-only">Choose the Google services to connect.</DialogDescription>
+        <div className="flex items-center gap-3"><AppLogo name="Google Workspace" brandKey="google" size={40} /><DialogTitle>{interfaceText("m_e0d4172a19ef39")}</DialogTitle></div>
+        <DialogDescription className="sr-only">{interfaceText("m_ec8b2847ab3a60")}</DialogDescription>
       </DialogHeader>
       <GoogleWorkspaceServiceFields value={selection} onChange={setSelection} />
-      {empty && <p role="status" className="text-xs text-muted-foreground">Select at least one service to continue.</p>}
+      {empty && <p role="status" className="text-xs text-muted-foreground">{interfaceText("m_53f0869602f789")}</p>}
       <footer className="flex items-center justify-between gap-3 pt-4">
-        <Button variant="ghost" onClick={() => onCancel(selection)}>Cancel</Button>
-        <Button disabled={empty} onClick={() => onContinue(selection)}>Continue</Button>
+        <Button variant="ghost" onClick={() => onCancel(selection)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+        <Button disabled={empty} onClick={() => onContinue(selection)}>{interfaceText("m_31fbef162594de")}</Button>
       </footer>
     </DialogContent>
   </Dialog>;

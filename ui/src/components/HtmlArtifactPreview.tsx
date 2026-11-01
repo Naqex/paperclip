@@ -1,11 +1,13 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import { htmlPreviewDocument } from "@/lib/html-preview";
 
 export function HtmlArtifactPreview({ html, title }: { html: string; title: string }) {
+  useInterfaceLanguage();
   const srcDoc = useMemo(() => htmlPreviewDocument(html), [html]);
   return (
     <iframe
-      title={`${title} rendered HTML`}
+      title={interfaceText("m_4ddfcef8d7f86f", { value0: (title) })}
       srcDoc={srcDoc}
       // Never add allow-same-origin: the opaque origin is the cookie/storage
       // and parent-DOM security boundary, including after frame navigation.

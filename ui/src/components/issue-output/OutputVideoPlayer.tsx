@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { cn } from "@/lib/utils";
 
 interface OutputVideoPlayerProps {
@@ -17,6 +18,7 @@ interface OutputVideoPlayerProps {
  * A fixed 16:9 box reserves height before metadata loads to avoid layout jump.
  */
 export function OutputVideoPlayer({ src, poster, className, title }: OutputVideoPlayerProps) {
+  useInterfaceLanguage();
   return (
     <div className={cn("relative w-full overflow-hidden rounded-md bg-black aspect-video", className)}>
       <video
@@ -25,7 +27,7 @@ export function OutputVideoPlayer({ src, poster, className, title }: OutputVideo
         controls
         preload="metadata"
         playsInline
-        aria-label={title ? `Video output: ${title}` : "Video output"}
+        aria-label={title ? interfaceText("m_de40be1fd08d99", { value0: (title) }) : interfaceText("m_4dc9f1d0d7a712")}
         className="absolute inset-0 h-full w-full"
       />
     </div>

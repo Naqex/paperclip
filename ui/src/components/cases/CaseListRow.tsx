@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { CaseSummary } from "@/api/cases";
 import { AgentIdentity } from "@/components/AgentIdentity";
 import { EntityRow } from "@/components/EntityRow";
@@ -17,6 +18,7 @@ export function CaseListRow({
   search?: string;
   columns?: readonly CaseColumn[];
 }) {
+  useInterfaceLanguage();
   const caseHref = useCaseHref();
   const task = caseData.workIssue;
   const show = new Set(columns);
@@ -26,8 +28,8 @@ export function CaseListRow({
     : null;
   const work = task ? <>
     {show.has("phase") && caseData.phase ? <span className="text-xs text-muted-foreground">{caseData.phase}</span> : null}
-    {show.has("assignee") && (assignee ? <AgentIdentity agent={assignee} size="xs" /> : <span className="text-xs text-muted-foreground">Unassigned</span>)}
-  </> : <span className="text-xs text-muted-foreground">{caseData.workIssueId ? "Task unavailable" : "No task linked"}</span>;
+    {show.has("assignee") && (assignee ? <AgentIdentity agent={assignee} size="xs" /> : <span className="text-xs text-muted-foreground">{interfaceText("m_14d33bd014e6b4")}</span>)}
+  </> : <span className="text-xs text-muted-foreground">{caseData.workIssueId ? interfaceText("m_8e7e15761d565d") : interfaceText("m_9ab7ec8db9bb1e")}</span>;
   const subtitle = [show.has("identifier") ? caseData.identifier : null, show.has("type") ? caseData.caseType : null,
     show.has("project") ? projectName : null].filter(Boolean);
 

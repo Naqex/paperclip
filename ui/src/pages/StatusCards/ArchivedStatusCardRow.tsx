@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
@@ -24,6 +25,7 @@ export function ArchivedStatusCardRow({
   onRestore: () => void;
   restorePending?: boolean;
 }) {
+  useInterfaceLanguage();
   // Lifetime cost is a rollup of the card's full update ledger (live P1 data).
   const updatesQuery = useQuery({
     queryKey: queryKeys.statusCards.updates(card.id),
@@ -34,23 +36,18 @@ export function ArchivedStatusCardRow({
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold">{card.title ?? "Untitled card"}</p>
-        <p className="mt-0.5 text-xs text-muted-foreground" title={card.archivedAt ? formatDateTime(card.archivedAt) : undefined}>
-          archived {shortDate(card.archivedAt)} · last summary {shortDate(card.lastGeneratedAt)}
-          {rollup ? ` · lifetime ${formatTokens(rollup.totalTokens)} / ${formatCents(rollup.totalCostCents)}` : ""}
+        <p className="truncate text-sm font-semibold">{card.title ?? interfaceText("m_29fc54324b6c82")}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground" title={card.archivedAt ? formatDateTime(card.archivedAt) : undefined}>{interfaceText("m_240c01c07b865c")}{shortDate(card.archivedAt)}{interfaceText("m_890d92d2b3adf7")}{shortDate(card.lastGeneratedAt)}
+          {rollup ? interfaceText("m_eda6744a1cdcc0", { value0: (formatTokens(rollup.totalTokens)), value1: (formatCents(rollup.totalCostCents)) }) : ""}
         </p>
       </div>
       {/* View is the more common intent on an archived row (reading the last
           summary); Restore is safe but secondary — it brings the card back
           stale and never auto-runs. */}
       <div className="flex shrink-0 gap-2">
-        <Button size="sm" onClick={onView}>
-          View
-        </Button>
+        <Button size="sm" onClick={onView}>{interfaceText("m_dcc839a4015c4b")}</Button>
         <Button variant="outline" size="sm" onClick={onRestore} disabled={restorePending}>
-          {restorePending ? <Loader2 className="animate-spin" /> : null}
-          Restore
-        </Button>
+          {restorePending ? <Loader2 className="animate-spin" /> : null}{interfaceText("m_a76e13b9839270")}</Button>
       </div>
     </div>
   );

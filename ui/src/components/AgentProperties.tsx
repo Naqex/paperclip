@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentIdentity } from "@/components/AgentIdentity";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@/lib/router";
@@ -28,6 +29,7 @@ function PropertyRow({ label, children }: { label: string; children: React.React
 }
 
 export function AgentProperties({ agent, runtimeState }: AgentPropertiesProps) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const lastErrorIsActive = agent.status === "error";
 
@@ -42,21 +44,21 @@ export function AgentProperties({ agent, runtimeState }: AgentPropertiesProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <PropertyRow label="Status">
+        <PropertyRow label={interfaceText("m_920e413c7d411b")}>
           <AgentStatusBadge status={agent.status} />
         </PropertyRow>
         {lastErrorIsActive && agent.errorReason && (
-          <PropertyRow label="Error reason">
+          <PropertyRow label={interfaceText("m_43076443114c47")}>
             <span className="text-xs text-red-600 dark:text-red-400 break-words min-w-0">
               {agent.errorReason}
             </span>
           </PropertyRow>
         )}
-        <PropertyRow label="Role">
+        <PropertyRow label={interfaceText("m_14736a2eb9f415")}>
           <span className="text-sm">{roleLabels[agent.role] ?? agent.role}</span>
         </PropertyRow>
         {agent.title && (
-          <PropertyRow label="Title">
+          <PropertyRow label={interfaceText("m_7e8cd2056da73a")}>
             <span className="text-sm">{agent.title}</span>
           </PropertyRow>
         )}
@@ -69,14 +71,14 @@ export function AgentProperties({ agent, runtimeState }: AgentPropertiesProps) {
 
       <div className="space-y-1">
         {(runtimeState?.sessionDisplayId ?? runtimeState?.sessionId) && (
-          <PropertyRow label="Session">
+          <PropertyRow label={interfaceText("m_6959b4159575d8")}>
             <span className="text-xs font-mono">
               {String(runtimeState.sessionDisplayId ?? runtimeState.sessionId).slice(0, 12)}...
             </span>
           </PropertyRow>
         )}
         {runtimeState?.lastError && (
-          <PropertyRow label={lastErrorIsActive ? "Last error" : "Last run error"}>
+          <PropertyRow label={lastErrorIsActive ? interfaceText("m_5488d837f5f65d") : interfaceText("m_bcda9fb58451d4")}>
             <span
               className={
                 lastErrorIsActive
@@ -89,12 +91,12 @@ export function AgentProperties({ agent, runtimeState }: AgentPropertiesProps) {
           </PropertyRow>
         )}
         {agent.lastHeartbeatAt && (
-          <PropertyRow label="Last Heartbeat">
+          <PropertyRow label={interfaceText("m_d591d3458ab804")}>
             <span className="text-sm">{formatDate(agent.lastHeartbeatAt)}</span>
           </PropertyRow>
         )}
         {agent.reportsTo && (
-          <PropertyRow label="Reports To">
+          <PropertyRow label={interfaceText("m_8b48a53f35fc7b")}>
             {reportsToAgent ? (
               <Link to={agentUrl(reportsToAgent)} className="hover:underline">
                 <AgentIdentity agent={reportsToAgent} size="sm" />
@@ -104,7 +106,7 @@ export function AgentProperties({ agent, runtimeState }: AgentPropertiesProps) {
             )}
           </PropertyRow>
         )}
-        <PropertyRow label="Created">
+        <PropertyRow label={interfaceText("m_d70b9e24bca26b")}>
           <span className="text-sm">{formatDate(agent.createdAt)}</span>
         </PropertyRow>
       </div>

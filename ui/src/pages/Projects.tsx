@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Project } from "@paperclipai/shared";
@@ -67,6 +68,7 @@ function sortProjects(projects: Project[], sortField: ProjectSortField, sortDir:
 }
 
 export function Projects() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { openNewProject } = useDialogActions();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -75,8 +77,8 @@ export function Projects() {
   const [sortDir, setSortDir] = useState<ProjectSortDir>("asc");
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Projects" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_04e2a9728af758") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const { data: allProjects, isLoading, error } = useQuery({
     queryKey: queryKeys.projects.list(selectedCompanyId!),
@@ -116,7 +118,7 @@ export function Projects() {
   }, [membershipsQuery.data, sortedProjects]);
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Hexagon} message="Select an organization to view projects." />;
+    return <EmptyState icon={Hexagon} message={interfaceText("m_73f624b24f4156")} />;
   }
 
   if (isLoading) {
@@ -133,13 +135,13 @@ export function Projects() {
       {!isLoading && projects.length === 0 && (
         <EmptyState
           icon={Hexagon}
-          message="No projects yet."
-          action="Add Project"
+          message={interfaceText("m_e2cb995c13fcdd")}
+          action={interfaceText("m_44b7ce21b9f2b3")}
           onAction={openNewProject}
         />
       )}
 
-      {projects.length > 0 && sortedProjects.length === 0 && <p className="text-sm text-muted-foreground">No projects match your search.</p>}
+      {projects.length > 0 && sortedProjects.length === 0 && <p className="text-sm text-muted-foreground">{interfaceText("m_d87821ba1a366b")}</p>}
 
       {sortedProjects.length > 0 && (
         <div className="space-y-6">
@@ -154,7 +156,7 @@ export function Projects() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-medium">{label}</h2>
                   <span className="text-xs text-muted-foreground">
-                    {sectionProjects.length} project{sectionProjects.length === 1 ? "" : "s"}
+                    {sectionProjects.length}{interfaceText("m_c6e0c8d38fc71d")}{sectionProjects.length === 1 ? "" : interfaceText("m_043a718774c572")}
                   </span>
                 </div>
                 <Card className="block py-0 overflow-hidden divide-y divide-border">
@@ -177,12 +179,12 @@ export function Projects() {
                         className={state === "left" ? "group text-foreground/55" : "group"}
                         trailing={
                           <div className="flex items-center gap-3">
-                            {project.visibility === "private" ? <Lock className="size-4 shrink-0 text-muted-foreground" aria-label="Private project" /> : null}
+                            {project.visibility === "private" ? <Lock className="size-4 shrink-0 text-muted-foreground" aria-label={interfaceText("m_5baec6fcbec2e2")} /> : null}
                             <span
                               className="hidden text-xs text-muted-foreground tabular-nums sm:inline"
-                              title={`${formatNumber(project.taskCount ?? 0)} task${(project.taskCount ?? 0) === 1 ? "" : "s"}`}
+                              title={interfaceText("m_af6a4de623169c", { value0: (formatNumber(project.taskCount ?? 0)), value1: ((project.taskCount ?? 0) === 1 ? "" : interfaceText("m_043a718774c572")) })}
                             >
-                              {formatNumber(project.taskCount ?? 0)} task{(project.taskCount ?? 0) === 1 ? "" : "s"}
+                              {formatNumber(project.taskCount ?? 0)}{interfaceText("m_3e7a7664eec2fc")}{(project.taskCount ?? 0) === 1 ? "" : interfaceText("m_043a718774c572")}
                             </span>
                             {project.budget && (
                               <span className="hidden text-xs text-muted-foreground tabular-nums sm:inline">

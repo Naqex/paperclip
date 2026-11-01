@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { agentAvatarUrl } from "@/lib/agent-avatar-url";
 import { resolveAgentAppearance } from "@paperclipai/shared";
 /**
@@ -779,10 +780,11 @@ function TimeAxisOverlay({
 }
 
 function Tooltip({ tooltip, now }: { tooltip: TooltipState; now: number }) {
+  useInterfaceLanguage();
   const { bar } = tooltip;
   const startMs = new Date(bar.span.start).getTime();
   const endMs = bar.span.end ? new Date(bar.span.end).getTime() : now;
-  const title = bar.span.issueTitle ?? bar.span.issueIdentifier ?? "run";
+  const title = bar.span.issueTitle ?? bar.span.issueIdentifier ?? interfaceText("m_acba25512100f8");
   const left = Math.min(tooltip.x + 14, (typeof window !== "undefined" ? window.innerWidth : 1200) - 300);
   return (
     <div
@@ -792,13 +794,12 @@ function Tooltip({ tooltip, now }: { tooltip: TooltipState; now: number }) {
     >
       <div className="text-(length:--text-compact) font-medium text-foreground">{truncate(title)}</div>
       <div className="mt-0.5 text-muted-foreground">
-        {fmtClock(startMs)}–{bar.span.end ? fmtClock(endMs) : "now"} · {formatDuration(startMs, endMs)} ·{" "}
+        {fmtClock(startMs)}–{bar.span.end ? fmtClock(endMs) : interfaceText("m_ed5eb9a37e2d82")} · {formatDuration(startMs, endMs)} ·{" "}
         <span className="font-medium text-foreground">{bar.span.status}</span>
       </div>
       {bar.kickoff && (
-        <div className="text-muted-foreground">
-          kicked off by: {(bar.kickoff as WorkTimelineActor).name}
-          {bar.span.retryOfRunId ? " · retry" : ""}
+        <div className="text-muted-foreground">{interfaceText("m_33cf8911feb7af")}{(bar.kickoff as WorkTimelineActor).name}
+          {bar.span.retryOfRunId ? interfaceText("m_4cb8ce878f70e4") : ""}
         </div>
       )}
       {tooltip.connectorHint && (
@@ -821,6 +822,7 @@ function MiniMap({
   scrollLeft: number;
   onVisibleRangeChange: (fromMs: number, toMs: number) => void;
 }) {
+  useInterfaceLanguage();
   const documentDragCleanupRef = useRef<(() => void) | null>(null);
   const W = Math.max(320, viewportW || 900);
   const H = 54;
@@ -946,7 +948,7 @@ function MiniMap({
           height={H - 2}
           width={handleW}
           testId="timeline-minimap-left-handle"
-          label="Drag left edge to resize visible range"
+          label={interfaceText("m_daede2443ddaff")}
           onMouseDown={(e) => startRangeDrag("left", e)}
         />
         <MiniMapHandle
@@ -955,7 +957,7 @@ function MiniMap({
           height={H - 2}
           width={handleW}
           testId="timeline-minimap-right-handle"
-          label="Drag right edge to resize visible range"
+          label={interfaceText("m_9e18abbaccd3be")}
           onMouseDown={(e) => startRangeDrag("right", e)}
         />
       </svg>

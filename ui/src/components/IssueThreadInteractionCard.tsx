@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Agent } from "@paperclipai/shared";
 import { AlertTriangle, ArrowUpRight, Bot, Check, CheckCircle2, ChevronDown, ChevronRight, CircleDashed, Clock, ExternalLink, FileText, GitBranch, ImagePlus, KeyRound, Loader2, MessageSquareQuote, MinusCircle, ShieldAlert, ThumbsUp, TriangleAlert, Wrench, X, XCircle } from "lucide-react";
@@ -151,9 +152,9 @@ function resolveActorLabel(args: {
     return agentMap?.get(agentId)?.name ?? agentId.slice(0, 8);
   }
   if (userId) {
-    return formatAssigneeUserLabel(userId, currentUserId, userLabelMap) ?? "Board";
+    return formatAssigneeUserLabel(userId, currentUserId, userLabelMap) ?? interfaceText("m_4816cbfd74aa82");
   }
-  return "Unknown";
+  return interfaceText("m_b764cdc0eab713");
 }
 
 /**
@@ -185,19 +186,19 @@ function getAdministrativeReason(interaction: IssueThreadInteraction): string | 
 function statusLabel(status: IssueThreadInteraction["status"]) {
   switch (status) {
     case "pending":
-      return "Pending";
+      return interfaceText("m_331551b0de4157");
     case "accepted":
-      return "Accepted";
+      return interfaceText("m_a00fb0c50741f8");
     case "rejected":
-      return "Rejected";
+      return interfaceText("m_aea4a04a80426e");
     case "answered":
-      return "Answered";
+      return interfaceText("m_665590354e719b");
     case "cancelled":
-      return "Cancelled";
+      return interfaceText("m_d353a99eb45568");
     case "expired":
-      return "Expired";
+      return interfaceText("m_424a2551d35675");
     case "failed":
-      return "Failed";
+      return interfaceText("m_031a8f0f659df8");
     default:
       return status;
   }
@@ -206,17 +207,17 @@ function statusLabel(status: IssueThreadInteraction["status"]) {
 function interactionKindLabel(kind: IssueThreadInteraction["kind"]) {
   switch (kind) {
     case "suggest_tasks":
-      return "Suggested tasks";
+      return interfaceText("m_5addd6fff8dd79");
     case "ask_user_questions":
-      return "Ask user questions";
+      return interfaceText("m_85f982633587e0");
     case "request_confirmation":
-      return "Confirmation";
+      return interfaceText("m_d743070540a126");
     case "request_checkbox_confirmation":
-      return "Checkbox confirmation";
+      return interfaceText("m_e977187ac2b98c");
     case "request_item_verdicts":
-      return "Item verdicts";
+      return interfaceText("m_7023d1056988ae");
     case "connection_intent":
-      return "Connection request";
+      return interfaceText("m_cd97ea1cff3e4e");
     default:
       return kind;
   }
@@ -295,14 +296,14 @@ function planStatusClasses(
         return {
           shell: "border-2 border-amber-500/70 bg-transparent",
           badge: "border-amber-500/60 bg-amber-500/10 text-amber-900 dark:bg-amber-500/15 dark:text-amber-100",
-          label: "Approved — agent resume failed",
+          label: interfaceText("m_03dbaee78a06fb"),
           Icon: AlertTriangle,
         };
       }
       return {
         shell: "border-2 border-green-500/80 bg-transparent",
         badge: "border-green-500/60 bg-green-500/10 text-green-900 dark:bg-green-500/15 dark:text-green-100",
-        label: "Approved",
+        label: interfaceText("m_87b42e40c2a290"),
         Icon: CheckCircle2,
       };
     case "rejected":
@@ -318,14 +319,14 @@ function planStatusClasses(
       return {
         shell: "border-2 border-amber-500/70 bg-transparent",
         badge: "border-amber-500/60 bg-amber-500/10 text-amber-900 dark:bg-amber-500/15 dark:text-amber-100",
-        label: "Expired",
+        label: interfaceText("m_424a2551d35675"),
         Icon: AlertTriangle,
       };
     default:
       return {
         shell: "border-2 border-violet-500/80 bg-transparent",
         badge: "border-violet-500/60 bg-violet-500/10 text-violet-900 dark:bg-violet-500/15 dark:text-violet-100",
-        label: "In review",
+        label: interfaceText("m_c39059141ced2e"),
         Icon: FileText,
       };
   }
@@ -486,7 +487,7 @@ function toolActionStatusClasses(state: ToolActionCardState): {
       return {
         shell: "border-2 border-amber-500/70 bg-transparent",
         badge: "border-amber-500/60 bg-amber-500/10 text-amber-900 dark:bg-amber-500/15 dark:text-amber-100",
-        label: "Running…",
+        label: interfaceText("m_46c541363b0253"),
         Icon: Loader2,
         spin: true,
       };
@@ -494,31 +495,31 @@ function toolActionStatusClasses(state: ToolActionCardState): {
       return {
         shell: "border-2 border-green-500/80 bg-transparent",
         badge: "border-green-500/60 bg-green-500/10 text-green-900 dark:bg-green-500/15 dark:text-green-100",
-        label: "Executed",
+        label: interfaceText("m_3aa8b683ebf370"),
         Icon: CheckCircle2,
       };
     case "failed":
       return {
         shell: "border-2 border-amber-500/70 bg-transparent",
         badge: "border-amber-500/60 bg-amber-500/10 text-amber-900 dark:bg-amber-500/15 dark:text-amber-100",
-        label: "Failed",
+        label: interfaceText("m_031a8f0f659df8"),
         Icon: XCircle,
       };
     case "declined":
       return {
         shell: "border-2 border-red-500/80 bg-transparent",
         badge: "border-red-500/60 bg-red-500/10 text-red-900 dark:bg-red-500/15 dark:text-red-100",
-        label: "Declined",
+        label: interfaceText("m_dce083a2c47ffd"),
         Icon: XCircle,
         dimmed: true,
       };
     case "cancelled":
-      return { shell: "border-2 border-border bg-transparent", badge: "border-border bg-muted text-muted-foreground", label: "Cancelled", Icon: XCircle, dimmed: true };
+      return { shell: "border-2 border-border bg-transparent", badge: "border-border bg-muted text-muted-foreground", label: interfaceText("m_d353a99eb45568"), Icon: XCircle, dimmed: true };
     case "expired":
       return {
         shell: "border-2 border-border bg-transparent",
         badge: "border-border bg-muted/60 text-muted-foreground",
-        label: "Expired",
+        label: interfaceText("m_424a2551d35675"),
         Icon: Clock,
         dimmed: true,
       };
@@ -526,7 +527,7 @@ function toolActionStatusClasses(state: ToolActionCardState): {
       return {
         shell: "border-2 border-violet-500/80 bg-transparent",
         badge: "border-violet-500/60 bg-violet-500/10 text-violet-900 dark:bg-violet-500/15 dark:text-violet-100",
-        label: "Awaiting approval",
+        label: interfaceText("m_ae25c9b1d366d1"),
         Icon: ShieldAlert,
       };
   }
@@ -586,6 +587,7 @@ function TaskTreeNode({
   showSelection?: boolean;
   onToggleSelection?: (node: SuggestedTaskTreeNode, checked: boolean) => void;
 }) {
+  useInterfaceLanguage();
   const visibleChildren = node.children.filter((child) => !child.task.hiddenInPreview);
   const hiddenChildCount = node.children
     .filter((child) => child.task.hiddenInPreview)
@@ -625,7 +627,7 @@ function TaskTreeNode({
                 <Checkbox
                   checked={isSelected}
                   onCheckedChange={(checked) => onToggleSelection?.(node, checked === true)}
-                  aria-label={`Include ${node.task.title}`}
+                  aria-label={interfaceText("m_ce8c7bb9a844cf", { value0: (node.task.title) })}
                   className="mt-0.5"
                 />
               ) : null}
@@ -643,9 +645,7 @@ function TaskTreeNode({
                   </div>
                 </div>
                 {depth > 0 ? (
-                  <div className="mt-0.5 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-                    Child task
-                  </div>
+                  <div className="mt-0.5 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_4e6d7bdb7ee5f2")}</div>
                 ) : null}
                 {node.task.description ? (
                   <p className="mt-0.5 text-sm leading-5 text-muted-foreground">
@@ -665,25 +665,23 @@ function TaskTreeNode({
               <ChevronRight className="h-3 w-3" />
             </Link>
           ) : isSkipped ? (
-            <span className="inline-flex shrink-0 items-center rounded-sm border border-amber-500/60 bg-amber-500/10 px-2.5 py-1 text-(length:--text-micro) font-medium text-amber-900 dark:text-amber-100">
-              Skipped
-            </span>
+            <span className="inline-flex shrink-0 items-center rounded-sm border border-amber-500/60 bg-amber-500/10 px-2.5 py-1 text-(length:--text-micro) font-medium text-amber-900 dark:text-amber-100">{interfaceText("m_12698ce1ea5cd4")}</span>
           ) : null}
         </div>
 
         {hasMetadata ? (
           <div className="mt-2 flex flex-wrap gap-1.5">
             {hasExplicitAssignee ? (
-              <TaskField label="Responsible" value={assigneeLabel} />
+              <TaskField label={interfaceText("m_bc110a6d072209")} value={assigneeLabel} />
             ) : null}
             {node.task.billingCode ? (
-              <TaskField label="Billing" value={node.task.billingCode} />
+              <TaskField label={interfaceText("m_3ac8bbca9a74cf")} value={node.task.billingCode} />
             ) : null}
             {node.task.projectId ? (
-              <TaskField label="Project" value={node.task.projectId} tone="subtle" />
+              <TaskField label={interfaceText("m_98595978531974")} value={node.task.projectId} tone="subtle" />
             ) : null}
             {labels.map((label) => (
-              <TaskField key={label} label="Label" value={label} tone="subtle" />
+              <TaskField key={label} label={interfaceText("m_0e66373f45dcf3")} value={label} tone="subtle" />
             ))}
           </div>
         ) : null}
@@ -693,8 +691,8 @@ function TaskTreeNode({
             <GitBranch className="h-3.5 w-3.5 shrink-0" />
             <span>
               {hiddenChildCount === 1
-                ? "1 follow-on task hidden in preview"
-                : `${hiddenChildCount} follow-on tasks hidden in preview`}
+                ? interfaceText("m_20e5cdebdcbad0")
+                : interfaceText("m_a42d2f4f9c6b84", { value0: (hiddenChildCount) })}
             </span>
           </div>
         ) : null}
@@ -746,6 +744,7 @@ function SuggestTasksCard({
     reason?: string,
   ) => Promise<void> | void;
 }) {
+  useInterfaceLanguage();
   const [rejecting, setRejecting] = useState(false);
   const [working, setWorking] = useState<"accept" | "reject" | null>(null);
   const [rejectReason, setRejectReason] = useState(
@@ -852,9 +851,9 @@ function SuggestTasksCard({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span>{totalTasks === 1 ? "1 draft issue" : `${totalTasks} draft issues`}</span>
+        <span>{totalTasks === 1 ? interfaceText("m_142b5c43a2dd87") : interfaceText("m_b5bb1f6583b845", { value0: (totalTasks) })}</span>
         {interaction.payload.defaultParentId ? (
-          <TaskField label="Default parent" value={interaction.payload.defaultParentId} tone="subtle" />
+          <TaskField label={interfaceText("m_ac981ebffeaa6b")} value={interaction.payload.defaultParentId} tone="subtle" />
         ) : null}
       </div>
 
@@ -877,27 +876,23 @@ function SuggestTasksCard({
 
       {interaction.status === "accepted" ? (
         <div className="rounded-sm border border-emerald-500/60 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-900 dark:text-emerald-100">
-          <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-emerald-700">
-            Resolution summary
-          </div>
+          <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-emerald-700">{interfaceText("m_5ac338f055a7ab")}</div>
           <p className="mt-1 leading-6">
             {skippedCount > 0
-              ? `Created ${createdCount} draft ${createdCount === 1 ? "issue" : "issues"} and skipped ${skippedCount} during review.`
-              : `Created all ${createdCount} draft ${createdCount === 1 ? "issue" : "issues"}.`}
+              ? interfaceText("m_5a9bcfdd856356", { value0: (createdCount), value1: (createdCount === 1 ? "issue" : "issues"), value2: (skippedCount) })
+              : interfaceText("m_e8db5ec62457a3", { value0: (createdCount), value1: (createdCount === 1 ? "issue" : "issues") })}
           </p>
         </div>
       ) : null}
 
       {interaction.status === "rejected" ? (
         <div className="rounded-sm border border-rose-500/60 bg-rose-500/10 px-4 py-3 text-sm text-rose-900 dark:text-rose-100">
-          <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-rose-700">
-            Rejection reason
-          </div>
+          <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-rose-700">{interfaceText("m_e57499264f493e")}</div>
           <p className={cn(
             "mt-1 leading-6",
             !interaction.result?.rejectionReason && "text-rose-900/75",
           )}>
-            {interaction.result?.rejectionReason || "No reason provided."}
+            {interaction.result?.rejectionReason || interfaceText("m_a63c933ad7a29d")}
           </p>
         </div>
       ) : null}
@@ -908,13 +903,12 @@ function SuggestTasksCard({
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <span>
                 {selectedCount === totalTasks
-                  ? `All ${totalTasks} draft ${totalTasks === 1 ? "issue" : "issues"} selected`
-                  : `${selectedCount} of ${totalTasks} draft ${totalTasks === 1 ? "issue" : "issues"} selected`}
+                  ? interfaceText("m_b5967e61024dcb", { value0: (totalTasks), value1: (totalTasks === 1 ? "issue" : "issues") })
+                  : interfaceText("m_3e8859712efdb7", { value0: (selectedCount), value1: (totalTasks), value2: (totalTasks === 1 ? "issue" : "issues") })}
               </span>
               {selectedCount < totalTasks ? (
                 <span>
-                  {totalTasks - selectedCount} will be skipped if you accept this interaction.
-                </span>
+                  {totalTasks - selectedCount}{interfaceText("m_d3786c4d25bf2f")}</span>
               ) : null}
             </div>
 
@@ -927,11 +921,9 @@ function SuggestTasksCard({
                 >
                   {working === "accept" ? (
                     <>
-                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                      Accepting...
-                    </>
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_31409c77894fb4")}</>
                   ) : (
-                    selectedCount === totalTasks ? "Accept drafts" : "Accept selected drafts"
+                    selectedCount === totalTasks ? interfaceText("m_43a26ceb78ea73") : interfaceText("m_3db4cde14abef8")
                   )}
                 </Button>
                 <Button
@@ -939,18 +931,14 @@ function SuggestTasksCard({
                   variant="outline"
                   disabled={!onRejectInteraction || working !== null}
                   onClick={() => setRejecting((current) => !current)}
-                >
-                  Reject
-                </Button>
+                >{interfaceText("m_ab604a36077773")}</Button>
                 {selectedCount < totalTasks ? (
                   <Button
                     size="sm"
                     variant="ghost"
                     disabled={working !== null}
                     onClick={() => setSelectedClientKeys(new Set(interaction.payload.tasks.map((task) => task.clientKey)))}
-                  >
-                    Reset selection
-                  </Button>
+                  >{interfaceText("m_2e9246864f088a")}</Button>
                 ) : null}
               </div>
             </DecisionCardFooter>
@@ -961,7 +949,7 @@ function SuggestTasksCard({
               <Textarea
                 value={rejectReason}
                 onChange={(event) => setRejectReason(event.target.value)}
-                placeholder="Add a short reason for rejecting this suggestion"
+                placeholder={interfaceText("m_11886cf22e87c7")}
                 className="min-h-24 bg-background text-sm"
               />
               <div className="flex justify-end">
@@ -973,11 +961,9 @@ function SuggestTasksCard({
                 >
                   {working === "reject" ? (
                     <>
-                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                      Saving...
-                    </>
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_dc85af8f2b1d0d")}</>
                   ) : (
-                    "Save rejection"
+                    interfaceText("m_6fc943c1e5b363")
                   )}
                 </Button>
               </div>
@@ -1071,6 +1057,7 @@ function AskUserQuestionsCard({
   ) => Promise<void> | void;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const [draftAnswers, setDraftAnswers] = useState<Record<string, string[]>>(() =>
     Object.fromEntries(
       (interaction.result?.answers ?? []).map((answer) => [
@@ -1211,13 +1198,11 @@ function AskUserQuestionsCard({
     <div className="space-y-4">
       {!compact ? <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Badge variant="outline" className="border-border/70 bg-background/70 px-2.5 py-1 uppercase tracking-(--tracking-eyebrow) text-foreground/70">
-          <MessageSquareQuote className="h-3 w-3" />
-          Ask user questions
-        </Badge>
+          <MessageSquareQuote className="h-3 w-3" />{interfaceText("m_85f982633587e0")}</Badge>
         <span>
           {questions.length === 1
-            ? "1 question"
-            : `${questions.length} questions`}
+            ? interfaceText("m_d69c3b1839e702")
+            : interfaceText("m_8fdceff6f63551", { value0: (questions.length) })}
         </span>
       </div> : null}
 
@@ -1275,8 +1260,7 @@ function AskUserQuestionsCard({
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  {!compact ? <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-                    Question {index + 1}
+                  {!compact ? <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_39821a754d341a")}{index + 1}
                   </div> : null}
                   <div
                     id={`${interaction.id}-${question.id}-prompt`}
@@ -1292,9 +1276,9 @@ function AskUserQuestionsCard({
                   ) : null}
                 </div>
                 {compact ? <span className="sr-only" id={`${interaction.id}-${question.id}-requirements`}>
-                  {question.selectionMode === "single" ? "Choose one answer." : "Choose one or more answers."} {question.required ? "Required." : "Optional."}
+                  {question.selectionMode === "single" ? interfaceText("m_336bcb612c4383") : interfaceText("m_44916fc3824a73")} {question.required ? interfaceText("m_13dcc0e02273ee") : interfaceText("m_a9aaf97cc9e9ce")}
                 </span> : <TaskField
-                  label={question.selectionMode === "single" ? "Pick" : "Pick many"}
+                  label={question.selectionMode === "single" ? interfaceText("m_831a9d52a9c374") : interfaceText("m_1c7919368277ed")}
                   value={question.required ? "Required" : "Optional"}
                   tone="subtle"
                 />}
@@ -1327,14 +1311,14 @@ function AskUserQuestionsCard({
                         />
                         {isFreeText && optionSelected ? (
                           <Textarea
-                            aria-label={`Describe your answer for ${question.prompt}`}
+                            aria-label={interfaceText("m_1bdfaea41c564e", { value0: (question.prompt) })}
                             value={draftOtherAnswers[question.id] ?? ""}
                             onChange={(event) =>
                               setDraftOtherAnswers((current) => ({
                                 ...current,
                                 [question.id]: event.target.value,
                               }))}
-                            placeholder="Type your answer"
+                            placeholder={interfaceText("m_d078bf7520a710")}
                             className="min-h-24 bg-background text-sm"
                             autoFocus
                           />
@@ -1363,19 +1347,17 @@ function AskUserQuestionsCard({
                       )}
                       onClick={() =>
                         toggleOption(question.id, OTHER_ANSWER_ID, question.selectionMode)}
-                    >
-                      Other
-                    </button>
+                    >{interfaceText("m_f97e9da0e3b879")}</button>
                     {otherActiveQuestions[question.id] ? (
                       <Textarea
-                        aria-label={`Other answer for ${question.prompt}`}
+                        aria-label={interfaceText("m_459acf244c1e11", { value0: (question.prompt) })}
                         value={draftOtherAnswers[question.id] ?? ""}
                         onChange={(event) =>
                           setDraftOtherAnswers((current) => ({
                             ...current,
                             [question.id]: event.target.value,
                           }))}
-                        placeholder="Type your answer"
+                        placeholder={interfaceText("m_d078bf7520a710")}
                         className="min-h-24 bg-background text-sm"
                       />
                     ) : null}
@@ -1388,9 +1370,7 @@ function AskUserQuestionsCard({
 
           <DecisionCardFooter leading={footerSlot}>
             <div className={compact ? "flex flex-wrap items-center justify-end gap-3" : "flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-background/75 p-4"}>
-              {!compact ? <div className="text-sm text-muted-foreground">
-                Submit once after you finish the full form.
-              </div> : null}
+              {!compact ? <div className="text-sm text-muted-foreground">{interfaceText("m_02885ec7af193b")}</div> : null}
               <div className="flex flex-wrap items-center gap-2">
                 {onCancelInteraction ? (
                   <Button
@@ -1401,11 +1381,9 @@ function AskUserQuestionsCard({
                   >
                     {cancelling ? (
                       <>
-                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                        Cancelling...
-                      </>
+                        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_7b26131098bb18")}</>
                     ) : (
-                      "Cancel question"
+                      interfaceText("m_437c1e56615202")
                     )}
                     </Button>
                   ) : null}
@@ -1416,11 +1394,9 @@ function AskUserQuestionsCard({
                 >
                   {working ? (
                     <>
-                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                      Submitting...
-                    </>
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_64115d5b9c794c")}</>
                   ) : (
-                    interaction.payload.submitLabel ?? "Submit answers"
+                    interaction.payload.submitLabel ?? interfaceText("m_6d23261523eb64")
                   )}
                 </Button>
               </div>
@@ -1433,15 +1409,15 @@ function AskUserQuestionsCard({
         <div className="rounded-2xl border border-rose-300/60 bg-rose-50/85 p-4 text-sm leading-6 text-rose-950 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-100">
           <div className="font-semibold">
             {interaction.result?.outcome === "withdrawn"
-              ? questions.length === 1 ? "Question withdrawn" : "Questions withdrawn"
-              : "Question cancelled"}
+              ? questions.length === 1 ? interfaceText("m_7fb9da0d31ce3c") : interfaceText("m_5f00159eb0a684")
+              : interfaceText("m_e8960873b52bc7")}
           </div>
           {interaction.result?.cancellationReason ? (
             <p className="mt-1">{interaction.result.cancellationReason}</p>
           ) : interaction.result?.reason ? (
             <p className="mt-1">{interaction.result.reason}</p>
           ) : (
-            <p className="mt-1">No answer was recorded.</p>
+            <p className="mt-1">{interfaceText("m_9122bb871bbd9a")}</p>
           )}
         </div>
       ) : interaction.status === "expired" ? (
@@ -1450,24 +1426,22 @@ function AskUserQuestionsCard({
             <AlertTriangle className="h-4 w-4" />
             {interaction.result?.outcome === "issue_closed"
               ? questions.length === 1
-                ? "Question expired when the issue closed"
-                : "Questions expired when the issue closed"
+                ? interfaceText("m_25e10cc4b79122")
+                : interfaceText("m_0f7b109de2e441")
               : questions.length === 1
-                ? "Question expired by comment"
-                : "Questions expired by comment"}
+                ? interfaceText("m_9a1e929d06d9ed")
+                : interfaceText("m_891685543f6e5a")}
           </div>
           <p className="mt-1">
             {interaction.result?.outcome === "issue_closed"
-              ? "This question request expired automatically when the issue reached a terminal state."
-              : "A later board/user comment superseded this question request. Create a fresh request if answers are still needed."}
+              ? interfaceText("m_7dc5da5d518731")
+              : interfaceText("m_890aebaab34c22")}
           </p>
           {interaction.result?.commentId ? (
             <a
               href={`#comment-${interaction.result.commentId}`}
               className="mt-3 inline-flex text-sm font-medium underline underline-offset-4"
-            >
-              Jump to comment
-            </a>
+            >{interfaceText("m_c8799fd3b3b2fe")}</a>
           ) : null}
         </div>
       ) : (
@@ -1488,10 +1462,10 @@ function AskUserQuestionsCard({
                 <div className="mt-2 flex flex-wrap gap-2">
                   {labels.length > 0 ? (
                     labels.map((label) => (
-                      <TaskField key={label} label="Answer" value={label} />
+                      <TaskField key={label} label={interfaceText("m_b2a3aa602762a7")} value={label} />
                     ))
                   ) : (
-                    <span className="text-sm text-muted-foreground">No answer recorded.</span>
+                    <span className="text-sm text-muted-foreground">{interfaceText("m_85dd23047a757d")}</span>
                   )}
                 </div>
               </div>
@@ -1500,9 +1474,7 @@ function AskUserQuestionsCard({
 
           {interaction.result?.summaryMarkdown ? (
             <div className="rounded-2xl border border-emerald-300/60 bg-emerald-50/85 p-4">
-              <div className="mb-2 text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-emerald-700">
-                Submitted summary
-              </div>
+              <div className="mb-2 text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-emerald-700">{interfaceText("m_6af3ea688c2d33")}</div>
               <MarkdownBody externalReferences={externalReferences}>{interaction.result.summaryMarkdown}</MarkdownBody>
             </div>
           ) : null}
@@ -1523,10 +1495,10 @@ function isDisplayableRequestConfirmationTarget(
 
 function requestConfirmationTargetLabel(target: RequestConfirmationTarget) {
   if (target.label) return target.label;
-  if (target.type === "issue_attachment") return "Attachment";
+  if (target.type === "issue_attachment") return interfaceText("m_040d2b3689dd1d");
   const revision = target.revisionNumber ? ` v${target.revisionNumber}` : "";
   if (target.type === "issue_document" && target.key === "plan") {
-    return `Plan${revision}`;
+    return interfaceText("m_3f6595cc6d021a", { value0: (revision) });
   }
   return `${target.key}${revision}`;
 }
@@ -1598,6 +1570,7 @@ function RequestConfirmationResolution({
 }: {
   interaction: RequestConfirmationInteraction;
 }) {
+  useInterfaceLanguage();
   const outcome = interaction.result?.outcome;
   const target = interaction.payload.target ?? null;
   const staleTarget = interaction.result?.staleTarget ?? null;
@@ -1608,21 +1581,18 @@ function RequestConfirmationResolution({
       return (
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2 text-sm leading-6 text-foreground">
-            <span className="font-medium">Confirmed</span>
+            <span className="font-medium">{interfaceText("m_fe00b67b6dd114")}</span>
             <RequestConfirmationTargetChip interaction={interaction} target={target} />
           </div>
           <div className="rounded-sm border border-amber-500/60 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-100">
-            <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-amber-700">
-              Agent resume failed
-            </div>
+            <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-amber-700">{interfaceText("m_a456bede8c75f3")}</div>
             <p className="mt-1 leading-6">
               {resumeFailure.status === "retrying"
-                ? `Paperclip is retrying the agent resume after approval (attempt ${resumeFailure.attempt}/${resumeFailure.maxAttempts}).`
-                : "Paperclip needs attention before the agent can resume this approved work."}
+                ? interfaceText("m_d8b50eccb09fb7", { value0: (resumeFailure.attempt), value1: (resumeFailure.maxAttempts) })
+                : interfaceText("m_d517e69acc3f17")}
             </p>
             {resumeFailure.errorCode ? (
-              <p className="mt-1 leading-6">
-                Latest cause: <code className="font-mono text-(length:--text-micro)">{resumeFailure.errorCode}</code>
+              <p className="mt-1 leading-6">{interfaceText("m_96dc286e65687a")}<code className="font-mono text-(length:--text-micro)">{resumeFailure.errorCode}</code>
               </p>
             ) : null}
           </div>
@@ -1631,7 +1601,7 @@ function RequestConfirmationResolution({
     }
     return (
       <div className="flex flex-wrap items-center gap-2 text-sm leading-6 text-foreground">
-        <span className="font-medium">Confirmed</span>
+        <span className="font-medium">{interfaceText("m_fe00b67b6dd114")}</span>
         <RequestConfirmationTargetChip interaction={interaction} target={target} />
       </div>
     );
@@ -1641,7 +1611,7 @@ function RequestConfirmationResolution({
     return (
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2 text-sm leading-6 text-foreground">
-          <span className="font-medium">Declined</span>
+          <span className="font-medium">{interfaceText("m_dce083a2c47ffd")}</span>
           <RequestConfirmationTargetChip interaction={interaction} target={target} />
         </div>
         {interaction.result?.reason ? (
@@ -1660,7 +1630,7 @@ function RequestConfirmationResolution({
     // and no duplicated reason text.
     return (
       <div className="flex flex-wrap items-center gap-2 text-sm leading-6 text-foreground">
-        <span className="font-medium">Withdrawn</span>
+        <span className="font-medium">{interfaceText("m_00c0b03fcfa2ac")}</span>
         <RequestConfirmationTargetChip interaction={interaction} target={target} />
       </div>
     );
@@ -1680,19 +1650,19 @@ function RequestConfirmationResolution({
          */}
         {expiredByIssueClosed ? null : (
           <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-amber-700">
-            {expiredByComment ? "Expired by comment" : "Expired by target change"}
+            {expiredByComment ? interfaceText("m_2261bc69df12dc") : interfaceText("m_29b61c07a1af44")}
           </div>
         )}
         <p className="leading-6">
           {expiredByComment
-            ? "A board comment superseded this confirmation before it was resolved."
+            ? interfaceText("m_93bcdf36fb064b")
             : expiredByIssueClosed
-              ? "This confirmation expired automatically when the issue reached a terminal state."
-              : "The requested target changed before this confirmation was resolved."}
+              ? interfaceText("m_d9d1a93282983a")
+              : interfaceText("m_45202d1a0937c6")}
         </p>
         {expiredByComment && interaction.result?.commentId ? (
           <Button asChild size="sm" variant="ghost" className="h-7 px-2 text-amber-950 hover:bg-amber-500/15 dark:text-amber-50">
-            <a href={`#comment-${interaction.result.commentId}`}>Jump to comment</a>
+            <a href={`#comment-${interaction.result.commentId}`}>{interfaceText("m_c8799fd3b3b2fe")}</a>
           </Button>
         ) : null}
         {expiredByTargetChange ? (
@@ -1715,9 +1685,7 @@ function RequestConfirmationResolution({
 
   if (interaction.status === "failed") {
     return (
-      <p className="text-sm leading-6 text-muted-foreground">
-        This request could not be resolved. Try again or create a new request.
-      </p>
+      <p className="text-sm leading-6 text-muted-foreground">{interfaceText("m_7056ad01b4c11a")}</p>
     );
   }
 
@@ -1731,6 +1699,7 @@ function ToolActionResolution({
   state: ToolActionCardState;
   interaction: RequestConfirmationInteraction;
 }) {
+  useInterfaceLanguage();
   const result = interaction.result?.toolAction;
   const [resultOpen, setResultOpen] = useState(false);
   const output = state === "executed" ? result?.resultSummary?.trim() : null;
@@ -1754,14 +1723,14 @@ function ToolActionResolution({
   const status = <>
     <Icon className={cn("h-3.5 w-3.5 shrink-0", state === "running" && "animate-spin", state === "failed" && "text-destructive")} />
     {labels[state]}
-    {result?.rememberedAction ? " · Always allowed" : ""}
+    {result?.rememberedAction ? interfaceText("m_b2f63ebe84ae46") : ""}
   </>;
   return (
     <div className="space-y-1 text-sm text-muted-foreground" aria-live="polite">
       {output ? (
         <Collapsible open={resultOpen} onOpenChange={setResultOpen}>
           <CollapsibleTrigger asChild>
-            <button type="button" className="flex items-center gap-1.5 rounded-sm hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={resultOpen ? "Hide result details" : "Show result details"}>
+            <button type="button" className="flex items-center gap-1.5 rounded-sm hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={resultOpen ? interfaceText("m_1ff4e49e4fd49c") : interfaceText("m_68254305e7a9ea")}>
               {status}<ChevronDown className={cn("h-3 w-3", resultOpen && "rotate-180")} />
             </button>
           </CollapsibleTrigger>
@@ -1772,7 +1741,7 @@ function ToolActionResolution({
       ) : <p className="flex items-center gap-1.5">{status}</p>}
       {detail ? <p className={cn("break-words", state === "failed" && "text-destructive")}>{detail}</p> : null}
       {state === "executed" && result?.resultHref?.trim() ? (
-        <a className="inline-flex items-center gap-1 underline underline-offset-4 hover:text-foreground" href={result.resultHref} target="_blank" rel="noreferrer">View result<ExternalLink className="h-3 w-3" /></a>
+        <a className="inline-flex items-center gap-1 underline underline-offset-4 hover:text-foreground" href={result.resultHref} target="_blank" rel="noreferrer">{interfaceText("m_fdb7eafd12ba78")}<ExternalLink className="h-3 w-3" /></a>
       ) : null}
     </div>
   );
@@ -1793,6 +1762,7 @@ function RequestToolActionCard({
   onRejectInteraction?: (interaction: RequestConfirmationInteraction, reason?: string) => Promise<void> | void;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const payload = interaction.payload.toolAction!;
   const [working, setWorking] = useState<"accept" | "always" | "reject" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -1832,23 +1802,21 @@ function RequestToolActionCard({
         <DecisionCardFooter leading={footerSlot} className="mt-3">
           <div className={cn(!footerSlot && "mt-3", "flex flex-wrap items-center justify-end gap-2")}>
           <Button size="sm" variant="ghost" disabled={!onRejectInteraction || working !== null} onClick={() => void decide("reject")}>
-            {working === "reject" ? "Declining…" : "Decline"}
+            {working === "reject" ? interfaceText("m_fb03c72b9ced6a") : interfaceText("m_a2d285b3528734")}
           </Button>
-          <div className="inline-flex" role="group" aria-label="Approve request">
+          <div className="inline-flex" role="group" aria-label={interfaceText("m_9ed200aeb78c5b")}>
             <Button size="sm" variant={variant} className={payload.rememberActionScope ? "rounded-r-none" : undefined} disabled={!onAcceptInteraction || working !== null} onClick={() => void decide("accept")}>
-              {working === "accept" || working === "always" ? <><Loader2 className="h-3.5 w-3.5 animate-spin" />{working === "always" ? "Saving…" : "Approving…"}</> : "Approve & run"}
+              {working === "accept" || working === "always" ? <><Loader2 className="h-3.5 w-3.5 animate-spin" />{working === "always" ? interfaceText("m_23e39291d61358") : interfaceText("m_e99dcb0a97a232")}</> : interfaceText("m_e31adde562aa34")}
             </Button>
             {payload.rememberActionScope ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="icon-sm" variant={variant} className="rounded-l-none border-l border-background/30" aria-label="Approval options" disabled={!onAcceptInteraction || working !== null}>
+                  <Button size="icon-sm" variant={variant} className="rounded-l-none border-l border-background/30" aria-label={interfaceText("m_b8cd0e4b744cdf")} disabled={!onAcceptInteraction || working !== null}>
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onSelect={() => void decide("always")} title={payload.rememberActionScope} aria-description={payload.rememberActionScope}>
-                    Always allow
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => void decide("always")} title={payload.rememberActionScope} aria-description={payload.rememberActionScope}>{interfaceText("m_977618bd8bc7ee")}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : null}
@@ -1899,6 +1867,7 @@ function SecretProposalIdentityHeader({
 }: {
   state: SecretProposalCardState;
 }) {
+  useInterfaceLanguage();
   const dimmed = state === "declined" || state === "expired";
   return (
     <div className={cn("flex items-start gap-3", dimmed && "opacity-60 grayscale")}>
@@ -1909,9 +1878,7 @@ function SecretProposalIdentityHeader({
         <KeyRound className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-base font-bold leading-tight text-foreground">
-          Bind an existing secret
-        </div>
+        <div className="text-base font-bold leading-tight text-foreground">{interfaceText("m_2aea300f8bec71")}</div>
       </div>
     </div>
   );
@@ -1922,24 +1889,19 @@ function SecretProposalDetails({
 }: {
   payload: NonNullable<RequestConfirmationInteraction["payload"]["secretProposal"]>;
 }) {
+  useInterfaceLanguage();
   return (
     <dl className="grid gap-3 rounded-sm border border-border/70 bg-muted/30 p-3 sm:grid-cols-2">
       <div className="min-w-0 space-y-1">
-        <dt className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-          Source secret
-        </dt>
+        <dt className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_60e1f18db6c8a2")}</dt>
         <dd className="truncate text-sm font-medium text-foreground">{payload.sourceSecretLabel}</dd>
       </div>
       <div className="min-w-0 space-y-1">
-        <dt className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-          Target agent
-        </dt>
+        <dt className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_d539091489783f")}</dt>
         <dd className="truncate text-sm font-medium text-foreground">{payload.targetAgentName}</dd>
       </div>
       <div className="min-w-0 space-y-1 sm:col-span-2">
-        <dt className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-          New config path
-        </dt>
+        <dt className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_be59ea68894f63")}</dt>
         <dd className="break-all font-mono text-sm text-foreground">{payload.configPath}</dd>
       </div>
     </dl>
@@ -1955,6 +1917,7 @@ function SecretProposalResolution({
   state: SecretProposalCardState;
   resolvedByLabel: string | null;
 }) {
+  useInterfaceLanguage();
   const result = interaction.result?.secretProposal ?? null;
   const who = resolvedByLabel ?? "the board";
   const when = interaction.resolvedAt
@@ -1968,10 +1931,8 @@ function SecretProposalResolution({
       <div aria-live="polite" className="flex items-start gap-2 rounded-sm border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-100">
         <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin" />
         <div>
-          <div className="font-medium">Approved by {who} — creating the binding</div>
-          <p className="mt-1 text-amber-900/80 dark:text-amber-100/80">
-            Paperclip is re-checking authority and the proposal snapshot before writing.
-          </p>
+          <div className="font-medium">{interfaceText("m_17923f10b195ab")}{who}{interfaceText("m_0a5d873cf74d88")}</div>
+          <p className="mt-1 text-amber-900/80 dark:text-amber-100/80">{interfaceText("m_5117fae9ab1d31")}</p>
         </div>
       </div>
     );
@@ -1982,9 +1943,8 @@ function SecretProposalResolution({
       <div aria-live="polite" className="flex items-start gap-2 rounded-sm border border-green-500/50 bg-green-500/10 px-4 py-3 text-sm text-green-900 dark:text-green-100">
         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
         <div>
-          <div className="font-medium">Binding created · approved by {who}</div>
-          <p className="mt-1 text-green-900/80 dark:text-green-100/80">
-            The target agent can now use the proposed config path{when ? ` · ${when}` : ""}.
+          <div className="font-medium">{interfaceText("m_263f6218b09473")}{who}</div>
+          <p className="mt-1 text-green-900/80 dark:text-green-100/80">{interfaceText("m_c91e5f787cc690")}{when ? ` · ${when}` : ""}.
           </p>
         </div>
       </div>
@@ -1998,19 +1958,13 @@ function SecretProposalResolution({
         <div className="flex items-start gap-2">
           <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="font-semibold uppercase tracking-(--tracking-eyebrow)">
-              FAILED · binding was not created
-            </div>
-            <p className="mt-1 text-red-900/80 dark:text-red-100/80">
-              The request was accepted, but execution failed closed. No secret value was exposed.
-            </p>
+            <div className="font-semibold uppercase tracking-(--tracking-eyebrow)">{interfaceText("m_0c4d9095e29b66")}</div>
+            <p className="mt-1 text-red-900/80 dark:text-red-100/80">{interfaceText("m_2b88620383f311")}</p>
           </div>
         </div>
         {errorCode ? (
           <div className="rounded-sm border border-red-500/50 bg-background/60 px-3 py-2">
-            <span className="text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-eyebrow)">
-              Error code
-            </span>{" "}
+            <span className="text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-eyebrow)">{interfaceText("m_0570b384c3cecf")}</span>{" "}
             <code className="font-mono text-foreground">{errorCode}</code>
           </div>
         ) : null}
@@ -2025,8 +1979,8 @@ function SecretProposalResolution({
         <div className="flex items-start gap-2">
           <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <div className="font-medium">Rejected by {who}</div>
-            <p className="mt-1 text-red-900/80 dark:text-red-100/80">The binding was not created.</p>
+            <div className="font-medium">{interfaceText("m_66c88919768b5e")}{who}</div>
+            <p className="mt-1 text-red-900/80 dark:text-red-100/80">{interfaceText("m_383649952b47b1")}</p>
           </div>
         </div>
         {reason ? (
@@ -2042,8 +1996,8 @@ function SecretProposalResolution({
     <div className="flex items-start gap-2 rounded-sm border border-border bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
       <Clock className="mt-0.5 h-4 w-4 shrink-0" />
       <div>
-        <div className="font-medium text-foreground">Proposal expired{when ? ` · ${when}` : ""}</div>
-        <p className="mt-1">The binding was not created. A fresh proposal is required.</p>
+        <div className="font-medium text-foreground">{interfaceText("m_63284dbbf1a312")}{when ? ` · ${when}` : ""}</div>
+        <p className="mt-1">{interfaceText("m_7676878454063a")}</p>
       </div>
     </div>
   );
@@ -2067,6 +2021,7 @@ function RequestSecretProposalCard({
     reason?: string,
   ) => Promise<void> | void;
 }) {
+  useInterfaceLanguage();
   const payload = interaction.payload.secretProposal!;
   const [working, setWorking] = useState<"accept" | "reject" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -2110,8 +2065,7 @@ function RequestSecretProposalCard({
       <SecretProposalDetails payload={payload} />
       <ProposalJustification justification={payload.justification} />
       <div className="flex items-center gap-2 text-(length:--text-micro) text-muted-foreground">
-        <Clock className="h-3.5 w-3.5" />
-        Expires {formatDateTime(payload.expiresAt)}
+        <Clock className="h-3.5 w-3.5" />{interfaceText("m_d970e4fd1080c6")}{formatDateTime(payload.expiresAt)}
       </div>
 
       {isPending ? (
@@ -2221,6 +2175,7 @@ function ConfirmationActionRow({
    * hierarchy instead of relying on opportunistic flex wrapping. */
   stackActionsOnMobile?: boolean;
 }) {
+  useInterfaceLanguage();
   const [revising, setRevising] = useState(false);
   const { enabled: coordinatorEnabled } = useCoordinatorWorkspaceEnabled();
   const [reason, setReason] = useState("");
@@ -2266,9 +2221,7 @@ function ConfirmationActionRow({
           >
             {working === "accept" ? (
               <>
-                <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                Approving…
-              </>
+                <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_e99dcb0a97a232")}</>
             ) : (
               approveLabel
             )}
@@ -2297,9 +2250,7 @@ function ConfirmationActionRow({
             >
               {working === "reject" && !revising ? (
                 <>
-                  <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                  Rejecting…
-                </>
+                  <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_09868524d9262e")}</>
               ) : (
                 rejectLabel
               )}
@@ -2321,7 +2272,7 @@ function ConfirmationActionRow({
             )}
           />
           {attempted && reasonMissing ? (
-            <p className="text-xs text-destructive">Add a note describing the changes you want.</p>
+            <p className="text-xs text-destructive">{interfaceText("m_d5ef6ba97db8fd")}</p>
           ) : null}
           {revisePanelChildren}
           <DecisionCardFooter leading={footerSlot}>
@@ -2334,9 +2285,7 @@ function ConfirmationActionRow({
                   setRevising(false);
                   setAttempted(false);
                 }}
-              >
-                Cancel
-              </Button>
+              >{interfaceText("m_19766ed6ccb2f4")}</Button>
               <Button
                 size="sm"
                 variant="outline"
@@ -2345,11 +2294,9 @@ function ConfirmationActionRow({
               >
                 {working === "reject" ? (
                   <>
-                    <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                    Sending…
-                  </>
+                    <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_b8ed5279e897be")}</>
                 ) : (
-                  "Send revision"
+                  interfaceText("m_953cc98c1bd59e")
                 )}
               </Button>
             </div>
@@ -2376,7 +2323,7 @@ function connectionAuthorizationStatusClasses(
       return {
         shell: "border-2 border-sky-500/70 bg-transparent",
         badge: "border-sky-500/60 bg-sky-500/10 text-sky-900 dark:bg-sky-500/15 dark:text-sky-100",
-        label: "Action required",
+        label: interfaceText("m_adf69e75cc7d3c"),
         Icon: KeyRound,
       };
     case "waiting":
@@ -2399,7 +2346,7 @@ function connectionAuthorizationStatusClasses(
       return {
         shell: "border-border bg-transparent",
         badge: "border-border bg-muted/60 text-muted-foreground",
-        label: "Not connected",
+        label: interfaceText("m_0303e182467081"),
         Icon: MinusCircle,
       };
     case "expired":
@@ -2407,7 +2354,7 @@ function connectionAuthorizationStatusClasses(
       return {
         shell: "border-border bg-transparent",
         badge: "border-border bg-muted/60 text-muted-foreground",
-        label: "Authorization expired",
+        label: interfaceText("m_92b4263f21419c"),
         Icon: CircleDashed,
       };
   }
@@ -2461,6 +2408,7 @@ function RequestConnectionAuthorizationCard({
     reason?: string,
   ) => Promise<void> | void;
 }) {
+  useInterfaceLanguage();
   const [working, setWorking] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const resolutionErrorMessage = useResolutionErrorMessage();
@@ -2493,7 +2441,7 @@ function RequestConnectionAuthorizationCard({
   // person. Shown to a teammate it names the wrong account, so a reader who is
   // not the addressee gets the same fact stated about them. Caught by rendering
   // the card, not by reading it.
-  const agentLabel = requestingAgentLabel ?? "An agent";
+  const agentLabel = requestingAgentLabel ?? interfaceText("m_ea6a03636c62be");
   const lead = isAddressee
     ? interaction.summary?.trim()
       || `${agentLabel} needs your ${providerName} identity for work running as you.`
@@ -2520,8 +2468,7 @@ function RequestConnectionAuthorizationCard({
                 className="grid grid-cols-1 items-stretch gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end"
               >
                 <Button asChild size="sm" variant="cta" className="w-full sm:w-auto">
-                  <a href={href} target="_blank" rel="noreferrer">
-                    Connect {providerName}
+                  <a href={href} target="_blank" rel="noreferrer">{interfaceText("m_3b887c9884f2c9")}{providerName}
                     <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" />
                   </a>
                 </Button>
@@ -2534,11 +2481,9 @@ function RequestConnectionAuthorizationCard({
                 >
                   {working ? (
                     <>
-                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                      Saving…
-                    </>
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_23e39291d61358")}</>
                   ) : (
-                    "Not now"
+                    interfaceText("m_a0e63d7c7125d2")
                   )}
                 </Button>
               </div>
@@ -2568,14 +2513,13 @@ function RequestConnectionAuthorizationCard({
           testId="connection-authorization-connected"
           headline={`${providerName} connected`}
           detail={
-            <>
-              Connected by{" "}
+            <>{interfaceText("m_9952ce521b7857")}{" "}
               <span className="font-medium text-foreground">
                 {/* "You" is display-cased for a badge; this is mid-sentence. */}
-                {(resolvedByLabel ?? addresseeLabel) === "You" ? "you" : resolvedByLabel ?? addresseeLabel}
+                {(resolvedByLabel ?? addresseeLabel) === "You" ? interfaceText("m_bb0347a468d97e") : resolvedByLabel ?? addresseeLabel}
               </span>
               {resolvedByAgent ? <ResolvedByAgentChip /> : null}
-              {interaction.resolvedAt ? ` on ${formatDateTime(interaction.resolvedAt)}` : ""}
+              {interaction.resolvedAt ? interfaceText("m_763fee10d1bc90", { value0: (formatDateTime(interaction.resolvedAt)) }) : ""}
             </>
           }
         />
@@ -2648,6 +2592,7 @@ function RequestConfirmationCard({
   onUploadImage?: (file: File) => Promise<string>;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const [working, setWorking] = useState<"accept" | "reject" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const resolutionErrorMessage = useResolutionErrorMessage();
@@ -2663,8 +2608,8 @@ function RequestConfirmationCard({
   const reasonPlaceholder =
     interaction.payload.declineReasonPlaceholder
     ?? (interaction.payload.acceptLabel === "Approve plan"
-      ? "Optional: what would you like revised?"
-      : "Optional: tell the agent what you'd change.");
+      ? interfaceText("m_97f44938bed7dd")
+      : interfaceText("m_faf1bb60fa9ddd"));
 
   useEffect(() => {
     setActionError(null);
@@ -2737,9 +2682,7 @@ function RequestConfirmationCard({
           {interaction.payload.detailsMarkdown ? (
             compact ? <details className="group/confirmation-details">
               <summary className="flex cursor-pointer list-none items-center gap-1 rounded-sm text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                <ChevronRight aria-hidden className="h-3.5 w-3.5 transition-transform group-open/confirmation-details:rotate-90 motion-reduce:transition-none" />
-                Details
-              </summary>
+                <ChevronRight aria-hidden className="h-3.5 w-3.5 transition-transform group-open/confirmation-details:rotate-90 motion-reduce:transition-none" />{interfaceText("m_45989de49fb7f6")}</summary>
               <div className="mt-2 rounded-sm bg-muted/40 px-2.5 py-2 text-sm text-muted-foreground">
                 <MarkdownBody externalReferences={externalReferences}>{interaction.payload.detailsMarkdown}</MarkdownBody>
               </div>
@@ -2791,7 +2734,7 @@ function RequestConfirmationCard({
                         />
                         <button
                           type="button"
-                          aria-label={`Remove ${shot.name}`}
+                          aria-label={interfaceText("m_e224cf245aada5", { value0: (shot.name) })}
                           className="absolute right-0.5 top-0.5 rounded-full bg-background/90 p-0.5 text-foreground opacity-0 transition-opacity group-hover:opacity-100"
                           onClick={() =>
                             setShots((current) => current.filter((_, i) => i !== index))
@@ -2823,14 +2766,10 @@ function RequestConfirmationCard({
                 >
                   {uploading ? (
                     <>
-                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                      Uploading...
-                    </>
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />{interfaceText("m_72cb29c90ccd83")}</>
                   ) : (
                     <>
-                      <ImagePlus className="mr-2 h-3.5 w-3.5" />
-                      Attach screenshots
-                    </>
+                      <ImagePlus className="mr-2 h-3.5 w-3.5" />{interfaceText("m_d0f8e01df872f8")}</>
                   )}
                 </Button>
                 {uploadError ? (
@@ -2854,6 +2793,7 @@ function RequestCheckboxConfirmationResolution({
 }: {
   interaction: RequestCheckboxConfirmationInteraction;
 }) {
+  useInterfaceLanguage();
   const target = interaction.payload.target ?? null;
   const [expanded, setExpanded] = useState(false);
 
@@ -2877,15 +2817,15 @@ function RequestCheckboxConfirmationResolution({
         <div className="flex flex-wrap items-center gap-2 text-sm leading-6 text-foreground">
           <span className="font-medium">
             {selectedCount === 0
-              ? "Confirmed with no options selected"
-              : `Confirmed ${selectedCount} of ${totalOptions} ${totalOptions === 1 ? "option" : "options"}`}
+              ? interfaceText("m_1962f778e51c03")
+              : interfaceText("m_9851be796e04d6", { value0: (selectedCount), value1: (totalOptions), value2: (totalOptions === 1 ? "option" : "options") })}
           </span>
           <RequestConfirmationTargetChip interaction={interaction} target={target} />
         </div>
         {visibleLabels.length > 0 ? (
           <div className="flex flex-wrap gap-1.5">
             {visibleLabels.map((label, index) => (
-              <TaskField key={`${label}-${index}`} label="Selected" value={label} />
+              <TaskField key={`${label}-${index}`} label={interfaceText("m_57fd7a0cf33f26")} value={label} />
             ))}
             {hasHiddenLabels ? (
               <button
@@ -2897,7 +2837,7 @@ function RequestCheckboxConfirmationResolution({
                 )}
                 aria-expanded={expanded}
               >
-                {expanded ? "Show less" : `+${hiddenCount} more`}
+                {expanded ? interfaceText("m_94ea9b1d33a029") : interfaceText("m_d10b45c87f7847", { value0: (hiddenCount) })}
               </button>
             ) : null}
           </div>
@@ -2916,9 +2856,7 @@ function RequestCheckboxConfirmationResolution({
 
   if (interaction.status === "failed") {
     return (
-      <p className="text-sm leading-6 text-muted-foreground">
-        This request could not be resolved. Try again or create a new request.
-      </p>
+      <p className="text-sm leading-6 text-muted-foreground">{interfaceText("m_7056ad01b4c11a")}</p>
     );
   }
 
@@ -2989,6 +2927,7 @@ function RequestCheckboxConfirmationCard({
   ) => Promise<void> | void;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const options = interaction.payload.options;
   const optionIds = useMemo(() => options.map((option) => option.id), [options]);
   const validOptionIds = useMemo(() => new Set(optionIds), [optionIds]);
@@ -3023,7 +2962,7 @@ function RequestCheckboxConfirmationCard({
   const rejectRequiresReason = interaction.payload.rejectRequiresReason === true;
   const allowRevise = interaction.payload.allowDeclineReason !== false;
   const reasonPlaceholder =
-    interaction.payload.declineReasonPlaceholder ?? "Optional: tell the agent what you'd change.";
+    interaction.payload.declineReasonPlaceholder ?? interfaceText("m_faf1bb60fa9ddd");
 
   const selectedCount = selectedOptionIds.size;
   const totalOptions = options.length;
@@ -3034,12 +2973,12 @@ function RequestCheckboxConfirmationCard({
 
   const validationMessage = belowMin
     ? minSelected === 1
-      ? "Select at least 1 option."
-      : `Select at least ${minSelected} options.`
+      ? interfaceText("m_b2ec33059221ee")
+      : interfaceText("m_1962b74027292c", { value0: (minSelected) })
     : aboveMax && maxSelected != null
       ? maxSelected === 1
-        ? "Select at most 1 option."
-        : `Select at most ${maxSelected} options.`
+        ? interfaceText("m_45f17e297cfbf8")
+        : interfaceText("m_8927d3a947b795", { value0: (maxSelected) })
       : null;
 
   function toggleOption(optionId: string, checked: boolean) {
@@ -3138,23 +3077,19 @@ function RequestCheckboxConfirmationCard({
               variant="ghost"
               disabled={working !== null || selectedCount === totalOptions || (maxSelected != null && selectedCount >= maxSelected)}
               onClick={handleSelectAll}
-            >
-              Select all
-            </Button>
+            >{interfaceText("m_1fc9a387654d41")}</Button>
             <Button
               size="sm"
               variant="ghost"
               disabled={working !== null || selectedCount === 0}
               onClick={handleClearSelection}
-            >
-              Clear selection
-            </Button>
+            >{interfaceText("m_cea4d2e010b8fd")}</Button>
           </div>
         </div>
 
         <div
           role="group"
-          aria-label="Selectable options"
+          aria-label={interfaceText("m_aaabfe0b43a195")}
           className="max-h-80 overflow-y-auto rounded-sm border border-border/70"
         >
           {options.map((option) => {
@@ -3241,15 +3176,14 @@ function VerdictConsequenceChip({ verdict }: { verdict: RequestItemVerdictValue 
 }
 
 function ItemVerdictDeepLink({ item, interaction }: { item: RequestItemVerdictsItem; interaction: RequestItemVerdictsInteraction }) {
+  useInterfaceLanguage();
   const href = itemVerdictHref(item, interaction);
   if (!href) return null;
   const isInternal = !href.startsWith("/api/") && (href.startsWith("/") || href.startsWith("#"));
   const className =
     "inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1";
   const label = (
-    <>
-      Open
-      {isInternal ? <ArrowUpRight className="h-3 w-3" aria-hidden /> : <ExternalLink className="h-3 w-3" aria-hidden />}
+    <>{interfaceText("m_ed077f3d8125d6")}{isInternal ? <ArrowUpRight className="h-3 w-3" aria-hidden /> : <ExternalLink className="h-3 w-3" aria-hidden />}
     </>
   );
   if (isInternal) {
@@ -3279,10 +3213,11 @@ function ItemVerdictSegmentedControl({
   disabled: boolean;
   onSelect: (verdict: RequestItemVerdictValue) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div
       role="group"
-      aria-label="Choose a verdict"
+      aria-label={interfaceText("m_849de4eb8d64c9")}
       className="flex shrink-0 flex-wrap items-center gap-2"
     >
       {verdicts.map((verdict) => {
@@ -3301,7 +3236,7 @@ function ItemVerdictSegmentedControl({
             variant={variant}
             disabled={disabled}
             aria-pressed={active}
-            aria-label={`${VERDICT_LABEL[verdict]} this item`}
+            aria-label={interfaceText("m_e52e5f7388c4e8", { value0: (VERDICT_LABEL[verdict]) })}
             className="min-h-11 min-w-24"
             onClick={() => onSelect(verdict)}
             data-verdict={verdict}
@@ -3336,6 +3271,7 @@ function RequestItemVerdictsCard({
   ) => Promise<void> | void;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const payload = interaction.payload;
   const items = payload.items;
   const enabledVerdicts = useMemo<RequestItemVerdictValue[]>(
@@ -3347,7 +3283,7 @@ function RequestItemVerdictsCard({
     [payload.requireReasonOn],
   );
   const allowBulkApprove = payload.allowBulkApprove !== false && enabledVerdicts.includes("approve");
-  const reasonLabel = payload.reasonLabel ?? "Reason";
+  const reasonLabel = payload.reasonLabel ?? interfaceText("m_f81ab834de5f84");
 
   const resolvedById = useMemo(
     () => new Map<string, RequestItemVerdictsResultItem>((interaction.result?.items ?? []).map((item) => [item.id, item])),
@@ -3456,8 +3392,8 @@ function RequestItemVerdictsCard({
   }
 
   const applyLabel = draftCount === 0
-    ? "Apply 0 decisions"
-    : `Apply ${draftCount} decision${draftCount === 1 ? "" : "s"}`;
+    ? interfaceText("m_3797d7e6d71926")
+    : interfaceText("m_ff178a5590f092", { value0: (draftCount), value1: (draftCount === 1 ? "" : interfaceText("m_043a718774c572")) });
 
   return (
     <div className="space-y-4">
@@ -3483,22 +3419,20 @@ function RequestItemVerdictsCard({
           <div className="flex items-center gap-2 font-medium">
             <AlertTriangle className="h-4 w-4" aria-hidden />
             {interaction.result?.outcome === "superseded_by_comment"
-              ? "This review expired after a later comment."
+              ? interfaceText("m_080c089706f6ea")
               : interaction.result?.outcome === "stale_target"
-                ? "This review expired after the target changed."
-                : "This review expired."}
+                ? interfaceText("m_66123ea9772595")
+                : interfaceText("m_36cd0712e3aa83")}
           </div>
           {progress.decided > 0 ? (
             <p className="mt-1 text-xs leading-5">
-              {progress.decided === 1 ? "1 item was" : `${progress.decided} items were`} already applied and cannot be
-              reverted. Remaining items were cancelled.
-            </p>
+              {progress.decided === 1 ? interfaceText("m_f4000d8ca4f0fd") : interfaceText("m_2f22df1c561128", { value0: (progress.decided) })}{interfaceText("m_26943104fab5a2")}</p>
           ) : null}
         </div>
       ) : null}
 
       {/* Item list (S1/S2/S3/S4) */}
-      <ul className="space-y-2" aria-label="Items to review">
+      <ul className="space-y-2" aria-label={interfaceText("m_6cac728c6d49ca")}>
         {items.map((item) => {
           const resolved = resolvedById.get(item.id);
           const applying = applyingItemIds.has(item.id);
@@ -3540,14 +3474,10 @@ function RequestItemVerdictsCard({
                     <VerdictConsequenceChip verdict={resolved.verdict} />
                   ) : applying ? (
                     <span className="inline-flex items-center gap-1.5 rounded-sm border border-border/70 bg-muted/40 px-2 py-0.5 text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-                      <Loader2 className="h-3.5 w-3.5 motion-safe:animate-spin" aria-hidden />
-                      Applying…
-                    </span>
+                      <Loader2 className="h-3.5 w-3.5 motion-safe:animate-spin" aria-hidden />{interfaceText("m_3329a9bb48b9c8")}</span>
                   ) : isTerminal ? (
                     <span className="inline-flex items-center gap-1 rounded-sm border border-border/70 bg-muted/30 px-2 py-0.5 text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-                      <CircleDashed className="h-3.5 w-3.5" aria-hidden />
-                      Not decided
-                    </span>
+                      <CircleDashed className="h-3.5 w-3.5" aria-hidden />{interfaceText("m_4fb8e6bd5ffdaf")}</span>
                   ) : (
                     <ItemVerdictSegmentedControl
                       itemId={item.id}
@@ -3573,7 +3503,7 @@ function RequestItemVerdictsCard({
                     id={`${interaction.id}-${item.id}-reason`}
                     value={draft.reason}
                     onChange={(event) => setDraftReason(item.id, event.target.value)}
-                    placeholder="Give the agent a reason so it can act on this item."
+                    placeholder={interfaceText("m_0149096b8e3536")}
                     aria-invalid={attempted && invalidDraftIds.has(item.id)}
                     className={cn(
                       "min-h-16 bg-background text-sm",
@@ -3581,7 +3511,7 @@ function RequestItemVerdictsCard({
                     )}
                   />
                   {attempted && invalidDraftIds.has(item.id) ? (
-                    <p className="text-xs text-destructive">A reason is required to {VERDICT_LABEL[draft.verdict].toLowerCase()} this item.</p>
+                    <p className="text-xs text-destructive">{interfaceText("m_7bac9427778c27")}{VERDICT_LABEL[draft.verdict].toLowerCase()}{interfaceText("m_1ec8bfc5c3c0c5")}</p>
                   ) : null}
                 </div>
               ) : null}
@@ -3595,8 +3525,7 @@ function RequestItemVerdictsCard({
         <div className="flex flex-wrap items-center gap-2 rounded-sm border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-900 dark:text-emerald-100">
           <CheckCircle2 className="h-4 w-4" aria-hidden />
           <span className="font-medium">
-            {progress.decided} decided · {progress.approved} approved · {progress.rejected} rejected
-            {progress.deferred > 0 ? ` · ${progress.deferred} deferred` : ""}
+            {progress.decided}{interfaceText("m_c18905f5e7ba60")}{progress.approved}{interfaceText("m_fa552f18cd584e")}{progress.rejected}{interfaceText("m_76d920c4b1d2fd")}{progress.deferred > 0 ? interfaceText("m_e37957a1c4c554", { value0: (progress.deferred) }) : ""}
           </span>
         </div>
       ) : null}
@@ -3607,8 +3536,8 @@ function RequestItemVerdictsCard({
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 pt-3">
             <div className="text-xs text-muted-foreground">
               {draftCount > 0
-                ? `${draftCount} draft verdict${draftCount === 1 ? "" : "s"} ready to apply`
-                : "Mark verdicts, then apply them in one pass."}
+                ? interfaceText("m_9d6e5888efe98d", { value0: (draftCount), value1: (draftCount === 1 ? "" : interfaceText("m_043a718774c572")) })
+                : interfaceText("m_881de88bc923c1")}
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {allowBulkApprove ? (
@@ -3619,9 +3548,7 @@ function RequestItemVerdictsCard({
                   disabled={working || progress.pendingItemIds.length === 0}
                   onClick={handleApproveAll}
                 >
-                  <ThumbsUp className="h-4 w-4" aria-hidden />
-                  Approve all
-                </Button>
+                  <ThumbsUp className="h-4 w-4" aria-hidden />{interfaceText("m_ae067b6871072a")}</Button>
               ) : null}
               <Button
                 type="button"
@@ -3633,9 +3560,7 @@ function RequestItemVerdictsCard({
               >
                 {working ? (
                   <>
-                    <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden />
-                    Applying…
-                  </>
+                    <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden />{interfaceText("m_3329a9bb48b9c8")}</>
                 ) : (
                   applyLabel
                 )}
@@ -3657,15 +3582,14 @@ function VerdictProgressBadge({
   progress: ReturnType<typeof getItemVerdictProgress>;
   pendingReason: boolean;
 }) {
+  useInterfaceLanguage();
   const pct = progress.total > 0 ? Math.round((progress.decided / progress.total) * 100) : 0;
   return (
     <div className="flex items-center gap-2">
       {/* Von Restorff accent when a draft reject is missing its reason */}
       {pendingReason ? (
         <span className="inline-flex items-center gap-1 rounded-sm border border-amber-500/60 bg-amber-500/10 px-1.5 py-0.5 text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-eyebrow) text-amber-900 dark:text-amber-100">
-          <AlertTriangle className="h-3 w-3" aria-hidden />
-          Reason needed
-        </span>
+          <AlertTriangle className="h-3 w-3" aria-hidden />{interfaceText("m_e2d71a28dacc5d")}</span>
       ) : null}
       <div
         className="flex items-center gap-2"
@@ -3673,7 +3597,7 @@ function VerdictProgressBadge({
         aria-valuemin={0}
         aria-valuemax={progress.total}
         aria-valuenow={progress.decided}
-        aria-label={`${progress.decided} of ${progress.total} decided`}
+        aria-label={interfaceText("m_e479b76106006b", { value0: (progress.decided), value1: (progress.total) })}
       >
         <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
           <div
@@ -3682,8 +3606,7 @@ function VerdictProgressBadge({
           />
         </div>
         <span className="whitespace-nowrap text-xs font-medium text-muted-foreground">
-          {progress.decided} of {progress.total} decided
-        </span>
+          {progress.decided}{interfaceText("m_a4282e4b2298b9")}{progress.total}{interfaceText("m_9c843b82f79501")}</span>
       </div>
     </div>
   );
@@ -3705,6 +3628,7 @@ export function IssueThreadInteractionCard({
   onUploadImage,
   externalReferences,
 }: IssueThreadInteractionCardProps) {
+  useInterfaceLanguage();
   const { enabled: coordinatorEnabled } = useCoordinatorWorkspaceEnabled();
   const compactDecision = presentationVariant === "coordinator-decision";
   // Single enforcement point (PAP-424, plan from PAP-420; extended by PAP-437):
@@ -3858,9 +3782,9 @@ export function IssueThreadInteractionCard({
   }
   const statusText =
     adminOutcome === "withdrawn"
-      ? "Withdrawn"
+      ? interfaceText("m_00c0b03fcfa2ac")
       : adminOutcome === "issue_closed"
-        ? "Expired · issue closed"
+        ? interfaceText("m_9a12869653848e")
         : activeStyles
           ? activeStyles.label
           : statusLabel(interaction.status);
@@ -3898,7 +3822,7 @@ export function IssueThreadInteractionCard({
                 <StatusIcon className={cn("h-3.5 w-3.5", iconSpin && "animate-spin")} />
                 {isSecretProposal ? (
                   <span className="flex flex-col sm:flex-row sm:items-center sm:gap-1">
-                    <span>Secret binding</span>
+                    <span>{interfaceText("m_c769362857f641")}</span>
                     <span className="hidden text-current/60 sm:inline">/</span>
                     <span>{statusText}</span>
                   </span>
@@ -3923,13 +3847,10 @@ export function IssueThreadInteractionCard({
                       className="gap-1"
                       data-testid="interaction-addressee-badge"
                     >
-                      <Bot className="h-3 w-3" />
-                      For {addresseeLabel}
+                      <Bot className="h-3 w-3" />{interfaceText("m_98502e168ecfa9")}{addresseeLabel}
                     </Badge>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-xs text-xs">
-                    Directed to {addresseeLabel}. Agent-addressed interactions are owned by that agent and are kept out of the open organization attention feed.
-                  </TooltipContent>
+                  <TooltipContent side="bottom" className="max-w-xs text-xs">{interfaceText("m_f8fc21c15bacf4")}{addresseeLabel}{interfaceText("m_6aabcb218e328c")}</TooltipContent>
                 </Tooltip>
               ) : null}
             </div>
@@ -3937,27 +3858,27 @@ export function IssueThreadInteractionCard({
             <div className="mt-3 text-lg font-bold text-foreground">
               {interaction.title
                 ?? (interaction.kind === "suggest_tasks"
-                  ? "Suggested task tree"
+                  ? interfaceText("m_7673189563a39f")
                   : interaction.kind === "ask_user_questions"
                     // Only a human-only card is genuinely "for the operator";
                     // an open card is answerable by any teammate (PAP-17280).
                     ? interaction.payload.title
                       ?? (audience.policy === "human_only"
-                        ? "Questions for the operator"
-                        : "Questions to answer")
+                        ? interfaceText("m_09c5a86ef56d95")
+                        : interfaceText("m_9b3aa9589f653d"))
                   : interaction.kind === "request_checkbox_confirmation"
-                    ? "Checkbox confirmation requested"
+                    ? interfaceText("m_afc8475cf23546")
                     : isSecretProposal
-                      ? "Secret binding requested"
+                      ? interfaceText("m_c2a0831be09d67")
                     : connectionAuthorization
-                      ? `Connect your ${connectionAuthorization.providerName} to continue`
+                      ? interfaceText("m_34904dfdf6eb1a", { value0: (connectionAuthorization.providerName) })
                     : isToolAction
-                      ? "Tool approval requested"
+                      ? interfaceText("m_76497c62df975f")
                       : interaction.kind === "request_item_verdicts"
-                        ? "Review these items"
+                        ? interfaceText("m_2309d9300f709e")
                         : isPlan
-                          ? "Plan review"
-                          : "Confirmation requested")}
+                          ? interfaceText("m_649e8b22560512")
+                          : interfaceText("m_92e16918fc3e80"))}
             </div>
             {/* A connection-authorization card composes its own single body
                 below, because the closing sentence depends on whether the
@@ -3977,11 +3898,10 @@ export function IssueThreadInteractionCard({
             <TooltipTrigger asChild>
               <div className="rounded-sm border border-border/70 bg-transparent px-3 py-2 text-right text-xs text-muted-foreground">
                 <div className="font-medium text-foreground">{formatShortDate(interaction.createdAt)}</div>
-                <div>proposed by {createdByLabel}</div>
+                <div>{interfaceText("m_b1fadb1b15f440")}{createdByLabel}</div>
               </div>
             </TooltipTrigger>
-            <TooltipContent side="bottom" className="text-xs">
-              Created {formatDateTime(interaction.createdAt)}
+            <TooltipContent side="bottom" className="text-xs">{interfaceText("m_f21b805903d722")}{formatDateTime(interaction.createdAt)}
             </TooltipContent>
           </Tooltip>
         </div>}
@@ -4076,11 +3996,10 @@ export function IssueThreadInteractionCard({
             className="mt-4 border-t border-border/60 pt-3 text-xs text-muted-foreground"
             data-testid="interaction-withdrawn-footer"
           >
-            <div>
-              Withdrawn by{" "}
-              <span className="font-medium text-foreground">{resolvedByLabel ?? "an agent"}</span>
+            <div>{interfaceText("m_305109dc492182")}{" "}
+              <span className="font-medium text-foreground">{resolvedByLabel ?? interfaceText("m_647936ec3e4078")}</span>
               {resolvedByAgent ? <ResolvedByAgentChip /> : null}
-              {interaction.resolvedAt ? ` on ${formatShortDate(interaction.resolvedAt)}` : ""}
+              {interaction.resolvedAt ? interfaceText("m_763fee10d1bc90", { value0: (formatShortDate(interaction.resolvedAt)) }) : ""}
             </div>
             {adminReason ? (
               <div className="mt-1 italic text-muted-foreground/90">"{adminReason}"</div>
@@ -4102,10 +4021,9 @@ export function IssueThreadInteractionCard({
           <div
             className="mt-4 flex flex-wrap items-center gap-x-1 gap-y-0.5 border-t border-border/60 pt-3 text-xs text-muted-foreground"
             data-testid="interaction-resolved-footer"
-          >
-            Resolved by <span className="font-medium text-foreground">{resolvedByLabel}</span>
+          >{interfaceText("m_55b02ae184233b")}<span className="font-medium text-foreground">{resolvedByLabel}</span>
             {resolvedByAgent ? <ResolvedByAgentChip /> : null}
-            {interaction.resolvedAt ? ` on ${formatShortDate(interaction.resolvedAt)}` : ""}
+            {interaction.resolvedAt ? interfaceText("m_763fee10d1bc90", { value0: (formatShortDate(interaction.resolvedAt)) }) : ""}
           </div>
         ) : null}
       </div>
@@ -4118,6 +4036,7 @@ export function IssueThreadInteractionCard({
  * than a human board member) — governed agent resolution introduced in P2.
  */
 function ResolvedByAgentChip() {
+  useInterfaceLanguage();
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -4130,9 +4049,7 @@ function ResolvedByAgentChip() {
           Agent
         </Badge>
       </TooltipTrigger>
-      <TooltipContent side="bottom" className="max-w-xs text-xs">
-        Resolved by an agent under the organization's interaction governance policy — audit-distinct from a human board resolution.
-      </TooltipContent>
+      <TooltipContent side="bottom" className="max-w-xs text-xs">{interfaceText("m_a511fb1064bcb2")}</TooltipContent>
     </Tooltip>
   );
 }

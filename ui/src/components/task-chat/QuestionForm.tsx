@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Check,
@@ -135,6 +136,7 @@ function SelectOption({
   disabled: boolean;
   onClick: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <button
       type="button"
@@ -176,9 +178,7 @@ function SelectOption({
         <span className="flex flex-wrap items-center gap-1.5 text-sm font-medium leading-5 text-foreground">
           <span>{label}</span>
           {recommended ? (
-            <span className="rounded-sm bg-background/70 px-1.5 py-0.5 text-(length:--text-micro) font-medium text-muted-foreground">
-              Recommended
-            </span>
+            <span className="rounded-sm bg-background/70 px-1.5 py-0.5 text-(length:--text-micro) font-medium text-muted-foreground">{interfaceText("m_d70604e8430461")}</span>
           ) : null}
         </span>
         {description ? (
@@ -198,6 +198,7 @@ export function QuestionResponseSummary({
   questionSet: PaperclipQuestionSet;
   response: PaperclipQuestionResponse;
 }) {
+  useInterfaceLanguage();
   return (
     <dl className="grid gap-2 text-sm">
       {questionSet.questions.map((question) => {
@@ -225,7 +226,7 @@ export function QuestionResponseSummary({
               </span>
             </dt>
             <dd className="mt-0.5 text-foreground">
-              {values.length > 0 ? values.join(", ") : "No answer"}
+              {values.length > 0 ? values.join(", ") : interfaceText("m_7e49c68db30e39")}
             </dd>
           </div>
         );
@@ -254,6 +255,7 @@ function QuestionFormForRequest({
   onSubmit,
   onCancel,
 }: QuestionFormProps) {
+  useInterfaceLanguage();
   const takeoverActions = useTaskChatComposerTakeoverActions();
   // A provider default is an editable draft only. An existing response or
   // saved draft, including an explicitly cleared value, always wins. State
@@ -331,9 +333,7 @@ function QuestionFormForRequest({
   );
   if (!question)
     return (
-      <p className="text-sm text-muted-foreground">
-        No answerable questions were provided.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_f088561afe97f5")}</p>
     );
   const answer = answers[question.id] ?? {};
   const selected = answer.selectedOptionIds ?? [];
@@ -474,26 +474,26 @@ function QuestionFormForRequest({
     questionSet.questions.length > 1 ? (
       <nav
         className="flex shrink-0 items-center gap-1"
-        aria-label="Question pagination"
+        aria-label={interfaceText("m_032747727a6c9f")}
       >
         <Button
           type="button"
           size="icon-xs"
           variant="ghost"
-          aria-label="Previous question"
+          aria-label={interfaceText("m_d237e091b80cd2")}
           disabled={disabled || working != null || page === 0}
           onClick={() => setPage((current) => current - 1)}
         >
           <ChevronLeft aria-hidden />
         </Button>
         <span className="min-w-10 text-center tabular-nums">
-          {page + 1} of {questionSet.questions.length}
+          {page + 1}{interfaceText("m_a4282e4b2298b9")}{questionSet.questions.length}
         </span>
         <Button
           type="button"
           size="icon-xs"
           variant="ghost"
-          aria-label="Next question"
+          aria-label={interfaceText("m_f7a9d7437e9646")}
           // The arrows browse; they do not validate. A send that finds an
           // earlier answer missing returns to that question (see submit).
           disabled={disabled || working != null || isLastPage}
@@ -545,7 +545,7 @@ function QuestionFormForRequest({
       {questionSet.description ? (
         <div
           role="region"
-          aria-label="Question context"
+          aria-label={interfaceText("m_2b0dfe494052c7")}
           tabIndex={0}
           className="mb-3 max-h-96 overflow-auto text-sm text-muted-foreground"
         >
@@ -554,7 +554,7 @@ function QuestionFormForRequest({
       ) : null}
       {question.answerMode === "text" && presentation !== "decision" ? (
         <div className="mb-2 flex items-center gap-3 text-xs text-muted-foreground">
-          {question.answerMode === "text" ? <span>Write an answer</span> : null}
+          {question.answerMode === "text" ? <span>{interfaceText("m_dd394ad8bf24c8")}</span> : null}
         </div>
       ) : null}
       {pagination ? (
@@ -598,7 +598,7 @@ function QuestionFormForRequest({
             value={answer.text ?? ""}
             disabled={disabled || working != null}
             onChange={(value) => updateAnswer({ text: value })}
-            placeholder="Write your answer"
+            placeholder={interfaceText("m_a2639bd01faffe")}
             imageUploadHandler={imageUploadHandler}
             mentions={mentions}
             autoFocus
@@ -629,8 +629,8 @@ function QuestionFormForRequest({
                     [question.id]: event.target.value,
                   }))
                 }
-                placeholder="Filter choices"
-                aria-label={`Filter choices for ${question.prompt}`}
+                placeholder={interfaceText("m_386caed3a289cd")}
+                aria-label={interfaceText("m_267229ba168576", { value0: (question.prompt) })}
                 className="pl-8"
               />
             </label>
@@ -652,7 +652,7 @@ function QuestionFormForRequest({
             <div className="space-y-1.5">
               <SelectOption
                 id={`${id}-${question.id}-custom`}
-                label={question.customAnswer?.label ?? "Other"}
+                label={question.customAnswer?.label ?? interfaceText("m_f97e9da0e3b879")}
                 selected={isCustomActive}
                 multiple={multiple}
                 disabled={disabled || working != null}
@@ -665,7 +665,7 @@ function QuestionFormForRequest({
                   testId="question-other-answer-composer"
                   value={answer.customText ?? ""}
                   placeholder={
-                    question.customAnswer?.placeholder ?? "Type your answer"
+                    question.customAnswer?.placeholder ?? interfaceText("m_d078bf7520a710")
                   }
                   disabled={disabled || working != null}
                   onChange={(value) =>
@@ -707,9 +707,7 @@ function QuestionFormForRequest({
             >
               {working === "cancel" ? (
                 <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
-              ) : null}{" "}
-              Cancel
-            </Button>
+              ) : null}{" "}{interfaceText("m_19766ed6ccb2f4")}</Button>
           ) : null}
           {!question.required ? (
             <Button
@@ -718,9 +716,7 @@ function QuestionFormForRequest({
               variant="outline"
               disabled={busy}
               onClick={skipQuestion}
-            >
-              Skip
-            </Button>
+            >{interfaceText("m_28d03596d24eeb")}</Button>
           ) : null}
           <Button
             type="button"
@@ -731,7 +727,7 @@ function QuestionFormForRequest({
             {working === "submit" ? (
               <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
             ) : null}
-            {isLastPage ? (questionSet.submitLabel ?? "Submit answers") : "Next"}
+            {isLastPage ? (questionSet.submitLabel ?? interfaceText("m_6d23261523eb64")) : interfaceText("m_1ff57a29d7c9d1")}
           </Button>
         </div>
       </DecisionCardFooter>

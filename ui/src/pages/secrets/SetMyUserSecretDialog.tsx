@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { CompanySecret, UserSecretDefinition } from "@paperclipai/shared";
@@ -39,6 +40,7 @@ export function SetMyUserSecretDialog({
   onOpenChange: (open: boolean) => void;
   onSaved?: (secret: CompanySecret) => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const [value, setValue] = useState("");
@@ -75,7 +77,7 @@ export function SetMyUserSecretDialog({
       queryClient.invalidateQueries({ queryKey: queryKeys.secrets.myUserSecrets(companyId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.secrets.userDefinitions(companyId) });
       pushToast({
-        title: existingSecret ? "Value updated" : "Value saved",
+        title: existingSecret ? interfaceText("m_2590dbf540c154") : interfaceText("m_ee25dd4cdb9b54"),
         body: definition?.name,
         tone: "success",
       });
@@ -100,14 +102,12 @@ export function SetMyUserSecretDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {existingSecret ? "Update your value" : "Set your value"}
+            {existingSecret ? interfaceText("m_5aa98f20977491") : interfaceText("m_830bced8c16829")}
             <UserSecretChip />
           </DialogTitle>
           <DialogDescription>
             {definition ? (
-              <>
-                This value is yours only. It is used when you are the user responsible for a run that
-                needs <span className="font-mono">{definition.key}</span>.
+              <>{interfaceText("m_e4c5e54043064b")}<span className="font-mono">{definition.key}</span>.
               </>
             ) : null}
           </DialogDescription>
@@ -127,32 +127,27 @@ export function SetMyUserSecretDialog({
 
             {isExternal ? (
               <div className="space-y-1">
-                <label className="text-xs font-medium text-foreground">External reference</label>
+                <label className="text-xs font-medium text-foreground">{interfaceText("m_5c54252e696c32")}</label>
                 <Input
                   value={externalRef}
                   onChange={(event) => setExternalRef(event.target.value)}
-                  placeholder="provider reference or ARN"
+                  placeholder={interfaceText("m_3aaaf8111e7869")}
                   className="font-mono text-sm"
                   autoFocus
                 />
-                <p className="text-(length:--text-micro) text-muted-foreground">
-                  Points at your own credential in the configured provider. Paperclip stores the
-                  reference, not the value.
-                </p>
+                <p className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_293a244f508e47")}</p>
               </div>
             ) : (
               <div className="space-y-1">
-                <label className="text-xs font-medium text-foreground">Your value</label>
+                <label className="text-xs font-medium text-foreground">{interfaceText("m_92b09f9a43ab14")}</label>
                 <Textarea
                   value={value}
                   onChange={(event) => setValue(event.target.value)}
-                  placeholder="Paste your token or credential"
+                  placeholder={interfaceText("m_2e889692433b9b")}
                   className="font-mono text-sm min-h-(--sz-80px)"
                   autoFocus
                 />
-                <p className="text-(length:--text-micro) text-muted-foreground">
-                  Stored encrypted. Never shown back to anyone, including admins.
-                </p>
+                <p className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_b803c895fd19a6")}</p>
               </div>
             )}
 
@@ -161,11 +156,9 @@ export function SetMyUserSecretDialog({
         ) : null}
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={save.isPending}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={save.isPending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button onClick={() => save.mutate()} disabled={!canSave || save.isPending}>
-            {save.isPending ? "Saving…" : existingSecret ? "Update value" : "Save value"}
+            {save.isPending ? interfaceText("m_23e39291d61358") : existingSecret ? interfaceText("m_d508b1f3b6c782") : interfaceText("m_2e2689eb3eaf0a")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, FileCheck2 } from "lucide-react";
@@ -124,11 +125,12 @@ export function CoordinatorCreatedTaskLink({ task, createdAt }: {
   createdAt?: Date | string | null;
   task: Pick<ConversationTaskHandoff, "issueId" | "identifier" | "title"> & { status?: ConversationTaskHandoff["status"] };
 }) {
+  useInterfaceLanguage();
   return <Link to={`/issues/${task.identifier ?? task.issueId}`} className="coordinator-created-task">
-    {task.status ? <StatusIcon status={task.status} size="lg" /> : <FileCheck2 className="size-5 shrink-0 text-muted-foreground" aria-label="Task created" />}
+    {task.status ? <StatusIcon status={task.status} size="lg" /> : <FileCheck2 className="size-5 shrink-0 text-muted-foreground" aria-label={interfaceText("m_a3e3e968c40e59")} />}
     <span className="min-w-0 flex-1">
       <span className="block truncate text-sm font-medium">{task.title}</span>
-      <span className="block truncate text-xs text-muted-foreground"><span className="font-mono">{task.identifier ?? task.issueId}</span> · Created</span>
+      <span className="block truncate text-xs text-muted-foreground"><span className="font-mono">{task.identifier ?? task.issueId}</span>{interfaceText("m_cc274092b39596")}</span>
     </span>
     {createdAt ? <CoordinatorRelativeTime value={createdAt} className="shrink-0 text-xs text-muted-foreground" /> : null}
     <ArrowUpRight className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -136,6 +138,7 @@ export function CoordinatorCreatedTaskLink({ task, createdAt }: {
 }
 
 function CreatedTaskLinks({ interaction }: { interaction: SuggestTasksInteraction }) {
+  useInterfaceLanguage();
   const { userId } = useCoordinatorWorkspaceEnabled();
   const tasks = interaction.result?.createdTasks ?? [];
   const ids = tasks.map(task => task.issueId).sort();
@@ -145,7 +148,7 @@ function CreatedTaskLinks({ interaction }: { interaction: SuggestTasksInteractio
     enabled: ids.length > 0,
     retry: false,
   });
-  if (tasks.length === 0) return <p className="p-4 text-sm text-muted-foreground">No tasks were created.</p>;
+  if (tasks.length === 0) return <p className="p-4 text-sm text-muted-foreground">{interfaceText("m_55b1825ba6cd17")}</p>;
   return <div className="divide-y divide-border">
     {tasks.map(task => {
       const summary = query.data?.find(candidate => candidate.id === task.issueId);

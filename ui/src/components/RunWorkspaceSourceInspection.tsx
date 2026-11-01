@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMutation } from "@tanstack/react-query";
 import { ENVIRONMENT_LEASE_POLICIES, WORKSPACE_SOURCE_VERIFICATION_REASONS } from "@paperclipai/shared";
 import { issuesApi } from "../api/issues";
@@ -20,6 +21,7 @@ function recordedFailure(evidence: Record<string, unknown>): string {
 }
 
 export function RunWorkspaceSourceInspection({ issueId, runId }: { issueId: string; runId: string }) {
+  useInterfaceLanguage();
   const listing = useMutation({ mutationFn: () => issuesApi.recoveryActions(issueId, { runId }) });
   const inspection = useMutation({ mutationFn: (actionId: string) => issuesApi.recoveryActions(issueId, { runId, actionId }) });
   const pending = listing.isPending || inspection.isPending;
@@ -28,30 +30,28 @@ export function RunWorkspaceSourceInspection({ issueId, runId }: { issueId: stri
   return (
     <div className="space-y-2" data-testid="run-workspace-source-inspection">
       <Button variant="outline" size="sm" disabled={pending} onClick={() => { inspection.reset(); listing.mutate(); }}>
-        {pending ? "Inspecting recovery…" : "Inspect recovery"}
+        {pending ? interfaceText("m_d0e50e170fe4cf") : interfaceText("m_dec40ea6a2c252")}
       </Button>
       {error ? <p role="alert" className="text-xs text-destructive">
-        {error instanceof Error ? error.message : "Recovery inspection failed. Try inspecting again."}
+        {error instanceof Error ? error.message : interfaceText("m_5a03f7e0474e85")}
       </p> : null}
-      {listing.data?.actions.length === 0 ? <p className="text-xs text-muted-foreground">No recorded recovery action for this run.</p> : null}
+      {listing.data?.actions.length === 0 ? <p className="text-xs text-muted-foreground">{interfaceText("m_4de95c98e00f03")}</p> : null}
       {listing.data?.actions.map(action => (
         <div key={action.id} className="space-y-2 text-xs">
-          <p>Recorded failure: <code className="font-mono">{recordedFailure(action.evidence)}</code></p>
+          <p>{interfaceText("m_1173acf46ab014")}<code className="font-mono">{recordedFailure(action.evidence)}</code></p>
           <p className="font-mono text-muted-foreground">{action.id} · {action.status}</p>
-          <Button variant="ghost" size="sm" disabled={pending} onClick={() => inspection.mutate(action.id)}>
-            Inspect current source
-          </Button>
+          <Button variant="ghost" size="sm" disabled={pending} onClick={() => inspection.mutate(action.id)}>{interfaceText("m_c9d0068f960a00")}</Button>
         </div>
       ))}
       {current ? <div className="space-y-2 text-xs" role="status">
-        <p className="font-medium">Current recorded-source identity</p>
-        <p className="font-mono text-muted-foreground">Action {current.actionId}</p>
-        <p className="text-muted-foreground">This read-only observation checks recorded identity. It does not confirm provider termination, local files, or successful preservation.</p>
-        {current.status === "verified" ? <p>Recorded-source identity verified.</p>
-          : current.status === "not_inspected" ? <p>Source not inspected: this record exceeds the inspection limit. Service attention is required.</p>
-          : <p>Blocked: <code className="font-mono">{current.sourceVerification?.reason ?? current.failureCode}</code>
-            {current.sourceVerification?.observedLeasePolicy ? <> · lease policy <code className="font-mono">{current.sourceVerification.observedLeasePolicy}</code></> : null}</p>}
-        <p className="font-mono text-muted-foreground">Observed {formatDateTime(current.observedAt)}</p>
+        <p className="font-medium">{interfaceText("m_3e500d99cbd33e")}</p>
+        <p className="font-mono text-muted-foreground">{interfaceText("m_4de725b22f7dbf")}{current.actionId}</p>
+        <p className="text-muted-foreground">{interfaceText("m_652889e296706d")}</p>
+        {current.status === "verified" ? <p>{interfaceText("m_0db2db4d805ab5")}</p>
+          : current.status === "not_inspected" ? <p>{interfaceText("m_f5ae2713b956fe")}</p>
+          : <p>{interfaceText("m_760c921c3cb781")}<code className="font-mono">{current.sourceVerification?.reason ?? current.failureCode}</code>
+            {current.sourceVerification?.observedLeasePolicy ? <>{interfaceText("m_f7b50405ee5232")}<code className="font-mono">{current.sourceVerification.observedLeasePolicy}</code></> : null}</p>}
+        <p className="font-mono text-muted-foreground">{interfaceText("m_746a233a9cd31f")}{formatDateTime(current.observedAt)}</p>
       </div> : null}
     </div>
   );

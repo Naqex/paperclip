@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Sun } from "lucide-react";
@@ -70,6 +71,7 @@ export function AgingItemRow({
   onDismiss: (item: AttentionItem) => void;
   onSnooze: (item: AttentionItem, snoozedUntil: string) => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const idleDays = attentionIdleDays(item, now);
@@ -77,12 +79,12 @@ export function AgingItemRow({
     mutationFn: () => decisionQueuesApi.setKeep(companyId, item.sourceKind, item.subject.id, true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attention(companyId) });
-      pushToast({ title: "Kept on desk", body: item.subject.title ?? undefined, tone: "success" });
+      pushToast({ title: interfaceText("m_d5c41d425cac94"), body: item.subject.title ?? undefined, tone: "success" });
     },
     onError: (error) =>
       pushToast({
-        title: "Could not keep this decision",
-        body: error instanceof Error ? error.message : "Please try again.",
+        title: interfaceText("m_f5156cd3b49f04"),
+        body: error instanceof Error ? error.message : interfaceText("m_eea4fb33efd382"),
         tone: "error",
       }),
   });
@@ -90,8 +92,7 @@ export function AgingItemRow({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between gap-2 px-1">
-        <span className="text-(length:--text-nano) text-muted-foreground">
-          Idle {idleDays} {idleDays === 1 ? "day" : "days"}
+        <span className="text-(length:--text-nano) text-muted-foreground">{interfaceText("m_5e16d1a24e5875")}{idleDays} {idleDays === 1 ? interfaceText("m_944c27e5b97ab7") : interfaceText("m_ab51004e9d71a4")}
         </span>
         <Button
           type="button"
@@ -103,7 +104,7 @@ export function AgingItemRow({
         >
           {keep.isPending && <Loader2 className="h-3 w-3 animate-spin" />}
           <Sun className="h-3.5 w-3.5" />
-          {item.keep ? "Kept" : "Keep on desk"}
+          {item.keep ? interfaceText("m_c159e7465c1ab2") : interfaceText("m_00ede66c9842be")}
         </Button>
       </div>
       <AttentionQueueRow

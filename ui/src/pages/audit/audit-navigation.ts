@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 export type AuditSection = "activity" | "runs" | "costs" | "budgets" | "timeline" | "commentary";
 
 export const AUDIT_SECTIONS: ReadonlyArray<{
@@ -5,12 +6,12 @@ export const AUDIT_SECTIONS: ReadonlyArray<{
   label: string;
   href: string;
 }> = [
-  { value: "activity", label: "Activity", href: "/activity" },
-  { value: "runs", label: "Runs", href: "/activity/runs" },
-  { value: "commentary", label: "Commentary", href: "/activity/commentary" },
-  { value: "costs", label: "Costs", href: "/activity/costs" },
-  { value: "budgets", label: "Budgets", href: "/activity/budgets" },
-  { value: "timeline", label: "Timeline", href: "/activity/timeline" },
+  { value: "activity", get label() { return interfaceText("m_38da1505ca8373"); }, href: "/activity" },
+  { value: "runs", get label() { return interfaceText("m_848f54e89660ce"); }, href: "/activity/runs" },
+  { value: "commentary", get label() { return interfaceText("m_4a7a75ab79cde0"); }, href: "/activity/commentary" },
+  { value: "costs", get label() { return interfaceText("m_b88fc5fc476514"); }, href: "/activity/costs" },
+  { value: "budgets", get label() { return interfaceText("m_a1a06e046b0b9a"); }, href: "/activity/budgets" },
+  { value: "timeline", get label() { return interfaceText("m_9dcff98e275f0c"); }, href: "/activity/timeline" },
 ];
 
 export interface AuditLinkScope {

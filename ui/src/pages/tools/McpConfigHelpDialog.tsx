@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { HelpCircle } from "lucide-react";
 import { AgentSetupPrompt } from "@/components/AgentSetupPrompt";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import { MCP_CONFIG_HELP_INSTRUCTIONS, MCP_CONFIG_HELP_PROMPT } from "@paperclip
  * anything the operator has typed.
  */
 export function McpConfigHelpDialog() {
+  useInterfaceLanguage();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -29,18 +31,15 @@ export function McpConfigHelpDialog() {
           variant="ghost"
           size="icon"
           className="h-6 w-6 shrink-0 text-muted-foreground hover:text-foreground"
-          aria-label="Get help creating an MCP config"
+          aria-label={interfaceText("m_2b39abc0e46ce5")}
         >
           <HelpCircle className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-(--sz-85vh) overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Ask an agent for an MCP config</DialogTitle>
-          <DialogDescription>
-            Don't know the URL or headers a tool needs? Hand this request to an agent and paste back what it
-            gives you.
-          </DialogDescription>
+          <DialogTitle>{interfaceText("m_fd679cf37003a3")}</DialogTitle>
+          <DialogDescription>{interfaceText("m_ea0f20d6d3e627")}</DialogDescription>
         </DialogHeader>
 
         <ol className="list-decimal space-y-1.5 pl-5 text-sm text-muted-foreground">
@@ -50,9 +49,7 @@ export function McpConfigHelpDialog() {
         </ol>
 
         <div className="space-y-2">
-          <label htmlFor="mcp-config-help-prompt" className="text-sm font-medium text-foreground">
-            Prompt to send
-          </label>
+          <label htmlFor="mcp-config-help-prompt" className="text-sm font-medium text-foreground">{interfaceText("m_928a8e35e48cbc")}</label>
           <Textarea
             id="mcp-config-help-prompt"
             readOnly
@@ -67,9 +64,9 @@ export function McpConfigHelpDialog() {
         <div>
           <AgentSetupPrompt
             prompt={MCP_CONFIG_HELP_PROMPT}
-            label="Get a config with an agent"
-            title="MCP configuration"
-            description="Paste this into your agent to create an MCP config, then paste its JSON reply back into Paperclip."
+            label={interfaceText("m_6e59e011c10650")}
+            title={interfaceText("m_ed6c3ce8284314")}
+            description={interfaceText("m_18774b617e7928")}
           />
         </div>
       </DialogContent>

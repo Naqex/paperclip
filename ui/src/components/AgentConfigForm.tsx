@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ACCOUNT_BOUND_MODEL_DISCOVERY_QUERY_OPTIONS, isAccountBoundAcpxAgent } from "@/lib/native-model-catalog";
 import { useConnectionModels } from "./ai-connections/useConnectionModels";
 import { agentHarnessType, agentRunner, paperclipRunnerProfileForHarness, normalizeClaudeRunnerOptions, type AgentRunnerChoice } from "@paperclipai/shared";
@@ -279,35 +280,35 @@ function formatArgList(value: unknown): string {
 }
 
 const openCodeThinkingEffortOptions = [
-  { id: "", label: "Auto" },
-  { id: "minimal", label: "Minimal" },
-  { id: "low", label: "Low" },
-  { id: "medium", label: "Medium" },
-  { id: "high", label: "High" },
-  { id: "xhigh", label: "X-High" },
-  { id: "max", label: "Max" },
+  { id: "", get label() { return interfaceText("m_0286249762f7c9"); } },
+  { id: "minimal", get label() { return interfaceText("m_057b5de48d7b90"); } },
+  { id: "low", get label() { return interfaceText("m_f793de205ead5a"); } },
+  { id: "medium", get label() { return interfaceText("m_8e588cd187741f"); } },
+  { id: "high", get label() { return interfaceText("m_c4ebc6d4a5832c"); } },
+  { id: "xhigh", get label() { return interfaceText("m_393d3e4bf2eea4"); } },
+  { id: "max", get label() { return interfaceText("m_a1a5936d3b0f8a"); } },
 ] as const;
 
 const cursorModeOptions = [
-  { id: "", label: "Auto" },
+  { id: "", get label() { return interfaceText("m_0286249762f7c9"); } },
   { id: "plan", label: "Plan" },
   { id: "ask", label: "Ask" },
 ] as const;
 
 const claudeThinkingEffortOptions = [
-  { id: "", label: "Auto" },
-  { id: "low", label: "Low" },
-  { id: "medium", label: "Medium" },
-  { id: "high", label: "High" },
+  { id: "", get label() { return interfaceText("m_0286249762f7c9"); } },
+  { id: "low", get label() { return interfaceText("m_f793de205ead5a"); } },
+  { id: "medium", get label() { return interfaceText("m_8e588cd187741f"); } },
+  { id: "high", get label() { return interfaceText("m_c4ebc6d4a5832c"); } },
 ] as const;
 
 // Kimi exposes low/high/max (no "medium") via each model's support_efforts;
 // the kimi_local adapter maps a legacy "medium" onto "high" at runtime.
 const kimiThinkingEffortOptions = [
-  { id: "", label: "Auto" },
-  { id: "low", label: "Low" },
-  { id: "high", label: "High" },
-  { id: "max", label: "Max" },
+  { id: "", get label() { return interfaceText("m_0286249762f7c9"); } },
+  { id: "low", get label() { return interfaceText("m_f793de205ead5a"); } },
+  { id: "high", get label() { return interfaceText("m_c4ebc6d4a5832c"); } },
+  { id: "max", get label() { return interfaceText("m_a1a5936d3b0f8a"); } },
 ] as const;
 
 const MAX_TURN_CONTINUATION_DEFAULT_MAX_ATTEMPTS = 2;
@@ -343,6 +344,7 @@ function ConfigSections({ order, className, children }: {
 /* ---- Form ---- */
 
 export function AgentConfigForm(props: AgentConfigFormProps) {
+  useInterfaceLanguage();
   const { mode, adapterModels: externalModels } = props;
   const isCreate = mode === "create";
   const cards = props.sectionLayout === "cards";
@@ -1008,7 +1010,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
     ? environmentDisplayLabel(instanceDefaultEnvironment)
     : managedSandboxOnly
       ? "Paperclip Computer"
-      : "Local";
+      : interfaceText("m_8c31e6e7223097");
 
   const modelProvider = adapterType === "opencode_local" && aiConnectionBindingSchema.safeParse(
     (overlay.runtime.runtimeConfig as Record<string, unknown> | undefined)?.aiConnection ?? runtimeConfig.aiConnection,
@@ -1235,7 +1237,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
   });
   const [testActionPending, setTestActionPending] = useState(false);
   const [testActionError, setTestActionError] = useState<string | null>(null);
-  const testActionLabel = "Test";
+  const testActionLabel = interfaceText("m_532eaabd957488");
   const isSavePending = !isCreate && Boolean(props.isSaving);
   const testEnvironmentDisabled = testActionPending || isSavePending || !selectedCompanyId;
 
@@ -1442,9 +1444,9 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
           : adapterType === "kimi_local"
             ? kimiThinkingEffortOptions
             : adapterType === "pi_local"
-              ? [{ id: "", label: "Auto" }, ...["off", "minimal", "low", "medium", "high", "xhigh"].map(id => ({ id, label: id }))]
+              ? [{ id: "", label: interfaceText("m_0286249762f7c9") }, ...["off", "minimal", "low", "medium", "high", "xhigh"].map(id => ({ id, label: id }))]
               : harnessType === "claude_local" || harnessType === "grok_local"
-                ? [{ id: "", label: "Auto" }, ...setupEfforts(harnessType, currentModelId).map((id) => ({
+                ? [{ id: "", label: interfaceText("m_0286249762f7c9") }, ...setupEfforts(harnessType, currentModelId).map((id) => ({
                     id,
                     label: id === "xhigh" ? "X-High" : id[0].toUpperCase() + id.slice(1),
                   }))]
@@ -1543,9 +1545,9 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
         {isDirty && !props.hideInlineSave && (
           <div className="sticky top-0 z-10 flex items-center justify-end border-b border-primary/20 bg-background/90 px-4 py-2 backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <span className="text-xs text-muted-foreground">Unsaved changes</span>
+              <span className="text-xs text-muted-foreground">{interfaceText("m_a710c2b90913b5")}</span>
               <Button size="sm" onClick={handleSave} disabled={props.isSaving}>
-                {props.isSaving ? "Saving..." : "Save"}
+                {props.isSaving ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_1509f561f24165")}
               </Button>
             </div>
           </div>
@@ -1554,8 +1556,8 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
         {props.environmentVariablesPlacement === "secrets" && (
           <div data-config-section="environment-variables" className={cn(!cards && "border-b border-border")}>
             {cards
-              ? <h3 className="mb-3 text-sm font-medium">Environment variables</h3>
-              : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Environment variables</div>
+              ? <h3 className="mb-3 text-sm font-medium">{interfaceText("m_aac7246f5e9714")}</h3>
+              : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_aac7246f5e9714")}</div>
             }
             <div className={cn(cards ? "rounded-lg border border-border p-4" : "px-4 pb-3")}>
               {environmentVariablesEditor}
@@ -1565,8 +1567,8 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
 
         <div data-config-section="secrets" className={cn(!cards && "border-b border-border")}>
           {cards
-            ? <h3 className="mb-3 text-sm font-medium">Secret access</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Secret access</div>
+            ? <h3 className="mb-3 text-sm font-medium">{interfaceText("m_1a28ac1036029a")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_1a28ac1036029a")}</div>
           }
           <div className={cn(cards ? "space-y-3 rounded-lg border border-border p-4" : "space-y-3 px-4 pb-3")}>
             <p className="text-xs text-muted-foreground">{help.secretAccess}</p>
@@ -1592,28 +1594,25 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
         <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-4">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-medium">Upgrade to Paperclip Runner</p>
-              <p className="text-sm text-muted-foreground">
-                Keep your harness, model, account, and compatible settings.
-                New sessions start fresh; past runs stay available.
-              </p>
+              <p className="text-sm font-medium">{interfaceText("m_ffd95e5b0b42ef")}</p>
+              <p className="text-sm text-muted-foreground">{interfaceText("m_56e1cc570d253a")}</p>
               {canQualifyRunnerUpgrade && runnerAvailability?.defaultRunner !== "paperclip" ? (
-                <p className="text-xs text-muted-foreground">The upgrade will verify your computer first. This can take a few minutes.</p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_779f7e61cb5190")}</p>
               ) : null}
               {upgradeWarnings.map(warning => <p key={warning.field} className="text-xs text-muted-foreground">{warning.message}</p>)}
               {upgradeEnvironmentChanged ? (
-                <p className="text-xs text-muted-foreground">Save your computer change before upgrading the runner.</p>
-              ) : isDirty ? <p className="text-xs text-muted-foreground">Your unsaved changes will be included.</p> : null}
+                <p className="text-xs text-muted-foreground">{interfaceText("m_dc0cb98fa4341e")}</p>
+              ) : isDirty ? <p className="text-xs text-muted-foreground">{interfaceText("m_d1f6ae5eca6f0f")}</p> : null}
             </div>
             <Button size="sm" className="self-end sm:self-auto" onClick={upgradeRunner} disabled={runnerUpgradePending || upgradeEnvironmentChanged || (!isCreate && props.isSaving)}>
               {runnerUpgradePending ? <Loader2 className="size-4 animate-spin" /> : null}
-              {runnerUpgradePending ? "Upgrading…" : "Upgrade runner"}
+              {runnerUpgradePending ? interfaceText("m_085f9cab21395c") : interfaceText("m_242bc76013bd70")}
             </Button>
           </div>
           {runnerUpgradeError ? <p role="alert" className="text-sm text-destructive">{runnerUpgradeError}</p> : null}
         </div>
       ) : null}
-      {runnerUpgraded ? <p role="status" className="text-sm text-muted-foreground">Upgraded to Paperclip Runner.</p> : null}
+      {runnerUpgraded ? <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_6d95803e33d7c5")}</p> : null}
       {adapterType === "paperclip_runner" && upgradeWarnings.length > 0 ? (
         <div role="status" className="space-y-1 rounded-lg border border-border bg-muted/30 p-4">
           {upgradeWarnings.map(warning => <p key={warning.field} className="text-sm text-muted-foreground">{warning.message}</p>)}
@@ -1624,13 +1623,13 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       {isDirty && !props.hideInlineSave && (
         <div className="sticky top-0 z-10 flex items-center justify-end px-4 py-2 bg-background/90 backdrop-blur-sm border-b border-primary/20">
           <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground">Unsaved changes</span>
+            <span className="text-xs text-muted-foreground">{interfaceText("m_a710c2b90913b5")}</span>
             <Button
               size="sm"
               onClick={handleSave}
               disabled={!isCreate && props.isSaving}
             >
-              {!isCreate && props.isSaving ? "Saving..." : "Save"}
+              {!isCreate && props.isSaving ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_1509f561f24165")}
             </Button>
           </div>
         </div>
@@ -1640,29 +1639,29 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       {!isCreate && (
         <div data-config-section="identity" className={cn(!cards && "border-b border-border")}>
           {cards
-            ? <h3 className="text-sm font-medium mb-3">{props.sectionTitles?.["identity"] ?? "Identity"}</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Identity</div>
+            ? <h3 className="text-sm font-medium mb-3">{props.sectionTitles?.["identity"] ?? interfaceText("m_999f23fcd7bec7")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_999f23fcd7bec7")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
-            <Field label="Name" hint={help.name}>
+            <Field label={interfaceText("m_dcd1d5223f73b3")} hint={help.name}>
               <DraftInput
                 value={eff("identity", "name", props.agent.name)}
                 onCommit={(v) => mark("identity", "name", v)}
                 immediate
                 className={inputClass}
-                placeholder="Agent name"
+                placeholder={interfaceText("m_1cfb21871a0357")}
               />
             </Field>
-            <Field label="Title" hint={help.title}>
+            <Field label={interfaceText("m_7e8cd2056da73a")} hint={help.title}>
               <DraftInput
                 value={eff("identity", "title", props.agent.title ?? "")}
                 onCommit={(v) => mark("identity", "title", v || null)}
                 immediate
                 className={inputClass}
-                placeholder="e.g. VP of Engineering"
+                placeholder={interfaceText("m_3d7748a741b385")}
               />
             </Field>
-            <Field label="Reports to" hint={help.reportsTo}>
+            <Field label={interfaceText("m_2b488c09391b5a")} hint={help.reportsTo}>
               <ReportsToPicker
                 agents={companyAgents}
                 value={eff("identity", "reportsTo", props.agent.reportsTo ?? null)}
@@ -1673,7 +1672,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
             </Field>
             {isLocal && !props.hidePromptTemplate && (
               <>
-                <Field label="Prompt Template" hint={help.promptTemplate}>
+                <Field label={interfaceText("m_8cd80ebe4e0ddf")} hint={help.promptTemplate}>
                   <MarkdownEditor
                     value={eff(
                       "adapterConfig",
@@ -1681,7 +1680,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                       String(config.promptTemplate ?? ""),
                     )}
                     onChange={(v) => mark("adapterConfig", "promptTemplate", v ?? "")}
-                    placeholder="You are agent {{ agent.name }}. Your role is {{ agent.role }}..."
+                    placeholder={interfaceText("m_d325109b166d92")}
                     contentClassName="min-h-(--sz-88px) text-sm font-mono"
                     imageUploadHandler={async (file) => {
                       const namespace = `agents/${props.agent.id}/prompt-template`;
@@ -1690,9 +1689,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                     }}
                   />
                 </Field>
-                <div className="rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-100">
-                  Prompt template is replayed on every heartbeat. Keep it compact and dynamic to avoid recurring token cost and cache churn.
-                </div>
+                <div className="rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-100">{interfaceText("m_752de465d66120")}</div>
               </>
             )}
           </div>
@@ -1706,24 +1703,19 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
         // Render the environment read-only instead of the selectable picker.
         <div data-config-section="environment" className={cn(!cards && (isCreate ? "border-t border-border" : "border-b border-border"))}>
           {cards
-            ? <h3 className="text-sm font-medium mb-3">Environment</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Environment</div>
+            ? <h3 className="text-sm font-medium mb-3">{interfaceText("m_9e471951a1b410")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_9e471951a1b410")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
             <Field
-              label="Default environment"
-              hint="This instance runs all agents in the Kubernetes sandbox. Local execution is disabled."
+              label={interfaceText("m_4929026b6fc93b")}
+              hint={interfaceText("m_336e70dfd72000")}
             >
               {kubernetesEnvironment ? (
                 <div className={cn(inputClass, "flex items-center text-muted-foreground")}>
-                  {kubernetesEnvironment.name} · Kubernetes sandbox
-                </div>
+                  {kubernetesEnvironment.name}{interfaceText("m_7f1c8cc6730bbd")}</div>
               ) : (
-                <div className="rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
-                  This instance requires the Kubernetes sandbox, but no managed Kubernetes
-                  environment is available for this organization yet. Configure one before creating
-                  agents; execution will not fall back to local.
-                </div>
+                <div className="rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">{interfaceText("m_e6dc1c9194db6a")}</div>
               )}
             </Field>
           </div>
@@ -1731,14 +1723,14 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       ) : showEnvironmentOverrideControl ? (
         <div data-config-section="environment" className={cn(!cards && (isCreate ? "border-t border-border" : "border-b border-border"))}>
           {cards
-            ? <h3 className="text-sm font-medium mb-3">Environment</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Environment</div>
+            ? <h3 className="text-sm font-medium mb-3">{interfaceText("m_9e471951a1b410")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_9e471951a1b410")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
-            <Field label="Environment override">
+            <Field label={interfaceText("m_557f46090c16bc")}>
               <div className="space-y-2">
                 <SelectPopover
-                  aria-label="Environment override"
+                  aria-label={interfaceText("m_557f46090c16bc")}
                   value={currentDefaultEnvironmentId}
                   onValueChange={(nextValue) => {
                     if (isCreate) {
@@ -1783,7 +1775,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
         </div>
         <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
           {showAdapterTypeField && isGrokBotRunner && (
-            <Field label="Harness" hint={help.adapterType}>
+            <Field label={interfaceText("m_e3b5b45953d79a")} hint={help.adapterType}>
               <div className="inline-flex items-center gap-1.5">
                 <AdapterMark type="grok_bot" className="size-4" />
                 <span>Grok Bot</span>
@@ -1792,7 +1784,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
             </Field>
           )}
           {showAdapterTypeField && !isGrokBotRunner && (
-            <Field label="Harness" hint={help.adapterType}>
+            <Field label={interfaceText("m_e3b5b45953d79a")} hint={help.adapterType}>
               <AdapterTypeDropdown
                 value={isDotRunner ? "openai_dot" : isMuseRunner ? "muse" : isRunnerHarness ? harnessType : adapterType}
                 disabledTypes={adapterPickerDisabledTypes}
@@ -1880,7 +1872,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               {testActionError
                 ?? (testEnvironment.error instanceof Error
                   ? testEnvironment.error.message
-                  : "Environment test failed")}
+                  : interfaceText("m_2a2e34303328cb"))}
             </div>
           )}
 
@@ -1904,7 +1896,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
 
           {/* Working directory */}
           {showLegacyWorkingDirectoryField && (
-            <Field label="Working directory (deprecated)" hint={help.cwd}>
+            <Field label={interfaceText("m_e3519a0e608f57")} hint={help.cwd}>
               <div className="flex items-center gap-2 rounded-md border border-border px-2.5 py-1.5">
                 <FolderOpen className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                 <DraftInput
@@ -1980,15 +1972,14 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                   {refreshModelsError
                     ?? (modelError instanceof Error
                       ? modelError.message
-                      : "Failed to load adapter models.")}
+                      : interfaceText("m_54638131e3399c"))}
                 </p>
               )}
               {adapterType === "opencode_local"
                 && !connectionModels
                 && currentDefaultEnvironment
                 && currentDefaultEnvironment.driver !== "local" && (
-                <p className="text-xs text-muted-foreground">
-                  Live OpenCode model discovery only runs for Local environments. Using the curated list and manual entry for {currentDefaultEnvironment.name}.
+                <p className="text-xs text-muted-foreground">{interfaceText("m_34ac80b46e3f27")}{currentDefaultEnvironment.name}.
                 </p>
               )}
 
@@ -2013,9 +2004,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                   {adapterType === "codex_local" &&
                     codexSearchEnabled &&
                     currentThinkingEffort === "minimal" && (
-                      <p className="text-xs text-amber-400">
-                        Codex may reject `minimal` thinking when search is enabled.
-                      </p>
+                      <p className="text-xs text-amber-400">{interfaceText("m_e000a4c9116c3a")}</p>
                     )}
                 </>
               )}
@@ -2028,13 +2017,13 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       {(
         <div data-config-section="configuration" className={cn(!cards && "border-b border-border")}>
           {cards
-            ? <h3 className="text-sm font-medium mb-3">Configuration</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Configuration</div>
+            ? <h3 className="text-sm font-medium mb-3">{interfaceText("m_b332c3492d5eb1")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_b332c3492d5eb1")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
               {!isCreate && typeof config.bootstrapPromptTemplate === "string" && config.bootstrapPromptTemplate && (
                 <>
-                  <Field label="Bootstrap prompt (legacy)" hint={help.bootstrapPrompt}>
+                  <Field label={interfaceText("m_6017093e6a552b")} hint={help.bootstrapPrompt}>
                     <MarkdownEditor
                       value={eff(
                         "adapterConfig",
@@ -2044,7 +2033,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                       onChange={(v) =>
                         mark("adapterConfig", "bootstrapPromptTemplate", v || undefined)
                       }
-                      placeholder="Optional initial setup prompt for the first run"
+                      placeholder={interfaceText("m_81ef2a863d2f1f")}
                       contentClassName="min-h-(--sz-44px) text-sm font-mono"
                       imageUploadHandler={async (file) => {
                         const namespace = `agents/${props.agent.id}/bootstrap-prompt`;
@@ -2053,15 +2042,13 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                       }}
                     />
                   </Field>
-                  <div className="rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
-                    Bootstrap prompt is legacy and will be removed in a future release. Consider moving this content into the agent&apos;s prompt template or instructions file instead.
-                  </div>
+                  <div className="rounded-md border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">{interfaceText("m_973a49c50cb077")}</div>
                 </>
               )}
               {renderAdapterFields("configuration")}
               {(isLocal || adapterType === "process" || configSchema?.fields.some((field) => schemaFieldSection(field.key) === "advanced")) && (
               <CollapsibleSection
-                title="Advanced"
+                title={interfaceText("m_9f088dbebd6c3c")}
                 open={configurationAdvancedOpen}
                 onToggle={() => setConfigurationAdvancedOpen(!configurationAdvancedOpen)}
               >
@@ -2083,7 +2070,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                 flashes on a managed instance.
               */}
               {!hideHostPaths && (
-                <Field label="Command" hint={help.localCommand}>
+                <Field label={interfaceText("m_713166971d730f")} hint={help.localCommand}>
                   <DraftInput
                     value={
                       isCreate
@@ -2118,7 +2105,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                 </Field>
               )}
 
-              <Field label="Extra args (comma-separated)" hint={help.extraArgs}>
+              <Field label={interfaceText("m_3136ac3aadf436")} hint={help.extraArgs}>
                 <DraftInput
                   value={
                     isCreate
@@ -2131,7 +2118,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                       : mark("adapterConfig", "extraArgs", v?.trim() ? parseCommaArgs(v) : null)
                   }
                   className={inputClass}
-                  placeholder="e.g. --verbose, --foo=bar"
+                  placeholder={interfaceText("m_1851c5925ecb3c")}
                 />
               </Field>
 
@@ -2148,8 +2135,8 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       {props.environmentVariablesPlacement !== "secrets" && (isLocal || configSchema?.fields.some((field) => schemaFieldSection(field.key) === "environment")) && (
         <div data-config-section="environment-variables" className={cn(!cards && "border-b border-border")}>
           {cards
-            ? <h3 className="text-sm font-medium mb-3">Environment variables</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">Environment variables</div>
+            ? <h3 className="text-sm font-medium mb-3">{interfaceText("m_aac7246f5e9714")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_aac7246f5e9714")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
             {isLocal ? environmentVariablesEditor : renderAdapterFields("environment")}
@@ -2161,12 +2148,12 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       {isCreate && showCreateRunPolicySection ? (
         <div data-config-section="run-policy" className={cn(!cards && "border-b border-border")}>
           {cards
-            ? <h3 className="text-sm font-medium flex items-center gap-2 mb-3"><Heart className="h-3 w-3" /> Run Policy</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground flex items-center gap-2"><Heart className="h-3 w-3" /> Run Policy</div>
+            ? <h3 className="text-sm font-medium flex items-center gap-2 mb-3"><Heart className="h-3 w-3" />{interfaceText("m_6ddc0b5e338815")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground flex items-center gap-2"><Heart className="h-3 w-3" />{interfaceText("m_6ddc0b5e338815")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
             <ToggleWithNumber
-              label="Heartbeat on interval"
+              label={interfaceText("m_b6da5e83c1983e")}
               hint={help.heartbeatInterval}
               checked={val!.heartbeatEnabled}
               onCheckedChange={(v) => set!({ heartbeatEnabled: v })}
@@ -2177,7 +2164,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               numberHint={help.intervalSec}
               showNumber={val!.heartbeatEnabled}
             />
-            <CollapsibleSection title="Advanced Run Policy" open={runPolicyAdvancedOpen} onToggle={() => setRunPolicyAdvancedOpen(!runPolicyAdvancedOpen)}>
+            <CollapsibleSection title={interfaceText("m_aafc650021d568")} open={runPolicyAdvancedOpen} onToggle={() => setRunPolicyAdvancedOpen(!runPolicyAdvancedOpen)}>
               <div className="space-y-3">{renderAdapterFields("runPolicy")}</div>
             </CollapsibleSection>
           </div>
@@ -2185,13 +2172,13 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
       ) : !isCreate ? (
         <div data-config-section="run-policy" className={cn(!cards && "border-b border-border")}>
           {cards
-            ? <h3 className="text-sm font-medium flex items-center gap-2 mb-3"><Heart className="h-3 w-3" /> Run Policy</h3>
-            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground flex items-center gap-2"><Heart className="h-3 w-3" /> Run Policy</div>
+            ? <h3 className="text-sm font-medium flex items-center gap-2 mb-3"><Heart className="h-3 w-3" />{interfaceText("m_6ddc0b5e338815")}</h3>
+            : <div className="px-4 py-2 text-xs font-medium text-muted-foreground flex items-center gap-2"><Heart className="h-3 w-3" />{interfaceText("m_6ddc0b5e338815")}</div>
           }
           <div className={cn(cards ? "border border-border rounded-lg overflow-hidden" : "")}>
             <div className={cn(cards ? "p-4 space-y-3" : "px-4 pb-3 space-y-3")}>
               <ToggleWithNumber
-                label="Heartbeat on interval"
+                label={interfaceText("m_b6da5e83c1983e")}
                 hint={help.heartbeatInterval}
                 checked={eff("heartbeat", "enabled", heartbeat.enabled === true)}
                 onCheckedChange={(v) => mark("heartbeat", "enabled", v)}
@@ -2204,7 +2191,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               />
             </div>
             <CollapsibleSection
-              title="Advanced Run Policy"
+              title={interfaceText("m_aafc650021d568")}
               bordered={cards}
               open={runPolicyAdvancedOpen}
               onToggle={() => setRunPolicyAdvancedOpen(!runPolicyAdvancedOpen)}
@@ -2216,7 +2203,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               {!isCreate && (
                 <>
                   {!configSchema?.fields.some((field) => field.key === "timeoutSec") && (
-                  <Field label="Timeout (sec)" hint={help.timeoutSec}>
+                  <Field label={interfaceText("m_5ac8f7c285b61a")} hint={help.timeoutSec}>
                     <DraftNumberInput
                       value={eff(
                         "adapterConfig",
@@ -2230,7 +2217,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                   </Field>
                   )}
                   {!configSchema?.fields.some((field) => field.key === "graceSec") && (
-                  <Field label="Interrupt grace period (sec)" hint={help.graceSec}>
+                  <Field label={interfaceText("m_1709050c874977")} hint={help.graceSec}>
                     <DraftNumberInput
                       value={eff(
                         "adapterConfig",
@@ -2247,7 +2234,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               )}
               </>)}
               <ToggleField
-                label="Wake on demand"
+                label={interfaceText("m_a7a5aea9b4fee5")}
                 hint={help.wakeOnDemand}
                 checked={eff(
                   "heartbeat",
@@ -2256,7 +2243,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                 )}
                 onChange={(v) => mark("heartbeat", "wakeOnDemand", v)}
               />
-              <Field label="Cooldown (sec)" hint={help.cooldownSec}>
+              <Field label={interfaceText("m_ea609aed947188")} hint={help.cooldownSec}>
                 <DraftNumberInput
                   value={eff(
                     "heartbeat",
@@ -2268,7 +2255,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                   className={inputClass}
                 />
               </Field>
-              <Field label="Max concurrent runs" hint={help.maxConcurrentRuns}>
+              <Field label={interfaceText("m_3234893f415e40")} hint={help.maxConcurrentRuns}>
                 <DraftNumberInput
                   value={eff(
                     "heartbeat",
@@ -2282,14 +2269,14 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
               </Field>
               <div className="rounded-md border border-border/70 px-3 py-2">
                 <ToggleField
-                  label="Continue after max-turn stop"
+                  label={interfaceText("m_b16081c0b4ded7")}
                   hint={help.maxTurnContinuationEnabled}
                   checked={maxTurnContinuationEnabled}
                   onChange={(v) => updateMaxTurnContinuation({ enabled: v })}
                 />
                 {maxTurnContinuationEnabled ? (
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                    <Field label="Continuation attempts" hint={help.maxTurnContinuationMaxAttempts}>
+                    <Field label={interfaceText("m_521a9cb20830e5")} hint={help.maxTurnContinuationMaxAttempts}>
                       <DraftNumberInput
                         value={maxTurnContinuationMaxAttempts}
                         onCommit={(v) =>
@@ -2300,7 +2287,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
                         className={inputClass}
                       />
                     </Field>
-                    <Field label="Continuation delay (sec)" hint={help.maxTurnContinuationDelaySec}>
+                    <Field label={interfaceText("m_0d665277efadc3")} hint={help.maxTurnContinuationDelaySec}>
                       <DraftNumberInput
                         value={maxTurnContinuationDelaySec}
                         onCommit={(v) =>
@@ -2325,12 +2312,10 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
         <div className={cn(!cards && "border-b border-border")}>
           {cards ? (
             <h3 className="mb-3 flex items-center gap-2 text-sm font-medium">
-              <Bug className="h-3 w-3" /> Debugging
-            </h3>
+              <Bug className="h-3 w-3" />{interfaceText("m_078ff7a1f36e8d")}</h3>
           ) : (
             <div className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-muted-foreground">
-              <Bug className="h-3 w-3" /> Debugging
-            </div>
+              <Bug className="h-3 w-3" />{interfaceText("m_078ff7a1f36e8d")}</div>
           )}
           <div
             className={cn(
@@ -2341,8 +2326,8 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
             )}
           >
             <ToggleField
-              label="Capture raw provider traces"
-              hint="Stores exact provider traffic for every future run until disabled. Traces may contain sensitive prompts and tool arguments, are administrator-only, and expire after 24 hours."
+              label={interfaceText("m_071aa7509f9921")}
+              hint={interfaceText("m_39f81fd274d44c")}
               checked={eff<unknown>("debug", "providerTrace", debug.providerTrace) === "raw"}
               onChange={(enabled) =>
                 mark("debug", "providerTrace", enabled ? "raw" : undefined)
@@ -2351,9 +2336,7 @@ export function AgentConfigForm(props: AgentConfigFormProps) {
             {eff<unknown>("debug", "providerTrace", debug.providerTrace) === "raw" ? (
               <div className="mt-3 flex items-start gap-2 rounded-md border border-border bg-background/60 px-3 py-2 text-xs text-foreground">
                 <Bug className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                <span>
-                  Raw tracing is on for future runs. Paperclip keeps at most 64 MiB per run and automatically deletes it after 24 hours.
-                </span>
+                <span>{interfaceText("m_560f2fe708c13a")}</span>
               </div>
             ) : null}
           </div>
@@ -2433,20 +2416,21 @@ function AdapterLoginTerminalState({
   status: AdapterAuthSessionStatus;
   message: string | null;
 }) {
+  useInterfaceLanguage();
   if (status === "authenticated") {
     return (
       <div className="flex items-center gap-2 text-(length:--text-micro) text-foreground">
         <Check className="size-3 shrink-0" />
-        <span>Authenticated. The environment has credentials now.</span>
+        <span>{interfaceText("m_146f7fef101ff8")}</span>
       </div>
     );
   }
   const label =
     status === "timed_out"
-      ? "Login timed out"
+      ? interfaceText("m_bf33d297a6ba65")
       : status === "cancelled"
-        ? "Login cancelled"
-        : "Login failed";
+        ? interfaceText("m_fcb9c05eed9f45")
+        : interfaceText("m_5a96e8452f1ed4");
   return (
     <div className="flex items-start gap-2 text-(length:--text-micro) text-destructive">
       <TriangleAlert className="size-3 shrink-0" />
@@ -2556,7 +2540,7 @@ const ADAPTER_LOGIN_PROVIDER: Record<string, string> = {
 
 function adapterLoginTitle(adapterType: string): string {
   const provider = ADAPTER_LOGIN_PROVIDER[adapterType];
-  return provider ? `Sign in to ${provider}` : "Sign in to the environment";
+  return provider ? interfaceText("m_aa5eed1607ea22", { value0: (provider) }) : interfaceText("m_3bfd38612d60eb");
 }
 
 export function AdapterLoginPanel(props: AdapterLoginPanelProps) {
@@ -2585,6 +2569,7 @@ function DisplayedCodeLoginPanel({
   aiConnection,
   onPromptReady,
 }: AdapterLoginPanelProps) {
+  useInterfaceLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [startError, setStartError] = useState<string | null>(null);
   // The server delivers the one-time prompt on the first owner read only. Latch
@@ -2868,18 +2853,16 @@ function DisplayedCodeLoginPanel({
             <p role="alert" className="pl-2 text-xs text-destructive">{startError}</p>
             {activeSessionQuery.error instanceof AdapterLoginConflictError && (
               <Button type="button" variant="outline" disabled={cancelConflictingLogin.isPending}
-                onClick={() => cancelConflictingLogin.mutate()}>
-                Cancel previous sign-in and retry
-              </Button>
+                onClick={() => cancelConflictingLogin.mutate()}>{interfaceText("m_e414dc8650dd20")}</Button>
             )}
           </div>
         ) : failed ? (
           <p role="alert" className="pl-2 text-xs text-destructive">
             {status === "timed_out"
-              ? "The login timed out. Start it again."
+              ? interfaceText("m_5eee8063785ee3")
               : status === "cancelled"
-                ? "The login was cancelled."
-                : "The login did not finish. Start it again."}
+                ? interfaceText("m_c5900c017efa79")
+                : interfaceText("m_5fa21cabb36435")}
           </p>
         ) : (
           <OnboardingLoginCodeRow code={prompt?.code ?? ""} autoCopy />
@@ -2906,9 +2889,7 @@ function DisplayedCodeLoginPanel({
               className="h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground"
               disabled={cancelLogin.isPending}
               onClick={() => cancelLogin.mutate()}
-            >
-              Cancel
-            </Button>
+            >{interfaceText("m_19766ed6ccb2f4")}</Button>
           )}
           <Button
             type="button"
@@ -2917,9 +2898,7 @@ function DisplayedCodeLoginPanel({
             className="h-7 px-2.5 text-xs"
             disabled={startDisabled}
             onClick={() => startLogin.mutate()}
-          >
-            Sign in
-          </Button>
+          >{interfaceText("m_bfd402b2f6f381")}</Button>
         </div>
       </div>
 
@@ -2935,15 +2914,13 @@ function DisplayedCodeLoginPanel({
         {isActive && !prompt && (
           <div className="flex items-center gap-2 text-(length:--text-micro) text-muted-foreground">
             <Loader2 className="size-3 animate-spin shrink-0" />
-            <span>Preparing...</span>
+            <span>{interfaceText("m_74a6b5348c06cd")}</span>
           </div>
         )}
 
         {isActive && prompt && (
           <div className="space-y-2">
-            <div className="text-(length:--text-micro) text-muted-foreground">
-              Copy the code, then open the authentication page.
-            </div>
+            <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_78517aff77b069")}</div>
           {/* Code first, then the URL, and the sentence and the numbering both
               say so.
 
@@ -2961,29 +2938,25 @@ function DisplayedCodeLoginPanel({
               does come first. */}
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
-              <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">
-                1. Code
-              </div>
+              <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">{interfaceText("m_d2d022f4e2dc94")}</div>
               <span className="font-mono text-xs text-foreground break-all">{prompt.code}</span>
             </div>
-            <AdapterLoginCopyButton value={prompt.code} label="Copy code" />
+            <AdapterLoginCopyButton value={prompt.code} label={interfaceText("m_49a0053f3b0d50")} />
           </div>
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
-              <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">
-                2. Authentication URL
-              </div>
+              <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">{interfaceText("m_964992f45ce788")}</div>
               <span className="font-mono text-xs text-foreground break-all">{prompt.url}</span>
             </div>
             <div className="flex items-center">
-              <AdapterLoginCopyButton value={prompt.url} label="Copy URL" />
+              <AdapterLoginCopyButton value={prompt.url} label={interfaceText("m_b26d1037f1c2da")} />
               <Button
                 asChild
                 type="button"
                 variant="ghost"
                 size="icon-xs"
-                aria-label="Open the authentication page"
-                title="Open the authentication page"
+                aria-label={interfaceText("m_81ae2f1df87665")}
+                title={interfaceText("m_81ae2f1df87665")}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <a href={prompt.url} target="_blank" rel="noreferrer noopener">
@@ -3005,21 +2978,19 @@ function DisplayedCodeLoginPanel({
         {status === "authenticated" && accountBindState === "saving" && (
           <div className="flex items-center gap-2 text-(length:--text-micro) text-muted-foreground">
             <Loader2 className="size-3 animate-spin shrink-0" />
-            <span>Binding this agent to the signed-in account...</span>
+            <span>{interfaceText("m_d23c6cd35a3407")}</span>
           </div>
         )}
         {status === "authenticated" && accountBindState === "bound" && (
           <div className="flex items-center gap-2 text-(length:--text-micro) text-foreground">
             <Check className="size-3 shrink-0" />
-            <span>Agent bound to the signed-in account.</span>
+            <span>{interfaceText("m_3ca06200396de3")}</span>
           </div>
         )}
         {status === "authenticated" && accountBindState === "failed" && (
           <div className="flex items-center gap-2 text-(length:--text-micro)">
             <TriangleAlert className="size-3 shrink-0 text-destructive" />
-            <span className="text-destructive">
-              Could not bind this agent to the signed-in account.
-            </span>
+            <span className="text-destructive">{interfaceText("m_5fd3151c594880")}</span>
             <Button
               type="button"
               variant="outline"
@@ -3028,9 +2999,7 @@ function DisplayedCodeLoginPanel({
               onClick={() => {
                 if (accountBinding) void runAccountBinding(accountBinding);
               }}
-            >
-              Retry
-            </Button>
+            >{interfaceText("m_942087cc2d41e0")}</Button>
           </div>
         )}
       </div>
@@ -3087,6 +3056,7 @@ function SubmittedBrowserCodeLoginPanel({
   aiConnection,
   onPromptReady,
 }: AdapterLoginPanelProps) {
+  useInterfaceLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [startError, setStartError] = useState<string | null>(null);
   // The server delivers the authorization URL on the guarded prompt read only.
@@ -3609,10 +3579,7 @@ function SubmittedBrowserCodeLoginPanel({
             clear text. */}
         {transportInsecure && (
           <p className="flex items-start gap-2 pl-2 text-xs text-amber-700 dark:text-amber-200">
-            <TriangleAlert className="mt-0.5 size-3 shrink-0" />
-            This connection is not encrypted. The login code travels in clear text on this
-            network. Continue only on a network you trust.
-          </p>
+            <TriangleAlert className="mt-0.5 size-3 shrink-0" />{interfaceText("m_4e5f4271ae173e")}</p>
         )}
         {startError ? (
           <p role="alert" className="pl-2 text-xs text-destructive">
@@ -3659,9 +3626,7 @@ function SubmittedBrowserCodeLoginPanel({
               className="h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground"
               disabled={cancelLogin.isPending}
               onClick={() => cancelLogin.mutate()}
-            >
-              Cancel
-            </Button>
+            >{interfaceText("m_19766ed6ccb2f4")}</Button>
           )}
           {/* Apply the existing stored login with no new login round trip. The
               affordance shows only when the status route reports a stored value
@@ -3676,9 +3641,7 @@ function SubmittedBrowserCodeLoginPanel({
                 onApplyStored();
                 setAppliedStored(true);
               }}
-            >
-              Use saved login
-            </Button>
+            >{interfaceText("m_9f072738a514de")}</Button>
           )}
           <Button
             type="button"
@@ -3688,7 +3651,7 @@ function SubmittedBrowserCodeLoginPanel({
             disabled={startDisabled}
             onClick={() => startLogin.mutate()}
           >
-            {storedToken && !isActive && !isStored ? "Sign in to replace" : "Sign in"}
+            {storedToken && !isActive && !isStored ? interfaceText("m_fc9da33ecad423") : interfaceText("m_bfd402b2f6f381")}
           </Button>
         </div>
       </div>
@@ -3697,16 +3660,13 @@ function SubmittedBrowserCodeLoginPanel({
           first and does not force a fresh login. Use saved login binds the stored
           token; a replacement login rotates it under the captured version. */}
       {storedToken && !isActive && !isStored && !appliedStored && (
-        <div className="text-(length:--text-micro) text-muted-foreground">
-          You have a saved Claude login. Use it to bind this agent, or log in again to replace the
-          stored token.
-        </div>
+        <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_723f9ebe631e5d")}</div>
       )}
 
       {appliedStored && (
         <div className="flex items-center gap-2 text-(length:--text-micro) text-foreground">
           <Check className="size-3 shrink-0" />
-          <span>The saved Claude login is bound to this agent now.</span>
+          <span>{interfaceText("m_5bd5c9ed4d60c1")}</span>
         </div>
       )}
 
@@ -3722,7 +3682,7 @@ function SubmittedBrowserCodeLoginPanel({
         {isActive && !authorizationUrl && !isCompleting && (
           <div className="flex items-center gap-2 text-(length:--text-micro) text-muted-foreground">
             <Loader2 className="size-3 animate-spin shrink-0" />
-            <span>Preparing...</span>
+            <span>{interfaceText("m_74a6b5348c06cd")}</span>
           </div>
         )}
 
@@ -3733,31 +3693,24 @@ function SubmittedBrowserCodeLoginPanel({
                 className="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 px-2 py-1.5 text-(length:--text-micro) text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200"
               >
                 <TriangleAlert className="size-3 shrink-0 mt-0.5" />
-                <span>
-                  This connection is not encrypted. The login code travels in clear text on this
-                  network. Continue only on a network you trust.
-                </span>
+                <span>{interfaceText("m_4e5f4271ae173e")}</span>
               </div>
             )}
-            <div className="text-(length:--text-micro) text-muted-foreground">
-              Open the authorization page, then enter the browser code it shows.
-            </div>
+            <div className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_35bebcd32dfa69")}</div>
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">
-                  1. Authorization URL
-                </div>
+                <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">{interfaceText("m_5dafba3f9041d4")}</div>
                 <span className="font-mono text-xs text-foreground break-all">{authorizationUrl}</span>
               </div>
               <div className="flex items-center">
-                <AdapterLoginCopyButton value={authorizationUrl} label="Copy URL" />
+                <AdapterLoginCopyButton value={authorizationUrl} label={interfaceText("m_b26d1037f1c2da")} />
                 <Button
                   asChild
                   type="button"
                   variant="ghost"
                   size="icon-xs"
-                  aria-label="Open the authorization page"
-                  title="Open the authorization page"
+                  aria-label={interfaceText("m_b11efe92e917df")}
+                  title={interfaceText("m_b11efe92e917df")}
                   className="text-muted-foreground hover:text-foreground"
                 >
                   <a href={authorizationUrl} target="_blank" rel="noreferrer noopener">
@@ -3767,12 +3720,10 @@ function SubmittedBrowserCodeLoginPanel({
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">
-                2. Browser code
-              </div>
+              <div className="text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">{interfaceText("m_c536a15cc7bd87")}</div>
               <div className="flex items-center gap-2">
                 <input
-                  aria-label="Browser code"
+                  aria-label={interfaceText("m_72da0a59119d61")}
                   type="text"
                   autoComplete="off"
                   spellCheck={false}
@@ -3793,9 +3744,7 @@ function SubmittedBrowserCodeLoginPanel({
                   className="h-7 px-2.5 text-xs"
                   disabled={!canSubmit}
                   onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
+                >{interfaceText("m_155f816c040731")}</Button>
               </div>
             </div>
           </div>
@@ -3804,14 +3753,14 @@ function SubmittedBrowserCodeLoginPanel({
         {isCompleting && (
           <div className="flex items-center gap-2 text-(length:--text-micro) text-muted-foreground">
             <Loader2 className="size-3 animate-spin shrink-0" />
-            <span>Completing the login…</span>
+            <span>{interfaceText("m_0a329f96c1261f")}</span>
           </div>
         )}
 
         {isStored && (
           <div className="flex items-center gap-2 text-(length:--text-micro) text-foreground">
             <Check className="size-3 shrink-0" />
-            <span>Authenticated. The environment has credentials now.</span>
+            <span>{interfaceText("m_146f7fef101ff8")}</span>
           </div>
         )}
 
@@ -3834,8 +3783,9 @@ function SubmittedBrowserCodeLoginPanel({
 }
 
 export function AdapterEnvironmentResult({ result }: { result: AdapterEnvironmentTestResult }) {
+  useInterfaceLanguage();
   const statusLabel =
-    result.status === "pass" ? "Passed" : result.status === "warn" ? "Warnings" : "Failed";
+    result.status === "pass" ? interfaceText("m_436fe71bb9561f") : result.status === "warn" ? interfaceText("m_0e04cd10f9afd7") : interfaceText("m_031a8f0f659df8");
   const statusClass =
     result.status === "pass"
       ? "text-green-700 dark:text-green-300 border-green-300 dark:border-green-500/40 bg-green-50 dark:bg-green-500/10"
@@ -3860,7 +3810,7 @@ export function AdapterEnvironmentResult({ result }: { result: AdapterEnvironmen
             <span className="mx-1 opacity-60">·</span>
             <span>{check.message}</span>
             {check.detail && <span className="block opacity-75 break-all">({check.detail})</span>}
-            {check.hint && <span className="block opacity-90 break-words">Hint: {check.hint}</span>}
+            {check.hint && <span className="block opacity-90 break-words">{interfaceText("m_c26c62214d8582")}{check.hint}</span>}
           </div>
         ))}
       </div>
@@ -3885,15 +3835,16 @@ export function AdapterTypeDropdown({
   museEnabled?: boolean;
   nativeRunnerEnabled?: boolean;
 }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const selectedDisplay = getAdapterDisplay(value);
   const adapterList = useMemo(() =>
     [...listAdapterOptions(type => adapterLabels[type] ?? getAdapterLabel(type)),
       ...(openAiDotEnabled ? [{ value: "openai_dot", label: "OpenAI Dot", experimental: true, comingSoon: false }] : []),
-      ...(museEnabled ? [{ value: "muse", label: "Muse — Personal agent", experimental: true, comingSoon: false }] : []),
+      ...(museEnabled ? [{ value: "muse", label: interfaceText("m_36b7c21c77b5e8"), experimental: true, comingSoon: false }] : []),
     ].filter(item => !item.comingSoon && (item.value !== "paperclip_runner" || nativeRunnerEnabled) && !disabledTypes.has(item.value))
       .sort((a, b) => Number(a.value === "paperclip_runner") - Number(b.value === "paperclip_runner")),
-    [disabledTypes, openAiDotEnabled, nativeRunnerEnabled, museEnabled]);
-  return <SelectPopover aria-label="Harness" value={value} onValueChange={onChange}
+    [disabledTypes, openAiDotEnabled, nativeRunnerEnabled, museEnabled, interfaceLanguage]);
+  return <SelectPopover aria-label={interfaceText("m_e3b5b45953d79a")} value={value} onValueChange={onChange}
     displayValue={<span className="inline-flex min-w-0 items-center gap-1.5">
       <span aria-hidden="true" className="inline-flex shrink-0"><AdapterMark type={value} className="size-4" /></span>
       <span className="truncate">{adapterLabels[value] ?? getAdapterLabel(value)}</span>
@@ -3906,10 +3857,9 @@ export function AdapterTypeDropdown({
 }
 
 function ExperimentalBadge() {
+  useInterfaceLanguage();
   return (
-    <span className="shrink-0 rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-(length:--text-nano) font-medium leading-none text-amber-700 dark:text-amber-200">
-      Experimental
-    </span>
+    <span className="shrink-0 rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-(length:--text-nano) font-medium leading-none text-amber-700 dark:text-amber-200">{interfaceText("m_3dc9f569422dcf")}</span>
   );
 }
 
@@ -3957,6 +3907,7 @@ export function ModelDropdown({
   defaultLabel?: string;
   presentation?: "searchable" | "native";
 }) {
+  useInterfaceLanguage();
   const [modelSearch, setModelSearch] = useState("");
   const [enteringCustomModel, setEnteringCustomModel] = useState(false);
   const [detectingModel, setDetectingModel] = useState(false);
@@ -4031,9 +3982,9 @@ export function ModelDropdown({
     const customOption = "__paperclip_custom_model__";
     const extraModels = [...new Set([value, ...promotedModelIds])].filter(id => id && (!models.some(model => model.id === id) || promotedModelIds.has(id)));
     return (
-      <Field label="Model" hint={help.model}>
+      <Field label={interfaceText("m_5e2c614c23f022")} hint={help.model}>
         <NativeSelect
-          aria-label="Model"
+          aria-label={interfaceText("m_5e2c614c23f022")}
           aria-busy={loadingModels || refreshingModels}
           value={enteringCustomModel ? customOption : value}
           required={required && !enteringCustomModel}
@@ -4044,7 +3995,7 @@ export function ModelDropdown({
           }}
         >
           <option value="" disabled={!allowDefault}>
-            {allowDefault ? (defaultLabel ?? "Default") : loadingModels ? "Loading models…" : required ? "Select model (required)" : "Select model"}
+            {allowDefault ? (defaultLabel ?? interfaceText("m_21b111cbfe6e8f")) : loadingModels ? interfaceText("m_cc8b4624f7659c") : required ? interfaceText("m_62d45d1d404833") : interfaceText("m_1d446005add35a")}
           </option>
           {extraModels.map(id => <option key={id} value={id}>{models.find(model => model.id === id)?.label ?? id}</option>)}
           {groupedModels.map(({ provider, entries }) => groupByProvider ? (
@@ -4052,27 +4003,25 @@ export function ModelDropdown({
               {entries.map(model => <option key={model.id} value={model.id}>{model.label}</option>)}
             </optgroup>
           ) : entries.map(model => <option key={model.id} value={model.id}>{model.label}</option>))}
-          {creatable && <option value={customOption}>Enter custom model…</option>}
+          {creatable && <option value={customOption}>{interfaceText("m_3b64d9d0c0a3e6")}</option>}
         </NativeSelect>
         {enteringCustomModel && (
-          <label className="mt-3 block space-y-1 text-xs text-muted-foreground">
-            Model ID
-            <Input aria-label="Model ID" value={value} onChange={event => onChange(event.target.value)}
-              placeholder="Enter model ID or alias" autoFocus required={required} />
+          <label className="mt-3 block space-y-1 text-xs text-muted-foreground">{interfaceText("m_089ef2b6dbb34f")}<Input aria-label={interfaceText("m_089ef2b6dbb34f")} value={value} onChange={event => onChange(event.target.value)}
+              placeholder={interfaceText("m_5738bf4dbb5ce7")} autoFocus required={required} />
           </label>
         )}
-        {loadingModels && <p role="status" className="mt-2 text-xs text-muted-foreground">Loading models…</p>}
+        {loadingModels && <p role="status" className="mt-2 text-xs text-muted-foreground">{interfaceText("m_cc8b4624f7659c")}</p>}
         {onRefreshModels && <Button type="button" variant="ghost" size="sm" disabled={refreshingModels}
-          onClick={() => void onRefreshModels()}>{refreshingModels ? "Refreshing…" : "Refresh models"}</Button>}
+          onClick={() => void onRefreshModels()}>{refreshingModels ? interfaceText("m_1c0def7be0607b") : interfaceText("m_04903063b2fd6a")}</Button>}
       </Field>
     );
   }
 
   return (
-    <Field label="Model" hint={help.model}>
-      <SelectPopover aria-label="Model" value={value}
+    <Field label={interfaceText("m_5e2c614c23f022")} hint={help.model}>
+      <SelectPopover aria-label={interfaceText("m_5e2c614c23f022")} value={value}
         displayValue={<span className={cn("truncate", !value && "text-muted-foreground")}>
-          {selected?.label ?? (value || (allowDefault ? (defaultLabel ?? "Default") : required ? "Select model (required)" : "Select model"))}
+          {selected?.label ?? (value || (allowDefault ? (defaultLabel ?? interfaceText("m_21b111cbfe6e8f")) : required ? interfaceText("m_62d45d1d404833") : interfaceText("m_1d446005add35a")))}
         </span>}
         open={open}
         onOpenChange={(nextOpen) => {
@@ -4080,11 +4029,11 @@ export function ModelDropdown({
           if (!nextOpen) setModelSearch("");
         }}
       >
-        <div role="listbox" aria-label="Model">
+        <div role="listbox" aria-label={interfaceText("m_5e2c614c23f022")}>
           <div className="relative mb-1">
             <input
               className="w-full px-2 py-1.5 pr-6 text-xs bg-transparent outline-none border-b border-border placeholder:text-muted-foreground/50"
-              placeholder={creatable ? "Search models... (type to create)" : "Search models..."}
+              placeholder={creatable ? interfaceText("m_e7eb0b73abb5d4") : interfaceText("m_37b90680b8421a")}
               value={modelSearch}
               onChange={(e) => setModelSearch(e.target.value)}
               autoFocus
@@ -4115,7 +4064,7 @@ export function ModelDropdown({
                 <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                 <path d="M3 3v5h5" />
               </svg>
-              {detectingModel ? "Detecting..." : detectedModel ? (detectModelLabel?.replace(/^Detect\b/, "Re-detect") ?? "Re-detect from config") : (detectModelLabel ?? "Detect from config")}
+              {detectingModel ? interfaceText("m_5ac197f8103a9e") : detectedModel ? (detectModelLabel?.replace(/^Detect\b/, "Re-detect") ?? interfaceText("m_90c73096a9c99b")) : (detectModelLabel ?? interfaceText("m_8f7023001a2235"))}
             </button>
           )}
           {onRefreshModels && !modelSearch.trim() && (
@@ -4133,7 +4082,7 @@ export function ModelDropdown({
                 <path d="M21 12a9 9 0 0 1-15.28 6.36L3 16" />
                 <path d="M8 16H3v5" />
               </svg>
-              {refreshingModels ? "Refreshing..." : "Refresh models"}
+              {refreshingModels ? interfaceText("m_69d2daed978a7b") : interfaceText("m_04903063b2fd6a")}
             </button>
           )}
           {value && (!models.some((m) => m.id === value) || promotedModelIds.has(value)) && (
@@ -4150,9 +4099,7 @@ export function ModelDropdown({
               <span className="block w-full text-left truncate font-mono text-xs" title={value}>
                 {models.find((m) => m.id === value)?.label ?? value}
               </span>
-              <Badge variant="outline" className="ml-auto text-(length:--text-nano) px-1.5 bg-green-500/15 text-green-400 border-green-500/20">
-                current
-              </Badge>
+              <Badge variant="outline" className="ml-auto text-(length:--text-nano) px-1.5 bg-green-500/15 text-green-400 border-green-500/20">{interfaceText("m_97b0560280ed60")}</Badge>
             </button>
           )}
           {detectedModel && detectedModel !== value && (
@@ -4170,9 +4117,7 @@ export function ModelDropdown({
               <span className="block w-full text-left truncate font-mono text-xs" title={detectedModel}>
                 {models.find((m) => m.id === detectedModel)?.label ?? detectedModel}
               </span>
-              <Badge variant="outline" className="ml-auto text-(length:--text-nano) px-1.5 bg-blue-500/15 text-blue-400 border-blue-500/20">
-                detected
-              </Badge>
+              <Badge variant="outline" className="ml-auto text-(length:--text-nano) px-1.5 bg-blue-500/15 text-blue-400 border-blue-500/20">{interfaceText("m_b96da48a63e7d2")}</Badge>
             </button>
           )}
           {detectedModelCandidates
@@ -4195,9 +4140,7 @@ export function ModelDropdown({
                   <span className="block w-full text-left truncate font-mono text-xs" title={candidate}>
                     {entry?.label ?? candidate}
                   </span>
-                  <Badge variant="outline" className="ml-auto text-(length:--text-nano) px-1.5 bg-sky-500/15 text-sky-400 border-sky-500/20">
-                    config
-                  </Badge>
+                  <Badge variant="outline" className="ml-auto text-(length:--text-nano) px-1.5 bg-sky-500/15 text-sky-400 border-sky-500/20">{interfaceText("m_b79606fb3afea5")}</Badge>
                 </button>
               );
             })}
@@ -4214,9 +4157,7 @@ export function ModelDropdown({
                   onChange("");
                   onOpenChange(false);
                 }}
-              >
-                Default
-              </button>
+              >{interfaceText("m_21b111cbfe6e8f")}</button>
             )}
             {canCreateManualModel && (
               <button
@@ -4229,7 +4170,7 @@ export function ModelDropdown({
                   setModelSearch("");
                 }}
               >
-                <span>Use manual model</span>
+                <span>{interfaceText("m_3490ecaa549331")}</span>
                 <span className="text-xs font-mono text-muted-foreground">{manualModel}</span>
               </button>
             )}
@@ -4264,9 +4205,9 @@ export function ModelDropdown({
             {filteredModels.length === 0 && !canCreateManualModel && promotedModelIds.size === 0 && (
               <div className="px-2 py-2 space-y-2">
                 <p className="text-xs text-muted-foreground">
-                  {loadingModels ? "Loading models…" : onDetectModel
-                    ? (emptyDetectHint ?? "No model detected yet. Enter a provider/model manually.")
-                    : "No models found."}
+                  {loadingModels ? interfaceText("m_cc8b4624f7659c") : onDetectModel
+                    ? (emptyDetectHint ?? interfaceText("m_f71129338255af"))
+                    : interfaceText("m_339e5fcda064be")}
                 </p>
               </div>
             )}
@@ -4290,8 +4231,9 @@ function ThinkingEffortDropdown({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  return <Field label="Thinking effort" hint={help.thinkingEffort}>
-    <SelectPopover aria-label="Thinking effort" value={value} onValueChange={onChange}
+  useInterfaceLanguage();
+  return <Field label={interfaceText("m_264c28cbf01ce9")} hint={help.thinkingEffort}>
+    <SelectPopover aria-label={interfaceText("m_264c28cbf01ce9")} value={value} onValueChange={onChange}
       open={open} onOpenChange={onOpenChange}
       options={options.map(option => ({ value: option.id, label: option.label,
         suffix: option.id ? <span className="text-xs text-muted-foreground font-mono">{option.id}</span> : undefined,

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { PrimaryAgentPreference } from "@paperclipai/shared";
@@ -10,6 +11,7 @@ import { useCompany } from "./CompanyContext";
 import { useToastActions } from "./ToastContext";
 
 export function PrimaryAgentProvider({ children }: { children: ReactNode }) {
+  useInterfaceLanguage();
   const { selectedCompanyId: companyId } = useCompany();
   const preference = usePrimaryAgent(companyId);
   const client = useQueryClient();
@@ -32,8 +34,8 @@ export function PrimaryAgentProvider({ children }: { children: ReactNode }) {
     onError: (error, choice, context) => {
       client.setQueryData(keyFor(choice), context?.previous);
       if (!isCurrentScope(choice)) return;
-      pushToast({ title: "Couldn't change your primary agent.", body: error.message, tone: "error",
-        action: { label: "Retry", onClick: () => { if (isCurrentScope(choice)) mutation.mutate(choice); } } });
+      pushToast({ title: interfaceText("m_48f6994e6d9801"), body: error.message, tone: "error",
+        action: { label: interfaceText("m_942087cc2d41e0"), onClick: () => { if (isCurrentScope(choice)) mutation.mutate(choice); } } });
     },
     onSuccess: (data, choice) => client.setQueryData(keyFor(choice), data),
     onSettled: (_data, _error, choice) => {

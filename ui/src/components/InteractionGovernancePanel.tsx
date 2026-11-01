@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Fragment } from "react";
 import {
   ISSUE_THREAD_INTERACTION_KINDS,
@@ -17,12 +18,12 @@ import {
 import { resolverPolicyLabel } from "../lib/interaction-audience";
 
 const INTERACTION_KIND_LABELS: Record<IssueThreadInteractionKind, string> = {
-  suggest_tasks: "Suggested tasks",
-  ask_user_questions: "Ask user questions",
-  request_confirmation: "Confirmations",
-  request_checkbox_confirmation: "Checkbox confirmations",
-  request_item_verdicts: "Item verdicts",
-  connection_intent: "Connection requests",
+  get suggest_tasks() { return interfaceText("m_5addd6fff8dd79"); },
+  get ask_user_questions() { return interfaceText("m_85f982633587e0"); },
+  get request_confirmation() { return interfaceText("m_5dfa99a6fa7623"); },
+  get request_checkbox_confirmation() { return interfaceText("m_b7f92c403f79c2"); },
+  get request_item_verdicts() { return interfaceText("m_7023d1056988ae"); },
+  get connection_intent() { return interfaceText("m_7c3a0985aafb42"); },
 };
 
 /**
@@ -48,25 +49,25 @@ const NARROWING_POLICIES: readonly IssueThreadInteractionCanonicalResolverPolicy
 ];
 
 const UNSET_LABELS: Record<GovernanceField, string> = {
-  defaultPolicy: "Anyone (default)",
-  cap: "No cap",
+  get defaultPolicy() { return interfaceText("m_9a3ee13fc2e37a"); },
+  get cap() { return interfaceText("m_59db2115b7b072"); },
 };
 
 const UNSET_EFFECTS: Record<GovernanceField, string> = {
-  defaultPolicy: "New cards are open — the board or any agent can respond, including the one that asked.",
-  cap: "A request keeps whatever audience it asks for.",
+  get defaultPolicy() { return interfaceText("m_65f5b11c067ce7"); },
+  get cap() { return interfaceText("m_fa03d0870f827b"); },
 };
 
 const DEFAULT_POLICY_EFFECTS: Record<IssueThreadInteractionCanonicalResolverPolicy, string> = {
-  anyone: UNSET_EFFECTS.defaultPolicy,
-  not_creator: "New cards exclude the agent that created them, so the answer comes from someone else.",
-  human_only: "New cards wait for a person on the board. Agents are turned away.",
+  get anyone() { return UNSET_EFFECTS.defaultPolicy; },
+  get not_creator() { return interfaceText("m_b48d3270a3b12d"); },
+  get human_only() { return interfaceText("m_898f0fdd0672e2"); },
 };
 
 const CAP_EFFECTS: Record<IssueThreadInteractionCanonicalResolverPolicy, string> = {
-  anyone: UNSET_EFFECTS.cap,
-  not_creator: "Even a card that asks for Anyone is narrowed to exclude its creator.",
-  human_only: "Every card of this kind waits for a person, whatever it asked for.",
+  get anyone() { return UNSET_EFFECTS.cap; },
+  get not_creator() { return interfaceText("m_be5d40cd133271"); },
+  get human_only() { return interfaceText("m_dc832bd62183a9"); },
 };
 
 function governanceOptions(field: GovernanceField): {
@@ -149,6 +150,7 @@ function GovernanceSelect({
   ariaLabel: string;
   mobileLabel: string;
 }) {
+  useInterfaceLanguage();
   const options = governanceOptions(field);
   return (
     <div className="min-w-0">
@@ -236,22 +238,16 @@ export function InteractionGovernancePanel({
   isPending?: boolean;
   errorMessage?: string | null;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="space-y-4" data-testid="company-settings-interaction-governance-section">
-      <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-        Interaction governance
-      </div>
+      <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{interfaceText("m_55a23137de6cd8")}</div>
       <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Thread interactions are open by default:{" "}
-          <span className="font-medium text-foreground">Anyone</span> in the organization — the
-          board or any agent, including the one that asked — can respond. Narrow a kind
-          only when you need to.{" "}
-          <span className="font-medium text-foreground">Default policy</span> is the
-          audience new cards get when the requester does not ask for one;{" "}
-          <span className="font-medium text-foreground">Cap</span> narrows every request of
-          that kind and can never widen one. Tool-approval confirmations always stay{" "}
-          <span className="font-medium text-foreground">Human only</span>.
+        <p className="text-sm text-muted-foreground">{interfaceText("m_3aa2fcb4f09ca6")}{" "}
+          <span className="font-medium text-foreground">{interfaceText("m_8d486bb2d3f85d")}</span>{interfaceText("m_8096beb03f055d")}{" "}
+          <span className="font-medium text-foreground">{interfaceText("m_8cca8b216a06c5")}</span>{interfaceText("m_6c14ba38225d06")}{" "}
+          <span className="font-medium text-foreground">{interfaceText("m_1257ac04471db9")}</span>{interfaceText("m_33195350afa55d")}{" "}
+          <span className="font-medium text-foreground">{interfaceText("m_de7c8fff477b3c")}</span>.
         </p>
         {/*
          * Responsive: below `sm` the row collapses to a single column so the
@@ -261,15 +257,9 @@ export function InteractionGovernancePanel({
          * its own inline label. At `sm`+ it restores the aligned 3-col grid.
          */}
         <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-[1fr_auto_auto] sm:items-center sm:gap-x-4 sm:gap-y-2.5">
-          <div className="hidden text-xs font-medium text-muted-foreground uppercase tracking-wide sm:block">
-            Kind
-          </div>
-          <div className="hidden text-xs font-medium text-muted-foreground uppercase tracking-wide sm:block">
-            Default policy
-          </div>
-          <div className="hidden text-xs font-medium text-muted-foreground uppercase tracking-wide sm:block">
-            Cap
-          </div>
+          <div className="hidden text-xs font-medium text-muted-foreground uppercase tracking-wide sm:block">{interfaceText("m_f5387f9bb6ed70")}</div>
+          <div className="hidden text-xs font-medium text-muted-foreground uppercase tracking-wide sm:block">{interfaceText("m_8cca8b216a06c5")}</div>
+          <div className="hidden text-xs font-medium text-muted-foreground uppercase tracking-wide sm:block">{interfaceText("m_1257ac04471db9")}</div>
           {ISSUE_THREAD_INTERACTION_KINDS.map((kind) => {
             const entry = governance[kind] ?? {};
             const kindLabel = INTERACTION_KIND_LABELS[kind];

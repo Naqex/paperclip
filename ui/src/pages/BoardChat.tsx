@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import {
   useEffect,
@@ -69,6 +70,7 @@ function AgentBubbleHeader({ agent }: { agent: import("../components/AgentAvatar
 
 /** Agent-styled chat bubble containing the three-dot typing indicator. */
 function TypingBubble() {
+  useInterfaceLanguage();
   return (
     <div className="flex justify-start">
       <div
@@ -77,7 +79,7 @@ function TypingBubble() {
           "bg-card border border-border text-foreground [border-radius:14px_14px_14px_4px]",
         )}
       >
-        <span className="typing-dots" aria-label="typing">
+        <span className="typing-dots" aria-label={interfaceText("m_f8fd8e84e5d029")}>
           <span />
           <span />
           <span />
@@ -88,13 +90,14 @@ function TypingBubble() {
 }
 
 export function BoardChat() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId, selectedCompany } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Conference Room" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_fb9623fb6b5b8b") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -645,10 +648,8 @@ export function BoardChat() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center max-w-sm">
-          <h2 className="text-lg font-semibold">No organization selected</h2>
-          <p className="text-sm text-muted-foreground mt-2">
-            Select an organization to start chatting with your board concierge.
-          </p>
+          <h2 className="text-lg font-semibold">{interfaceText("m_278cd1778d29b1")}</h2>
+          <p className="text-sm text-muted-foreground mt-2">{interfaceText("m_a3d0540815a829")}</p>
         </div>
       </div>
     );
@@ -676,10 +677,10 @@ export function BoardChat() {
             />
             <div className="min-w-0 flex-1">
               <h3 className="text-sm font-semibold">
-                {ceoAgent?.name ?? "Conference Room"}
+                {ceoAgent?.name ?? interfaceText("m_fb9623fb6b5b8b")}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {selectedCompany?.name ?? "Your organization"}
+                {selectedCompany?.name ?? interfaceText("m_8fd3f0c72de92e")}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-0.5">
@@ -690,12 +691,12 @@ export function BoardChat() {
                     variant="ghost"
                     size="icon-sm"
                     className="text-muted-foreground"
-                    aria-label="chat history"
+                    aria-label={interfaceText("m_964ab895fadbf3")}
                   >
                     <History className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom">chat history</TooltipContent>
+                <TooltipContent side="bottom">{interfaceText("m_964ab895fadbf3")}</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -704,12 +705,12 @@ export function BoardChat() {
                     variant="ghost"
                     size="icon-sm"
                     className="text-muted-foreground"
-                    aria-label="new chat"
+                    aria-label={interfaceText("m_11836096bd4252")}
                   >
                     <MessageSquarePlus className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom">new chat</TooltipContent>
+                <TooltipContent side="bottom">{interfaceText("m_11836096bd4252")}</TooltipContent>
               </Tooltip>
             </div>
           </div>
@@ -743,19 +744,19 @@ export function BoardChat() {
 
                 const chips: Array<{ label: string; prompt: string }> = [
                   {
-                    label: "Draft an Organization Brief",
+                    label: interfaceText("m_bbb3dce95b0ebe"),
                     prompt: `Draft a one-page Organization Brief for ${companyName} — include our mission, team roster, and first priorities.`,
                   },
                   {
-                    label: "Create a hiring plan",
+                    label: interfaceText("m_4178933161be50"),
                     prompt: `Create a hiring plan for ${companyName}. List the next roles to hire, in priority order, with a short rationale for each.`,
                   },
                   {
-                    label: "Outline our first 30 days",
+                    label: interfaceText("m_a2f66ddc9b9a47"),
                     prompt: `Outline our first 30 days. Break it into weekly priorities with who owns what.`,
                   },
                   {
-                    label: "Write an intro pitch",
+                    label: interfaceText("m_10326cca10cada"),
                     prompt: `Write a short intro pitch for ${companyName} that I could reuse for investors, customers, or recruits.`,
                   },
                 ];
@@ -893,7 +894,7 @@ export function BoardChat() {
               {sending && (
                 <div className="flex items-center gap-2 pl-1 text-xs text-muted-foreground">
                   <img src="/paperclip-thinking.svg" alt="" className="inline-block shrink-0" style={{ width: 14, height: 14 }} />
-                  <span>{statusText || "Thinking..."}</span>
+                  <span>{statusText || interfaceText("m_b4739a4f08650d")}</span>
                   {elapsedSec > 0 && (
                     <span className="opacity-50">{elapsedSec.toFixed(1)}s</span>
                   )}
@@ -928,7 +929,7 @@ export function BoardChat() {
             <button
               type="button"
               onClick={() => scrollToLatest("smooth")}
-              aria-label="Jump to latest messages"
+              aria-label={interfaceText("m_ef32661fdda078")}
               // design-allow(card-pattern): floating scroll-to-bottom <button>, not a content card (C5a Run 3)
               className="absolute bottom-24 left-1/2 z-20 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border border-border bg-card text-foreground shadow-md transition-colors duration-150 hover:bg-accent hover:border-muted-foreground/30"
             >
@@ -954,7 +955,7 @@ export function BoardChat() {
               value={input}
               onChange={setInput}
               onSubmit={handleSend}
-              placeholder="Ask anything about your organization..."
+              placeholder={interfaceText("m_815abb1bf8dbe8")}
               submitKey="enter"
               surface="translucent"
               submitting={sending}
@@ -969,7 +970,7 @@ export function BoardChat() {
         <div
           role="separator"
           aria-orientation="vertical"
-          aria-label="Resize board chat and agent feed"
+          aria-label={interfaceText("m_97e74cbcc89afa")}
           className="group relative hidden w-3 shrink-0 cursor-col-resize bg-background md:flex"
           onMouseDown={handleSplitDragStart}
         >
@@ -994,7 +995,7 @@ export function BoardChat() {
               size="icon"
               variant="secondary"
               className="fixed bottom-20 right-4 z-20 h-10 w-10 rounded-full shadow-lg"
-              aria-label="Open agent feed"
+              aria-label={interfaceText("m_26615aa3c7bbcf")}
             >
               <Activity className="h-4 w-4" />
             </Button>

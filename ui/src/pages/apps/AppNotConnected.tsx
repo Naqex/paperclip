@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { ToolConnection } from "@paperclipai/shared";
@@ -23,6 +24,8 @@ import { ReviewPanel } from "./app-detail/ReviewPanel";
 import { appApplicationTabHref, appTabHref, appTabLabel, isAppTabKey, type AppTabKey } from "./app-tabs";
 
 export function AppNotConnected() {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const { applicationId = "", tab } = useParams<{ applicationId: string; tab?: string }>();
   const navigate = useNavigate();
   const { selectedCompanyId } = useCompany();
@@ -79,12 +82,12 @@ export function AppNotConnected() {
   useEffect(() => {
     if (!activeTab) return;
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
+      { label: interfaceText("m_c3d2e79ebdd046"), href: "/apps" },
       { label: appName, href: appApplicationTabHref(applicationId, "permissions") },
       { label: appTabLabel(activeTab) },
     ]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs, appName, applicationId, activeTab]);
+  }, [setBreadcrumbs, appName, applicationId, activeTab, interfaceLanguage]);
 
   if (tab === "activity") {
     return <Navigate to="/activity?action=tool_" replace />;
@@ -93,7 +96,7 @@ export function AppNotConnected() {
     return <Navigate to={appApplicationTabHref(applicationId, "permissions")} replace />;
   }
   if (!selectedCompanyId) {
-    return <div className="p-6 text-sm text-muted-foreground">Select an organization to manage apps.</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{interfaceText("m_c62bf64e9f0c2f")}</div>;
   }
   if (!applicationId || !activeTab) {
     return <Navigate to={applicationId ? appApplicationTabHref(applicationId, "permissions") : "/apps"} replace />;
@@ -109,8 +112,8 @@ export function AppNotConnected() {
   if (!application) {
     return (
       <div className="max-w-3xl space-y-3 p-6 text-sm text-muted-foreground">
-        <p>This app doesn’t exist anymore.</p>
-        <Button variant="outline" size="sm" onClick={() => navigate("/apps")}>Back to connectors</Button>
+        <p>{interfaceText("m_f86e299e4c788b")}</p>
+        <Button variant="outline" size="sm" onClick={() => navigate("/apps")}>{interfaceText("m_4bb96fc6ab8187")}</Button>
       </div>
     );
   }
@@ -148,13 +151,13 @@ export function AppNotConnected() {
       )
       : grantsQuery.data?.capabilities.canConfigure === true);
   const reconnectUnavailableMessage = grantsQuery.isLoading
-    ? "Checking who can reconnect this identity…"
+    ? interfaceText("m_6e1a0df1d6af38")
     : grantsQuery.isError
-      ? "We couldn't verify who can reconnect this identity. Reload the page to try again."
+      ? interfaceText("m_3dca45b9bbe36e")
       : previousConnection?.credentialPolicy === "per_user"
         && retainedPersonalUserId !== grantsQuery.data?.currentUserId
-        ? "The person this connection belongs to must reconnect it."
-        : "You don't have permission to reconnect this identity.";
+        ? interfaceText("m_f6a7ad9aa11642")
+        : interfaceText("m_b611d45d5a90a8");
   const connectHref = newConnectionHref({
     applicationId,
     appName: application.name,
@@ -185,7 +188,7 @@ export function AppNotConnected() {
           <ReviewPanel connectionId={previousConnection.id} />
         ) : (
           <EmptyTab
-            title="Nothing is waiting for your OK right now."
+            title={interfaceText("m_635a902962e2e0")}
             body="Review requests will appear here after this app is connected."
           />
         )
@@ -210,6 +213,7 @@ function ApplicationHeader({
   darkLogoUrl: string | undefined;
   connectedCount: number;
 }) {
+  useInterfaceLanguage();
   return (
     <header className="flex flex-wrap items-center gap-4">
       <AppLogo name={applicationName} logoUrl={logoUrl} darkLogoUrl={darkLogoUrl} size={48} />
@@ -217,7 +221,7 @@ function ApplicationHeader({
         <div className="flex items-center gap-2">
           <h1 className="truncate text-2xl font-bold tracking-tight">{applicationName}</h1>
           <span className="inline-flex items-center rounded-full border border-border bg-background px-2 py-0.5 text-xs font-medium text-muted-foreground">
-            {connectedCount > 0 ? `${connectedCount} connected` : "Not connected"}
+            {connectedCount > 0 ? interfaceText("m_b13630948253ad", { value0: (connectedCount) }) : interfaceText("m_0303e182467081")}
           </span>
         </div>
         {description && (
@@ -241,41 +245,39 @@ function ConnectionCallout({
   reconnectUnavailableMessage: string;
   onConnect: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <section className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border px-4 py-3">
       <div>
         <h2 className="text-sm font-semibold text-foreground">
-          {previousConnection ? "Needs attention" : "Not connected"}
+          {previousConnection ? interfaceText("m_c1ebc7817870e5") : interfaceText("m_0303e182467081")}
         </h2>
         <p className="mt-0.5 text-sm text-muted-foreground">
           {previousConnection
             ? previousConnection.authKind === "oauth"
-              ? `Sign in to ${applicationName} again to restore access.`
-              : `Add a working ${applicationName} key to restore access.`
-            : `Connect ${applicationName} so agents can use it.`}
+              ? interfaceText("m_f2a5fbc12a6a1c", { value0: (applicationName) })
+              : interfaceText("m_9c7ac26b2d3e8f", { value0: (applicationName) })
+            : interfaceText("m_a5c64a86243bf2", { value0: (applicationName) })}
         </p>
         {previousConnection && !canReconnect ? (
           <p className="mt-1 text-sm text-muted-foreground">{reconnectUnavailableMessage}</p>
         ) : null}
       </div>
       {!previousConnection || canReconnect ? (
-        <Button onClick={onConnect}>{previousConnection ? "Reconnect" : "Connect"}</Button>
+        <Button onClick={onConnect}>{previousConnection ? interfaceText("m_bf8a9eab9e7e14") : interfaceText("m_1a2303ede07493")}</Button>
       ) : null}
     </section>
   );
 }
 
 function PermissionsTab({ previousConnection }: { previousConnection: ToolConnection | null }) {
+  useInterfaceLanguage();
   return (
     <section>
-      <h2 className="text-sm font-bold text-foreground">Permissions paused</h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Reconnect this app to edit who can use it and which actions need a human first.
-      </p>
+      <h2 className="text-sm font-bold text-foreground">{interfaceText("m_931046d27a8f72")}</h2>
+      <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_3ffd9025cf705d")}</p>
       {previousConnection && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Previous setup is retained for reconnect, but access controls stay read-only until the app is online.
-        </p>
+        <p className="mt-3 text-xs text-muted-foreground">{interfaceText("m_9d8b6537a29f94")}</p>
       )}
     </section>
   );

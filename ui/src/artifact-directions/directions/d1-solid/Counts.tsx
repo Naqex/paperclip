@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../kit";
@@ -35,6 +36,7 @@ export function Counts({
   of?: LabArtifact[];
   leadClassName?: string;
 }) {
+  useInterfaceLanguage();
   const review = of ? reviewCount(of) : 0;
   const changes = of ? changesCount(of) : 0;
   return (
@@ -51,14 +53,12 @@ export function Counts({
       {review > 0 ? (
         <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
           <StateDot state="needs_review" />
-          {review} to review
-        </span>
+          {review}{interfaceText("m_343e792fcd3845")}</span>
       ) : null}
       {changes > 0 ? (
         <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
           <StateDot state="changes_requested" />
-          {changes} {changes === 1 ? "change" : "changes"} requested
-        </span>
+          {changes} {changes === 1 ? interfaceText("m_12ea12eace7d65") : interfaceText("m_d0b4ba2311b3e8")}{interfaceText("m_fcaa4f2d700188")}</span>
       ) : null}
     </span>
   );

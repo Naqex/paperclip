@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Component, Suspense, useState, type ReactNode } from "react";
 import { captureBrowserException } from "../lib/sentry";
 import { PaperclipLoading } from "./AnimatedPaperclipIcon";
@@ -12,13 +13,14 @@ interface DeferredOverlayProps {
 }
 
 function OverlayNotice({ title, onClose, failed = false }: Pick<DeferredOverlayProps, "title" | "onClose"> & { failed?: boolean }) {
+  useInterfaceLanguage();
   return <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
     <DialogContent showCloseButton={false} aria-describedby={undefined}>
-      <DialogTitle>{failed ? `Couldn't open ${title.toLowerCase()}` : `Loading ${title.toLowerCase()}…`}</DialogTitle>
+      <DialogTitle>{failed ? interfaceText("m_69b42728b8cb90", { value0: (title.toLowerCase()) }) : interfaceText("m_2493f3817ec983", { value0: (title.toLowerCase()) })}</DialogTitle>
       {failed
-        ? <p className="text-sm text-muted-foreground">Close this window to keep working. Reload the page before trying again.</p>
+        ? <p className="text-sm text-muted-foreground">{interfaceText("m_acc29aeaecb8ea")}</p>
         : <PaperclipLoading className="min-h-0" />}
-      <div className="flex justify-end"><Button variant="outline" onClick={onClose}>{failed ? "Close" : "Cancel"}</Button></div>
+      <div className="flex justify-end"><Button variant="outline" onClick={onClose}>{failed ? interfaceText("m_7d9eb7acb13e24") : interfaceText("m_19766ed6ccb2f4")}</Button></div>
     </DialogContent>
   </Dialog>;
 }

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Blocks } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,7 @@ export function ConnectionProvenanceChip({
   } | null | undefined;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const chipClass = cn(
     "inline-flex items-center gap-1 rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground",
     className,
@@ -21,11 +23,9 @@ export function ConnectionProvenanceChip({
     return (
       <span
         className={chipClass}
-        title={connectorUid ? `Credentials managed by Vercel Connect (${connectorUid})` : "Credentials managed by Vercel Connect"}
+        title={connectorUid ? interfaceText("m_10f3e1aed837be", { value0: (connectorUid) }) : interfaceText("m_25308b6d7fac3b")}
       >
-        <Blocks className="h-3 w-3" />
-        via Vercel Connect
-      </span>
+        <Blocks className="h-3 w-3" />{interfaceText("m_d34e03fbdfb4a5")}</span>
     );
   }
 

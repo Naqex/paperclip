@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * @fileoverview Classifies a failed skill mutation into the four visual states
  * from the Phase 3 UX spec (PAP-13865 / §9.10 Company Skill Policy Contract).
@@ -119,8 +120,8 @@ export function classifySkillDenial(
     || reason === "policy_default";
   if (isPolicyDenial) {
     const title = actionLabel
-      ? `${actionLabel} is restricted by your organization policy.`
-      : "This action is restricted by your organization policy.";
+      ? interfaceText("m_4b1bcbd019902a", { value0: (actionLabel) })
+      : interfaceText("m_5427af2bebdc79");
     return {
       state: "policy",
       code,

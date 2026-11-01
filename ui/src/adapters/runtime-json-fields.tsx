@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import type { AdapterConfigFieldsProps } from "./types";
 import { Field, help } from "../components/agent-config-primitives";
@@ -60,6 +61,7 @@ export function RuntimeServicesJsonField({
   config,
   mark,
 }: JsonFieldProps) {
+  useInterfaceLanguage();
   if (!SHOW_EXPERIMENTAL_ISSUE_WORKTREE_UI) {
     return null;
   }
@@ -74,7 +76,7 @@ export function RuntimeServicesJsonField({
   const value = isCreate ? values?.runtimeServicesJson ?? "" : draft;
 
   return (
-    <Field label="Runtime services JSON" hint={help.runtimeServicesJson}>
+    <Field label={interfaceText("m_b915f4a01a7576")} hint={help.runtimeServicesJson}>
       <textarea
         className={`${inputClass} min-h-[148px]`}
         value={value}
@@ -96,6 +98,7 @@ export function PayloadTemplateJsonField({
   config,
   mark,
 }: JsonFieldProps) {
+  useInterfaceLanguage();
   const existing = formatJsonObject(config.payloadTemplate);
   const [draft, setDraft] = useState(existing);
 
@@ -106,7 +109,7 @@ export function PayloadTemplateJsonField({
   const value = isCreate ? values?.payloadTemplateJson ?? "" : draft;
 
   return (
-    <Field label="Payload template JSON" hint={help.payloadTemplateJson}>
+    <Field label={interfaceText("m_ab819866b5c3be")} hint={help.payloadTemplateJson}>
       <textarea
         className={`${inputClass} min-h-[132px]`}
         value={value}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { configFieldsForSection } from "../config-sections";
 import type { AdapterConfigFieldsProps } from "../types";
 import {
@@ -18,8 +19,9 @@ export function HttpConfigFields({
   eff,
   mark,
 }: AdapterConfigFieldsProps) {
+  useInterfaceLanguage();
   return configFieldsForSection(section, (
-    <Field label="Webhook URL" hint={help.webhookUrl}>
+    <Field label={interfaceText("m_84805a7574a820")} hint={help.webhookUrl}>
       <DraftInput
         value={
           isCreate

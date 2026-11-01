@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { FolderListItem, FolderListResult } from "@paperclipai/shared";
 
 /**
@@ -148,11 +149,11 @@ export function folderBreadcrumbTrail(
 export function reservedRootLabel(folder: Pick<FolderListItem, "systemKey" | "name">): string {
   switch (folder.systemKey) {
     case "my":
-      return "My Skills";
+      return interfaceText("m_ea424d66243dff");
     case "projects":
-      return "Projects";
+      return interfaceText("m_04e2a9728af758");
     case "bundled":
-      return "Bundled";
+      return interfaceText("m_79d3a1f108e8d9");
     default:
       return folder.name;
   }

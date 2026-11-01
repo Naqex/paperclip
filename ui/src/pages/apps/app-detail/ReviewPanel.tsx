@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ReviewQueueCard } from "../ReviewQueueCard";
 import { QuarantinedActionsReview } from "./SetupPanel";
 import type { AppDetailSectionProps } from "./types";
@@ -11,11 +12,12 @@ export function ReviewPanel({
   Partial<Pick<AppDetailSectionProps, "quarantined" | "pending">> & {
     onReviewQuarantined?: (enabledIds: string[]) => void;
   }) {
+  useInterfaceLanguage();
   const showsQuarantinedActions = quarantined.length > 0 && !!onReviewQuarantined;
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold text-foreground">Review</h2>
+      <h2 className="text-lg font-semibold text-foreground">{interfaceText("m_aff0766a5290e1")}</h2>
       {showsQuarantinedActions ? (
         <QuarantinedActionsReview
           entries={quarantined}

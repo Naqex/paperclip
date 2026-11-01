@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { PageTabBar } from "@/components/PageTabBar";
 import { Tabs } from "@/components/ui/tabs";
 import { useCloudInstance } from "@/hooks/useCloudInstance";
@@ -6,18 +7,18 @@ import { INSTANCE_SETTINGS_PATH_PREFIX } from "@/lib/instance-settings";
 import { useLocation, useNavigate } from "@/lib/router";
 
 const items = [
-  { value: "general", label: "General", href: "/company/settings" },
-  { value: "export", label: "Export", href: "/company/export" },
-  { value: "import", label: "Import", href: "/company/import" },
-  { value: "members", label: "Members", href: "/company/settings/members" },
-  { value: "secrets", label: "Secrets", href: "/company/settings/secrets" },
-  { value: "instance-profile", label: "Profile", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/profile` },
-  { value: "instance-environments", label: "Environments", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/environments` },
-  { value: "connections", label: "Connections", href: "/company/settings/connections" },
-  { value: "instance-access", label: "Access", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/access` },
-  { value: "instance-experimental", label: "Experimental", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/experimental` },
-  { value: "instance-plugins", label: "Plugins", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/plugins` },
-  { value: "instance-adapters", label: "Adapters", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/adapters` },
+  { value: "general", get label() { return interfaceText("m_c910d474dcd724"); }, href: "/company/settings" },
+  { value: "export", get label() { return interfaceText("m_3664895579f0a7"); }, href: "/company/export" },
+  { value: "import", get label() { return interfaceText("m_2cff9baabf56ca"); }, href: "/company/import" },
+  { value: "members", get label() { return interfaceText("m_1044a4c056d0d6"); }, href: "/company/settings/members" },
+  { value: "secrets", get label() { return interfaceText("m_d8707d411d9976"); }, href: "/company/settings/secrets" },
+  { value: "instance-profile", get label() { return interfaceText("m_d696a35bdd1883"); }, href: `${INSTANCE_SETTINGS_PATH_PREFIX}/profile` },
+  { value: "instance-environments", get label() { return interfaceText("m_07437cd651bed8"); }, href: `${INSTANCE_SETTINGS_PATH_PREFIX}/environments` },
+  { value: "connections", get label() { return interfaceText("m_dc273117482b44"); }, href: "/company/settings/connections" },
+  { value: "instance-access", get label() { return interfaceText("m_ec5ba0abb717da"); }, href: `${INSTANCE_SETTINGS_PATH_PREFIX}/access` },
+  { value: "instance-experimental", get label() { return interfaceText("m_3dc9f569422dcf"); }, href: `${INSTANCE_SETTINGS_PATH_PREFIX}/experimental` },
+  { value: "instance-plugins", get label() { return interfaceText("m_9514b7ff4860ea"); }, href: `${INSTANCE_SETTINGS_PATH_PREFIX}/plugins` },
+  { value: "instance-adapters", get label() { return interfaceText("m_d20547a8145f71"); }, href: `${INSTANCE_SETTINGS_PATH_PREFIX}/adapters` },
 ] as const;
 
 type CompanySettingsTab = (typeof items)[number]["value"];

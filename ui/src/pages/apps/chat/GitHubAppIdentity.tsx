@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ExternalLink, RefreshCw } from "lucide-react";
 import type { ChatEndpoint } from "@/api/chatEndpoints";
 import { AgentAvatarDownload } from "@/components/AgentAvatarDownload";
@@ -24,12 +25,13 @@ export function gitHubAppSettingsUrl(endpoint: ChatEndpoint) {
 }
 
 export function GitHubBotMention({ endpoint }: { endpoint: ChatEndpoint }) {
+  useInterfaceLanguage();
   const mention = gitHubBotMention(endpoint);
   return mention ? (
     <CopyText
       text={mention}
       ariaLabel="Copy GitHub mention"
-      title="Copy GitHub mention"
+      title={interfaceText("m_82f925a4e05eef")}
       className="break-all font-mono text-xs"
     >
       {mention}
@@ -45,19 +47,17 @@ export function GitHubAppBranding({
   endpoint: ChatEndpoint;
   avatarUrl?: string;
 }) {
+  useInterfaceLanguage();
   return (
-    <GitHubSettingsDisclosure title="GitHub App name and logo">
+    <GitHubSettingsDisclosure title={interfaceText("m_b8dc68ca64f1b2")}>
       <div className="mt-4 space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Change the name or upload a logo in the App’s Display information
-          settings on GitHub.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_9b0ba11046de6b")}</p>
         <div className="flex flex-wrap items-center gap-3">
           {avatarUrl && (
             <>
               <img
                 src={avatarUrl}
-                alt={`${endpoint.assignedAgentName}’s avatar for download`}
+                alt={interfaceText("m_4707484a9c49fd", { value0: (endpoint.assignedAgentName) })}
                 className="size-12 shrink-0 object-contain"
               />
               <AgentAvatarDownload
@@ -71,22 +71,16 @@ export function GitHubAppBranding({
               href={gitHubAppSettingsUrl(endpoint)}
               target="_blank"
               rel="noreferrer"
-              aria-label="Edit App name and logo on GitHub"
-            >
-              Edit on GitHub <ExternalLink className="size-4" />
+              aria-label={interfaceText("m_a2f0e5c78f7ebb")}
+            >{interfaceText("m_1148482394c5bc")}<ExternalLink className="size-4" />
             </a>
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Renaming also changes its @mention.{" "}
+        <p className="text-xs text-muted-foreground">{interfaceText("m_c236bcb29683d2")}{" "}
           <Link
             className="underline underline-offset-4"
             to={`/apps/chat/connect?provider=github&resume=${endpoint.id}&reconnect=1`}
-          >
-            Reconnect afterward
-          </Link>{" "}
-          to update it here.
-        </p>
+          >{interfaceText("m_d13ca086a1b15a")}</Link>{" "}{interfaceText("m_1bc5e0bfe9d465")}</p>
       </div>
     </GitHubSettingsDisclosure>
   );
@@ -100,6 +94,7 @@ export function GitHubAppIdentityActions({
   endpoint: ChatEndpoint;
   avatarUrl?: string;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-wrap items-center gap-1">
       {avatarUrl && (
@@ -114,17 +109,16 @@ export function GitHubAppIdentityActions({
           href={gitHubAppSettingsUrl(endpoint)}
           target="_blank"
           rel="noreferrer"
-          aria-label="Edit App name and logo on GitHub"
-          title="Change the App name or upload its logo on GitHub"
-        >
-          Edit App <ExternalLink className="size-3.5" />
+          aria-label={interfaceText("m_a2f0e5c78f7ebb")}
+          title={interfaceText("m_fcf24c34b1ebce")}
+        >{interfaceText("m_a4ad0ad55dee9a")}<ExternalLink className="size-3.5" />
         </a>
       </Button>
       <Button variant="ghost" size="icon" asChild>
         <Link
           to={`/apps/chat/connect?provider=github&resume=${endpoint.id}&reconnect=1`}
-          aria-label="Refresh GitHub App identity"
-          title="Reconnect after renaming the App to refresh its @mention"
+          aria-label={interfaceText("m_3538e949bcc8b1")}
+          title={interfaceText("m_1f78270e2dcf73")}
         >
           <RefreshCw className="size-3.5" />
         </Link>

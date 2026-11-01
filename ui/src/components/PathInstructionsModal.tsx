@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { Apple, Monitor, Terminal } from "lucide-react";
 import {
@@ -61,6 +62,7 @@ export function PathInstructionsModal({
   open,
   onOpenChange,
 }: PathInstructionsModalProps) {
+  useInterfaceLanguage();
   const [platform, setPlatform] = useState<Platform>(detectPlatform);
 
   const current = instructions[platform];
@@ -69,12 +71,9 @@ export function PathInstructionsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-base">How to get a full path</DialogTitle>
-          <DialogDescription>
-            Paste the absolute path (e.g.{" "}
-            <code className="text-xs bg-muted px-1 py-0.5 rounded">/Users/you/project</code>
-            ) into the input field.
-          </DialogDescription>
+          <DialogTitle className="text-base">{interfaceText("m_dc9f3a6626d2ec")}</DialogTitle>
+          <DialogDescription>{interfaceText("m_6f9194b921937a")}{" "}
+            <code className="text-xs bg-muted px-1 py-0.5 rounded">/Users/you/project</code>{interfaceText("m_fe953a5f572c43")}</DialogDescription>
         </DialogHeader>
 
         {/* Platform tabs */}
@@ -124,6 +123,7 @@ export function PathInstructionsModal({
  * Drop-in replacement for the old showDirectoryPicker buttons.
  */
 export function ChoosePathButton({ className }: { className?: string }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -134,9 +134,7 @@ export function ChoosePathButton({ className }: { className?: string }) {
           className,
         )}
         onClick={() => setOpen(true)}
-      >
-        Choose
-      </button>
+      >{interfaceText("m_c7f937836f5d82")}</button>
       <PathInstructionsModal open={open} onOpenChange={setOpen} />
     </>
   );

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useId, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -59,6 +60,7 @@ export function FastResponseSettingsView({
   onTest: () => void;
   onConnectionChange?: (id: string | null) => void;
 }) {
+  useInterfaceLanguage();
   const [draft, setDraft] = useState<UpdateFastResponse>(() =>
     editable(settings),
   );
@@ -98,22 +100,15 @@ export function FastResponseSettingsView({
     draft.model !== settings.model ||
     draft.allowSponsored !== settings.allowSponsored;
   return (
-    <section className="max-w-2xl space-y-4" aria-label="Fast response">
+    <section className="max-w-2xl space-y-4" aria-label={interfaceText("m_b68363dba36648")}>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">
-          Fast response
-        </h2>
+        <h2 className="text-lg font-semibold">{interfaceText("m_b68363dba36648")}</h2>
         <Link
           to="/activity/costs?tab=fast-responses"
           className="text-sm underline underline-offset-4"
-        >
-          View usage
-        </Link>
+        >{interfaceText("m_2e4ae39a4ee5a0")}</Link>
       </div>
-      <p className="text-sm text-muted-foreground">
-        Send a short acknowledgement while your agent starts work. Usage is
-        charged to the selected shared API connection.
-      </p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_399bf4c9c701e4")}</p>
       <ConnectionChoiceList
         selectedId={draft.grantId ?? undefined}
         disabled={saving || testing}
@@ -140,40 +135,29 @@ export function FastResponseSettingsView({
         }}
       />
       {!choices.length && (
-        <p className="text-sm text-muted-foreground">
-          Add a shared API connection in Apps to get started.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_971ac7f55973df")}</p>
       )}
       <div className="flex items-center gap-3">
         {onAdd && (
-          <Button variant="outline" size="sm" onClick={onAdd}>
-            Add connection
-          </Button>
+          <Button variant="outline" size="sm" onClick={onAdd}>{interfaceText("m_685f88ae3db24e")}</Button>
         )}
-        <Link to="/apps" className="text-sm underline underline-offset-4">
-          Manage connections
-        </Link>
+        <Link to="/apps" className="text-sm underline underline-offset-4">{interfaceText("m_cadfaac7241e36")}</Link>
       </div>
       {draft.connectionId && (
         <fieldset disabled={saving || testing} className="space-y-4">
           {!selected && (
-            <p role="status" className="text-sm text-muted-foreground">
-              The saved connection is unavailable. Disable fast responses or
-              choose another connection.
-            </p>
+            <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_e3768aa1a68787")}</p>
           )}
           <div className="space-y-2">
             <label
               htmlFor={`${modelListId}-input`}
               className="text-sm font-medium"
-            >
-              Model
-            </label>
+            >{interfaceText("m_5e2c614c23f022")}</label>
             <Input
               id={`${modelListId}-input`}
               list={modelListId}
               value={draft.model ?? ""}
-              placeholder="Choose or enter a model ID"
+              placeholder={interfaceText("m_45732715b2b33c")}
               onChange={(e) =>
                 setDraft((d) => ({ ...d, model: e.target.value || null }))
               }
@@ -187,22 +171,19 @@ export function FastResponseSettingsView({
             </datalist>
           </div>
           <ToggleField
-            label="Enable fast responses"
+            label={interfaceText("m_b60a1ea3d63720")}
             checked={draft.enabled}
             onChange={(enabled) => setDraft((d) => ({ ...d, enabled }))}
           />
           <div className="space-y-2">
             <ToggleField
-              label="Allow company-sponsored fast responses"
+              label={interfaceText("m_08376e1e3163e8")}
               checked={draft.allowSponsored}
               onChange={(allowSponsored) =>
                 setDraft((d) => ({ ...d, allowSponsored }))
               }
             />
-            <p className="text-xs text-muted-foreground">
-              Covers accepted external messages from people without a linked
-              Paperclip account.
-            </p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_451c2ba9210235")}</p>
           </div>
         </fieldset>
       )}
@@ -217,17 +198,15 @@ export function FastResponseSettingsView({
           <div role="status" className="space-y-2 text-sm">
             <p>{result.text}</p>
             <p className="text-xs text-muted-foreground">
-              {(result.durationMs / 1000).toFixed(2)} seconds ·{" "}
-              {result.usage.inputTokens ?? "—"} input /{" "}
-              {result.usage.outputTokens ?? "—"} output tokens · Usage recorded
-              in Costs.
-            </p>
+              {(result.durationMs / 1000).toFixed(2)}{interfaceText("m_cc4e2033fa9254")}{" "}
+              {result.usage.inputTokens ?? "—"}{interfaceText("m_429f460dbc91e9")}{" "}
+              {result.usage.outputTokens ?? "—"}{interfaceText("m_4f533f4f2a2d7a")}</p>
           </div>
         ) : (
           <p role="alert" className="text-sm text-destructive">
             {result.reason === "timeout"
-              ? "The model did not respond within three seconds. Try a faster model."
-              : "Could not generate a response. Check the connection and model, then try again."}
+              ? interfaceText("m_57f4c33dcc2d1e")
+              : interfaceText("m_268ada25369213")}
           </p>
         ))}
       <div className="flex items-center justify-between gap-3">
@@ -238,12 +217,12 @@ export function FastResponseSettingsView({
             onClick={onTest}
             disabled={dirty || !settings.enabled || saving || testing}
           >
-            {testing ? "Testing…" : "Test response"}
+            {testing ? interfaceText("m_407b7a04662f2a") : interfaceText("m_39779b6a6e81c4")}
           </Button>
           <p className="text-xs text-muted-foreground">
             {dirty
-              ? "Save changes before testing."
-              : "Runs a small sample with an API charge."}
+              ? interfaceText("m_10a5f254580803")
+              : interfaceText("m_9e0456bb1c2989")}
           </p>
         </div>
         {dirty && (
@@ -256,7 +235,7 @@ export function FastResponseSettingsView({
             }
             onClick={() => onSave(draft)}
           >
-            {saving ? "Saving…" : "Save fast response"}
+            {saving ? interfaceText("m_23e39291d61358") : interfaceText("m_3676a768947555")}
           </Button>
         )}
       </div>
@@ -268,6 +247,7 @@ export function FastResponseSettingsSection({
 }: {
   companyId: string;
 }) {
+  useInterfaceLanguage();
   const client = useQueryClient(),
     key = ["fast-response", companyId];
   const query = useQuery({
@@ -311,17 +291,13 @@ export function FastResponseSettingsSection({
   });
   if (query.isPending)
     return (
-      <p className="text-sm text-muted-foreground">Loading fast response…</p>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_5c8027ebfb443c")}</p>
     );
   if (query.error)
     return (
       <div role="alert">
-        <p className="text-sm text-destructive">
-          Could not load fast response settings.
-        </p>
-        <Button variant="outline" onClick={() => void query.refetch()}>
-          Try again
-        </Button>
+        <p className="text-sm text-destructive">{interfaceText("m_388d161a4eb9a1")}</p>
+        <Button variant="outline" onClick={() => void query.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>
       </div>
     );
   if (!query.data?.canManage || !query.data.settings) return null;
@@ -354,10 +330,8 @@ export function FastResponseSettingsSection({
       <Dialog open={adding} onOpenChange={setAdding}>
         <DialogContent className="sm:max-w-2xl max-h-(--sz-85vh) overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add a fast response connection</DialogTitle>
-            <DialogDescription>
-              Use a shared API connection for short acknowledgements.
-            </DialogDescription>
+            <DialogTitle>{interfaceText("m_384f85519d0ae3")}</DialogTitle>
+            <DialogDescription>{interfaceText("m_4e5d9931567993")}</DialogDescription>
           </DialogHeader>
           {provider ? (
             <ConnectionSetupFlow

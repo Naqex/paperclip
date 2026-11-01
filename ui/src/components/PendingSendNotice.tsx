@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,14 +29,15 @@ export function PendingSendNotice({
   onCancel: () => void;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const replayable = Boolean(onResendNow);
   const title = !replayable
-    ? `We couldn’t confirm whether this ${noun} was sent.`
+    ? interfaceText("m_726806ef8c2af7", { value0: (noun) })
     : resending
-      ? "Sending…"
+      ? interfaceText("m_b8ed5279e897be")
       : stalled
-        ? `Couldn’t send this ${noun} yet.`
-        : "Sending when reconnected…";
+        ? interfaceText("m_a09f35c30bfc05", { value0: (noun) })
+        : interfaceText("m_8639e646e6ceb3");
   const detail = replayable
     ? persisted ? `Your ${noun} is saved on this device.`
       : "Browser storage is unavailable. Keep this tab open or copy your text before leaving."
@@ -54,13 +56,9 @@ export function PendingSendNotice({
       <p className="text-muted-foreground">{detail}</p>
       <div className="flex items-center gap-2">
         {onResendNow ? (
-          <Button type="button" size="sm" variant="outline" disabled={resending} onClick={onResendNow}>
-            Resend now
-          </Button>
+          <Button type="button" size="sm" variant="outline" disabled={resending} onClick={onResendNow}>{interfaceText("m_a4fab5c81218e5")}</Button>
         ) : null}
-        <Button type="button" size="sm" variant="ghost" disabled={resending} onClick={onCancel}>
-          Cancel
-        </Button>
+        <Button type="button" size="sm" variant="ghost" disabled={resending} onClick={onCancel}>{interfaceText("m_19766ed6ccb2f4")}</Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo } from "react";
 import { Link, Navigate } from "@/lib/router";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -78,6 +79,7 @@ function buildProjectWorkspaceGroups(items: WorkspaceOverviewItem[]): ProjectWor
 }
 
 export function Workspaces() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const experimentalSettingsQuery = useQuery({
@@ -99,8 +101,8 @@ export function Workspaces() {
   const overviewView = useQueryView(overviewQuery);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Workspaces" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_1377264ba3b0a7") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const overviewPages = overviewQuery.data?.pages ?? [];
   const overviewItems = useMemo(
@@ -123,7 +125,7 @@ export function Workspaces() {
       <QueryErrorState
         size="page"
         error={experimentalSettingsQuery.error}
-        action="load workspaces"
+        action={interfaceText("m_71cd4154697ec7")}
         onRetry={experimentalSettingsView.retry}
         retrying={experimentalSettingsView.isFetching}
       />
@@ -132,24 +134,24 @@ export function Workspaces() {
   if (!isolatedWorkspacesEnabled) return <Navigate to="/issues" replace />;
   if (dataLoading) return <PageSkeleton variant="list" />;
   if (overviewView.kind === "error") {
-    return <QueryErrorState size="page" error={error} action="load workspaces" onRetry={overviewView.retry} retrying={overviewView.isFetching} />;
+    return <QueryErrorState size="page" error={error} action={interfaceText("m_71cd4154697ec7")} onRetry={overviewView.retry} retrying={overviewView.isFetching} />;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold">Workspaces</h2>
+        <h2 className="text-xl font-bold">{interfaceText("m_1377264ba3b0a7")}</h2>
       </div>
 
       <SummarySlotCard
         companyId={selectedCompanyId}
         scopeKind="workspaces_overview"
-        title="Workspace summary"
-        description="Summarizer tracks workspace activity, live services, and follow-up needs across projects."
+        title={interfaceText("m_970a90e91e265a")}
+        description={interfaceText("m_e12879046be555")}
       />
 
       {groups.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No workspace activity yet.</p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_f7bf9843700ea8")}</p>
       ) : (
         <div className="space-y-8">
           {groups.map((group) => (
@@ -164,7 +166,7 @@ export function Workspaces() {
                   </Link> : <h3 className="text-base font-semibold">{group.projectName}</h3>}
                 </div>
                 <span className="text-xs text-muted-foreground">
-                  {group.summaries.length} workspace{group.summaries.length === 1 ? "" : "s"}
+                  {group.summaries.length}{interfaceText("m_4be0369b18383e")}{group.summaries.length === 1 ? "" : interfaceText("m_043a718774c572")}
                 </span>
               </div>
               <ProjectWorkspacesContent
@@ -177,9 +179,7 @@ export function Workspaces() {
           ))}
           {overviewQuery.hasNextPage ? (
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-              <p className="text-sm text-muted-foreground">
-                Showing {overviewItems.length} of {totalWorkspaceCount} workspaces.
-              </p>
+              <p className="text-sm text-muted-foreground">{interfaceText("m_7282e1fbb2c6d3")}{overviewItems.length}{interfaceText("m_a4282e4b2298b9")}{totalWorkspaceCount}{interfaceText("m_fa147e43c4b617")}</p>
               <Button
                 type="button"
                 variant="outline"
@@ -187,7 +187,7 @@ export function Workspaces() {
                 onClick={() => void overviewQuery.fetchNextPage()}
                 disabled={overviewQuery.isFetchingNextPage}
               >
-                {overviewQuery.isFetchingNextPage ? "Loading..." : "Load more"}
+                {overviewQuery.isFetchingNextPage ? interfaceText("m_47d2a515ef2f05") : interfaceText("m_ac8991ef01019c")}
               </Button>
             </div>
           ) : null}

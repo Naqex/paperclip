@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { ExecutionProjection } from "@paperclipai/shared";
 import type {
   ReasoningMessagePart,
@@ -810,24 +811,24 @@ function runDurationLabel(run: {
   const stopReason = typeof run.resultJson?.stopReason === "string" ? run.resultJson.stopReason : null;
   switch (run.status) {
     case "succeeded":
-      return durationText ? `Worked for ${durationText}` : "Finished work";
+      return durationText ? interfaceText("m_5e5d13d4b39035", { value0: (durationText) }) : interfaceText("m_41443187c57888");
     case "failed":
     case "error":
-      return durationText ? `Failed after ${durationText}` : "Run failed";
+      return durationText ? interfaceText("m_7e3da3b0bba2cd", { value0: (durationText) }) : interfaceText("m_97fddf2d43e8df");
     case "timed_out":
-      return durationText ? `Timed out after ${durationText}` : "Run timed out";
+      return durationText ? interfaceText("m_d6f0436133540f", { value0: (durationText) }) : interfaceText("m_7b73d2f741cdb3");
     case "cancelled":
       if (isOperatorInterruptedRun(run.resultJson, run.errorCode)) {
-        return durationText ? `Interrupted by board after ${durationText}` : "Interrupted by board";
+        return durationText ? interfaceText("m_2202078960dff2", { value0: (durationText) }) : interfaceText("m_99d8dfd0e0f140");
       }
       if (stopReason === "paused") {
-        return durationText ? `Paused by board after ${durationText}` : "Paused by board";
+        return durationText ? interfaceText("m_bad08ae5244109", { value0: (durationText) }) : interfaceText("m_f8479a8ec2b0ec");
       }
-      return durationText ? `Cancelled after ${durationText}` : "Run cancelled";
+      return durationText ? interfaceText("m_78a2a430b252bf", { value0: (durationText) }) : interfaceText("m_2d34c9f19f5402");
     case "queued":
-      return "Queued";
+      return interfaceText("m_661ff40a07e037");
     case "running":
-      return "Working...";
+      return interfaceText("m_b93900bded315d");
     default:
       return formatStatusLabel(run.status);
   }
@@ -866,7 +867,7 @@ function createHistoricalTranscriptMessage(args: {
   const agentName = run.agentName ?? agentMap?.get(run.agentId)?.name ?? run.agentId.slice(0, 8);
   const compactedTranscript = compactIssueChatTranscript(transcript, issueChatTranscriptMaxVisibleEntries(run.adapterType));
   const { parts, notices, segments } = buildAssistantPartsFromTranscript(compactedTranscript);
-  const waitingText = hasOutput ? "" : "Run finished";
+  const waitingText = hasOutput ? "" : interfaceText("m_22488bd91e126f");
   const content = parts.length > 0
     ? parts
     : waitingText
@@ -1110,10 +1111,10 @@ function createLiveRunMessage(args: {
   const { parts, notices, segments } = buildAssistantPartsFromTranscript(compactedTranscript);
   const waitingText =
     run.status === "queued"
-      ? "Queued..."
+      ? interfaceText("m_c0c05da9e9a62c")
       : parts.length > 0
         ? ""
-        : "Working...";
+        : interfaceText("m_b93900bded315d");
 
   const content = parts;
 

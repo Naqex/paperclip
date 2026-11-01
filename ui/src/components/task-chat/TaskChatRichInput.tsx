@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState } from "react";
 import { ImagePlus, Loader2 } from "lucide-react";
 import {
@@ -41,6 +42,7 @@ export function TaskChatRichInput({
   showImageAttachControls = false,
   questionAnswer = false,
 }: TaskChatRichInputProps) {
+  useInterfaceLanguage();
   const editorRef = useRef<MarkdownEditorRef>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadCountRef = useRef(0);
@@ -134,10 +136,8 @@ export function TaskChatRichInput({
               <Loader2 aria-hidden className="h-3.5 w-3.5 animate-spin" />
             ) : (
               <ImagePlus aria-hidden className="h-3.5 w-3.5" />
-            )}
-            Attach image
-          </Button>
-          <span>or drop/paste an image into the note</span>
+            )}{interfaceText("m_2eacc5e02758c0")}</Button>
+          <span>{interfaceText("m_91c413d37849d5")}</span>
         </div>
       ) : null}
       {uploadError ? (

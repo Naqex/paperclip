@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, MessageSquarePlus } from "lucide-react";
 import { chatEndpointsApi, type ChatProvider } from "@/api/chatEndpoints";
@@ -25,6 +26,7 @@ export function AgentChannelsPanel({
   companyId: string;
   agentId: string;
 }) {
+  useInterfaceLanguage();
   const { enabled, githubEnabled } = useChatConnectorsEnabled();
   const query = useQuery({
     queryKey: queryKeys.chatEndpoints.list(companyId),
@@ -39,28 +41,24 @@ export function AgentChannelsPanel({
     <section className="max-w-3xl space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold">Channels</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Chat and email identities connected to this agent.
-          </p>
+          <h2 className="text-lg font-semibold">{interfaceText("m_4c8906cf76f574")}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_1a1a7a34710f87")}</p>
         </div>
         <Button asChild size="sm">
           <Link to={`/apps?chatAgentId=${encodeURIComponent(agentId)}`}>
-            <MessageSquarePlus />
-            Connect a channel
-          </Link>
+            <MessageSquarePlus />{interfaceText("m_283fa1a6131eb1")}</Link>
         </Button>
       </div>
       {query.isLoading ? (
-        <p className="text-sm text-muted-foreground">Loading channels…</p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_b09d106b3f777e")}</p>
       ) : endpoints.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border p-5">
-          <p className="text-sm font-medium">No channels connected</p>
+          <p className="text-sm font-medium">{interfaceText("m_ce30a0411e9616")}</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            {enabled || githubEnabled ? "Connect an agent identity from Connectors." : "Connect AgentMail from Connectors."}
+            {enabled || githubEnabled ? interfaceText("m_f60f50b7ca1b53") : interfaceText("m_dfa2bbda97d099")}
           </p>
           <Button asChild className="mt-3" variant="outline" size="sm">
-            <Link to="/apps">Open Connectors</Link>
+            <Link to="/apps">{interfaceText("m_d985974b1d0546")}</Link>
           </Button>
         </div>
       ) : (
@@ -77,13 +75,12 @@ export function AgentChannelsPanel({
                 <p className="truncate text-xs text-muted-foreground">
                   {endpoint.botLabel ??
                     endpoint.providerAccountLabel ??
-                    "Provider identity"}
+                    interfaceText("m_656eefd90b9236")}
                 </p>
               </div>
               <Badge variant="outline">{endpoint.status.replace(/[_-]/g, " ")}</Badge>
               <Button asChild size="sm" variant="outline">
-                <Link to={`/apps/chat/${endpoint.id}/settings`}>
-                  Open connection <ExternalLink />
+                <Link to={`/apps/chat/${endpoint.id}/settings`}>{interfaceText("m_b083431c1d1326")}<ExternalLink />
                 </Link>
               </Button>
             </div>

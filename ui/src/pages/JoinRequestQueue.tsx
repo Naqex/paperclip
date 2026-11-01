@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserPlus2 } from "lucide-react";
@@ -12,6 +13,8 @@ import { useToast } from "@/context/ToastContext";
 import { queryKeys } from "@/lib/queryKeys";
 
 export function JoinRequestQueue() {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompany, selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { pushToast } = useToast();
@@ -22,10 +25,10 @@ export function JoinRequestQueue() {
   useEffect(() => {
     setBreadcrumbs([
       { label: selectedCompany?.name ?? "Organization", href: "/dashboard" },
-      { label: "Inbox", href: "/inbox" },
-      { label: "Join Requests" },
+      { label: interfaceText("m_94835ea2fcf775"), href: "/inbox" },
+      { label: interfaceText("m_26fe033758d637") },
     ]);
-  }, [selectedCompany?.name, setBreadcrumbs]);
+  }, [selectedCompany?.name, setBreadcrumbs, interfaceLanguage]);
 
   const requestsQuery = useQuery({
     queryKey: queryKeys.access.joinRequests(selectedCompanyId ?? "", `${status}:${requestType}`),
@@ -44,7 +47,7 @@ export function JoinRequestQueue() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.access.joinRequests(selectedCompanyId!, `${status}:${requestType}`) });
       await queryClient.invalidateQueries({ queryKey: queryKeys.access.companyMembers(selectedCompanyId!) });
       await queryClient.invalidateQueries({ queryKey: queryKeys.access.companyUserDirectory(selectedCompanyId!) });
-      pushToast({ title: "Join request approved", tone: "success" });
+      pushToast({ title: interfaceText("m_d1a4dcc6d86431"), tone: "success" });
     },
   });
 
@@ -52,25 +55,25 @@ export function JoinRequestQueue() {
     mutationFn: (requestId: string) => accessApi.rejectJoinRequest(selectedCompanyId!, requestId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.access.joinRequests(selectedCompanyId!, `${status}:${requestType}`) });
-      pushToast({ title: "Join request rejected", tone: "success" });
+      pushToast({ title: interfaceText("m_c8110f2795ab61"), tone: "success" });
     },
   });
 
   if (!selectedCompanyId) {
-    return <div className="text-sm text-muted-foreground">Select an organization to review join requests.</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_2317c6a6bf957d")}</div>;
   }
 
   if (requestsQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading join requests…</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_6aaf5068256131")}</div>;
   }
 
   if (requestsQuery.error) {
     const message =
       requestsQuery.error instanceof ApiError && requestsQuery.error.status === 403
-        ? "You do not have permission to review join requests for this organization."
+        ? interfaceText("m_8759eaa51103a6")
         : requestsQuery.error instanceof Error
           ? requestsQuery.error.message
-          : "Failed to load join requests.";
+          : interfaceText("m_de1cbe58e21d7c");
     return <div className="text-sm text-destructive">{message}</div>;
   }
 
@@ -79,16 +82,14 @@ export function JoinRequestQueue() {
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <UserPlus2 className="h-5 w-5 text-muted-foreground" />
-          <h1 className="text-lg font-semibold">Join Request Queue</h1>
+          <h1 className="text-lg font-semibold">{interfaceText("m_a51c104b51cc31")}</h1>
         </div>
-        <p className="max-w-3xl text-sm text-muted-foreground">
-          Review human and agent join requests outside the mixed inbox feed. This queue uses the same approval mutations as the inline inbox cards.
-        </p>
+        <p className="max-w-3xl text-sm text-muted-foreground">{interfaceText("m_a25f80123d884e")}</p>
       </div>
 
       <Card className="flex-row flex-wrap gap-3 p-4">
         <label className="space-y-2 text-sm">
-          <span className="font-medium">Status</span>
+          <span className="font-medium">{interfaceText("m_920e413c7d411b")}</span>
           <select
             className="rounded-md border border-border bg-background px-3 py-2"
             value={status}
@@ -96,13 +97,13 @@ export function JoinRequestQueue() {
               setStatus(event.target.value as "pending_approval" | "approved" | "rejected")
             }
           >
-            <option value="pending_approval">Pending approval</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
+            <option value="pending_approval">{interfaceText("m_bb33a7f41817b3")}</option>
+            <option value="approved">{interfaceText("m_87b42e40c2a290")}</option>
+            <option value="rejected">{interfaceText("m_aea4a04a80426e")}</option>
           </select>
         </label>
         <label className="space-y-2 text-sm">
-          <span className="font-medium">Request type</span>
+          <span className="font-medium">{interfaceText("m_6db8df2da928eb")}</span>
           <select
             className="rounded-md border border-border bg-background px-3 py-2"
             value={requestType}
@@ -110,8 +111,8 @@ export function JoinRequestQueue() {
               setRequestType(event.target.value as "all" | "human" | "agent")
             }
           >
-            <option value="all">All</option>
-            <option value="human">Human</option>
+            <option value="all">{interfaceText("m_a52ace420f2175")}</option>
+            <option value="human">{interfaceText("m_9ffa865f2bc6e8")}</option>
             <option value="agent">Agent</option>
           </select>
         </label>
@@ -119,9 +120,7 @@ export function JoinRequestQueue() {
 
       <div className="space-y-4">
         {(requestsQuery.data ?? []).length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">
-            No join requests match the current filters.
-          </div>
+          <div className="rounded-xl border border-dashed border-border px-4 py-8 text-sm text-muted-foreground">{interfaceText("m_bf9e13fbd9e55b")}</div>
         ) : (
           requestsQuery.data!.map((request) => (
             <Card key={request.id} className="block p-4">
@@ -137,8 +136,8 @@ export function JoinRequestQueue() {
                   <div>
                     <div className="text-base font-medium">
                       {request.requestType === "human"
-                        ? request.requesterUser?.name || request.requestEmailSnapshot || request.requestingUserId || "Unknown human requester"
-                        : request.agentName || "Unknown agent requester"}
+                        ? request.requesterUser?.name || request.requestEmailSnapshot || request.requestingUserId || interfaceText("m_08c8b631ee643c")
+                        : request.agentName || interfaceText("m_ef1e967cb399e4")}
                     </div>
                     <div className="text-sm text-muted-foreground">
                       {request.requestType === "human"
@@ -154,35 +153,31 @@ export function JoinRequestQueue() {
                       variant="outline"
                       onClick={() => rejectMutation.mutate(request.id)}
                       disabled={rejectMutation.isPending}
-                    >
-                      Reject
-                    </Button>
+                    >{interfaceText("m_ab604a36077773")}</Button>
                     <Button
                       onClick={() => approveMutation.mutate(request.id)}
                       disabled={approveMutation.isPending}
-                    >
-                      Approve
-                    </Button>
+                    >{interfaceText("m_6007acbe30b2cd")}</Button>
                   </div>
                 ) : null}
               </div>
 
               <div className="mt-4 grid gap-3 text-sm text-muted-foreground md:grid-cols-2">
                 <div className="rounded-lg border border-border bg-background px-3 py-2">
-                  <div className="text-xs font-medium uppercase tracking-wide">Invite context</div>
+                  <div className="text-xs font-medium uppercase tracking-wide">{interfaceText("m_b13541ba608ff3")}</div>
                   <div className="mt-2">
                     {request.invite
-                      ? `${request.invite.allowedJoinTypes} join invite${request.invite.humanRole ? ` • default role ${request.invite.humanRole}` : ""}`
-                      : "Invite metadata unavailable"}
+                      ? interfaceText("m_c12ed41052bd9f", { value0: (request.invite.allowedJoinTypes), value1: (request.invite.humanRole ? ` • default role ${request.invite.humanRole}` : "") })
+                      : interfaceText("m_1ba4d74c6db5a3")}
                   </div>
                   {request.invite?.inviteMessage ? (
                     <div className="mt-2 text-foreground">{request.invite.inviteMessage}</div>
                   ) : null}
                 </div>
                 <div className="rounded-lg border border-border bg-background px-3 py-2">
-                  <div className="text-xs font-medium uppercase tracking-wide">Request details</div>
-                  <div className="mt-2">Submitted {new Date(request.createdAt).toLocaleString()}</div>
-                  <div>Source IP {request.requestIp}</div>
+                  <div className="text-xs font-medium uppercase tracking-wide">{interfaceText("m_b6e3369e005b72")}</div>
+                  <div className="mt-2">{interfaceText("m_f0833d28137715")}{new Date(request.createdAt).toLocaleString()}</div>
+                  <div>{interfaceText("m_6b4f32b9476438")}{request.requestIp}</div>
                   {request.requestType === "agent" && request.capabilities ? <div>{request.capabilities}</div> : null}
                 </div>
               </div>

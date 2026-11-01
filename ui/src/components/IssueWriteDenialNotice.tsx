@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Clock, EyeOff, ShieldX, UserCog } from "lucide-react";
 import {
   describeIssueWriteDenial,
@@ -73,6 +74,7 @@ export function IssueWriteDenialNotice({
   context?: IssueWriteDenialContext;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const copy = describeIssueWriteDenial(code, context ?? {});
   const tone = TONE_CLASSES[copy.tone];
   const Icon = VISIBILITY_CODES.has(code) ? EyeOff : TONE_ICONS[copy.tone];
@@ -99,11 +101,11 @@ export function IssueWriteDenialNotice({
               label and the first words of the value together at every width. */}
           <dl className={cn("space-y-0.5 text-xs leading-5", tone.action)}>
             <div className="min-w-0">
-              <dt className="inline font-medium">Who can act:</dt>{" "}
+              <dt className="inline font-medium">{interfaceText("m_0a595201a6468c")}</dt>{" "}
               <dd className="inline">{copy.whoCanAct}</dd>
             </div>
             <div className="min-w-0">
-              <dt className="inline font-medium">Try this:</dt>{" "}
+              <dt className="inline font-medium">{interfaceText("m_0965b88a3bfa3d")}</dt>{" "}
               <dd className="inline">{copy.sanctionedPath}</dd>
             </div>
           </dl>

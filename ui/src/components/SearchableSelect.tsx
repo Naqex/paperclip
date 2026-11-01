@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -99,7 +100,7 @@ export function SearchableSelect<
   onValueChange,
   placeholder,
   searchPlaceholder = "Search...",
-  emptyMessage = "No options found.",
+  emptyMessage = interfaceText("m_2d333ca8a101b8"),
   loadingMessage = "Loading...",
   loading = false,
   disabled = false,
@@ -121,6 +122,7 @@ export function SearchableSelect<
   listFooter,
   createItem,
 }: SearchableSelectProps<TValue, TOption>) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const mobileViewportStyle = useMobileEntityPickerViewportStyle();
@@ -272,7 +274,7 @@ export function SearchableSelect<
           <button
             type="button"
             className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Close selector"
+            aria-label={interfaceText("m_74de5f1da8b548")}
             onClick={() => closePopover({ suppressTriggerFocus: true })}
           >
             <X className="size-5" />

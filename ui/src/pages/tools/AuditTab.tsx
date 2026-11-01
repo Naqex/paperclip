@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, ScrollText } from "lucide-react";
@@ -30,29 +31,29 @@ const ALL = "__all";
 
 /** Outcome chip vocabulary (spec §4C / §5): Allowed · Blocked · Asked first · Failed · Waiting. */
 const OUTCOME_META: Record<ToolAuditOutcome, { label: string; status: string }> = {
-  allowed: { label: "Allowed", status: "allowed" },
-  blocked: { label: "Blocked", status: "denied" },
-  asked_first: { label: "Asked first", status: "require-approval" },
-  waiting: { label: "Waiting", status: "deferred" },
-  failed: { label: "Failed", status: "failed" },
-  unknown: { label: "Recorded", status: "unchecked" },
+  allowed: { get label() { return interfaceText("m_1bb201d188352e"); }, status: "allowed" },
+  blocked: { get label() { return interfaceText("m_18f2a0947f9d65"); }, status: "denied" },
+  asked_first: { get label() { return interfaceText("m_db928628a30ccd"); }, status: "require-approval" },
+  waiting: { get label() { return interfaceText("m_6e293a8c009e00"); }, status: "deferred" },
+  failed: { get label() { return interfaceText("m_031a8f0f659df8"); }, status: "failed" },
+  unknown: { get label() { return interfaceText("m_c7175fa7a0db0d"); }, status: "unchecked" },
 };
 
 const OUTCOME_FILTERS: { value: string; label: string }[] = [
-  { value: ALL, label: "All outcomes" },
-  { value: "allowed", label: "Allowed" },
-  { value: "blocked", label: "Blocked" },
-  { value: "asked_first", label: "Asked first" },
-  { value: "waiting", label: "Waiting" },
-  { value: "failed", label: "Failed" },
+  { value: ALL, get label() { return interfaceText("m_1d7f920d0db498"); } },
+  { value: "allowed", get label() { return interfaceText("m_1bb201d188352e"); } },
+  { value: "blocked", get label() { return interfaceText("m_18f2a0947f9d65"); } },
+  { value: "asked_first", get label() { return interfaceText("m_db928628a30ccd"); } },
+  { value: "waiting", get label() { return interfaceText("m_6e293a8c009e00"); } },
+  { value: "failed", get label() { return interfaceText("m_031a8f0f659df8"); } },
 ];
 
 const WINDOW_FILTERS: { value: ToolAuditWindow; label: string }[] = [
-  { value: "all", label: "All time" },
-  { value: "1h", label: "Last 1 hour" },
-  { value: "24h", label: "Last 24 hours" },
-  { value: "7d", label: "Last 7 days" },
-  { value: "30d", label: "Last 30 days" },
+  { value: "all", get label() { return interfaceText("m_9755c8d7d44a62"); } },
+  { value: "1h", get label() { return interfaceText("m_3e88e2410dc4c4"); } },
+  { value: "24h", get label() { return interfaceText("m_5c37cf8f018b4a"); } },
+  { value: "7d", get label() { return interfaceText("m_0603deca4fcb66"); } },
+  { value: "30d", get label() { return interfaceText("m_f8f03fb441b8b4"); } },
 ];
 
 function detailString(details: Record<string, unknown> | null, key: string): string | undefined {
@@ -163,6 +164,7 @@ function ActivityRow({
   event: ToolGatewayActivityEvent;
   ruleNamesById: Map<string, string>;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -216,17 +218,14 @@ function ActivityRow({
             <span className="block text-foreground">{lifecycle}</span>
           ) : isRuntimeMcpDeliveryDiagnostic ? (
             <span className="block text-foreground">
-              <span className="font-medium">{who}</span>'s run received 0 MCP servers —{" "}
-              <span className="font-medium">{permittedNotInstalledCount ?? permittedNotInstalledConnections.length}</span>{" "}
-              permitted {(permittedNotInstalledCount ?? permittedNotInstalledConnections.length) === 1 ? "connection" : "connections"} not installed
-            </span>
+              <span className="font-medium">{who}</span>{interfaceText("m_76fb41633e1a54")}{" "}
+              <span className="font-medium">{permittedNotInstalledCount ?? permittedNotInstalledConnections.length}</span>{" "}{interfaceText("m_f9e970f212d04a")}{(permittedNotInstalledCount ?? permittedNotInstalledConnections.length) === 1 ? interfaceText("m_b38d9d168c3aed") : interfaceText("m_1e5fac867454a4")}{interfaceText("m_8b1d0c796fe971")}</span>
           ) : (
             <span className="block text-foreground">
-              <span className="font-medium">{who}</span> used <span className="font-medium">{action}</span>
+              <span className="font-medium">{who}</span>{interfaceText("m_dbe119136b2670")}<span className="font-medium">{action}</span>
               {app ? (
                 <>
-                  {" "}
-                  in <span className="font-medium">{app}</span>
+                  {" "}{interfaceText("m_74241f65e5ac9f")}<span className="font-medium">{app}</span>
                 </>
               ) : null}
             </span>
@@ -254,14 +253,10 @@ function ActivityRow({
 
           <div className="flex flex-wrap gap-3 text-xs">
             {issueId ? (
-              <Link to={`/issues/${issueId}`} className="text-primary hover:underline">
-                View task
-              </Link>
+              <Link to={`/issues/${issueId}`} className="text-primary hover:underline">{interfaceText("m_01444a2b442a7b")}</Link>
             ) : null}
             {runId && agentId ? (
-              <Link to={`/agents/${agentId}/runs/${runId}`} className="text-primary hover:underline">
-                View run
-              </Link>
+              <Link to={`/agents/${agentId}/runs/${runId}`} className="text-primary hover:underline">{interfaceText("m_aaf7fccc7d1315")}</Link>
             ) : null}
           </div>
 
@@ -271,33 +266,31 @@ function ActivityRow({
               onClick={() => setDetailsOpen((v) => !v)}
               className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground"
             >
-              {detailsOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
-              Details
-            </button>
+              {detailsOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}{interfaceText("m_45989de49fb7f6")}</button>
             {detailsOpen ? (
               <div className="mt-2 space-y-1.5 text-xs">
-                {rawTool ? <DetailFact label="Action name" value={rawTool} mono /> : null}
-                <DetailFact label="Reason code" value={reasonCode} mono />
-                <DetailFact label="Actor type" value={event.actorType ?? "—"} />
-                {runId ? <DetailFact label="Run ID" value={runId} mono /> : null}
-                {transport ? <DetailFact label="Transport" value={transport} mono /> : null}
-                {requestMethod && endpoint ? <DetailFact label="HTTP request" value={`${requestMethod} ${endpoint}`} mono /> : null}
-                {mcpMethod ? <DetailFact label="MCP method" value={mcpMethod} mono /> : null}
-                {requestId ? <DetailFact label="Request ID" value={requestId} mono /> : null}
-                {request ? <DetailFact label="Dispatched" value={request.dispatched === true ? "Yes" : "No"} /> : null}
-                {httpStatus !== undefined ? <DetailFact label="HTTP status" value={String(httpStatus)} mono /> : null}
-                {contentType ? <DetailFact label="Content type" value={contentType} mono /> : null}
-                {responseBytes !== undefined ? <DetailFact label="Response size" value={`${responseBytes} bytes`} /> : null}
-                {upstreamRequestId ? <DetailFact label="Upstream ID" value={upstreamRequestId} mono /> : null}
+                {rawTool ? <DetailFact label={interfaceText("m_323a3fff012475")} value={rawTool} mono /> : null}
+                <DetailFact label={interfaceText("m_9e13ec9ee6a95a")} value={reasonCode} mono />
+                <DetailFact label={interfaceText("m_6d003d9d9a9349")} value={event.actorType ?? "—"} />
+                {runId ? <DetailFact label={interfaceText("m_26d3e7aaace434")} value={runId} mono /> : null}
+                {transport ? <DetailFact label={interfaceText("m_aaead4abf5d0fd")} value={transport} mono /> : null}
+                {requestMethod && endpoint ? <DetailFact label={interfaceText("m_f1ee1152c8b29e")} value={`${requestMethod} ${endpoint}`} mono /> : null}
+                {mcpMethod ? <DetailFact label={interfaceText("m_e810a950faf752")} value={mcpMethod} mono /> : null}
+                {requestId ? <DetailFact label={interfaceText("m_d561f528baf777")} value={requestId} mono /> : null}
+                {request ? <DetailFact label={interfaceText("m_a43dccadeb619e")} value={request.dispatched === true ? "Yes" : "No"} /> : null}
+                {httpStatus !== undefined ? <DetailFact label={interfaceText("m_0f7cf91f242cdf")} value={String(httpStatus)} mono /> : null}
+                {contentType ? <DetailFact label={interfaceText("m_6f51cb0403204b")} value={contentType} mono /> : null}
+                {responseBytes !== undefined ? <DetailFact label={interfaceText("m_3bbd79b42b54c2")} value={`${responseBytes} bytes`} /> : null}
+                {upstreamRequestId ? <DetailFact label={interfaceText("m_56ca20b2823d95")} value={upstreamRequestId} mono /> : null}
                 {isRuntimeMcpDeliveryDiagnostic ? (
                   <>
-                    <DetailFact label="Delivered MCP servers" value="0" mono />
+                    <DetailFact label={interfaceText("m_e8f93a3ea5e8fb")} value="0" mono />
                     {permittedNotInstalledConnections.map((connection) => {
                       const connectionId = detailString(connection, "id");
                       const connectionName = detailString(connection, "name") ?? "Unnamed connection";
                       return connectionId ? (
                         <div key={connectionId} className="flex gap-2">
-                          <span className="shrink-0 text-muted-foreground">Not installed</span>
+                          <span className="shrink-0 text-muted-foreground">{interfaceText("m_d177cdc09a4ea3")}</span>
                           <Link to={`/apps/${connectionId}/permissions`} className="font-medium text-primary hover:underline">
                             {connectionName}
                           </Link>
@@ -308,7 +301,7 @@ function ActivityRow({
                 ) : null}
                 {argumentsText ? (
                   <div className="space-y-1">
-                    <span className="text-muted-foreground">Parameters (redacted)</span>
+                    <span className="text-muted-foreground">{interfaceText("m_7aa473afa7c5f4")}</span>
                     <pre className="whitespace-pre-wrap break-words rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground">
                       {argumentsText}
                     </pre>
@@ -324,6 +317,7 @@ function ActivityRow({
 }
 
 export function AuditTab({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const [app, setApp] = useState<string>(ALL);
   const [agent, setAgent] = useState<string>(ALL);
   const [outcome, setOutcome] = useState<string>(ALL);
@@ -396,17 +390,17 @@ export function AuditTab({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-4">
       <ToolsPageHeader
-        title="Activity"
-        description="What your agents actually did with your apps, newest first. Each line is one decision — allowed, blocked, asked first, waiting, or failed."
+        title={interfaceText("m_38da1505ca8373")}
+        description={interfaceText("m_c7a12a9c26f81c")}
       />
 
       <div className="flex flex-wrap items-center gap-2">
         <Select value={app} onValueChange={setApp}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="App" />
+            <SelectValue placeholder={interfaceText("m_0d04bfeb7d64b7")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>All apps</SelectItem>
+            <SelectItem value={ALL}>{interfaceText("m_01bed311e7d0c9")}</SelectItem>
             {(apps.data?.applications ?? []).map((a) => (
               <SelectItem key={a.id} value={a.id}>
                 {a.name}
@@ -445,15 +439,13 @@ export function AuditTab({ companyId }: { companyId: string }) {
           </SelectContent>
         </Select>
         <Input
-          placeholder="Search activity…"
+          placeholder={interfaceText("m_6f14857bfd04fa")}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           className="max-w-xs"
         />
         {hasActiveFilters ? (
-          <Button variant="ghost" size="sm" onClick={clearFilters}>
-            Clear filters
-          </Button>
+          <Button variant="ghost" size="sm" onClick={clearFilters}>{interfaceText("m_7179ea0035fca7")}</Button>
         ) : null}
       </div>
 
@@ -467,14 +459,10 @@ export function AuditTab({ companyId }: { companyId: string }) {
             <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
               <ScrollText className="h-10 w-10 text-muted-foreground/40" />
               <div>
-                <p className="text-sm font-medium text-foreground">No activity matches these filters</p>
-                <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                  Try a wider time window or different filters.
-                </p>
+                <p className="text-sm font-medium text-foreground">{interfaceText("m_2acc5c1033c90d")}</p>
+                <p className="mt-1 max-w-md text-sm text-muted-foreground">{interfaceText("m_4e97d386c47afe")}</p>
               </div>
-              <Button variant="outline" size="sm" onClick={clearFilters}>
-                Clear filters
-              </Button>
+              <Button variant="outline" size="sm" onClick={clearFilters}>{interfaceText("m_7179ea0035fca7")}</Button>
             </CardContent>
           </Card>
         ) : (
@@ -482,10 +470,8 @@ export function AuditTab({ companyId }: { companyId: string }) {
             <CardContent className="flex flex-col items-center gap-3 py-14 text-center">
               <ScrollText className="h-10 w-10 text-muted-foreground/40" />
               <div>
-                <p className="text-sm font-medium text-foreground">Nothing here yet</p>
-                <p className="mt-1 max-w-md text-sm text-muted-foreground">
-                  As soon as your agents start using connected apps, what they do shows up here.
-                </p>
+                <p className="text-sm font-medium text-foreground">{interfaceText("m_49abaf804ab38c")}</p>
+                <p className="mt-1 max-w-md text-sm text-muted-foreground">{interfaceText("m_3d3eaa1988ecba")}</p>
               </div>
             </CardContent>
           </Card>
@@ -510,7 +496,7 @@ export function AuditTab({ companyId }: { companyId: string }) {
             onClick={() => activity.fetchNextPage()}
             disabled={activity.isFetchingNextPage}
           >
-            {activity.isFetchingNextPage ? "Loading…" : "Load more"}
+            {activity.isFetchingNextPage ? interfaceText("m_ba3bbbe10d8bef") : interfaceText("m_ac8991ef01019c")}
           </Button>
         </div>
       ) : null}

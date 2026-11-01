@@ -76,5 +76,64 @@
     "searchProjects": "Search projects...",
     "noProjects": "No projects found.",
     "privateProject": "Private project"
+  },
+  "teamPreview": {
+    "steps": {
+      "experiment": "Develop candidates using only the permitted research data.",
+      "prepare": "Check data quality and freeze the baseline, splits, costs and experiment limits.",
+      "evaluate": "Freeze the candidate, run the controlled evaluator and review the evidence independently.",
+      "report": "Report the outcome and propose the next step. Demo admission is a separate decision."
+    },
+    "researcher": {
+      "work": "Build candidates with RD-Agent. Use TradingAgents for specific market-analysis questions.",
+      "output": "Output: versioned code and a log of every experiment.",
+      "name": "Quant researcher"
+    },
+    "title": "Trading research team",
+    "draft": "Proposed",
+    "orgLabel": "Proposed reporting structure",
+    "owner": "You · Product owner",
+    "lead": {
+      "work": "Define the question, assign work and summarize the evidence for you.",
+      "output": "Output: bounded experiment plan and a clear report.",
+      "name": "Research lead"
+    },
+    "reviewer": {
+      "work": "Check timing, data leakage, costs and the evaluator results. Can block promotion.",
+      "output": "Output: pass, fail, insufficient evidence or run error, with reasons.",
+      "name": "Independent reviewer"
+    },
+    "approval": "Approve promotion",
+    "open": "View team and example",
+    "description": "Three roles, with independent validation. This preview does not create agents or runnable tasks.",
+    "task": "Does a volatility filter improve a simple trend baseline after trading costs?",
+    "close": "Close",
+    "boundary": "Model connections, agent permissions and automatic schedules have not been enabled. Real-money deployment requires separate approval.",
+    "scope": "Illustrative research question. Market, timeframe, dataset and acceptance thresholds are still to be agreed.",
+    "notStarted": "Not started",
+    "example": "Example research task"
+  },
+  "states": {
+    "backlog": "Backlog",
+    "todo": "To do",
+    "in_progress": "In progress",
+    "in_review": "In review",
+    "done": "Done",
+    "blocked": "Blocked",
+    "cancelled": "Cancelled",
+    "idle": "idle",
+    "active": "active",
+    "running": "running",
+    "paused": "paused",
+    "error": "error",
+    "pending": "pending",
+    "pending_approval": "pending approval",
+    "approved": "approved",
+    "rejected": "rejected",
+    "succeeded": "succeeded",
+    "failed": "failed",
+    "queued": "queued",
+    "terminated": "terminated",
+    "draft": "draft"
   }
 }

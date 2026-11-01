@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentIdentity } from "@/components/AgentIdentity";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -67,6 +68,7 @@ export function BlockedInboxView({
   showUpdatedColumn,
   presentation = "legacy",
 }: BlockedInboxViewProps) {
+  useInterfaceLanguage();
   const [collapsedVariants, setCollapsedVariants] = useState<Set<string>>(() => new Set());
 
   const {
@@ -152,7 +154,7 @@ export function BlockedInboxView({
 
   if (error) {
     const message =
-      error instanceof Error ? error.message : "Couldn't load the Blocked tab.";
+      error instanceof Error ? error.message : interfaceText("m_a61e4428eceeae");
     return (
       <div
         data-testid="blocked-inbox-error"
@@ -162,9 +164,8 @@ export function BlockedInboxView({
         <div className="flex items-start gap-2">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <div className="flex-1 space-y-1">
-            <p className="text-sm font-medium">Couldn't load the Blocked tab.</p>
-            <p className="text-xs opacity-80">
-              Other Inbox tabs still work. {message}
+            <p className="text-sm font-medium">{interfaceText("m_a61e4428eceeae")}</p>
+            <p className="text-xs opacity-80">{interfaceText("m_ed9ecf1388f30a")}{message}
             </p>
           </div>
           <Button
@@ -175,7 +176,7 @@ export function BlockedInboxView({
             onClick={() => void refetch()}
             disabled={isFetching}
           >
-            {isFetching ? "Trying…" : "Try again"}
+            {isFetching ? interfaceText("m_3ff51b0b15d948") : interfaceText("m_d8b8392e2c5429")}
           </Button>
         </div>
       </div>
@@ -192,10 +193,8 @@ export function BlockedInboxView({
           <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
         </span>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-foreground">No work is stopped.</p>
-          <p className="text-xs text-muted-foreground">
-            Tasks that need a decision, recovery, or external action will appear here.
-          </p>
+          <p className="text-sm font-medium text-foreground">{interfaceText("m_6d4397f7dcd7c4")}</p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_ec0fc599cc6de1")}</p>
         </div>
       </Card>
     );
@@ -207,9 +206,7 @@ export function BlockedInboxView({
         <Card
           data-testid="blocked-inbox-no-search-results"
           className="block border-border/70 bg-card/40 px-4 py-6 text-center text-sm text-muted-foreground"
-        >
-          No stopped items match your search.
-        </Card>
+        >{interfaceText("m_c4f2407daa7680")}</Card>
       </div>
     );
   }

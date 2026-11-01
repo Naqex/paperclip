@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { MuseInvitation } from "@paperclipai/shared";
@@ -152,6 +153,7 @@ export function ExternalAgentInviteDialog({ companyId, onClose, onBack, initialP
 function MuseInvitationController({ companyId, companyName, onClose, onBack, initialName }: {
   companyId: string; companyName: string; initialName: string; onClose: () => void; onBack: () => void;
 }) {
+  useInterfaceLanguage();
   const cache = useQueryClient();
   const identity = useAccountIdentity();
   const scopeKey = `${companyId}:${identity.userId}`;
@@ -224,7 +226,7 @@ function MuseInvitationController({ companyId, companyName, onClose, onBack, ini
   const operatorRequired = error instanceof ApiError && (error.status === 401 || error.status === 403)
     && !invitation;
   const missingPublicOrigin = !!invitation && muse.state.isSuccess && !muse.state.data.publicOrigin;
-  const errorMessage = missingPublicOrigin ? "This instance has no public HTTPS URL for Muse. Ask your instance administrator to configure a stable public HTTPS address, then refresh setup. Muse cannot connect through a local-only address." : operatorRequired ? "Use an authenticated Paperclip instance with a public HTTPS URL and a company operator account. Local trusted access alone cannot connect Muse." : error?.message;
+  const errorMessage = missingPublicOrigin ? interfaceText("m_abf704db346218") : operatorRequired ? interfaceText("m_2d30241c08109f") : error?.message;
   return <ExternalAgentInviteContent preset="muse" companyName={companyName} prompt={muse.pairing?.setupInstruction ?? ""}
     connection={{ phase: "waiting" }} museConnection={invitation && !missingPublicOrigin && (muse.state.data || muse.state.isError) ? connection : undefined} busy={busy} error={identity.failed ? "Unable to confirm your account. Refresh to resume Muse setup." : errorMessage}
     approvalHref={pendingApproval && invitation?.approvalId ? `/approvals/${invitation.approvalId}` : undefined}

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { isAgentCreatedIssue, type ExternalObjectSummary, type Issue } from "@paperclipai/shared";
 
 export type IssueFilterWorkspaceLookup = {
@@ -84,10 +85,10 @@ export const issueStatusOrder = ["in_progress", "todo", "backlog", "in_review", 
 export const issuePriorityOrder = ["critical", "high", "medium", "low"];
 
 export const issueQuickFilterPresets = [
-  { label: "All", statuses: [] as string[] },
-  { label: "Active", statuses: ["todo", "in_progress", "in_review", "blocked"] },
-  { label: "Backlog", statuses: ["backlog"] },
-  { label: "Done", statuses: ["done", "cancelled"] },
+  { get label() { return interfaceText("m_a52ace420f2175"); }, statuses: [] as string[] },
+  { get label() { return interfaceText("m_92340695899bd2"); }, statuses: ["todo", "in_progress", "in_review", "blocked"] },
+  { get label() { return interfaceText("m_bf986e9a4f860e"); }, statuses: ["backlog"] },
+  { get label() { return interfaceText("m_11a6767d5674c7"); }, statuses: ["done", "cancelled"] },
 ];
 
 export function issueFilterLabel(value: string): string {

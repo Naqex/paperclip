@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { IssueCreationSource } from "@paperclipai/shared";
 import { GitBranch } from "lucide-react";
 import {
@@ -20,6 +21,7 @@ export interface IssueCreatedFromNoteProps {
  * not a blocker. Renders nothing when the viewer may not see the source.
  */
 export function IssueCreatedFromNote({ createdFrom, issueLinkState, className }: IssueCreatedFromNoteProps) {
+  useInterfaceLanguage();
   if (!createdFrom) return null;
   const { issue, agent } = createdFrom;
   const ref = issue.identifier ?? issue.id;
@@ -29,7 +31,7 @@ export function IssueCreatedFromNote({ createdFrom, issueLinkState, className }:
       className={cn("flex min-w-0 items-center gap-1 text-xs text-muted-foreground", className)}
     >
       <GitBranch aria-hidden className="h-3 w-3 shrink-0" />
-      <span className="shrink-0">Created from</span>
+      <span className="shrink-0">{interfaceText("m_afe7b2f591f189")}</span>
       <Link
         to={createIssueDetailPath(ref)}
         state={issueLinkState}
@@ -39,7 +41,7 @@ export function IssueCreatedFromNote({ createdFrom, issueLinkState, className }:
       >
         {issue.identifier ? `${issue.identifier} ${issue.title}` : issue.title}
       </Link>
-      {agent && <span className="shrink-0">by {agent.name}</span>}
+      {agent && <span className="shrink-0">{interfaceText("m_9155f2107df0c8")}{agent.name}</span>}
     </p>
   );
 }

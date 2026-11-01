@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import {
   COMPANY_SEARCH_UPDATED_WITHIN_OPTIONS,
   ISSUE_PRIORITIES,
@@ -40,13 +41,13 @@ export interface SearchOperatorSuggestion {
 export const SEARCH_OPERATOR_QUICK_FILTERS = ["assignee:me", "is:open", "updated:>7d"] as const;
 
 export const SEARCH_OPERATOR_SUGGESTIONS: SearchOperatorSuggestion[] = [
-  { token: "status:todo", label: "Open todo tasks", description: "Filter by task status" },
-  { token: "status:blocked", label: "Blocked tasks", description: "Find blocked work" },
-  { token: "assignee:me", label: "Assigned to me", description: "Use your current board user" },
-  { token: "project:\"Paperclip App\"", label: "Project name", description: "Quote multi-word project names" },
-  { token: "label:bug", label: "Label", description: "Filter by issue label" },
-  { token: "priority:high", label: "High priority", description: "Filter by priority" },
-  { token: "updated:>7d", label: "Recently updated", description: "Updated in the last 7 days" },
+  { token: "status:todo", get label() { return interfaceText("m_b26fc8802dfc86"); }, description: "Filter by task status" },
+  { token: "status:blocked", get label() { return interfaceText("m_fb0166222d3540"); }, description: "Find blocked work" },
+  { token: "assignee:me", get label() { return interfaceText("m_82adb506e0a78e"); }, description: "Use your current board user" },
+  { token: "project:\"Paperclip App\"", get label() { return interfaceText("m_25498193b89819"); }, description: "Quote multi-word project names" },
+  { token: "label:bug", get label() { return interfaceText("m_0e66373f45dcf3"); }, description: "Filter by issue label" },
+  { token: "priority:high", get label() { return interfaceText("m_b699a8c8e2c86c"); }, description: "Filter by priority" },
+  { token: "updated:>7d", get label() { return interfaceText("m_474b2a869ac147"); }, description: "Updated in the last 7 days" },
 ];
 
 export interface SearchQueryParserContext {

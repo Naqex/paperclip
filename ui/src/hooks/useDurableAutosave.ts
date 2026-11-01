@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { QueryClientContext } from "@tanstack/react-query";
 import { bindAccount } from "@/lib/account-scope";
@@ -27,15 +28,15 @@ export type DurableAutosaveResult =
 export function autosaveLabel(status: DurableAutosaveStatus, error: ErrorDescription | null): string | null {
   switch (status) {
     case "saving":
-      return "Saving…";
+      return interfaceText("m_23e39291d61358");
     case "saved":
-      return "Saved";
+      return interfaceText("m_b5c120b316c237");
     case "waiting":
-      return "Will save when reconnected";
+      return interfaceText("m_669f62ef1a5783");
     case "stalled":
-      return "Automatic saving paused";
+      return interfaceText("m_5a27b22c0daec9");
     case "error":
-      return error ? `Couldn't save (${error.body.replace(/\.$/, "")})` : "Couldn't save";
+      return error ? interfaceText("m_a128f2104a842b", { value0: (error.body.replace(/\.$/, "")) }) : interfaceText("m_d89c56c70c5409");
     default:
       return null;
   }

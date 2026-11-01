@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import * as React from "react"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { Select as SelectPrimitive } from "radix-ui"
@@ -26,7 +27,7 @@ export function SelectPopover({
   value,
   onValueChange,
   options = [],
-  placeholder = "Select…",
+  placeholder = interfaceText("m_731fe041ce28da"),
   displayValue,
   "aria-label": ariaLabel,
   "aria-busy": ariaBusy,
@@ -51,6 +52,7 @@ export function SelectPopover({
   onCloseAutoFocus?: React.ComponentProps<typeof PopoverContent>["onCloseAutoFocus"];
   children?: React.ReactNode;
 }) {
+  useInterfaceLanguage();
   const [localOpen, setLocalOpen] = React.useState(false);
   const open = controlledOpen ?? localOpen;
   const setOpen = (next: boolean) => {

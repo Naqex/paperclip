@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -52,6 +53,7 @@ export function StatusCardDetailDrawer({
   onOpenChange: (open: boolean) => void;
   initialTab?: string;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [tab, setTab] = useState("summary");
   const [settings, setSettings] = useState<StatusCardSettingsValue>(defaultSettingsValue());
@@ -210,7 +212,7 @@ export function StatusCardDetailDrawer({
         <SheetHeader className="border-b border-border p-4">
           <div className="flex items-center gap-2 pr-8">
             <span className={cn("inline-block h-2.5 w-2.5 shrink-0 rounded-full", presentation.dotClassName)} aria-hidden="true" />
-            <SheetTitle className="min-w-0 flex-1 truncate text-lg">{card.title ?? "Untitled card"}</SheetTitle>
+            <SheetTitle className="min-w-0 flex-1 truncate text-lg">{card.title ?? interfaceText("m_29fc54324b6c82")}</SheetTitle>
             <Badge variant="outline">{presentation.label}</Badge>
             {lifecycle === "compiling" ? (
               <Button
@@ -226,7 +228,7 @@ export function StatusCardDetailDrawer({
                 ) : (
                   <Wand2 className="h-3.5 w-3.5" />
                 )}
-                {setupRunning ? "Setting up…" : recompileMutation.isPending ? "Running…" : "Run now"}
+                {setupRunning ? interfaceText("m_c894bba9c3e787") : recompileMutation.isPending ? interfaceText("m_46c541363b0253") : interfaceText("m_0991397702fabb")}
               </Button>
             ) : (
               <Button
@@ -236,31 +238,31 @@ export function StatusCardDetailDrawer({
                 disabled={refreshMutation.isPending || lifecycle === "updating"}
               >
                 <RefreshCw className={cn("h-3.5 w-3.5", refreshMutation.isPending && "animate-spin")} />
-                {refreshMutation.isPending ? "Refreshing…" : "Refresh"}
+                {refreshMutation.isPending ? interfaceText("m_1c0def7be0607b") : interfaceText("m_0e91610117029a")}
               </Button>
             )}
           </div>
           <p className="text-xs text-muted-foreground">
-            {card.lastGeneratedAt ? `Updated ${relativeTime(card.lastGeneratedAt)}` : "No summary yet"} ·{" "}
+            {card.lastGeneratedAt ? interfaceText("m_8f124f40e9bee7", { value0: (relativeTime(card.lastGeneratedAt)) }) : interfaceText("m_f098ecd6800609")} ·{" "}
             {describeRefreshPolicy(card.refreshPolicy)}
           </p>
         </SheetHeader>
 
         <Tabs value={tab} onValueChange={setTab} className="flex min-h-0 flex-1 flex-col gap-0">
           <TabsList variant="line" className="w-full justify-start gap-4 border-b border-border px-4">
-            <TabsTrigger value="summary">Summary</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-            <TabsTrigger value="watched">Watched issues</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="summary">{interfaceText("m_8e76a94ac8320d")}</TabsTrigger>
+            <TabsTrigger value="settings">{interfaceText("m_74a883a037bc22")}</TabsTrigger>
+            <TabsTrigger value="watched">{interfaceText("m_df63da53661a1b")}</TabsTrigger>
+            <TabsTrigger value="history">{interfaceText("m_0e769600933790")}</TabsTrigger>
           </TabsList>
 
           {actionError ? (
             <div className="px-4 pt-3">
-              <InlineBanner tone="warning" title="Heads up">{actionError}</InlineBanner>
+              <InlineBanner tone="warning" title={interfaceText("m_dc1f657d6c09a8")}>{actionError}</InlineBanner>
             </div>
           ) : actionNote ? (
             <div className="px-4 pt-3">
-              <InlineBanner tone="info" title="Working on it">{actionNote}</InlineBanner>
+              <InlineBanner tone="info" title={interfaceText("m_d55b6d1bbd56f5")}>{actionNote}</InlineBanner>
             </div>
           ) : null}
 
@@ -276,14 +278,12 @@ export function StatusCardDetailDrawer({
                       value={selectedRevisionId ?? "__latest__"}
                       onValueChange={(value) => setSelectedRevisionId(value === "__latest__" ? null : value)}
                     >
-                      <SelectTrigger size="sm" className="w-auto gap-1.5" aria-label="Select summary revision">
+                      <SelectTrigger size="sm" className="w-auto gap-1.5" aria-label={interfaceText("m_e9e258ba6e6839")}>
                         <History className="h-3.5 w-3.5" aria-hidden="true" />
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent align="end" position="popper">
-                        <SelectItem value="__latest__" className="text-xs">
-                          Revision {latestRevisionNumber} · latest
-                        </SelectItem>
+                        <SelectItem value="__latest__" className="text-xs">{interfaceText("m_e330d85ff90102")}{latestRevisionNumber}{interfaceText("m_7c912ed3c3bd06")}</SelectItem>
                         <SelectSeparator />
                         {summaryRevisions.slice(0, 30).map((update) => (
                           <SelectItem
@@ -291,14 +291,13 @@ export function StatusCardDetailDrawer({
                             value={update.id}
                             className="text-xs"
                             title={formatDateTime(update.startedAt)}
-                          >
-                            Rev {revisionNumberOf(update)} · {updateKindLabel(update.kind)} · {relativeTime(update.startedAt)}
+                          >{interfaceText("m_65dae0c1e49d78")}{revisionNumberOf(update)} · {updateKindLabel(update.kind)} · {relativeTime(update.startedAt)}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   ) : latestRevisionNumber > 0 ? (
-                    <span className="text-xs text-muted-foreground">Revision {latestRevisionNumber} · latest</span>
+                    <span className="text-xs text-muted-foreground">{interfaceText("m_e330d85ff90102")}{latestRevisionNumber}{interfaceText("m_7c912ed3c3bd06")}</span>
                   ) : null}
                 </div>
               ) : null}
@@ -307,8 +306,7 @@ export function StatusCardDetailDrawer({
                 <MarkdownBody className="text-sm leading-7">{draftStream.draft}</MarkdownBody>
               ) : selectedRevision ? (
                 <div className="space-y-2 rounded-md border border-border bg-muted/30 p-3">
-                  <p className="text-xs text-muted-foreground" title={formatDateTime(selectedRevision.startedAt)}>
-                    Revision {revisionNumberOf(selectedRevision)} · {updateKindLabel(selectedRevision.kind)} ·{" "}
+                  <p className="text-xs text-muted-foreground" title={formatDateTime(selectedRevision.startedAt)}>{interfaceText("m_e330d85ff90102")}{revisionNumberOf(selectedRevision)} · {updateKindLabel(selectedRevision.kind)} ·{" "}
                     {relativeTime(selectedRevision.startedAt)}
                   </p>
                   {selectedRevisionBody ? (
@@ -316,15 +314,10 @@ export function StatusCardDetailDrawer({
                   ) : selectedRevision.changeSummary ? (
                     <>
                       <MarkdownBody className="text-sm leading-7">{selectedRevision.changeSummary}</MarkdownBody>
-                      <p className="text-xs text-muted-foreground/70">
-                        The full summary text for this revision is unavailable — showing its change summary. The
-                        integrated changes below are the live ledger for this revision.
-                      </p>
+                      <p className="text-xs text-muted-foreground/70">{interfaceText("m_3a956e3a8a06b4")}</p>
                     </>
                   ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No change summary was recorded for this revision.
-                    </p>
+                    <p className="text-sm text-muted-foreground">{interfaceText("m_8be76f660b5315")}</p>
                   )}
                 </div>
               ) : hasSummary ? (
@@ -338,30 +331,26 @@ export function StatusCardDetailDrawer({
                       <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
                     )}
                     {setupRunning
-                      ? "Setting up — the first summary is generated automatically once this finishes."
-                      : "Setup didn’t finish. Run it now to try again."}
+                      ? interfaceText("m_b88e778ab100e0")
+                      : interfaceText("m_af145c69a095a8")}
                   </p>
                   {setupRunning && card.generatingIssueId ? (
                     <Link
                       to={`/issues/${card.generatingIssueId}`}
                       className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground underline-offset-2 hover:underline"
                     >
-                      <ExternalLink className="h-3.5 w-3.5" />
-                      View setup task
-                    </Link>
+                      <ExternalLink className="h-3.5 w-3.5" />{interfaceText("m_6b5859989f3fdb")}</Link>
                   ) : null}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
-                  No summary yet — the first one is generated automatically once this card finishes setting up.
-                </p>
+                <p className="text-sm text-muted-foreground">{interfaceText("m_ec44e68ae5c284")}</p>
               )}
 
               {displayedChanges.length > 0 ? (
                 <section className="space-y-2">
                   <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {selectedRevision ? "Integrated in this revision" : "Integrated in this update"} (
-                    {displayedChanges.length} {displayedChanges.length === 1 ? "change" : "changes"})
+                    {selectedRevision ? interfaceText("m_42b2ab8b03110e") : interfaceText("m_b990fa3d66d8f8")} (
+                    {displayedChanges.length} {displayedChanges.length === 1 ? interfaceText("m_12ea12eace7d65") : interfaceText("m_d0b4ba2311b3e8")})
                   </h3>
                   <div className="space-y-1.5">
                     {displayedChanges.map((change) => (
@@ -377,17 +366,15 @@ export function StatusCardDetailDrawer({
                   every recorded update (each update is one summary revision). */}
               {updatesQuery.isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Loading history…
-                </div>
+                  <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_3c7e6cd562b94c")}</div>
               ) : updates.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No updates recorded yet.</p>
+                <p className="text-sm text-muted-foreground">{interfaceText("m_f0a917b114336c")}</p>
               ) : (
                 <>
-                  <div className="text-xs text-muted-foreground">
-                    Today: {todayRollup.updateCount}{" "}
-                    {todayRollup.updateCount === 1 ? "update" : "updates"} ·{" "}
+                  <div className="text-xs text-muted-foreground">{interfaceText("m_627ac69da52cc8")}{todayRollup.updateCount}{" "}
+                    {todayRollup.updateCount === 1 ? interfaceText("m_2937013f218181") : interfaceText("m_35759b3ca7da9a")} ·{" "}
                     {formatTokens(todayRollup.totalTokens)} · {formatCents(todayRollup.totalCostCents)}
-                    {card.refreshPolicy.dailyTokenCap ? ` · daily cap ${formatTokens(card.refreshPolicy.dailyTokenCap)}` : ""}
+                    {card.refreshPolicy.dailyTokenCap ? interfaceText("m_8d116844c21496", { value0: (formatTokens(card.refreshPolicy.dailyTokenCap)) }) : ""}
                   </div>
                   <div className="divide-y divide-border">
                     {updates.map((update) => (
@@ -406,7 +393,7 @@ export function StatusCardDetailDrawer({
                         <p className="mt-1 text-xs text-muted-foreground">
                           {formatTokenSplit(update.inputTokens, update.outputTokens)} · {formatCents(update.costCents)}
                           {update.model ? ` · ${update.model}` : ""}
-                          {update.changes.length > 0 ? ` · ${update.changes.length} changes` : ""}
+                          {update.changes.length > 0 ? interfaceText("m_a267d4077e610b", { value0: (update.changes.length) }) : ""}
                         </p>
                         {update.error ? <p className="mt-1 text-xs text-destructive">{update.error}</p> : null}
                       </div>
@@ -418,16 +405,13 @@ export function StatusCardDetailDrawer({
 
             <TabsContent value="watched" className="mt-0 space-y-3">
               {card.queries.length === 0 && (card.mentionedIssueIds?.length ?? 0) === 0 ? (
-                <div className="rounded-md border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">
-                  This card is still setting up — the issues it watches appear here once it's ready.
-                </div>
+                <div className="rounded-md border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">{interfaceText("m_40fedd14b62097")}</div>
               ) : dryRunQuery.isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Matching issues…
-                </div>
+                  <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_d2980dee526a98")}</div>
               ) : dryRunQuery.isError ? (
-                <InlineBanner tone="danger" title="Could not load matched issues">
-                  {dryRunQuery.error instanceof Error ? dryRunQuery.error.message : "Try again."}
+                <InlineBanner tone="danger" title={interfaceText("m_9ab2d3318d994a")}>
+                  {dryRunQuery.error instanceof Error ? dryRunQuery.error.message : interfaceText("m_a0c2cc1374d949")}
                 </InlineBanner>
               ) : (
                 <MatchedIssueList
@@ -439,29 +423,26 @@ export function StatusCardDetailDrawer({
 
             <TabsContent value="settings" className="mt-0 space-y-6">
               <section className="space-y-2">
-                <h3 className="text-sm font-semibold">Card name</h3>
+                <h3 className="text-sm font-semibold">{interfaceText("m_e260ce2668950e")}</h3>
                 <Input
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Auto-named from the query"
+                  placeholder={interfaceText("m_9165924dad1959")}
                   className="text-sm"
-                  aria-label="Card name"
+                  aria-label={interfaceText("m_e260ce2668950e")}
                 />
               </section>
 
               <section className="space-y-2">
-                <h3 className="text-sm font-semibold">What this card watches & reports</h3>
+                <h3 className="text-sm font-semibold">{interfaceText("m_1e934501d807f9")}</h3>
                 <Textarea
                   value={interest}
                   onChange={(event) => setInterest(event.target.value)}
                   rows={3}
                   className="text-sm"
-                  aria-label="What this card watches & reports"
+                  aria-label={interfaceText("m_1e934501d807f9")}
                 />
-                <p className="text-xs text-muted-foreground">
-                  This one message drives the whole card: the agent compiles the watch query from it
-                  and follows it as the instructions for every update. Editing it rebuilds the card.
-                </p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_08fec083302100")}</p>
               </section>
 
               <section className="space-y-2">
@@ -480,9 +461,7 @@ export function StatusCardDetailDrawer({
 
               <div className="flex justify-end border-t border-border pt-4">
                 <Button onClick={() => saveSettingsMutation.mutate()} disabled={saveSettingsMutation.isPending}>
-                  {saveSettingsMutation.isPending ? <Loader2 className="animate-spin" /> : null}
-                  Save
-                </Button>
+                  {saveSettingsMutation.isPending ? <Loader2 className="animate-spin" /> : null}{interfaceText("m_1509f561f24165")}</Button>
               </div>
             </TabsContent>
           </div>
@@ -499,24 +478,23 @@ export function StatusCardDetailDrawer({
  * inspectable without leaving Settings.
  */
 function QueryDebugSection({ card }: { card: StatusCardView }) {
+  useInterfaceLanguage();
   const queryJson = JSON.stringify({ queries: card.queries, limit: 50 }, null, 2);
   return (
     <Collapsible className="rounded-md border border-border">
       <CollapsibleTrigger className="group flex w-full items-center justify-between gap-2 px-3 py-2.5 text-sm font-semibold">
-        <span className="flex items-center gap-2">
-          Query debug
-          <Badge variant="secondary">v{card.queryVersion}</Badge>
+        <span className="flex items-center gap-2">{interfaceText("m_58f8683ddefe9f")}<Badge variant="secondary">v{card.queryVersion}</Badge>
         </span>
         <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-2 border-t border-border px-3 py-3">
         <pre className="max-h-64 overflow-auto rounded-md bg-muted p-3 font-mono text-xs text-foreground">
-          {card.queries.length > 0 ? queryJson : "// query not compiled yet"}
+          {card.queries.length > 0 ? queryJson : interfaceText("m_ac5cf2a4d48555")}
         </pre>
         <p className="text-xs text-muted-foreground">
           {card.queryCompiledAt
-            ? `Compiled by Summarizer ${relativeTime(card.queryCompiledAt)} · version ${card.queryVersion}. Edit “What this card watches” above to rebuild it.`
-            : "Not compiled yet. The query builds automatically once the card finishes setting up."}
+            ? interfaceText("m_02e41a9120f6ce", { value0: (relativeTime(card.queryCompiledAt)), value1: (card.queryVersion) })
+            : interfaceText("m_c3fd0b87f43134")}
         </p>
       </CollapsibleContent>
     </Collapsible>
@@ -530,6 +508,7 @@ function QueryDebugSection({ card }: { card: StatusCardView }) {
  * join the watched set too and render as their own group below the matches.
  */
 function MatchedIssueList({ queries, mentioned }: { queries: StatusCardDryRun["queries"]; mentioned: CompanySearchIssueSummary[] }) {
+  useInterfaceLanguage();
   const seen = new Set<string>();
   const matched: CompanySearchIssueSummary[] = [];
   for (const { result } of queries) {
@@ -542,9 +521,7 @@ function MatchedIssueList({ queries, mentioned }: { queries: StatusCardDryRun["q
   const mentionedOnly = mentioned.filter((issue) => !seen.has(issue.id));
   if (matched.length === 0 && mentionedOnly.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">
-        The compiled query matches no issues right now.
-      </div>
+      <div className="rounded-md border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">{interfaceText("m_6bf003b65a2391")}</div>
     );
   }
   return (
@@ -558,7 +535,7 @@ function MatchedIssueList({ queries, mentioned }: { queries: StatusCardDryRun["q
       ) : null}
       {mentionedOnly.length > 0 ? (
         <div className="space-y-1.5">
-          <p className="text-xs font-medium text-muted-foreground">Mentioned in the latest update</p>
+          <p className="text-xs font-medium text-muted-foreground">{interfaceText("m_af6b8ee2be6bf8")}</p>
           {mentionedOnly.map((issue) => (
             <WatchedIssueRow key={issue.id} issue={issue} />
           ))}

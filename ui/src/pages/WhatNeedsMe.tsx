@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useCoordinatorWorkspaceEnabled } from "../hooks/useCoordinatorWorkspaceEnabled";
@@ -92,6 +93,7 @@ export function WhatNeedsMe() {
 }
 
 function ClassicWhatNeedsMe() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -144,8 +146,8 @@ function ClassicWhatNeedsMe() {
   );
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Decisions" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_cfa6a08af3ed58") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   // Re-hydrate per-company preferences when the company changes.
   useEffect(() => {
@@ -445,10 +447,10 @@ function ClassicWhatNeedsMe() {
         body: item.subject.title ?? undefined,
         tone: "info",
         ttlMs: 8000,
-        action: { label: "Undo", onClick: () => handleUndoDismiss(item) },
+        action: { label: interfaceText("m_a8283ade31856f"), onClick: () => handleUndoDismiss(item) },
       });
     },
-    [dismiss, handleUndoDismiss, pushToast],
+    [dismiss, handleUndoDismiss, pushToast, interfaceLanguage],
   );
   const handleSnooze = useCallback(
     (item: AttentionItem, snoozedUntil: string) => {
@@ -516,7 +518,7 @@ function ClassicWhatNeedsMe() {
   }, [handleDismiss, keyboardItems, navigate, selectedAttentionId]);
 
   if (!selectedCompanyId) {
-    return <p className="text-sm text-muted-foreground">Select an organization first.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_0d7c81ffe0023b")}</p>;
   }
 
   if (isLoading) {
@@ -528,7 +530,7 @@ function ClassicWhatNeedsMe() {
   return (
     <div ref={rootRef} className="max-w-3xl space-y-4">
       <div className="space-y-4">
-        <h1 className="text-xl font-bold">Decisions</h1>
+        <h1 className="text-xl font-bold">{interfaceText("m_cfa6a08af3ed58")}</h1>
         <DecisionsToolbar
           query={searchQuery}
           onQueryChange={setSearchQuery}
@@ -643,7 +645,7 @@ function ClassicWhatNeedsMe() {
 
           {snoozedItems.length > 0 && (
             <Curtain
-              label="Snoozed"
+              label={interfaceText("m_88096584e4a882")}
               count={snoozedItems.length}
               open={snoozedOpen}
               onToggle={() => setSnoozedOpen((prev) => !prev)}
@@ -667,7 +669,7 @@ function ClassicWhatNeedsMe() {
 
           {dismissedItems.length > 0 && (
             <Curtain
-              label="Dismissed"
+              label={interfaceText("m_9d74727714dba7")}
               count={dismissedItems.length}
               open={dismissedOpen}
               onToggle={() => setDismissedOpen((prev) => !prev)}
@@ -691,14 +693,12 @@ function ClassicWhatNeedsMe() {
 
           {agingItems.length > 0 && (
             <Curtain
-              label="Aging"
+              label={interfaceText("m_90dd095da6be9e")}
               count={agingItems.length}
               open={agingOpen}
               onToggle={() => setAgingOpen((prev) => !prev)}
             >
-              <p className="text-xs text-muted-foreground">
-                Idle past {ATTENTION_AGING_DAYS} days — kept off the desk. Keep any you still want surfaced.
-              </p>
+              <p className="text-xs text-muted-foreground">{interfaceText("m_616dcdfa35c880")}{ATTENTION_AGING_DAYS}{interfaceText("m_0366ea0d61da12")}</p>
               {agingItems.map((item) => (
                 <AgingItemRow
                   key={item.id}
@@ -722,13 +722,13 @@ function ClassicWhatNeedsMe() {
 
       <div className="space-y-4">
         <Curtain
-          label="Decided"
+          label={interfaceText("m_30ba702eee51c2")}
           count={decisionHistoryCount(decidedDecisions?.length)}
           open={decidedOpen}
           onToggle={() => setDecidedOpen((prev) => !prev)}
         >
           {decidedDecisionsLoading ? (
-            <p className="text-xs text-muted-foreground">Loading decided decisions…</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_44462192446e36")}</p>
           ) : (decidedDecisions?.length ?? 0) > 0 ? (
             decidedDecisions!.slice(0, DECISION_HISTORY_VISIBLE_LIMIT).map((decision) => (
               <DecisionResolver
@@ -740,18 +740,18 @@ function ClassicWhatNeedsMe() {
               />
             ))
           ) : (
-            <p className="text-xs text-muted-foreground">No decided decisions.</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_455204da7de595")}</p>
           )}
         </Curtain>
 
         <Curtain
-          label="Expired"
+          label={interfaceText("m_424a2551d35675")}
           count={decisionHistoryCount(expiredDecisions?.length)}
           open={expiredOpen}
           onToggle={() => setExpiredOpen((prev) => !prev)}
         >
           {expiredDecisionsLoading ? (
-            <p className="text-xs text-muted-foreground">Loading expired decisions…</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_16b6f10a835cf5")}</p>
           ) : (expiredDecisions?.length ?? 0) > 0 ? (
             expiredDecisions!.slice(0, DECISION_HISTORY_VISIBLE_LIMIT).map((decision) => (
               <DecisionResolver
@@ -763,7 +763,7 @@ function ClassicWhatNeedsMe() {
               />
             ))
           ) : (
-            <p className="text-xs text-muted-foreground">No expired decisions.</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_56b04ba292bda1")}</p>
           )}
         </Curtain>
       </div>
@@ -787,15 +787,16 @@ export function DecisionBundleHeader({
   originIssue: AttentionSubject | null;
   count: number;
 }) {
+  useInterfaceLanguage();
   const noun = count === 1 ? "decision" : "decisions";
   return (
     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-sm border-l-2 border-violet-500/60 bg-violet-500/5 px-3 py-1.5 text-xs">
       <span className="font-semibold text-violet-800 dark:text-violet-200">
-        {agentName ?? "An agent"} proposed {count} {noun}
+        {agentName ?? interfaceText("m_ea6a03636c62be")}{interfaceText("m_d13aa5c67e421c")}{count} {noun}
       </span>
       {originIssue && (originIssue.identifier || originIssue.title) && (
         <span className="text-muted-foreground">
-          {"· from "}
+          {interfaceText("m_6b23b9e02f09ca")}
           {originIssue.href ? (
             <a href={originIssue.href} className="hover:underline">
               {originIssue.identifier ?? originIssue.title}
@@ -806,35 +807,35 @@ export function DecisionBundleHeader({
         </span>
       )}
       {title && <span className="text-muted-foreground">· {title}</span>}
-      <span className="text-muted-foreground">· {count} pending</span>
+      <span className="text-muted-foreground">· {count}{interfaceText("m_f9ad5e1de7d0af")}</span>
     </div>
   );
 }
 
 function CaughtUpNote({ filtered }: { filtered: boolean }) {
+  useInterfaceLanguage();
   return (
     <div className="rounded-xl border border-dashed border-border py-10 text-center">
       <p className="text-sm font-medium text-foreground">
-        {filtered ? "No decisions match your search or filters." : "You're all caught up."}
+        {filtered ? interfaceText("m_3fc01f88a52672") : interfaceText("m_aebca55641976f")}
       </p>
       {filtered && (
-        <p className="mt-1 text-xs text-muted-foreground">Adjust or clear your search and filters to see the rest.</p>
+        <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_5040e96352396f")}</p>
       )}
     </div>
   );
 }
 
 function ZeroState() {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-20 text-center">
       <div className="mb-4 rounded-full bg-green-500/10 p-4">
         <CheckCircle2 className="h-10 w-10 text-green-500" />
       </div>
-      <p className="text-lg font-semibold text-foreground">You're all caught up</p>
+      <p className="text-lg font-semibold text-foreground">{interfaceText("m_2f485b9971dfa5")}</p>
       <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Inbox className="h-4 w-4" />
-        Nothing needs a decision from you right now.
-      </p>
+        <Inbox className="h-4 w-4" />{interfaceText("m_158178704c028e")}</p>
     </div>
   );
 }

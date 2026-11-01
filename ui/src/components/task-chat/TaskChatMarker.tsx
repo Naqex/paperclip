@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronDown, CircleDot, OctagonX, Square, Flag, KeyRound } from "lucide-react";
@@ -27,6 +28,7 @@ export function TaskChatMarker({
   onTryAgain?: () => Promise<void> | void;
   tryAgainPending?: boolean;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const detailsId = useId();
   const streamlined = useStreamlinedTaskChatPresentation();
@@ -47,16 +49,13 @@ export function TaskChatMarker({
         className="tc-enter-marker flex w-full items-start gap-3 rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm">
         <KeyRound className="mt-0.5 size-5 shrink-0 text-destructive" aria-hidden />
         <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <p className="font-semibold text-destructive">{agentName} couldn’t start</p>
+          <p className="font-semibold text-destructive">{agentName}{interfaceText("m_928b475936110e")}</p>
           <p className="break-words font-medium text-foreground">
-            {agentName} is configured to use {credentialName || "an AI credential"}, but {deniedUser === "you" ? "you don’t" : `${deniedUser} doesn’t`} have access to that credential.
-          </p>
-          <p className="text-muted-foreground">
-            Choose an AI connection {deniedUser === "you" ? "you can" : `${deniedUser} can`} use, or ask an administrator to update {agentName}’s connection. Then try again.
-          </p>
+            {agentName}{interfaceText("m_86dfb2be0fa1ce")}{credentialName || interfaceText("m_9d4ded42400107")}{interfaceText("m_efd2a4b8195e28")}{deniedUser === "you" ? interfaceText("m_8bab6b875ef752") : interfaceText("m_d92719f3820e6a", { value0: (deniedUser) })}{interfaceText("m_6a908d46babaa6")}</p>
+          <p className="text-muted-foreground">{interfaceText("m_35e1c6e8c7e469")}{deniedUser === "you" ? interfaceText("m_c854dc490a9525") : interfaceText("m_5e6c82194dfac2", { value0: (deniedUser) })}{interfaceText("m_75f71d09c6c077")}{agentName}{interfaceText("m_40c2331a29613b")}</p>
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <Button asChild variant="outline" size="sm"><Link to={settingsHref}>Change AI connection</Link></Button>
-            {item.runHref && <Button asChild variant="ghost" size="sm"><Link to={item.runHref}>View run</Link></Button>}
+            <Button asChild variant="outline" size="sm"><Link to={settingsHref}>{interfaceText("m_1dae4a98f6ebca")}</Link></Button>
+            {item.runHref && <Button asChild variant="ghost" size="sm"><Link to={item.runHref}>{interfaceText("m_aaf7fccc7d1315")}</Link></Button>}
           </div>
         </div>
       </div>
@@ -105,7 +104,7 @@ export function TaskChatMarker({
               disabled={tryAgainPending}
               data-testid="task-chat-run-failed-try-again"
             >
-              {tryAgainPending ? "Trying again..." : "Try again"}
+              {tryAgainPending ? interfaceText("m_808041416fbdba") : interfaceText("m_d8b8392e2c5429")}
             </Button>
           ) : null}
         </div>
@@ -124,12 +123,12 @@ export function TaskChatMarker({
               <div className="flex items-center justify-end gap-2 border-t border-border/70 bg-background/50 px-3 py-2 dark:bg-background/30">
                 {item.planHref ? (
                   <Button asChild variant="ghost" size="xs">
-                    <Link to={item.planHref}>View saved plan</Link>
+                    <Link to={item.planHref}>{interfaceText("m_33ea4b19991f3e")}</Link>
                   </Button>
                 ) : null}
                 {item.runHref ? (
                   <Button asChild variant="ghost" size="xs">
-                    <Link to={item.runHref}>View run</Link>
+                    <Link to={item.runHref}>{interfaceText("m_aaf7fccc7d1315")}</Link>
                   </Button>
                 ) : null}
                 {onTryAgain ? (
@@ -140,7 +139,7 @@ export function TaskChatMarker({
                     disabled={tryAgainPending}
                     data-testid="task-chat-run-failed-try-again"
                   >
-                    {tryAgainPending ? "Trying again..." : "Try again"}
+                    {tryAgainPending ? interfaceText("m_808041416fbdba") : interfaceText("m_d8b8392e2c5429")}
                   </Button>
                 ) : null}
               </div>
@@ -179,7 +178,7 @@ export function TaskChatMarker({
             disabled={tryAgainPending}
             data-testid="task-chat-run-failed-try-again"
           >
-            {tryAgainPending ? "Trying again..." : "Try again"}
+            {tryAgainPending ? interfaceText("m_808041416fbdba") : interfaceText("m_d8b8392e2c5429")}
           </Button>
         ) : null}
       </span>

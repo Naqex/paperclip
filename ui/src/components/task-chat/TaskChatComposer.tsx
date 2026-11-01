@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCurrentAccountGuard } from "@/hooks/useAccountBoundMutation";
 import { AgentAvatar } from "../AgentAvatar";
 import {
@@ -313,17 +314,17 @@ function AssigneeIdentityAvatar({
 /** v7 per-mode placeholder copy; `{agent}` is the pending assignee's name. */
 function modePlaceholder(mode: IssueWorkMode, agentName: string, mobile: boolean): string {
   if (mobile) {
-    if (mode === "planning") return `Plan with ${agentName}…`;
-    if (mode === "ask") return `Ask ${agentName}…`;
-    return `Message ${agentName}…`;
+    if (mode === "planning") return interfaceText("m_db3b7e100e5e78", { value0: (agentName) });
+    if (mode === "ask") return interfaceText("m_6e87aedb1d8123", { value0: (agentName) });
+    return interfaceText("m_04c074e69d6d24", { value0: (agentName) });
   }
   switch (mode) {
     case "planning":
-      return `Plan with ${agentName} — shapes the plan doc, no code changes…`;
+      return interfaceText("m_fd49516983f88f", { value0: (agentName) });
     case "ask":
-      return `Ask ${agentName} a question — read-only, nothing runs…`;
+      return interfaceText("m_6cd2813e5782e3", { value0: (agentName) });
     default:
-      return `Message ${agentName} — describe what you want done…`;
+      return interfaceText("m_1d5beb9f69b73b", { value0: (agentName) });
   }
 }
 
@@ -430,6 +431,7 @@ export function TaskChatComposer({
   onRunnerGoalCommand,
   onRunnerGoalReassign,
 }: TaskChatComposerProps) {
+  useInterfaceLanguage();
   const streamlined = useStreamlinedTaskChatPresentation();
   const stopControl = useComposerStop(onStop, stopPending);
   const [localBody, setBody] = useState(() => (draftKey ? loadDraft(draftKey) : ""));
@@ -669,11 +671,11 @@ export function TaskChatComposer({
   const assigneeValue = creation || conversationMode ? currentAssigneeValue : pendingAssignee ?? suggestedAssigneeValue ?? currentAssigneeValue;
   const showConversationModel = coordinator && conversationMode && supportsComposerModel(modelAgents?.get(assigneeValue.slice(6)));
   const assigneeLabel =
-    reassignOptions?.find((o) => o.id === assigneeValue)?.label ?? "Unassigned";
+    reassignOptions?.find((o) => o.id === assigneeValue)?.label ?? interfaceText("m_14d33bd014e6b4");
   const assigneeName =
     assigneeLabel === "Unassigned" ? "the agent" : assigneeLabel;
   const effectivePlaceholder = queuedEdit
-    ? "Edit queued message…"
+    ? interfaceText("m_cc38c6185d8e92")
     : (placeholder ?? modePlaceholder(pendingMode, assigneeName, mobile));
   const goalUnavailable = runnerGoalCapability?.availability !== "available";
   const goalCommandOption: ActionCommandOption = {
@@ -1262,9 +1264,7 @@ export function TaskChatComposer({
     >
       {takeoverBusy ? (
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-      ) : null}
-      Skip
-    </Button>
+      ) : null}{interfaceText("m_28d03596d24eeb")}</Button>
   ) : null;
 
   if (pause && (!conversationMode || queuedEdit)) {
@@ -1306,12 +1306,11 @@ export function TaskChatComposer({
             <div className="ml-auto flex shrink-0 items-center gap-1">
               {takeover.pendingCount > 1 ? (
                 <Button type="button" size="sm" variant="ghost" className="h-7 px-2" onClick={takeover.onShowNext}>
-                  {takeover.pendingCount} pending
-                </Button>
+                  {takeover.pendingCount}{interfaceText("m_f9ad5e1de7d0af")}</Button>
               ) : null}
               <div ref={setTakeoverControlsSlot} className="flex shrink-0 items-center" data-testid="task-chat-composer-takeover-controls-slot" />
               <Button type="button" size="icon-xs" variant="ghost" className="text-muted-foreground hover:text-foreground"
-                aria-label={`Dismiss ${takeover.label}`} disabled={takeoverBusy} onClick={takeover.onDismiss}>
+                aria-label={interfaceText("m_b3de1fd6a0cc7c", { value0: (takeover.label) })} disabled={takeoverBusy} onClick={takeover.onDismiss}>
                 <X aria-hidden />
               </Button>
             </div>
@@ -1341,7 +1340,7 @@ export function TaskChatComposer({
           className="flex h-11 min-w-0 items-center gap-2 px-2.5"
           data-testid="task-chat-composer-context"
           role="group"
-          aria-label="Task project and worktrees"
+          aria-label={interfaceText("m_fc5cde17a31945")}
         >
           {creation.contextBar}
         </TaskChatComposerBar>
@@ -1392,17 +1391,16 @@ export function TaskChatComposer({
         >
           <CircleHelp className="h-4 w-4 shrink-0" aria-hidden />
           <span className="min-w-0 flex-1 truncate">
-            {pendingTakeover?.label ?? takeover?.label ?? "Pending input"}
+            {pendingTakeover?.label ?? takeover?.label ?? interfaceText("m_bc6e0973dfa1a0")}
           </span>
           <span className="shrink-0 font-medium">
-            {pendingTakeover?.count ?? takeover?.pendingCount ?? 1} pending
-          </span>
+            {pendingTakeover?.count ?? takeover?.pendingCount ?? 1}{interfaceText("m_f9ad5e1de7d0af")}</span>
         </button>
       ) : null}
           {pause && conversationMode ? (
             <div className="space-y-2">
               <TaskChatPausedTakeover {...pause} hasDraft={Boolean(body.trim() || attachments.length)} />
-              <p className="text-xs text-muted-foreground">Send /new to start a fresh session and resume this conversation.</p>
+              <p className="text-xs text-muted-foreground">{interfaceText("m_bed063a11d2dc7")}</p>
             </div>
           ) : null}
           <div data-testid="task-chat-composer-input">
@@ -1412,7 +1410,7 @@ export function TaskChatComposer({
               onChange={changeBody}
               placeholder={
                 disabled
-                  ? (disabledReason ?? "Composer disabled")
+                  ? (disabledReason ?? interfaceText("m_72a59faee394ed"))
                   : effectivePlaceholder
               }
               readOnly={disabled || !!uncertainSubmission || Boolean(creation && (submitting || creation.readOnly))}
@@ -1481,9 +1479,9 @@ export function TaskChatComposer({
                       </AttachmentTitle>
                       <AttachmentDescription className="max-w-48">
                         {attachment.status === "uploading"
-                          ? "Uploading…"
+                          ? interfaceText("m_5ce44dd77dae78")
                           : attachment.status === "error"
-                            ? (attachment.error ?? "Upload failed")
+                            ? (attachment.error ?? interfaceText("m_6efc5d27f30b20"))
                             : [kind.label, sizeLabel]
                                 .filter(Boolean)
                                 .join(" · ")}
@@ -1492,7 +1490,7 @@ export function TaskChatComposer({
                     <AttachmentActions>
                       {attachment.status === "error" && attachment.file ? (
                         <AttachmentAction
-                          aria-label={`Retry ${attachment.name}`}
+                          aria-label={interfaceText("m_9e58d77649ac6f", { value0: (attachment.name) })}
                           disabled={!!uncertainSubmission}
                           onClick={() => retryUpload(attachment)}
                         >
@@ -1500,7 +1498,7 @@ export function TaskChatComposer({
                         </AttachmentAction>
                       ) : null}
                       <AttachmentAction
-                        aria-label={`Remove ${attachment.name}`}
+                        aria-label={interfaceText("m_e224cf245aada5", { value0: (attachment.name) })}
                         disabled={!!uncertainSubmission}
                         onClick={() =>
                           setAttachments((prev) =>
@@ -1544,8 +1542,8 @@ export function TaskChatComposer({
             {queuedEdit ? (
               <span className="px-1 text-xs font-medium text-muted-foreground">
                 {queuedEdit.stale
-                  ? "Queued message changed"
-                  : "Editing queued message"}
+                  ? interfaceText("m_2dc0f5a680d75f")
+                  : interfaceText("m_3bb5020b9725d3")}
               </span>
             ) : (
               <ComposerModeChip mode={pendingMode} onRemove={onWorkModeChange ? () => changeMode("standard") : undefined}
@@ -1583,11 +1581,11 @@ export function TaskChatComposer({
               <InlineEntitySelector
                 value={assigneeValue}
                 options={reassignOptions ?? []}
-                placeholder="Assignee"
+                placeholder={interfaceText("m_5e20d20e3978dc")}
                 mobileTitle="Select assignee"
                 noneLabel="No assignee"
-                searchPlaceholder="Search assignees…"
-                emptyMessage="No matches."
+                searchPlaceholder={interfaceText("m_12019555b7b48d")}
+                emptyMessage={interfaceText("m_d6572bd2e77380")}
                 onChange={updatePendingAssignee}
                 disabled={disabled}
                 triggerTestId="task-chat-composer-assignee"
@@ -1633,9 +1631,7 @@ export function TaskChatComposer({
                 onClick={onCancelQueuedEdit}
                 disabled={submitting}
                 className="h-8 shrink-0 rounded-md px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50"
-              >
-                Cancel
-              </button>
+              >{interfaceText("m_19766ed6ccb2f4")}</button>
             ) : null}
             <button
               type="button"
@@ -1655,28 +1651,28 @@ export function TaskChatComposer({
               title={
                 showStop
                   ? stopControl.stopping
-                    ? "Stopping…"
-                    : "Stop response"
+                    ? interfaceText("m_bbe8574175aba8")
+                    : interfaceText("m_d5ca579c194339")
                   : queuedEdit
                     ? queuedEdit.stale
-                      ? "Queue as new message"
-                      : "Save queued message"
+                      ? interfaceText("m_c4284a6608e939")
+                      : interfaceText("m_3d52a0db1756ee")
                     : uploadPending
-                      ? "Waiting for upload to finish"
+                      ? interfaceText("m_71fd6a43957e57")
                       : uploadFailed
-                        ? "Remove the failed attachment to send"
-                        : creation ? `${creation.submitLabel} (⌘+Enter)` : "Send (⌘+Enter)"
+                        ? interfaceText("m_10d2ce8e995a60")
+                        : creation ? `${creation.submitLabel} (⌘+Enter)` : interfaceText("m_b5f7acc1f87d8c")
               }
               aria-label={
                 showStop
                   ? stopControl.stopping
-                    ? "Stopping…"
-                    : "Stop"
+                    ? interfaceText("m_bbe8574175aba8")
+                    : interfaceText("m_cae7d57bc067a5")
                   : queuedEdit
                     ? queuedEdit.stale
-                      ? "Queue as new message"
-                      : "Save queued message"
-                    : creation?.submitLabel ?? "Send"
+                      ? interfaceText("m_c4284a6608e939")
+                      : interfaceText("m_3d52a0db1756ee")
+                    : creation?.submitLabel ?? interfaceText("m_f6f4688ff23d50")
               }
               aria-busy={submitting}
               className={cn(

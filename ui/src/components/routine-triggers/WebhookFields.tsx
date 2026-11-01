@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ export function CopyField({
   value: string;
   help?: string;
 }) {
+  useInterfaceLanguage();
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(false);
   return (
@@ -26,7 +28,7 @@ export function CopyField({
         <Button
           variant="ghost"
           size="sm"
-          aria-label={`Copy ${label}`}
+          aria-label={interfaceText("m_a9a564b7e7e852", { value0: (label) })}
           onClick={async () => {
             try {
               await copyTextToClipboard(value);
@@ -42,18 +44,16 @@ export function CopyField({
           ) : (
             <Copy className="h-3.5 w-3.5" />
           )}
-          {copied ? "Copied" : "Copy"}
+          {copied ? interfaceText("m_8d525e5f158b9a") : interfaceText("m_e21f935f11d7e9")}
         </Button>
       </div>
       {help && <p className="text-xs text-muted-foreground">{help}</p>}
       {error && (
         <div className="space-y-2">
-          <p role="alert" className="text-xs text-destructive">
-            Copy failed. Select and copy the text below.
-          </p>
+          <p role="alert" className="text-xs text-destructive">{interfaceText("m_7a8581437b38ba")}</p>
           <textarea
             readOnly
-            aria-label={`${label} text`}
+            aria-label={interfaceText("m_f7baaf181f4d7d", { value0: (label) })}
             value={value}
             rows={5}
             className="w-full rounded-md border border-input bg-background p-3 font-mono text-xs"
@@ -65,23 +65,21 @@ export function CopyField({
 }
 
 export function AgentInstructions({ value }: { value: string }) {
+  useInterfaceLanguage();
   return (
     <section
-      aria-label="Agent instructions"
+      aria-label={interfaceText("m_dc390e1824d455")}
       className="space-y-3 rounded-md bg-muted/40 p-4"
     >
       <div className="space-y-1">
-        <h2 className="text-sm font-medium">Agent instructions</h2>
-        <p className="text-sm text-muted-foreground">
-          Give your agent everything it needs to connect this webhook: the URL,
-          authentication key, and step-by-step instructions.
-        </p>
+        <h2 className="text-sm font-medium">{interfaceText("m_dc390e1824d455")}</h2>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_ea90b46a82b362")}</p>
       </div>
       <AgentSetupPrompt
         prompt={value}
-        label="Copy for your agent"
-        title="Webhook setup"
-        description="Paste this into your agent to connect this webhook to your routine."
+        label={interfaceText("m_64d2d48d463cb4")}
+        title={interfaceText("m_25f5e2b7a32670")}
+        description={interfaceText("m_9c0e1f1b08d16c")}
       />
     </section>
   );

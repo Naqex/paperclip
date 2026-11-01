@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ArrowUpDown, Check, Plus } from "lucide-react";
 import { ToolbarSearch } from "./ToolbarSearch";
 import { Button } from "./ui/button";
@@ -7,10 +8,10 @@ export type ProjectSortField = "name" | "updated" | "created" | "targetDate";
 export type ProjectSortDir = "asc" | "desc";
 
 const PROJECT_SORT_OPTIONS: Array<{ field: ProjectSortField; label: string }> = [
-  { field: "name", label: "Name" },
-  { field: "updated", label: "Updated" },
-  { field: "created", label: "Created" },
-  { field: "targetDate", label: "Target date" },
+  { field: "name", get label() { return interfaceText("m_dcd1d5223f73b3"); } },
+  { field: "updated", get label() { return interfaceText("m_3a5ecca188c057"); } },
+  { field: "created", get label() { return interfaceText("m_d70b9e24bca26b"); } },
+  { field: "targetDate", get label() { return interfaceText("m_834cc86be24061"); } },
 ];
 
 /** Canonical project search, sorting and creation controls. State stays with the page. */
@@ -22,14 +23,15 @@ export function ProjectsToolbar({ query, onQueryChange, sortField, sortDir, onSo
   onSortChange: (field: ProjectSortField, direction: ProjectSortDir) => void;
   onNewProject: () => void;
 }) {
-  const sortLabel = PROJECT_SORT_OPTIONS.find(option => option.field === sortField)?.label ?? "Name";
-  return <div data-canonical-toolbar="projects" role="toolbar" aria-label="Projects controls" className="flex flex-wrap items-center gap-4">
-    <ToolbarSearch query={query} onQueryChange={onQueryChange} label="Search projects" placeholder="Search projects…" />
+  useInterfaceLanguage();
+  const sortLabel = PROJECT_SORT_OPTIONS.find(option => option.field === sortField)?.label ?? interfaceText("m_dcd1d5223f73b3");
+  return <div data-canonical-toolbar="projects" role="toolbar" aria-label={interfaceText("m_4296794037b564")} className="flex flex-wrap items-center gap-4">
+    <ToolbarSearch query={query} onQueryChange={onQueryChange} label={interfaceText("m_9e079c7df9f105")} placeholder={interfaceText("m_b0c5facf521794")} />
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" title="Sort">
+        <Button variant="outline" size="sm" title={interfaceText("m_bec69036aa27e7")}>
           <ArrowUpDown className="h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1" />
-          <span>Sort: {sortLabel}</span>
+          <span>{interfaceText("m_a2bdb621058475")}{sortLabel}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-44 p-0">
@@ -53,7 +55,7 @@ export function ProjectsToolbar({ query, onQueryChange, sortField, sortDir, onSo
               {sortField === option.field ? (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Check className="h-3 w-3" />
-                  {sortDir === "asc" ? "Asc" : "Desc"}
+                  {sortDir === "asc" ? interfaceText("m_cddeba5cfc9a05") : interfaceText("m_5c4419a6999d2a")}
                 </span>
               ) : null}
             </button>
@@ -63,9 +65,7 @@ export function ProjectsToolbar({ query, onQueryChange, sortField, sortDir, onSo
     </Popover>
     <div className="design-toolbar-actions">
       <Button size="sm" variant="outline" data-toolbar-primary onClick={openNewProject}>
-          <Plus className="h-4 w-4 mr-1" />
-          Add Project
-      </Button>
+          <Plus className="h-4 w-4 mr-1" />{interfaceText("m_44b7ce21b9f2b3")}</Button>
     </div>
   </div>;
 }

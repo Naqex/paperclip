@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ArrowUpDown, Check } from "lucide-react";
 import { COMPANY_SEARCH_SORTS, type CompanySearchSort } from "@paperclipai/shared";
 import { Button } from "@/components/ui/button";
@@ -19,17 +20,18 @@ export function SearchSortMenu({
   value: CompanySearchSort;
   onChange: (next: CompanySearchSort) => void;
 }) {
+  useInterfaceLanguage();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs font-normal" aria-label="Sort results">
+        <Button variant="ghost" size="sm" className="h-8 gap-1 text-xs font-normal" aria-label={interfaceText("m_765b3c6a932f95")}>
           <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
-          <span className="hidden sm:inline text-muted-foreground">Sort:</span>
+          <span className="hidden sm:inline text-muted-foreground">{interfaceText("m_8f3e7ea6ed491d")}</span>
           <span>{SORT_LABELS[value]}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuLabel className="text-xs text-muted-foreground">Sort by</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-muted-foreground">{interfaceText("m_c9129025bd3ff6")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {COMPANY_SEARCH_SORTS.map((sort) => (
           <DropdownMenuItem key={sort} onSelect={() => onChange(sort)} className="gap-2 text-sm">

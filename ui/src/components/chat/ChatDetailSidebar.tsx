@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { chatEndpointsApi } from "@/api/chatEndpoints";
 import { queryKeys } from "@/lib/queryKeys";
@@ -18,6 +19,7 @@ export function ChatDetailSidebar({
   endpointId: string;
   NavItem?: typeof SidebarNavItem;
 }) {
+  useInterfaceLanguage();
   const endpoint = useQuery({
     queryKey: queryKeys.chatEndpoints.detail(endpointId),
     queryFn: () => chatEndpointsApi.get(endpointId),
@@ -26,7 +28,7 @@ export function ChatDetailSidebar({
   return (
     <aside className="flex h-full min-h-0 w-full flex-col border-r border-border bg-background">
       <nav
-        aria-label="Chat connection"
+        aria-label={interfaceText("m_c3b314eca2b084")}
         data-slot="contextual-sidebar-nav"
         className={contextualSidebarStyles.nav}
       >
@@ -36,32 +38,32 @@ export function ChatDetailSidebar({
         >
           <NavItem
             to={`/apps/chat/${endpointId}/settings`}
-            label="Settings"
+            label={interfaceText("m_74a883a037bc22")}
             icon={Settings}
             end
           />
           <NavItem
             to={`/apps/chat/${endpointId}/access`}
-            label="Access"
+            label={interfaceText("m_ec5ba0abb717da")}
             icon={Users}
             end
           />
           {endpoint.data?.provider === "github" && (
             <NavItem
               to={`/apps/chat/${endpointId}/reviews`}
-              label="Reviews"
+              label={interfaceText("m_84cb7871b741c3")}
               icon={GitPullRequest}
             />
           )}
           <NavItem
             to={`/apps/chat/${endpointId}/conversations`}
-            label="Conversations"
+            label={interfaceText("m_1d432f58690c2b")}
             icon={MessageSquare}
             end
           />
           <NavItem
             to={`/apps/chat/${endpointId}/activity`}
-            label="Activity"
+            label={interfaceText("m_38da1505ca8373")}
             icon={Activity}
             end
           />

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { readThreadScrollAnchor, threadScrollAnchorDelta, type ThreadScrollAnchor } from "./scroll-anchor";
 import { cn } from "@/lib/utils";
@@ -53,6 +54,7 @@ interface TaskMessageScrollerProps {
  * while pinned stays instant, so no reflow/jump happens during streaming.
  */
 export function TaskMessageScroller({ children, contentKey, className, scrollingHistory }: TaskMessageScrollerProps) {
+  useInterfaceLanguage();
   const streamlined = useStreamlinedTaskChatPresentation();
   const navigation = useTaskChatScrollNavigation();
   const initialPositionApplied = useRef(false);
@@ -309,7 +311,7 @@ export function TaskMessageScroller({ children, contentKey, className, scrolling
         onScroll={handleScroll}
         tabIndex={scrollingHistory ? 0 : undefined}
         role={scrollingHistory ? "region" : undefined}
-        aria-label={scrollingHistory ? "Conversation messages" : undefined}
+        aria-label={scrollingHistory ? interfaceText("m_f5f8903fca4355") : undefined}
         onKeyDown={event => {
           if (["ArrowUp", "PageUp", "Home"].includes(event.key) && ref.current && ref.current.scrollTop <= 192) requestEarlierHistory();
         }}
@@ -346,9 +348,9 @@ export function TaskMessageScroller({ children, contentKey, className, scrolling
         {scrollingHistory && (scrollingHistory.hasMore || scrollingHistory.loading || scrollingHistory.error) ? (
           <div role="status" className="flex h-8 items-center justify-center gap-2 text-xs text-muted-foreground" data-testid="chat-history-status">
             {scrollingHistory.error ? <>
-              <span>Earlier messages couldn’t load.</span>
-              <button type="button" className="underline underline-offset-4" onClick={() => scrollingHistory.load()}>Retry</button>
-            </> : scrollingHistory.loading ? "Loading earlier messages…" : "Scroll up for earlier messages"}
+              <span>{interfaceText("m_11aa16c5ba93b4")}</span>
+              <button type="button" className="underline underline-offset-4" onClick={() => scrollingHistory.load()}>{interfaceText("m_942087cc2d41e0")}</button>
+            </> : scrollingHistory.loading ? interfaceText("m_b8507b92eee1d9") : interfaceText("m_3b8326d698743b")}
           </div>
         ) : null}
         {children}
@@ -357,7 +359,7 @@ export function TaskMessageScroller({ children, contentKey, className, scrolling
       {pillPhase !== "hidden" ? (
         <button
           type="button"
-          aria-label="Scroll to latest"
+          aria-label={interfaceText("m_60df3caee4bdbd")}
           onClick={handleJumpToLatest}
           onAnimationEnd={() => {
             if (pillPhase === "out") setPillPhase("hidden");

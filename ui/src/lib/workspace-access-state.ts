@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   WorkspaceOperation,
   WorkspaceReadiness,
@@ -79,7 +80,7 @@ function failedRepairNotice(repair: WorkspaceOperation): WorkspaceAccessNotice {
     description: phase
       ? `The repair stopped during ${phase}. The pre-repair backup was kept.`
       : "The repair stopped before the workspace became usable. The pre-repair backup was kept.",
-    action: { kind: "view_logs", label: "View repair log" },
+    action: { kind: "view_logs", label: interfaceText("m_bb0e22f5f97986") },
   };
 }
 
@@ -92,7 +93,7 @@ function failedProvisionNotice(provision: WorkspaceOperation): WorkspaceAccessNo
     description: phase
       ? `The earlier clone attempt failed during ${phase}. The workspace later became usable.`
       : "An earlier clone attempt failed, but the workspace later became usable.",
-    action: { kind: "view_logs", label: "View provisioning log" },
+    action: { kind: "view_logs", label: interfaceText("m_0b151b3554978a") },
   };
 }
 
@@ -191,7 +192,7 @@ export function resolveWorkspaceAccessState(input: {
       description: phase
         ? `Only the isolated database is replaced; the git worktree and your files are preserved. Current phase: ${phase}.`
         : "Only the isolated database is replaced; the git worktree and your files are preserved.",
-      action: { kind: "wait", label: "Repair in progress" },
+      action: { kind: "wait", label: interfaceText("m_4b259553baee5d") },
       handoffAvailable,
     };
   }
@@ -209,7 +210,7 @@ export function resolveWorkspaceAccessState(input: {
       state: "provisioning",
       title: "Provisioning database",
       description: "Restoring the isolated database clone for this workspace. This runs once before the first start.",
-      action: { kind: "wait", label: "Provisioning" },
+      action: { kind: "wait", label: interfaceText("m_c2b1b8e2e03928") },
       handoffAvailable,
     };
   }
@@ -223,7 +224,7 @@ export function resolveWorkspaceAccessState(input: {
       description: seedPhase
         ? `The clone failed during ${seedPhase}. Repairing replaces only the isolated database.`
         : "The clone did not finish, so this workspace has no usable database yet.",
-      action: { kind: "repair", label: "Repair workspace" },
+      action: { kind: "repair", label: interfaceText("m_152f148bfd5702") },
       handoffAvailable,
     };
   }
@@ -237,7 +238,7 @@ export function resolveWorkspaceAccessState(input: {
         state: "stopped",
         title: "Workspace is not running",
         description: "Start the workspace runtime to publish its board.",
-        action: { kind: "start", label: "Start workspace" },
+        action: { kind: "start", label: interfaceText("m_0e6b0b29214d72") },
         handoffAvailable,
       };
     }
@@ -252,8 +253,8 @@ export function resolveWorkspaceAccessState(input: {
           validating ? "Paperclip is still confirming the clone." : "One bounded repair replaces the isolated database.",
         ].join(" "),
         action: validating
-          ? { kind: "wait", label: "Validating" }
-          : { kind: "repair", label: "Repair workspace" },
+          ? { kind: "wait", label: interfaceText("m_5a1a167e3d9030") }
+          : { kind: "repair", label: interfaceText("m_152f148bfd5702") },
         handoffAvailable,
       };
     }
@@ -263,8 +264,8 @@ export function resolveWorkspaceAccessState(input: {
         title: servingService ? "Ready — snapshot-local sign-in" : "Workspace is degraded",
         description: cause ?? "Opening the board will ask for the credentials captured in this snapshot.",
         action: servingService
-          ? { kind: "open", label: "Open workspace" }
-          : { kind: "start", label: "Start workspace" },
+          ? { kind: "open", label: interfaceText("m_b3e34b185d067b") }
+          : { kind: "start", label: interfaceText("m_0e6b0b29214d72") },
         handoffAvailable: false,
         secondaryNotice,
       };
@@ -276,7 +277,7 @@ export function resolveWorkspaceAccessState(input: {
       state: "provisioning",
       title: "Workspace is starting",
       description: "Paperclip is starting the workspace runtime and waiting for its board URL.",
-      action: { kind: "wait", label: "Starting workspace" },
+      action: { kind: "wait", label: interfaceText("m_7212fa79f12ab1") },
       handoffAvailable,
     };
   }
@@ -286,7 +287,7 @@ export function resolveWorkspaceAccessState(input: {
       state: "ready",
       title: "Ready",
       description: "Opening the workspace signs you in to the cloned board without a password.",
-      action: { kind: "open", label: "Open workspace" },
+      action: { kind: "open", label: interfaceText("m_b3e34b185d067b") },
       handoffAvailable,
       secondaryNotice,
     };
@@ -301,7 +302,7 @@ export function resolveWorkspaceAccessState(input: {
       title: "Workspace is degraded",
       description: cause
         ?? "The runtime is up but did not report a usable database, so Paperclip will not publish it as ready.",
-      action: { kind: "repair", label: "Repair workspace" },
+      action: { kind: "repair", label: interfaceText("m_152f148bfd5702") },
       handoffAvailable,
     };
   }
@@ -310,7 +311,7 @@ export function resolveWorkspaceAccessState(input: {
     state: "stopped",
     title: "Workspace is not running",
     description: "Start the workspace runtime to publish its board.",
-    action: { kind: "start", label: "Start workspace" },
+    action: { kind: "start", label: interfaceText("m_0e6b0b29214d72") },
     handoffAvailable,
   };
 }

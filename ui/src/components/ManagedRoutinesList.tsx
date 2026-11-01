@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Button } from "@/components/ui/button";
 import {
   RoutineListRow,
@@ -79,7 +80,7 @@ export function ManagedRoutinesList({
   agents = [],
   projects = [],
   pluginDisplayName = null,
-  emptyMessage = "No managed routines.",
+  emptyMessage = interfaceText("m_0a429d06766f01"),
   runningRoutineKey = null,
   statusMutationRoutineKey = null,
   reconcilingRoutineKey = null,
@@ -89,6 +90,7 @@ export function ManagedRoutinesList({
   onReconcile,
   onReset,
 }: ManagedRoutinesListProps) {
+  useInterfaceLanguage();
   const agentById = new Map<string, RoutineListAgentSummary>(
     agents.map((agent) => [agent.id, agent]),
   );
@@ -132,7 +134,7 @@ export function ManagedRoutinesList({
               secondaryDetails={
                 <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   {routine.resourceKey ? <span>{routine.resourceKey}</span> : null}
-                  {routine.cronExpression ? <span>Schedule {routine.cronExpression}</span> : null}
+                  {routine.cronExpression ? <span>{interfaceText("m_3bcece15942138")}{routine.cronExpression}</span> : null}
                 </span>
               }
               onRunNow={() => onRunNow?.(routine)}
@@ -148,8 +150,8 @@ export function ManagedRoutinesList({
               >
                 <span>
                   {missingRefs.length
-                    ? `Missing ${missingRefs.map((ref) => `${ref.resourceKind}:${ref.resourceKey}`).join(", ")}`
-                    : "Routine defaults can be repaired."}
+                    ? interfaceText("m_cf9b2d3060e366", { value0: (missingRefs.map((ref) => `${ref.resourceKind}:${ref.resourceKey}`).join(", ")) })
+                    : interfaceText("m_f3bb51cc127fca")}
                 </span>
                 <span className="flex items-center gap-2">
                   {onReconcile ? (
@@ -159,7 +161,7 @@ export function ManagedRoutinesList({
                       disabled={reconcilingRoutineKey === routine.key}
                       onClick={() => onReconcile(routine)}
                     >
-                      {reconcilingRoutineKey === routine.key ? "Reconciling..." : "Reconcile"}
+                      {reconcilingRoutineKey === routine.key ? interfaceText("m_393dc4a3ec8926") : interfaceText("m_b59be5659f714e")}
                     </Button>
                   ) : null}
                   {onReset ? (
@@ -169,7 +171,7 @@ export function ManagedRoutinesList({
                       disabled={resettingRoutineKey === routine.key}
                       onClick={() => onReset(routine)}
                     >
-                      {resettingRoutineKey === routine.key ? "Resetting..." : "Reset"}
+                      {resettingRoutineKey === routine.key ? interfaceText("m_02281affa65c88") : interfaceText("m_daee7606b339f3")}
                     </Button>
                   ) : null}
                 </span>

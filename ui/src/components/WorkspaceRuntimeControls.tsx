@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type {
   WorkspaceCommandDefinition,
   RuntimeExposureStatus,
@@ -192,13 +193,13 @@ function isActiveStatusLabel(statusLabel: string) {
 function exposureFailureCopy(exposure: RuntimeExposureStatus | null) {
   if (exposure?.state === "failed") {
     return {
-      label: "HTTPS unavailable",
+      label: interfaceText("m_0c011e774a5bc6"),
       remediation: "Check the Tailscale broker and node HTTPS configuration.",
     };
   }
   if (exposure?.state === "cleanup_pending") {
     return {
-      label: "HTTPS cleanup pending",
+      label: interfaceText("m_6727ed53bf2cce"),
       remediation: "Restart the host broker before reusing this port.",
     };
   }
@@ -360,6 +361,7 @@ function CommandActionButtons({
   square?: boolean;
   iconOnly?: boolean;
 }) {
+  useInterfaceLanguage();
   const actions: WorkspaceRuntimeAction[] =
     item.kind === "job"
       ? ["run"]
@@ -373,12 +375,12 @@ function CommandActionButtons({
         const request = buildRequest(item, action);
         const Icon = action === "stop" ? Square : action === "restart" ? RotateCcw : Play;
         const label = action === "run"
-          ? "Run"
+          ? interfaceText("m_00d60e31a4e6b8")
           : action === "start"
-            ? "Start"
+            ? interfaceText("m_e4bb9f1ece9af9")
             : action === "stop"
-              ? "Stop"
-              : "Restart";
+              ? interfaceText("m_cae7d57bc067a5")
+              : interfaceText("m_6b983a81e5e809");
         const showSpinner = isPending && requestMatchesPending(pendingRequest, request);
         const disabled =
           isPending
@@ -431,6 +433,7 @@ function CommandSection({
   square?: boolean;
   iconOnly?: boolean;
 }) {
+  useInterfaceLanguage();
   // Managed-sandbox-only policy: the working directory is a path on the
   // execution host, so the command rows drop it, and keep dropping it until the
   // policy is known. The URL, the port, and the command itself stay — they
@@ -476,7 +479,7 @@ function CommandSection({
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   ) : null}
-                  {item.port ? <div>Port {item.port}</div> : null}
+                  {item.port ? <div>{interfaceText("m_943544b0fce7e8")}{item.port}</div> : null}
                   {item.command ? <div className="break-all font-mono">{item.command}</div> : null}
                   {item.cwd && !hideHostPaths ? <div className="break-all font-mono">{item.cwd}</div> : null}
                   {item.disabledReason ? <div>{item.disabledReason}</div> : null}
@@ -516,6 +519,7 @@ export function WorkspaceRuntimeControls({
   className,
   square,
 }: WorkspaceRuntimeControlsProps) {
+  useInterfaceLanguage();
   const runningCount = [...sections.services, ...sections.otherServices].filter(
     (item) => item.statusLabel === "running" || item.statusLabel === "starting",
   ).length;
@@ -525,7 +529,7 @@ export function WorkspaceRuntimeControls({
     <div className={cn("space-y-4", className)}>
       <div className={cn("border border-border/70 bg-background p-3", square ? "rounded-none" : "rounded-xl")}>
         <div className="space-y-1">
-          <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">Workspace commands</div>
+          <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_6cc6282c5ab303")}</div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline"
               className={cn(
@@ -536,12 +540,12 @@ export function WorkspaceRuntimeControls({
               )}
             >
               <Activity className="h-3.5 w-3.5" />
-              {runningCount > 0 ? `${runningCount} services running` : "No services running"}
+              {runningCount > 0 ? interfaceText("m_f45f955b1009eb", { value0: (runningCount) }) : interfaceText("m_03916b31f1d7d4")}
             </Badge>
             <span className="text-xs text-muted-foreground">
               {sections.jobs.length > 0
-                ? `${sections.jobs.length} job${sections.jobs.length === 1 ? "" : "s"} available to run on demand.`
-                : "Each command can be controlled independently."}
+                ? interfaceText("m_5bd9cd22efabcf", { value0: (sections.jobs.length), value1: (sections.jobs.length === 1 ? "" : interfaceText("m_043a718774c572")) })
+                : interfaceText("m_9a0e7981ef1d3b")}
             </span>
           </div>
           {visibleDisabledHint ? <p className="text-xs text-muted-foreground">{visibleDisabledHint}</p> : null}
@@ -549,8 +553,8 @@ export function WorkspaceRuntimeControls({
       </div>
 
       <CommandSection
-        title="Services"
-        description="Long-running commands that Paperclip can supervise for this workspace."
+        title={interfaceText("m_604dce445e326d")}
+        description={interfaceText("m_ed1be5cc288bf4")}
         items={sections.services}
         emptyMessage={serviceEmptyMessage}
         disabledHint={visibleDisabledHint}
@@ -561,8 +565,8 @@ export function WorkspaceRuntimeControls({
       />
 
       <CommandSection
-        title="Jobs"
-        description="One-shot commands that run now and exit when they finish."
+        title={interfaceText("m_2f17a0f8d518e4")}
+        description={interfaceText("m_9b358ae2380d7f")}
         items={sections.jobs}
         emptyMessage={jobEmptyMessage}
         isPending={isPending}
@@ -573,8 +577,8 @@ export function WorkspaceRuntimeControls({
 
       {sections.otherServices.length > 0 ? (
         <CommandSection
-          title="Untracked services"
-          description="Running services that no longer match the current workspace command config."
+          title={interfaceText("m_87bd9a2e2d135b")}
+          description={interfaceText("m_b3169d3dc6d79d")}
           items={sections.otherServices}
           emptyMessage=""
           isPending={isPending}

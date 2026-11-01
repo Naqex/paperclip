@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { ArrowRight, Download, ExternalLink } from "lucide-react";
 import type { LabArtifact, LabGroup } from "../../kit";
 import type { SolidAction } from "./actions";
@@ -95,13 +96,13 @@ export function galleryActions(a: LabArtifact): GalleryActions {
   };
   if (isTaskDocument(a)) return { primary, secondary: [] };
   if (a.kind === "link") {
-    return { primary, secondary: [{ id: "preview", label: "Open link in new tab", icon: ExternalLink, href: a.url ?? "#", external: true }] };
+    return { primary, secondary: [{ id: "preview", label: interfaceText("m_a536d83e872867"), icon: ExternalLink, href: a.url ?? "#", external: true }] };
   }
   return {
     primary,
     secondary: [
-      { id: "preview", label: "Open file in new tab", icon: ExternalLink, href: `#file-${a.id}`, external: true },
-      { id: "download", label: "Download file", icon: Download, href: `#download-${a.id}` },
+      { id: "preview", label: interfaceText("m_f31b6190b24b53"), icon: ExternalLink, href: `#file-${a.id}`, external: true },
+      { id: "download", label: interfaceText("m_9de4149fb9716c"), icon: Download, href: `#download-${a.id}` },
     ],
   };
 }

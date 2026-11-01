@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import {
   COMPANY_SEARCH_SORTS,
   type CompanySearchSort,
@@ -28,7 +29,7 @@ export const UPDATED_WITHIN_LABELS: Record<string, string> = {
 };
 
 export function updatedWithinLabel(value: string): string {
-  return UPDATED_WITHIN_LABELS[value] ?? `Updated ≤ ${value}`;
+  return UPDATED_WITHIN_LABELS[value] ?? interfaceText("m_f2533731b23625", { value0: (value) });
 }
 
 const SORT_SET = new Set<string>(COMPANY_SEARCH_SORTS);
@@ -109,15 +110,15 @@ function humanize(value: string): string {
 }
 
 function assigneeChipLabel(filters: SearchFilters, lookups: FilterChipLookups): string {
-  if (filters.assigneeAgentId === null) return "Unassigned";
+  if (filters.assigneeAgentId === null) return interfaceText("m_14d33bd014e6b4");
   if (typeof filters.assigneeAgentId === "string") {
     return lookups.agentName(filters.assigneeAgentId) ?? "Agent";
   }
   if (filters.assigneeUserId) {
-    if (filters.assigneeUserId === lookups.currentUserId) return "Me";
-    return lookups.userName(filters.assigneeUserId) ?? "User";
+    if (filters.assigneeUserId === lookups.currentUserId) return interfaceText("m_d30af076b0dc85");
+    return lookups.userName(filters.assigneeUserId) ?? interfaceText("m_b512d97e7cbf97");
   }
-  return "Assignee";
+  return interfaceText("m_5e20d20e3978dc");
 }
 
 /** Removable chip descriptors for the active-filter row. */

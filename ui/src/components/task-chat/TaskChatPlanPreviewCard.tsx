@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { IssueDocument } from "@paperclipai/shared";
 import { FileText, Lightbulb, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -86,6 +87,7 @@ export function TaskChatPlanPreviewCard({
   testId = "task-chat-plan-preview",
   className,
 }: TaskChatPlanPreviewCardProps) {
+  useInterfaceLanguage();
   const coordinator = useCoordinatorPresentation();
   const shimmer = useTaskChatShimmer(source.kind === "live" ? source.activity.id : "saved-plan");
   const revision = planRevision(source);
@@ -103,15 +105,15 @@ export function TaskChatPlanPreviewCard({
       : href;
     const compactClassName = cn("inline-flex max-w-full items-center gap-2 rounded-lg border border-border bg-muted/25 px-3 py-2.5 text-sm text-muted-foreground",
       targetHref && "transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className);
-    const compactBody = <><FileText className="size-4 shrink-0" aria-hidden /><span className="shrink-0">{live ? "Writing" : "Open"}</span>{" "}
+    const compactBody = <><FileText className="size-4 shrink-0" aria-hidden /><span className="shrink-0">{live ? interfaceText("m_a8bfae3eee9415") : interfaceText("m_ed077f3d8125d6")}</span>{" "}
       <span className={cn("min-w-0 truncate text-foreground", targetHref && "underline underline-offset-4", live && shimmer && "shimmer-text shimmer-text-muted")}>{content.title}</span>
-      {targetHref ? <span className="hidden shrink-0 sm:inline">{" "}in the sidebar</span> : null}</>;
+      {targetHref ? <span className="hidden shrink-0 sm:inline">{" "}{interfaceText("m_bdfda3e53e7f1c")}</span> : null}</>;
     return targetHref ? <SidebarDocumentLink href={targetHref} testId={testId}
       ariaLabel={ariaLabel ?? `Open ${content.title}${revision == null ? "" : ` revision ${revision}`} in task sidebar`} className={className}>
-      <span className="shrink-0">Open</span>{" "}<span className="min-w-0 truncate text-foreground underline underline-offset-4">{content.title}</span>
-      <span className="hidden shrink-0 sm:inline">{" "}in the sidebar</span>
+      <span className="shrink-0">{interfaceText("m_ed077f3d8125d6")}</span>{" "}<span className="min-w-0 truncate text-foreground underline underline-offset-4">{content.title}</span>
+      <span className="hidden shrink-0 sm:inline">{" "}{interfaceText("m_bdfda3e53e7f1c")}</span>
     </SidebarDocumentLink>
-      : <section data-testid={testId} aria-label={ariaLabel ?? "Writing plan"} className={compactClassName}>{compactBody}</section>;
+      : <section data-testid={testId} aria-label={ariaLabel ?? interfaceText("m_64c92e65a10a2d")} className={compactClassName}>{compactBody}</section>;
   }
   const headerDetail = revision == null
     ? null
@@ -124,7 +126,7 @@ export function TaskChatPlanPreviewCard({
           className={cn("h-4 w-4 shrink-0", live && "text-(--status-agent-running)")}
         />
         <span className={cn("font-medium", live && shimmer && "shimmer-text shimmer-text-muted")} data-testid={live ? "task-chat-plan-streaming-status" : undefined}>
-          {live ? "Writing plan" : "Plan"}
+          {live ? interfaceText("m_64c92e65a10a2d") : "Plan"}
         </span>
         {headerDetail ? (
           <span
@@ -153,7 +155,7 @@ export function TaskChatPlanPreviewCard({
           </ul>
         ) : (
           <p className="mt-1 text-sm text-muted-foreground">
-            {live ? "Waiting for the first plan step…" : "Open the synchronized plan to review it."}
+            {live ? interfaceText("m_e4fab791c7bd3c") : interfaceText("m_57c679e39307ea")}
           </p>
         )}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-linear-to-b from-transparent to-card/95" />
@@ -171,7 +173,7 @@ export function TaskChatPlanPreviewCard({
       <a
         href={href}
         data-testid={testId}
-        aria-label={ariaLabel ?? `Open Plan${revision == null ? "" : ` revision ${revision}`}`}
+        aria-label={ariaLabel ?? interfaceText("m_57f73be1274f71", { value0: (revision == null ? "" : ` revision ${revision}`) })}
         className={sharedClassName}
       >
         {body}
@@ -181,7 +183,7 @@ export function TaskChatPlanPreviewCard({
 
   return (
     <section
-      aria-label={ariaLabel ?? "Streaming Plan preview"}
+      aria-label={ariaLabel ?? interfaceText("m_7a03f9c3fe6abb")}
       data-testid={testId}
       className={sharedClassName}
     >

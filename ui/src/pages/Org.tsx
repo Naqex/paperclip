@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { Link } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
@@ -85,12 +86,13 @@ function OrgTreeNode({
 }
 
 export function Org() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Org Chart" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_aab3e6c8a0d87c") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: queryKeys.org(selectedCompanyId!),
@@ -99,7 +101,7 @@ export function Org() {
   });
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={GitBranch} message="Select an organization to view org chart." />;
+    return <EmptyState icon={GitBranch} message={interfaceText("m_91ee1dc2b81995")} />;
   }
 
   if (isLoading) {
@@ -113,7 +115,7 @@ export function Org() {
       {data && data.length === 0 && (
         <EmptyState
           icon={GitBranch}
-          message="No agents in the organization. Create agents to build your org chart."
+          message={interfaceText("m_30519ad7322a68")}
         />
       )}
 

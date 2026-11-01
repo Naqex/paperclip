@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Plus, Trash2, Users } from "lucide-react";
@@ -54,9 +55,10 @@ export function AgentsUsingSkillBadge({
   skill: CompanySkillDetail;
   canManage?: boolean;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const count = skill.usedByAgents.length;
-  const label = `${count} ${count === 1 ? "agent uses" : "agents use"} this skill`;
+  const label = interfaceText("m_36de3abb460a36", { value0: (count), value1: (count === 1 ? "agent uses" : "agents use") });
 
   return (
     <>
@@ -72,7 +74,7 @@ export function AgentsUsingSkillBadge({
         )}
       >
         <Users className="h-3.5 w-3.5" aria-hidden="true" />
-        {count} {count === 1 ? "agent" : "agents"}
+        {count} {count === 1 ? "agent" : interfaceText("m_8c70b25cbbbe8e")}
       </button>
       <AgentsUsingSkillDialog
         open={open}
@@ -105,6 +107,7 @@ export function AgentsUsingSkillDialog({
   skill: CompanySkillDetail;
   canManage?: boolean;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const toast = useOptionalToastActions();
   const adapterCaps = useAdapterCapabilities();
@@ -201,11 +204,11 @@ export function AgentsUsingSkillDialog({
       ]);
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "Failed to update agent skills.";
+      const message = error instanceof Error ? error.message : interfaceText("m_f491569a7cec22");
       toast?.pushToast({
         tone: "error",
-        title: "Update failed",
-        body: message.includes("403") ? "You don't have permission to change this agent's skills." : message,
+        title: interfaceText("m_e58282fd73fb85"),
+        body: message.includes("403") ? interfaceText("m_ac98e751c8a215") : message,
       });
     },
   });
@@ -232,11 +235,11 @@ export function AgentsUsingSkillDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Agents using {skill.name}</DialogTitle>
+          <DialogTitle>{interfaceText("m_17b953c3506ca9")}{skill.name}</DialogTitle>
           <DialogDescription>
             {count === 0
-              ? "No agents have this skill assigned yet."
-              : `${count} ${count === 1 ? "agent has" : "agents have"} this skill in their desired set.`}
+              ? interfaceText("m_765a266e6b0682")
+              : interfaceText("m_1510b550236235", { value0: (count), value1: (count === 1 ? "agent has" : "agents have") })}
           </DialogDescription>
         </DialogHeader>
 
@@ -244,8 +247,8 @@ export function AgentsUsingSkillDialog({
           {count === 0 ? (
             <div className="rounded-md border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
               {canManage
-                ? "Add an agent below to assign this skill."
-                : "This skill isn't assigned to any agents."}
+                ? interfaceText("m_4d7a74467bf213")
+                : interfaceText("m_c4ac8bbf116780")}
             </div>
           ) : (
             <ul className="divide-y divide-border">
@@ -318,6 +321,7 @@ function AgentRow({
   onRemove: () => void;
   onPin: (versionId: string | null) => void;
 }) {
+  useInterfaceLanguage();
   const behindLatest =
     pinnedRevision !== null && latestRevision !== null && latestRevision > pinnedRevision
       ? latestRevision - pinnedRevision
@@ -340,12 +344,12 @@ function AgentRow({
 
       <div className="flex shrink-0 flex-col items-end gap-0.5">
         {!hasVersions ? (
-          <span className="text-sm text-muted-foreground" aria-label={`${agent.name} version`}>
+          <span className="text-sm text-muted-foreground" aria-label={interfaceText("m_8c6e75d8667573", { value0: (agent.name) })}>
             —
           </span>
         ) : canManage ? (
           <select
-            aria-label={`${agent.name} skill version`}
+            aria-label={interfaceText("m_d1e12014ef92d8", { value0: (agent.name) })}
             value={agent.versionId ?? LATEST_VALUE}
             disabled={busy}
             onChange={(event) =>
@@ -353,8 +357,7 @@ function AgentRow({
             }
             className="h-8 rounded-md border border-border bg-background px-2 text-xs text-foreground disabled:opacity-60"
           >
-            <option value={LATEST_VALUE}>
-              Latest{latestRevision !== null ? ` (v${latestRevision})` : ""}
+            <option value={LATEST_VALUE}>{interfaceText("m_8730d3c2022abf")}{latestRevision !== null ? ` (v${latestRevision})` : ""}
             </option>
             {versions.map((version) => (
               <option key={version.id} value={version.id}>
@@ -367,13 +370,12 @@ function AgentRow({
           <span className="text-xs text-muted-foreground">
             {agent.versionId
               ? `v${pinnedRevision ?? "?"}`
-              : `Latest${latestRevision !== null ? ` (v${latestRevision})` : ""}`}
+              : interfaceText("m_7a5eac04a51ee0", { value0: (latestRevision !== null ? ` (v${latestRevision})` : "") })}
           </span>
         )}
         {behindLatest > 0 ? (
           <span className="text-(length:--text-nano) text-amber-500">
-            {behindLatest} version{behindLatest === 1 ? "" : "s"} behind latest
-          </span>
+            {behindLatest}{interfaceText("m_ba9c4e16699236")}{behindLatest === 1 ? "" : interfaceText("m_043a718774c572")}{interfaceText("m_67970476c1d2c1")}</span>
         ) : null}
       </div>
 
@@ -385,13 +387,11 @@ function AgentRow({
               size="sm"
               onClick={onRemove}
               disabled={busy}
-              aria-label={`Confirm removing this skill from ${agent.name}`}
+              aria-label={interfaceText("m_40163f5e311fa3", { value0: (agent.name) })}
             >
-              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Remove"}
+              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : interfaceText("m_c3812fc4acb861")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={onCancelRemove} disabled={busy}>
-              Cancel
-            </Button>
+            <Button variant="ghost" size="sm" onClick={onCancelRemove} disabled={busy}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           </div>
         ) : (
           <Button
@@ -400,7 +400,7 @@ function AgentRow({
             onClick={onRequestRemove}
             disabled={busy}
             className="shrink-0 text-muted-foreground hover:text-destructive"
-            aria-label={`Remove this skill from ${agent.name}`}
+            aria-label={interfaceText("m_4c49dc3ef44be8", { value0: (agent.name) })}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -421,6 +421,7 @@ function AddAgentPicker({
   disabled: boolean;
   onSelect: (agent: Agent) => void;
 }) {
+  useInterfaceLanguage();
   type AgentOption = SearchableSelectOption<string> & { agent: Agent };
   const groups = useMemo<readonly SearchableSelectGroup<string, AgentOption>[]>(() => {
     const options: AgentOption[] = agents.map((agent) => ({
@@ -440,9 +441,9 @@ function AddAgentPicker({
       groups={groups}
       loading={loading}
       loadingMessage="Loading agents..."
-      placeholder="Add agent…"
-      searchPlaceholder="Search agents..."
-      emptyMessage="All eligible agents already have this skill."
+      placeholder={interfaceText("m_51189bf03b3a84")}
+      searchPlaceholder={interfaceText("m_32f4468b0b6f94")}
+      emptyMessage={interfaceText("m_e8e90b54634e2f")}
       disabled={disabled}
       onValueChange={(_value, option) => {
         onSelect(option.agent);
@@ -452,9 +453,7 @@ function AddAgentPicker({
       contentClassName="w-72"
       renderValue={() => (
         <span className="flex items-center gap-1.5 text-muted-foreground">
-          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-          Add agent…
-        </span>
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" />{interfaceText("m_51189bf03b3a84")}</span>
       )}
       renderOption={(option) => (
         <span className="flex min-w-0 flex-col">

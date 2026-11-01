@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState } from "react";
 import {
   CheckCircle2,
@@ -115,10 +116,11 @@ function checklistIcon(step: TaskChatProtocolStep) {
 }
 
 function fileCountLabel(files: number): string {
-  return `${files} ${files === 1 ? "file" : "files"} changed`;
+  return interfaceText("m_e4ce53442d96e0", { value0: (files), value1: (files === 1 ? "file" : "files") });
 }
 
 function IslandBody({ model }: { model: TaskChatTurnStatusModel }) {
+  useInterfaceLanguage();
   const plan = model.segments.find(
     (segment): segment is Extract<TaskChatTurnStatusSegment, { kind: "plan" }> => segment.kind === "plan",
   );
@@ -130,8 +132,7 @@ function IslandBody({ model }: { model: TaskChatTurnStatusModel }) {
       {plan ? (
         <span className="flex shrink-0 items-center gap-2">
           {planIcon(plan)}
-          <span className="font-mono text-sm tabular-nums" aria-live="polite" aria-atomic="true">
-            Step {plan.currentStepIndex + 1} / {plan.steps.length}
+          <span className="font-mono text-sm tabular-nums" aria-live="polite" aria-atomic="true">{interfaceText("m_474a987f3bbe57")}{plan.currentStepIndex + 1} / {plan.steps.length}
             <span className="sr-only">: {plan.steps[plan.currentStepIndex]?.label}</span>
           </span>
         </span>
@@ -178,6 +179,7 @@ const ISLAND_CLASS_NAME = "mx-auto flex min-h-10 max-w-(--sz-turn-status-island)
 const HOVER_CLOSE_GRACE_MS = 100;
 
 export function TaskChatTurnStatusIsland({ model }: { model: TaskChatTurnStatusModel }) {
+  useInterfaceLanguage();
   const plan = model.segments.find(
     (segment): segment is Extract<TaskChatTurnStatusSegment, { kind: "plan" }> => segment.kind === "plan",
   );
@@ -248,7 +250,7 @@ export function TaskChatTurnStatusIsland({ model }: { model: TaskChatTurnStatusM
         align="center"
         sideOffset={8}
         className="w-(--sz-turn-status-popover) p-2"
-        aria-label="Turn plan"
+        aria-label={interfaceText("m_e2e8da4d7051d6")}
         onPointerEnter={(event) => {
           if (event.pointerType === "mouse") cancelClose();
         }}
@@ -258,7 +260,7 @@ export function TaskChatTurnStatusIsland({ model }: { model: TaskChatTurnStatusM
         onEscapeKeyDown={() => setPinned(false)}
         onInteractOutside={() => setPinned(false)}
       >
-        <ol className="flex flex-col gap-1" aria-label="Within-turn checklist">
+        <ol className="flex flex-col gap-1" aria-label={interfaceText("m_985ce887b9e920")}>
           {plan.steps.map((step, index) => (
             <li
               key={step.id}

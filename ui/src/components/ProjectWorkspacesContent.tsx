@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ExecutionWorkspace } from "@paperclipai/shared";
@@ -19,6 +20,7 @@ export function ProjectWorkspacesContent({
   projectRef: string | null;
   summaries: ProjectWorkspaceSummary[];
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [runtimeActionKey, setRuntimeActionKey] = useState<string | null>(null);
   const [closingWorkspace, setClosingWorkspace] = useState<{
@@ -53,7 +55,7 @@ export function ProjectWorkspacesContent({
   });
 
   if (summaries.length === 0) {
-    return <p className="text-sm text-muted-foreground">No non-default workspace activity yet.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_ee79d00cbbbb4c")}</p>;
   }
 
   const activeSummaries = summaries.filter((summary) => summary.executionWorkspaceStatus !== "cleanup_failed");
@@ -77,9 +79,7 @@ export function ProjectWorkspacesContent({
         </div>
         {cleanupFailedSummaries.length > 0 ? (
           <div className="space-y-2">
-            <div className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-              Cleanup attention needed
-            </div>
+            <div className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_f11c45b2a2da2c")}</div>
             <div className="space-y-3">
               {cleanupFailedSummaries.map((summary) => (
                 <ProjectWorkspaceSummaryCard

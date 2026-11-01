@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Building2, Loader2, Lock, RefreshCw, TriangleAlert, UserRound } from "lucide-react";
 import type {
@@ -122,6 +123,7 @@ export function IdentitiesSection({
   onOpenAudience: (grantId: string) => void;
   onCloseAudience: () => void;
 }) {
+  useInterfaceLanguage();
   const grants = grantsQuery?.grants ?? [];
   const capabilities = grantsQuery?.capabilities;
   const currentUserId = grantsQuery?.currentUserId ?? null;
@@ -165,9 +167,7 @@ export function IdentitiesSection({
     return (
       <section className="space-y-5">
         <IdentitiesHeading />
-        <InlineBanner tone="warning" compact>
-          We couldn't load who this connection acts as. Reload the page to try again.
-        </InlineBanner>
+        <InlineBanner tone="warning" compact>{interfaceText("m_8d0b5a1b9bc555")}</InlineBanner>
       </section>
     );
   }
@@ -176,24 +176,21 @@ export function IdentitiesSection({
     const github = agentGrant?.providerTenant?.github;
     return (
       <section className="space-y-5">
-        <h2 className="text-sm font-semibold text-foreground">GitHub identity</h2>
-        <p className="text-sm text-muted-foreground">This agent uses this GitHub account for everyone’s work, instead of the person giving instructions.</p>
+        <h2 className="text-sm font-semibold text-foreground">{interfaceText("m_c043831d870fa5")}</h2>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_a47d6599936b7d")}</p>
         <IdentityRow
-          title={github ? `@${github.login}` : "Dedicated GitHub account"}
+          title={github ? `@${github.login}` : interfaceText("m_55fb115cee43ef")}
           status={agentGrant?.status ?? null}
           detail={dedicatedAgent ? (
             <Link
               to={agentUrl(dedicatedAgent)}
               className="transition-colors hover:text-foreground hover:underline"
-            >
-              Used only by {dedicatedAgent.name}
+            >{interfaceText("m_4bf518f8efaadd")}{dedicatedAgent.name}
             </Link>
           ) : "Dedicated to one agent"}
           actions={!agentGrant && dedicatedAgent && capabilities?.canConfigure ? (
             <Button size="sm" disabled={connectPending} onClick={() => onConnectAgent(dedicatedAgent.id)}>
-              {connectPending ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}
-              Connect dedicated account
-            </Button>
+              {connectPending ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}{interfaceText("m_c566d2da342eb8")}</Button>
           ) : null}
         />
         {github ? <GitHubConnectionSummary grant={agentGrant} onRefreshAccess={onRefreshAccess} refreshPending={refreshAccessPending} /> : null}
@@ -233,14 +230,12 @@ export function IdentitiesSection({
           personalGrant ? null : (
             <IdentityRow
               id="personal-identity"
-              title="Personal account"
+              title={interfaceText("m_96c55b36cc6bd6")}
               status={null}
               detail="Personal identity"
               actions={capabilities?.canConnectAsCurrentUser ? (
                   <Button size="sm" disabled={connectPending} onClick={onConnectAsMe}>
-                    {connectPending ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}
-                    Connect as me
-                  </Button>
+                    {connectPending ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}{interfaceText("m_806b41647c835b")}</Button>
                 ) : null}
             />
           )
@@ -248,20 +243,16 @@ export function IdentitiesSection({
           orgGrant ? (
             orgGrant.capabilities?.canEditAudience ? (
               <div className="flex justify-end">
-                  <Button size="sm" variant="outline" onClick={() => onOpenAudience(orgGrant.id)}>
-                    Manage access
-                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => onOpenAudience(orgGrant.id)}>{interfaceText("m_a90527b63530c6")}</Button>
               </div>
             ) : null
           ) : (
             <IdentityRow
-              title="Organization account"
+              title={interfaceText("m_d20569935c0190")}
               status={null}
               detail="Organization identity"
               actions={capabilities?.canCreateOrganizationGrant ? (
-                  <Button size="sm" disabled={connectPending} onClick={onConnectOrganization}>
-                    Connect organization identity
-                  </Button>
+                  <Button size="sm" disabled={connectPending} onClick={onConnectOrganization}>{interfaceText("m_dfa1d1c849c1ef")}</Button>
                 ) : null}
             />
           )
@@ -293,6 +284,7 @@ function GitHubConnectionSummary({
   onRefreshAccess?: () => void;
   refreshPending: boolean;
 }) {
+  useInterfaceLanguage();
   const github = grant.providerTenant?.github;
   if (!github) return null;
   const configurationUrl = github.appSlug
@@ -311,7 +303,7 @@ function GitHubConnectionSummary({
   return (
     <div className="divide-y divide-border border-y border-border">
       <div className="py-3">
-        <div className="text-sm font-medium text-foreground">GitHub account</div>
+        <div className="text-sm font-medium text-foreground">{interfaceText("m_d686f873a56689")}</div>
         <a className="text-sm text-muted-foreground hover:underline" href={`https://github.com/${encodeURIComponent(github.login)}`} target="_blank" rel="noreferrer">
           @{github.login}
         </a>
@@ -319,7 +311,7 @@ function GitHubConnectionSummary({
       <div className="space-y-3 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <div className="text-sm font-medium text-foreground">Repositories</div>
+            <div className="text-sm font-medium text-foreground">{interfaceText("m_1e32af87ea7427")}</div>
             {repositoryWarning ? (
               <div
                 role="note"
@@ -337,49 +329,44 @@ function GitHubConnectionSummary({
           </div>
           <div className="flex items-center gap-2">
             {onRefreshAccess && configurationUrl ? (
-              <Button size="icon-sm" variant="outline" aria-label="Refresh access" title="Refresh access" disabled={refreshPending} onClick={onRefreshAccess}>
+              <Button size="icon-sm" variant="outline" aria-label={interfaceText("m_0df81b58931817")} title={interfaceText("m_0df81b58931817")} disabled={refreshPending} onClick={onRefreshAccess}>
                 {refreshPending ? <Loader2 className="animate-spin" aria-hidden="true" /> : <RefreshCw aria-hidden="true" />}
               </Button>
             ) : null}
             {configurationUrl ? (
               <Button asChild size="sm" variant="outline">
-                <a href={configurationUrl} target="_blank" rel="noreferrer">Add More Repos on GitHub</a>
+                <a href={configurationUrl} target="_blank" rel="noreferrer">{interfaceText("m_c7c688ecfbfc91")}</a>
               </Button>
             ) : onRefreshAccess ? (
               <Button size="sm" variant="outline" disabled={refreshPending} onClick={onRefreshAccess}>
-                {refreshPending ? <Loader2 className="animate-spin" aria-hidden="true" /> : <RefreshCw aria-hidden="true" />}
-                Load GitHub configuration
-              </Button>
+                {refreshPending ? <Loader2 className="animate-spin" aria-hidden="true" /> : <RefreshCw aria-hidden="true" />}{interfaceText("m_075ef31830d0e0")}</Button>
             ) : null}
           </div>
         </div>
         {github.repositories ? (
-          github.repositories.length ? <ul aria-label="Accessible GitHub repositories" tabIndex={0} className="max-h-(--sz-github-repository-list) space-y-2 overflow-y-auto text-sm">
+          github.repositories.length ? <ul aria-label={interfaceText("m_8aec55c7eb93dc")} tabIndex={0} className="max-h-(--sz-github-repository-list) space-y-2 overflow-y-auto text-sm">
             {github.repositories.map((repository) => (
               <li key={repository.id}>
                 <a className="flex items-center gap-2 text-muted-foreground hover:underline" href={`https://github.com/${repository.fullName.split("/").map(encodeURIComponent).join("/")}`} target="_blank" rel="noreferrer">
                   <GithubIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="break-all">{repository.fullName}</span>
-                  {repository.private === true ? <Lock className="h-3 w-3 shrink-0" role="img" aria-label="Private repository" /> : null}
+                  {repository.private === true ? <Lock className="h-3 w-3 shrink-0" role="img" aria-label={interfaceText("m_6ab5ea78cce6f3")} /> : null}
                 </a>
               </li>
             ))}
-          </ul> : <p role="status" className="text-sm text-muted-foreground">
-            No accessible repositories.
-          </p>
+          </ul> : <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_ecffe2f56a1a90")}</p>
         ) : (
-          <p className="text-sm text-muted-foreground">Refresh access to load the current repository list.</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_6011831a78afde")}</p>
         )}
-        {configurationUrl ? <p className="text-xs text-muted-foreground">
-          Missing an organization or repository? <a href={configurationUrl} target="_blank" rel="noreferrer" className="text-foreground hover:underline">Configure access on GitHub</a>, then refresh this list.
-        </p> : null}
+        {configurationUrl ? <p className="text-xs text-muted-foreground">{interfaceText("m_3a187a2cd92b53")}<a href={configurationUrl} target="_blank" rel="noreferrer" className="text-foreground hover:underline">{interfaceText("m_e9f56cc327be69")}</a>{interfaceText("m_7d86d67ba31053")}</p> : null}
       </div>
     </div>
   );
 }
 
 function IdentitiesHeading() {
-  return <h2 className="text-sm font-semibold text-foreground">Which humans can use this credential?</h2>;
+  useInterfaceLanguage();
+  return <h2 className="text-sm font-semibold text-foreground">{interfaceText("m_df3c5fa3fb9fdb")}</h2>;
 }
 
 function HumanAccessCards({
@@ -495,6 +482,7 @@ export function AudienceDialog({
   onCancel: () => void;
   onSave: (memberUserIds: string[]) => void;
 }) {
+  useInterfaceLanguage();
   const initialSelection = useMemo(() => audienceUserIds(grant), [grant]);
   const [scope, setScope] = useState<"all" | "selected">(initialSelection.size === 0 ? "all" : "selected");
   const [selected, setSelected] = useState<Set<string>>(initialSelection);
@@ -510,7 +498,7 @@ export function AudienceDialog({
     <Dialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Who can use this identity</DialogTitle>
+          <DialogTitle>{interfaceText("m_c43b59226e59bb")}</DialogTitle>
           <DialogDescription>
             {grantAccountLabel(grant)} · {appName}
           </DialogDescription>
@@ -550,10 +538,7 @@ export function AudienceDialog({
             />
           ) : null}
 
-          <p className="text-xs text-muted-foreground">
-            This controls whose work can use the identity. It does not change which agents have the
-            connection.
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_0f4980c2357c3c")}</p>
 
           {error ? (
             <InlineBanner tone="warning" compact>
@@ -563,16 +548,12 @@ export function AudienceDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={onCancel} disabled={pending}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onClick={onCancel} disabled={pending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button
             disabled={pending || !canSave}
             onClick={() => onSave(scope === "all" ? [] : [...selected])}
           >
-            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Save audience
-          </Button>
+            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}{interfaceText("m_bece046d7f4245")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -606,12 +587,13 @@ export function RevokeGrantDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  useInterfaceLanguage();
   const personal = grant.kind === "user";
   const title = personal
     ? isOwnIdentity
-      ? `Revoke your ${providerName} identity?`
-      : `Revoke this ${providerName} identity?`
-    : "Revoke the organization identity?";
+      ? interfaceText("m_b3274ed11c2ff2", { value0: (providerName) })
+      : interfaceText("m_88de346732540f", { value0: (providerName) })
+    : interfaceText("m_2606ac93a4ef5b");
   const body = personal
     ? isOwnIdentity
       ? "Agents will stop acting as you. Work that needs this identity can ask you to connect again."
@@ -629,18 +611,14 @@ export function RevokeGrantDialog({
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={pending} autoFocus>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={pending} autoFocus>{interfaceText("m_19766ed6ccb2f4")}</AlertDialogCancel>
           <AlertDialogAction
             disabled={pending}
             onClick={(event) => {
               event.preventDefault();
               onConfirm();
             }}
-          >
-            Revoke identity
-          </AlertDialogAction>
+          >{interfaceText("m_c8534276405e47")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

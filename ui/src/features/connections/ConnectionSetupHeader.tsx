@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { Ref } from "react";
 import { AppLogo } from "@/pages/apps/AppLogo";
 import { UnverifiedServerBadge } from "@/pages/apps/UnverifiedServerBadge";
@@ -30,6 +31,7 @@ export function StepHeader({
   unverifiedHost?: string | null;
   onCancel?: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="mb-6">
       <div className="flex items-start justify-between gap-4">
@@ -39,22 +41,20 @@ export function StepHeader({
           ) : null}
           <div>
             <h1 ref={headingRef} tabIndex={headingRef ? -1 : undefined} className="text-2xl font-bold tracking-tight outline-none">
-              {title ?? (appIdentity ? `Connect ${appIdentity.name}` : "Connect your own MCP server")}
+              {title ?? (appIdentity ? interfaceText("m_aeb7ebc7447ae0", { value0: (appIdentity.name) }) : interfaceText("m_abb2409de6f9cc"))}
             </h1>
             {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
             {unverifiedHost ? <UnverifiedServerBadge host={unverifiedHost} className="mt-2" /> : null}
           </div>
         </div>
-        {onCancel && <Button variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
-        </Button>}
+        {onCancel && <Button variant="ghost" size="sm" onClick={onCancel}>{interfaceText("m_19766ed6ccb2f4")}</Button>}
       </div>
       {step !== "gallery" && labels.length > 1 && (
         // A landmark with stable hooks, so the step model can be read without
         // guessing at Tailwind classes. The dots are decoration — the label
         // line below already says the same thing, so announcing both would
         // read every step name twice.
-        <nav className="mt-4" aria-label="Setup progress" data-testid="wizard-stepper">
+        <nav className="mt-4" aria-label={interfaceText("m_e9b4495ace7263")} data-testid="wizard-stepper">
           <ol className="flex gap-2" aria-hidden="true">
             {labels.map((label, i) => (
               <li

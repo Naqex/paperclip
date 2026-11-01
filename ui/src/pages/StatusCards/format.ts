@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { StatusCardRefreshPolicy, StatusCardUpdate } from "@paperclipai/shared";
 
 /** "1.1k tok" / "940 tok" — compact token count for footers and chips. */
@@ -145,11 +146,11 @@ export function formatTokenSplit(inputTokens: number, outputTokens: number): str
 export function updateKindLabel(kind: StatusCardUpdate["kind"]): string {
   switch (kind) {
     case "compile":
-      return "compile";
+      return interfaceText("m_eba8dcd606bd00");
     case "full":
-      return "full rebuild";
+      return interfaceText("m_4cec2a63ea9d58");
     case "incremental":
-      return "incremental";
+      return interfaceText("m_80a3df68e54012");
     default:
       return kind;
   }

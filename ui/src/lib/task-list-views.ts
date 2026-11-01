@@ -1,10 +1,11 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { Issue } from "@paperclipai/shared";
 
 export const taskListViews = [
-  { value: "inbox", label: "Inbox" },
-  { value: "unread", label: "Unread" },
-  { value: "blocked", label: "Needs attention" },
-  { value: "all", label: "All tasks" },
+  { value: "inbox", get label() { return interfaceText("m_94835ea2fcf775"); } },
+  { value: "unread", get label() { return interfaceText("m_1b9f384c1436f6"); } },
+  { value: "blocked", get label() { return interfaceText("m_c1ebc7817870e5"); } },
+  { value: "all", get label() { return interfaceText("m_cb66482383df9e"); } },
 ] as const;
 
 export type TaskListView = typeof taskListViews[number]["value"];

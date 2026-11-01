@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Component, StrictMode, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router-dom";
@@ -54,9 +55,10 @@ function isTyping(target: EventTarget | null): boolean {
 }
 
 function KitProblem({ id, error }: { id: DirectionId; error: unknown }) {
+  useInterfaceLanguage();
   return (
     <div role="alert" data-kit-error={id} className="m-6 rounded-md bg-destructive/10 p-4 font-mono text-xs text-destructive">
-      {KIT_META[id].name} failed: {error instanceof Error ? error.message : String(error)}
+      {KIT_META[id].name}{interfaceText("m_e8da4fa8b199a3")}{error instanceof Error ? error.message : String(error)}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { executionWorkspacesApi } from "@/api/execution-workspaces";
 import { useCompany } from "@/context/CompanyContext";
@@ -32,7 +33,7 @@ function workspaceLookupGate(view: QueryViewState<unknown>, companiesLoading: bo
       <QueryErrorState
         size="page"
         error={view.error}
-        action="open this workspace"
+        action={interfaceText("m_df6308b190bdd8")}
         onRetry={view.retry}
         retrying={view.isFetching}
       />

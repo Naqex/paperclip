@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ApiError } from "@/api/client";
 import { Button } from "@/components/ui/button";
 
@@ -25,18 +26,17 @@ export function AccessRetryBanner({ message, error, pending, onRetry }: {
   pending: boolean;
   onRetry: () => void;
 }) {
+  useInterfaceLanguage();
   const recoveryUrl = githubAccessRecoveryUrl(error);
   return (
     <div role="status">
-      <p>{message || "GitHub access could not be checked. Try again."}</p>
+      <p>{message || interfaceText("m_6885435127193b")}</p>
       {recoveryUrl ? (
         <Button asChild variant="outline">
-          <a href={recoveryUrl} target="_blank" rel="noreferrer">Open installation settings on GitHub</a>
+          <a href={recoveryUrl} target="_blank" rel="noreferrer">{interfaceText("m_1a96bb77368d90")}</a>
         </Button>
       ) : null}
-      <Button variant="outline" disabled={pending} onClick={onRetry}>
-        Retry access
-      </Button>
+      <Button variant="outline" disabled={pending} onClick={onRetry}>{interfaceText("m_e5222230e095f6")}</Button>
     </div>
   );
 }

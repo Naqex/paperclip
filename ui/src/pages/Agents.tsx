@@ -1,6 +1,8 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { PrimaryAgentIndicator } from "@/components/primary-agent/PrimaryAgentPresentation";
 import { AgentBulkRoster } from "@/components/agents/AgentBulkRoster";
 import { AgentAvatar } from "@/components/AgentAvatar";
+import { ResearchTeamPreview } from "@/components/ResearchTeamPreview";
 import { useAgentChatEnabled } from "../hooks/useAgentChatEnabled";
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { Link, useNavigate, useLocation } from "@/lib/router";
@@ -57,7 +59,7 @@ interface EnvironmentDescriptor {
 }
 
 const localEnvironmentDescriptor: EnvironmentDescriptor = {
-  label: "Local",
+  get label() { return interfaceText("m_8c31e6e7223097"); },
   detail: "Paperclip host",
   title: "Local - Paperclip host",
 };
@@ -142,7 +144,7 @@ function describeEnvironment(
 
 function describeMissingEnvironment(environmentId: string): EnvironmentDescriptor {
   return {
-    label: "Unknown environment",
+    label: interfaceText("m_ea7edbd56b1ce8"),
     detail: environmentId.slice(0, 8),
     title: `Unknown environment - ${environmentId}`,
   };
@@ -186,6 +188,7 @@ export function filterOrgTree(nodes: OrgNode[], tab: FilterTab, builtInAgentIds:
 export type AgentsView = "list" | "org";
 
 export function Agents({ initialView = "list" }: { initialView?: AgentsView } = {}) {
+  const interfaceLanguage = useInterfaceLanguage();
   const [query, setQuery] = useState("");
   const agentChat = useAgentChatEnabled();
   const { selectedCompanyId } = useCompany();
@@ -309,8 +312,8 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
   }, [agents, environmentsById, environmentCapabilities, instanceSettings?.defaultEnvironmentId]);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Agents" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_279b44d2ab4b40") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   useEffect(() => {
     if (requestedTab !== "all") {
@@ -319,7 +322,7 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
   }, [navigate, requestedTab]);
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Bot} message="Select an organization to view agents." />;
+    return <EmptyState icon={Bot} message={interfaceText("m_160f63a71271f7")} />;
   }
 
   if (isLoading) {
@@ -356,9 +359,7 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
               size="xs"
               variant="outline"
               onClick={() => setConfigureState(builtInState)}
-            >
-              Set up
-            </Button>
+            >{interfaceText("m_4da10f1fbb17ca")}</Button>
           </span>
         )}
       </>
@@ -375,7 +376,7 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
         to={agentUrl(agent)}
         className="group py-3"
         leading={hasInvalidOrgChain ? (
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-500" aria-label="Invalid reporting chain" />
+          <AlertTriangle className="h-3.5 w-3.5 text-amber-500" aria-label={interfaceText("m_bf9c6d9dc8a902")} />
         ) : (
           <AgentAvatar agent={agent} size={32} />
         )}
@@ -387,12 +388,12 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
             {showEnvironmentColumn && <span className="text-xs text-muted-foreground" title={resolveRenderedEnvironment(agent.id).title}>
               {resolveRenderedEnvironment(agent.id).label} · {resolveRenderedEnvironment(agent.id).detail}
             </span>}
-            {agent.lastHeartbeatAt && <span className="text-xs text-muted-foreground" title="Last heartbeat">{relativeTime(agent.lastHeartbeatAt)}</span>}
+            {agent.lastHeartbeatAt && <span className="text-xs text-muted-foreground" title={interfaceText("m_40f7951c09dbc0")}>{relativeTime(agent.lastHeartbeatAt)}</span>}
           </div>
         )}
         trailing={
           <div className="flex items-center gap-3">
-            {agentChat.enabled && <Button variant="ghost" size="sm" onClick={event => { event.preventDefault(); event.stopPropagation(); navigate(`/chats/${agentRouteRef(agent)}`); }}>Chat</Button>}
+            {agentChat.enabled && <Button variant="ghost" size="sm" onClick={event => { event.preventDefault(); event.stopPropagation(); navigate(`/chats/${agentRouteRef(agent)}`); }}>{interfaceText("m_460b3a7da007b7")}</Button>}
             <div className="hidden sm:flex items-center gap-3">
               {liveRunByAgent.has(agent.id) && (
                 <LiveRunIndicator
@@ -419,14 +420,16 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
       <AgentsToolbar query={query} onQueryChange={setQuery} view={effectiveView} onViewChange={setView}
         hideViewToggle={forceListView} onNewAgent={openNewAgent} />
 
+      {import.meta.env.VITE_NAQEX_WORKSPACE_ORIGIN && <ResearchTeamPreview />}
+
       <div className={cn("min-h-0 space-y-4", effectiveView === "org" && "flex flex-1 flex-col")}>
       {error && <p className="text-sm text-destructive">{error.message}</p>}
 
       {agents && agents.length === 0 && (
         <EmptyState
           icon={Bot}
-          message="Create your first agent to get started."
-          action="New Agent"
+          message={interfaceText("m_14bccad4168826")}
+          action={interfaceText("m_c548aab130f7e7")}
           onAction={openNewAgent}
         />
       )}
@@ -446,15 +449,11 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
       )}
 
       {effectiveView === "org" && orgTree && orgTree.length > 0 && filteredOrg.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-8">
-          No agents match your search and selected status.
-        </p>
+        <p className="text-sm text-muted-foreground text-center py-8">{interfaceText("m_d4ac6b6139e085")}</p>
       )}
 
       {effectiveView === "org" && orgTree && orgTree.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-8">
-          No organizational hierarchy defined.
-        </p>
+        <p className="text-sm text-muted-foreground text-center py-8">{interfaceText("m_7ac9886550455b")}</p>
       )}
       {configureState && selectedCompanyId && (
         <Suspense fallback={null}>
@@ -494,6 +493,7 @@ function OrgTreeNode({
   builtInByAgentId: Map<string, BuiltInAgentState>;
   onConfigureBuiltIn: (state: BuiltInAgentState) => void;
 }) {
+  useInterfaceLanguage();
   const agent = agentMap.get(node.id);
   const builtInState = builtInByAgentId.get(node.id);
   const showBuiltInLifecycle = builtInState?.status === "needs_setup" || builtInState?.status === "pending_approval";
@@ -506,7 +506,7 @@ function OrgTreeNode({
         className="group flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-accent/50 transition-colors w-full text-left no-underline text-inherit"
       >
         {hasInvalidOrgChain ? (
-          <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-label="Invalid reporting chain" />
+          <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-label={interfaceText("m_bf9c6d9dc8a902")} />
         ) : (
           <AgentAvatar agent={agent ?? node} size={24} />
         )}
@@ -531,9 +531,7 @@ function OrgTreeNode({
                     e.stopPropagation();
                   }}
                 >
-                  <Button size="xs" variant="outline" onClick={() => onConfigureBuiltIn(builtInState)}>
-                    Set up
-                  </Button>
+                  <Button size="xs" variant="outline" onClick={() => onConfigureBuiltIn(builtInState)}>{interfaceText("m_4da10f1fbb17ca")}</Button>
                 </span>
               )}
             </div>
@@ -657,6 +655,7 @@ function LiveRunIndicator({
   runId: string;
   liveCount: number;
 }) {
+  useInterfaceLanguage();
   return (
     <Link
       to={`/agents/${agentRef}/runs/${runId}`}
@@ -667,8 +666,7 @@ function LiveRunIndicator({
         <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
         <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
       </span>
-      <span className="text-(length:--text-micro) font-medium text-blue-600 dark:text-blue-400">
-        Live{liveCount > 1 ? ` (${liveCount})` : ""}
+      <span className="text-(length:--text-micro) font-medium text-blue-600 dark:text-blue-400">{interfaceText("m_b64ac05f17e64d")}{liveCount > 1 ? ` (${liveCount})` : ""}
       </span>
     </Link>
   );

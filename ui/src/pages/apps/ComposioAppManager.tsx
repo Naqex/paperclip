@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
@@ -14,19 +15,21 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 export function ComposioAppManager({ app, connections, initialConnectionId, onClose }: {
   app: AggregatorAppCatalogEntry; connections: ToolConnection[]; initialConnectionId?: string; onClose: () => void;
 }) {
+  useInterfaceLanguage();
   const [connectionId, setConnectionId] = useState(initialConnectionId ?? connections[0]?.id ?? "");
   const connection = connections.find(candidate => candidate.id === connectionId);
   return <Dialog open onOpenChange={open => { if (!open) onClose(); }}><DialogContent>
-    <DialogHeader><DialogTitle>Manage {app.name}</DialogTitle><DialogDescription>Accounts and sign-in are managed in Composio.</DialogDescription></DialogHeader>
-    {connections.length > 1 ? <div className="space-y-2"><Label htmlFor="composio-manage-gateway">Composio account</Label>
+    <DialogHeader><DialogTitle>{interfaceText("m_d1f3b7c8d7b5ce")}{app.name}</DialogTitle><DialogDescription>{interfaceText("m_ace5e91176d8dd")}</DialogDescription></DialogHeader>
+    {connections.length > 1 ? <div className="space-y-2"><Label htmlFor="composio-manage-gateway">{interfaceText("m_c7d01d2a55ff25")}</Label>
       <select id="composio-manage-gateway" value={connectionId} onChange={event => setConnectionId(event.target.value)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
         {connections.map(candidate => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}
       </select></div> : null}
-    {connection ? <ComposioAccountObservations key={connection.id} app={app} connection={connection} onClose={onClose} /> : <p role="alert">This Composio connection is no longer available.</p>}
+    {connection ? <ComposioAccountObservations key={connection.id} app={app} connection={connection} onClose={onClose} /> : <p role="alert">{interfaceText("m_6a505ff1bd16f5")}</p>}
   </DialogContent></Dialog>;
 }
 
 function ComposioAccountObservations({ app, connection, onClose }: { app: AggregatorAppCatalogEntry; connection: ToolConnection; onClose: () => void }) {
+  useInterfaceLanguage();
   const queries = useQueryClient();
   const key = queryKeys.tools.composioApps(connection.id);
   const accountsQuery = useQuery({ queryKey: key, queryFn: () => toolsApi.listComposioApps(connection.id), staleTime: Infinity, refetchOnWindowFocus: false });
@@ -46,21 +49,21 @@ function ComposioAccountObservations({ app, connection, onClose }: { app: Aggreg
     } finally { setBusy(false); }
   }
   return <>
-    {error || accountsQuery.isError ? <p role="alert" className="text-sm text-destructive">{error ?? "Couldn’t load Composio accounts. Refresh to try again."}</p> : null}
-    {accountsQuery.isLoading ? <p role="status" className="text-sm text-muted-foreground">Loading accounts…</p> : accounts.length === 0 ? <p className="text-sm text-muted-foreground">No connected {app.name} accounts.</p> : <div className="divide-y divide-border">
+    {error || accountsQuery.isError ? <p role="alert" className="text-sm text-destructive">{error ?? interfaceText("m_df1f5da8bbd43f")}</p> : null}
+    {accountsQuery.isLoading ? <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_2494bdb5bc4682")}</p> : accounts.length === 0 ? <p className="text-sm text-muted-foreground">{interfaceText("m_14556401bcd27b")}{app.name}{interfaceText("m_f9ab07ff1bff1e")}</p> : <div className="divide-y divide-border">
       {accounts.map(({ account, snapshot }) => <div key={`${snapshot.toolkit}:${account.id}`} className="py-3">
-        <p className="truncate text-sm font-medium">{account.alias || `${app.name} account`}</p>
+        <p className="truncate text-sm font-medium">{account.alias || interfaceText("m_143a6364ba0088", { value0: (app.name) })}</p>
         <p className="text-xs text-muted-foreground">{snapshot.errorAt || Date.now() - new Date(snapshot.checkedAt).getTime() > 5 * 60_000
-          ? "Last known account · Refresh to verify" : account.status === "ACTIVE" ? "Connected" : account.status === "INITIATED" ? "Waiting for sign-in" : "Needs sign-in"}{account.isDefault ? " · Default" : ""}</p>
+          ? interfaceText("m_398f59585b814e") : account.status === "ACTIVE" ? interfaceText("m_22965568d22a14") : account.status === "INITIATED" ? interfaceText("m_749a343a3a25c1") : interfaceText("m_1077f6b6e64aad")}{account.isDefault ? interfaceText("m_2a7e0b7b20620a") : ""}</p>
       </div>)}
     </div>}
     <div className="space-y-1 text-xs text-muted-foreground">
-      <p>Via <Link to={`/apps/${connection.id}/permissions`} onClick={onClose} className="underline underline-offset-2">“{connection.name}”</Link></p>
-      <p>Composio permissions apply to all apps on this connection.</p>
+      <p>{interfaceText("m_abf4a801972d03")}<Link to={`/apps/${connection.id}/permissions`} onClick={onClose} className="underline underline-offset-2">“{connection.name}”</Link></p>
+      <p>{interfaceText("m_5d564e6d7eebcb")}</p>
     </div>
-    <DialogFooter className="sm:items-center sm:justify-between"><Button variant="ghost" onClick={onClose}>Close</Button>
-      <div className="flex items-center gap-2"><Button variant="ghost" disabled={busy} onClick={() => void refresh()}>{busy ? "Checking…" : "Refresh"}</Button>
-        <Button asChild><a href={COMPOSIO_APP_MANAGEMENT_URL} target="_blank" rel="noopener noreferrer">Open in Composio<ExternalLink className="size-4" /></a></Button></div>
+    <DialogFooter className="sm:items-center sm:justify-between"><Button variant="ghost" onClick={onClose}>{interfaceText("m_7d9eb7acb13e24")}</Button>
+      <div className="flex items-center gap-2"><Button variant="ghost" disabled={busy} onClick={() => void refresh()}>{busy ? interfaceText("m_ec963ffc911b84") : interfaceText("m_0e91610117029a")}</Button>
+        <Button asChild><a href={COMPOSIO_APP_MANAGEMENT_URL} target="_blank" rel="noopener noreferrer">{interfaceText("m_08118c90799071")}<ExternalLink className="size-4" /></a></Button></div>
     </DialogFooter>
   </>;
 }

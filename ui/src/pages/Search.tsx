@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search as SearchIcon, AlertTriangle, FileQuestion, Plus, X } from "lucide-react";
@@ -131,6 +132,7 @@ function shapeError(error: unknown): { message: string; status?: number } {
 }
 
 export function Search() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { openNewIssue } = useDialogActions();
@@ -156,8 +158,8 @@ export function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Search" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_49c266baaaa709") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   useEffect(() => {
     if (!selectedCompanyId) return;
@@ -545,7 +547,7 @@ export function Search() {
   return (
     <div className="flex h-full min-h-0 flex-col" data-page="search">
       <div className="border-b border-border px-4 py-3 sm:px-6">
-        <h1 className="sr-only">Search</h1>
+        <h1 className="sr-only">{interfaceText("m_49c266baaaa709")}</h1>
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -565,15 +567,15 @@ export function Search() {
                 }
               }
             }}
-            placeholder="Search tasks, comments, documents, artifacts, agents, projects…"
-            aria-label="Search query"
+            placeholder={interfaceText("m_e395aedd49f7c0")}
+            aria-label={interfaceText("m_9eef05233ecfc1")}
             className="h-10 pl-9 pr-20 text-sm"
           />
           {draftQuery.length > 0 ? (
             <button
               type="button"
               onClick={handleClear}
-              aria-label="Clear search"
+              aria-label={interfaceText("m_3b7ea51793e9d9")}
               className="absolute right-12 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground hover:bg-accent/50"
             >
               <X className="h-3.5 w-3.5" />
@@ -602,7 +604,7 @@ export function Search() {
                 <button
                   key={suggestion.token}
                   type="button"
-                  aria-label={`Insert operator ${suggestion.token}`}
+                  aria-label={interfaceText("m_3cd5344edfef53", { value0: (suggestion.token) })}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => {
                     setDraftQuery(applySearchOperatorSuggestion(draftQuery, suggestion.token));
@@ -616,10 +618,8 @@ export function Search() {
               ))}
             </div>
           ) : (
-            <span className="truncate">
-              Try <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">status:todo</code>,{" "}
-              <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">assignee:me</code>,{" "}
-              or <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">updated:&gt;7d</code>.
+            <span className="truncate">{interfaceText("m_c7f791f4e95c49")}<code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">status:todo</code>,{" "}
+              <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">assignee:me</code>,{" "}{interfaceText("m_f1d1090d64d17c")}<code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">updated:&gt;7d</code>.
             </span>
           )}
         </div>
@@ -759,20 +759,17 @@ function SearchTabContent({
   isFetching,
   agentsById,
 }: SearchTabContentProps) {
+  useInterfaceLanguage();
   if (showInitialState) {
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-10 sm:px-6">
         <div>
-          <h2 className="text-lg font-semibold">Type to search organization memory.</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Tasks, comments, plan documents, artifacts, agents, projects — same surface, ranked by relevance.
-          </p>
+          <h2 className="text-lg font-semibold">{interfaceText("m_cb201d7ceaf215")}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_ea90c709ce3aa2")}</p>
         </div>
         {recentSearches.length > 0 ? (
           <div>
-            <div className="mb-2 text-(length:--text-micro) font-semibold uppercase tracking-wide text-muted-foreground">
-              Recent searches
-            </div>
+            <div className="mb-2 text-(length:--text-micro) font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_228c84b5a56e6b")}</div>
             <ul className="flex flex-col divide-y divide-border rounded-md border border-border">
               {recentSearches.map((entry) => (
                 <li key={entry}>
@@ -791,17 +788,12 @@ function SearchTabContent({
         ) : null}
         <ul className="space-y-1 text-xs text-muted-foreground">
           <li>
-            <span className="font-medium text-foreground">Identifier lookup:</span> type{" "}
-            <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">PAP-123</code> to jump straight to a task.
-          </li>
+            <span className="font-medium text-foreground">{interfaceText("m_492ca8934fe835")}</span>{interfaceText("m_33a5a3fadbf64e")}{" "}
+            <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">PAP-123</code>{interfaceText("m_a467e106b0c8c1")}</li>
           <li>
-            <span className="font-medium text-foreground">Quoted phrases:</span> wrap a phrase in quotes to match the
-            exact sequence.
-          </li>
+            <span className="font-medium text-foreground">{interfaceText("m_9efd02faeb841a")}</span>{interfaceText("m_8eaaed2deb1d12")}</li>
           <li>
-            <span className="font-medium text-foreground">⌘K:</span> reopens the command palette pre-seeded with your
-            current query.
-          </li>
+            <span className="font-medium text-foreground">⌘K:</span>{interfaceText("m_47ed0c95c6fdb1")}</li>
         </ul>
       </div>
     );
@@ -812,18 +804,12 @@ function SearchTabContent({
     return (
       <div className="mx-auto flex w-full max-w-xl flex-col items-center justify-center gap-3 px-4 py-12 text-center">
         <AlertTriangle className="h-10 w-10 text-destructive" aria-hidden />
-        <div className="text-base font-semibold">Couldn’t run that search</div>
+        <div className="text-base font-semibold">{interfaceText("m_8e9caef82caab2")}</div>
         <p className="text-sm text-muted-foreground">
-          {status ? `The server returned ${status}.` : "The request failed."} Your input and filters are still here, so
-          you can retry or fall back to the Tasks filter.
-        </p>
+          {status ? interfaceText("m_1e55d1ea780625", { value0: (status) }) : interfaceText("m_db4fb44737e74f")}{interfaceText("m_3b2daa2411997e")}</p>
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <Button onClick={refetch} variant="default" size="sm">
-            Retry
-          </Button>
-          <Button onClick={navigateIssuesFallback} variant="outline" size="sm">
-            Open Tasks filter view
-          </Button>
+          <Button onClick={refetch} variant="default" size="sm">{interfaceText("m_942087cc2d41e0")}</Button>
+          <Button onClick={navigateIssuesFallback} variant="outline" size="sm">{interfaceText("m_841ffda7cc0be0")}</Button>
         </div>
       </div>
     );
@@ -832,8 +818,7 @@ function SearchTabContent({
   if (isLoading) {
     return (
       <div className="flex flex-col gap-2 px-2 py-3 sm:px-4">
-        <div className="px-3 text-xs text-muted-foreground" data-testid="search-loading">
-          Searching for &ldquo;{trimmedQuery}&rdquo;…
+        <div className="px-3 text-xs text-muted-foreground" data-testid="search-loading">{interfaceText("m_28838cdaf9d994")}{trimmedQuery}&rdquo;…
         </div>
         <div className="flex flex-col">
           <div className="px-3 py-2">
@@ -860,31 +845,21 @@ function SearchTabContent({
     return (
       <div className="mx-auto flex w-full max-w-xl flex-col items-center justify-center gap-3 px-4 py-12 text-center">
         <FileQuestion className="h-10 w-10 text-muted-foreground" aria-hidden />
-        <div className="text-base font-semibold">No results for &ldquo;{trimmedQuery}&rdquo;</div>
-        <p className="text-sm text-muted-foreground">
-          We couldn’t find a match in {describeScope(scope).toLowerCase()}. Try widening the scope or rephrasing your
-          query.
-        </p>
+        <div className="text-base font-semibold">{interfaceText("m_63a389a426dcd6")}{trimmedQuery}&rdquo;</div>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_d7096dc7259ace")}{describeScope(scope).toLowerCase()}{interfaceText("m_f8873d6cec799e")}</p>
         <div className="flex flex-wrap items-center justify-center gap-2">
           {scope !== "all" ? (
-            <Button onClick={showAllScope} size="sm" variant="outline">
-              Search all scopes
-            </Button>
+            <Button onClick={showAllScope} size="sm" variant="outline">{interfaceText("m_5bcc0794472210")}</Button>
           ) : null}
           <Button onClick={openNewIssue} size="sm" variant="default">
-            <Plus className="mr-1.5 h-4 w-4" />
-            Create task from this query
-          </Button>
-          <Button onClick={navigateIssuesFallback} size="sm" variant="ghost">
-            Open Tasks filter view
-          </Button>
+            <Plus className="mr-1.5 h-4 w-4" />{interfaceText("m_ab10ebff65e7a8")}</Button>
+          <Button onClick={navigateIssuesFallback} size="sm" variant="ghost">{interfaceText("m_841ffda7cc0be0")}</Button>
         </div>
         <ul className="mt-2 space-y-0.5 text-xs text-muted-foreground">
-          <li>Try fewer tokens or a single distinctive term.</li>
-          <li>
-            Use an identifier shortcut like <code className="rounded bg-muted px-1 py-0.5">PAP-123</code>.
+          <li>{interfaceText("m_2fc7f119e3c1d0")}</li>
+          <li>{interfaceText("m_7d83672cad9e24")}<code className="rounded bg-muted px-1 py-0.5">PAP-123</code>.
           </li>
-          <li>Wrap multi-word phrases in quotes.</li>
+          <li>{interfaceText("m_bc38db20b3e524")}</li>
         </ul>
       </div>
     );
@@ -897,16 +872,16 @@ function SearchTabContent({
       <div className="flex items-center justify-between py-2 text-(length:--text-micro) uppercase tracking-wide text-muted-foreground">
         <span>
           {allMatchTotal > totalResults
-            ? `${totalResults} of ${allMatchTotal} results`
+            ? interfaceText("m_8aae751f4f183e", { value0: (totalResults), value1: (allMatchTotal) })
             : totalResults === 1
-              ? "1 result"
-              : `${totalResults} results`}
-          {` · sorted by ${sortLabel}`}
+              ? interfaceText("m_15bf3671f0f0ec")
+              : interfaceText("m_a32fa4d78cfbce", { value0: (totalResults) })}
+          {interfaceText("m_6125d9cacf86fe", { value0: (sortLabel) })}
           {activeFilterCount > 0
-            ? ` · ${activeFilterCount} ${activeFilterCount === 1 ? "filter" : "filters"} active`
+            ? interfaceText("m_6cf8866fbfe342", { value0: (activeFilterCount), value1: (activeFilterCount === 1 ? "filter" : "filters") })
             : ""}
         </span>
-        {isFetching ? <span aria-live="polite" className="normal-case tracking-normal">Updating…</span> : null}
+        {isFetching ? <span aria-live="polite" className="normal-case tracking-normal">{interfaceText("m_dfe40efe921fe8")}</span> : null}
       </div>
       <div className="flex flex-col gap-y-1 pb-10">
         {results.map((result) => (

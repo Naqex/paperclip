@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { createContext, useContext, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, KeyRound, Loader2, Plus, X } from "lucide-react";
@@ -86,14 +87,15 @@ function statusTone(status: CompanySecret["status"]): string {
 export function SecretBindingPicker({
   value,
   onChange,
-  label = "Secret",
-  placeholder = "Select secret",
+  label = interfaceText("m_7e32a729b1226e"),
+  placeholder = interfaceText("m_72a2a90fd493df"),
   allowVersionSelector = true,
   emptyHint = "No matching secrets. Create one to bind it here.",
   className,
   disabled,
   statusFilter = ["active"],
 }: SecretBindingPickerProps) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { selectedCompanyId } = useCompany();
   const [createOpen, setCreateOpen] = useState(false);
@@ -169,8 +171,7 @@ export function SecretBindingPicker({
               onClick={() => onChange(null)}
               disabled={disabled}
             >
-              <X className="h-3 w-3" /> Clear
-            </button>
+              <X className="h-3 w-3" />{interfaceText("m_e412e0e3a87bf2")}</button>
           ) : null}
         </div>
       ) : null}
@@ -193,14 +194,14 @@ export function SecretBindingPicker({
             }}
             disabled={disabled || secretsQuery.isPending}
           >
-            <option value="">{secretsQuery.isPending ? "Loading…" : placeholder}</option>
+            <option value="">{secretsQuery.isPending ? interfaceText("m_ba3bbbe10d8bef") : placeholder}</option>
             {selectedMissing && value ? (
               <option value={value.secretId}>
                 {missingHint
                   ? `${missingHint.name} — ${missingHint.companyName ?? "another organization"}`
                   : hintsPending
-                    ? `Secret (${value.secretId.slice(0, 8)}…)`
-                    : `Missing secret (${value.secretId.slice(0, 8)}…)`}
+                    ? interfaceText("m_d5d0ccd7806a5f", { value0: (value.secretId.slice(0, 8)) })
+                    : interfaceText("m_4f61400d211844", { value0: (value.secretId.slice(0, 8)) })}
               </option>
             ) : null}
             {filteredSecrets.map((secret) => (
@@ -221,9 +222,9 @@ export function SecretBindingPicker({
               onChange({ ...value, version: next });
             }}
             disabled={disabled || !value || !selectedSecret}
-            aria-label="Version"
+            aria-label={interfaceText("m_dd167905de0def")}
           >
-            <option value={VERSION_LATEST}>latest</option>
+            <option value={VERSION_LATEST}>{interfaceText("m_5e1e2bcac30595")}</option>
             {selectedSecret
               ? Array.from({ length: Math.max(0, selectedSecret.latestVersion) }, (_, index) => {
                   const version = selectedSecret.latestVersion - index;
@@ -243,7 +244,7 @@ export function SecretBindingPicker({
           size="sm"
           onClick={() => setCreateOpen(true)}
           disabled={disabled || !selectedCompanyId}
-          aria-label="Create secret"
+          aria-label={interfaceText("m_b72a982613b6b6")}
         >
           <Plus className="h-3.5 w-3.5" />
         </Button>
@@ -251,33 +252,28 @@ export function SecretBindingPicker({
 
       {selectedSecret ? (
         <p className={cn("text-(length:--text-micro) text-muted-foreground", statusTone(selectedSecret.status))}>
-          {selectedSecret.status !== "active" ? `Status: ${selectedSecret.status}. ` : null}
-          Bound to {versionDisplay(value?.version)} · {selectedSecret.key}
+          {selectedSecret.status !== "active" ? interfaceText("m_6c03b97fc565c1", { value0: (selectedSecret.status) }) : null}{interfaceText("m_28871d52930738")}{versionDisplay(value?.version)} · {selectedSecret.key}
         </p>
       ) : crossCompanyHint ? (
         <p className="text-(length:--text-micro) text-muted-foreground flex items-center gap-1">
-          <AlertCircle className="h-3 w-3" />
-          Owned by {crossCompanyHint.companyName ? `the ${crossCompanyHint.companyName} organization` : "another organization"}. The binding keeps working; selecting a secret from this list re-points it here.
-        </p>
+          <AlertCircle className="h-3 w-3" />{interfaceText("m_d8592c3fdbf9b8")}{crossCompanyHint.companyName ? interfaceText("m_a109a022394cc6", { value0: (crossCompanyHint.companyName) }) : interfaceText("m_7398b63d95173c")}{interfaceText("m_2e2c744b00c3d6")}</p>
       ) : missingHint ? (
         <p className="text-(length:--text-micro) text-destructive flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {missingHint.status === "deleted"
-            ? "The previously selected secret was deleted. Pick another or remove the binding."
-            : `This secret is ${missingHint.status}; runs cannot resolve it until it is active again.`}
+            ? interfaceText("m_ca77f5877939b5")
+            : interfaceText("m_126ca2604de857", { value0: (missingHint.status) })}
         </p>
       ) : hintsPending ? (
         <p className="text-(length:--text-micro) text-muted-foreground flex items-center gap-1">
           <AlertCircle className="h-3 w-3" />
           {hintsContext?.status === "error"
-            ? "Could not load this secret reference's details."
-            : "Checking this secret reference…"}
+            ? interfaceText("m_4832b9fd9a4f47")
+            : interfaceText("m_b7d8c139527a43")}
         </p>
       ) : selectedMissing ? (
         <p className="text-(length:--text-micro) text-destructive flex items-center gap-1">
-          <AlertCircle className="h-3 w-3" />
-          The previously selected secret is no longer available. Pick another or remove the binding.
-        </p>
+          <AlertCircle className="h-3 w-3" />{interfaceText("m_80dbc032ef6381")}</p>
       ) : (filteredSecrets.length === 0 && !secretsQuery.isPending) ? (
         <p className="text-(length:--text-micro) text-muted-foreground">{emptyHint}</p>
       ) : null}
@@ -285,11 +281,11 @@ export function SecretBindingPicker({
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Create new secret</DialogTitle>
+            <DialogTitle>{interfaceText("m_369eed0c494e6d")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium text-foreground/80" htmlFor="secret-name">Name</label>
+              <label className="text-xs font-medium text-foreground/80" htmlFor="secret-name">{interfaceText("m_dcd1d5223f73b3")}</label>
               <Input
                 id="secret-name"
                 value={createName}
@@ -299,40 +295,36 @@ export function SecretBindingPicker({
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-foreground/80" htmlFor="secret-value">Value</label>
+              <label className="text-xs font-medium text-foreground/80" htmlFor="secret-value">{interfaceText("m_8e37953d23daca")}</label>
               <Textarea
                 id="secret-value"
                 value={createValue}
                 onChange={(event) => setCreateValue(event.target.value)}
                 rows={3}
-                placeholder="Paste the secret value"
+                placeholder={interfaceText("m_695e316ec6b594")}
                 className="font-mono text-xs"
               />
-              <p className="text-(length:--text-micro) text-muted-foreground mt-1">
-                The value is stored once and never re-displayed. Rotate to replace.
-              </p>
+              <p className="text-(length:--text-micro) text-muted-foreground mt-1">{interfaceText("m_70a9ef5b2ec59a")}</p>
             </div>
             <div>
-              <label className="text-xs font-medium text-foreground/80" htmlFor="secret-description">Description</label>
+              <label className="text-xs font-medium text-foreground/80" htmlFor="secret-description">{interfaceText("m_526e0087cc3f25")}</label>
               <Input
                 id="secret-description"
                 value={createDescription}
                 onChange={(event) => setCreateDescription(event.target.value)}
-                placeholder="Optional notes (no values)"
+                placeholder={interfaceText("m_6c3c8a00014730")}
               />
             </div>
             {createError ? <p className="text-xs text-destructive">{createError}</p> : null}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button
               type="button"
               onClick={() => createMutation.mutate()}
               disabled={!createName.trim() || !createValue || createMutation.isPending}
             >
-              {createMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-              Create &amp; bind
-            </Button>
+              {createMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}{interfaceText("m_e4fbc1826339fe")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

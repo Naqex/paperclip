@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Copy } from "lucide-react";
@@ -14,25 +15,25 @@ import { Badge } from "@/components/ui/badge";
 const inviteRoleOptions = [
   {
     value: "viewer",
-    label: "Viewer",
+    get label() { return interfaceText("m_678bfa6af48b17"); },
     description: "Can view organization work and follow along.",
     gets: "View-only organization membership.",
   },
   {
     value: "operator",
-    label: "Operator",
+    get label() { return interfaceText("m_291101a07fe980"); },
     description: "Can edit organization work and invite people.",
     gets: "Full editing and audit access. Cannot approve join requests or manage member permissions.",
   },
   {
     value: "admin",
-    label: "Admin",
+    get label() { return interfaceText("m_c1c224b03cd9bc"); },
     description: "Recommended for operators who need to invite people, create agents, and approve joins.",
     gets: "Can create agents, invite users, assign tasks, and approve join requests.",
   },
   {
     value: "owner",
-    label: "Owner",
+    get label() { return interfaceText("m_4b1b8aa3608a26"); },
     description: "Full organization access, including membership management.",
     gets: "Everything in Admin, plus managing members.",
   },
@@ -47,6 +48,7 @@ function isInviteHistoryRow(value: unknown): value is Awaited<ReturnType<typeof 
 
 /** The Invites tab of the Members page (extracted from the former standalone Invites page). */
 export function InvitesSection() {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { pushToast } = useToast();
   const queryClient = useQueryClient();
@@ -76,7 +78,7 @@ export function InvitesSection() {
       afterFallback?.();
     }
     pushToast({
-      title: "Clipboard unavailable",
+      title: interfaceText("m_4ff69f6f16e049"),
       body: unavailableBody,
       tone: "warn",
     });
@@ -121,15 +123,15 @@ export function InvitesSection() {
 
       await queryClient.invalidateQueries({ queryKey: inviteHistoryQueryKey });
       pushToast({
-        title: "Invite created",
-        body: copied ? "Invite ready below and copied to clipboard." : "Invite ready below.",
+        title: interfaceText("m_eb00b164c6b4ab"),
+        body: copied ? interfaceText("m_2956aad1ae8302") : interfaceText("m_c7f94a6092d620"),
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to create invite",
-        body: error instanceof Error ? error.message : "Unknown error",
+        title: interfaceText("m_23a0de73f2e96e"),
+        body: error instanceof Error ? error.message : interfaceText("m_27c2ccd962c2b8"),
         tone: "error",
       });
     },
@@ -139,52 +141,47 @@ export function InvitesSection() {
     mutationFn: (inviteId: string) => accessApi.revokeInvite(inviteId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: inviteHistoryQueryKey });
-      pushToast({ title: "Invite revoked", tone: "success" });
+      pushToast({ title: interfaceText("m_d8fb3309e7d72c"), tone: "success" });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to revoke invite",
-        body: error instanceof Error ? error.message : "Unknown error",
+        title: interfaceText("m_ac674f0b0e047e"),
+        body: error instanceof Error ? error.message : interfaceText("m_27c2ccd962c2b8"),
         tone: "error",
       });
     },
   });
 
   if (!selectedCompanyId) {
-    return <div className="text-sm text-muted-foreground">Select an organization to manage invites.</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_462e1828e0e435")}</div>;
   }
 
   if (invitesQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading invites…</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_5c525c4dec9c3d")}</div>;
   }
 
   if (invitesQuery.error) {
     const message =
       invitesQuery.error instanceof ApiError && invitesQuery.error.status === 403
-        ? "You do not have permission to manage organization invites."
+        ? interfaceText("m_e61b97198c4be1")
         : invitesQuery.error instanceof Error
           ? invitesQuery.error.message
-          : "Failed to load invites.";
+          : interfaceText("m_d62fcfaa307f69");
     return <div className="text-sm text-destructive">{message}</div>;
   }
 
   return (
     <div className="max-w-6xl space-y-8">
-      <p className="max-w-3xl text-sm text-muted-foreground">
-        Invite people to request access to this organization. New invite links are copied to your clipboard when they are
-        generated.
-      </p>
+      <p className="max-w-3xl text-sm text-muted-foreground">{interfaceText("m_b8b2979cab3cc5")}</p>
 
       <section className="space-y-4 rounded-xl border border-border p-5">
         <div className="space-y-1">
-          <h2 className="text-sm font-semibold">Invite a person</h2>
-          <p className="text-sm text-muted-foreground">
-            Generate a human invite link and choose the default access it should request.
-          </p>
+          <h2 className="text-sm font-semibold">{interfaceText("m_f76f965ea88c96")}</h2>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_dd31c56fa8afb7")}</p>
         </div>
 
         <fieldset className="space-y-3">
-          <legend className="text-sm font-medium">Choose a role</legend>
+          <legend className="text-sm font-medium">{interfaceText("m_a49c49b04c4db0")}</legend>
           <div className="rounded-xl border border-border">
             {inviteRoleOptions.map((option, index) => {
               const checked = humanRole === option.value;
@@ -205,9 +202,7 @@ export function InvitesSection() {
                     <span className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-medium">{option.label}</span>
                       {option.value === "operator" ? (
-                        <Badge variant="outline" className="border-border text-muted-foreground">
-                          Default
-                        </Badge>
+                        <Badge variant="outline" className="border-border text-muted-foreground">{interfaceText("m_21b111cbfe6e8f")}</Badge>
                       ) : null}
                     </span>
                     <span className="block max-w-2xl text-sm text-muted-foreground">{option.description}</span>
@@ -219,35 +214,29 @@ export function InvitesSection() {
           </div>
         </fieldset>
 
-        <div className="rounded-lg border border-border px-4 py-3 text-sm text-muted-foreground">
-          Each invite link is single-use. Human invitees get the selected role immediately after sign-in; agent invites still create a join request for approval.
-        </div>
+        <div className="rounded-lg border border-border px-4 py-3 text-sm text-muted-foreground">{interfaceText("m_879640378d52e0")}</div>
 
         <div className="flex flex-wrap items-center gap-3">
           <Button onClick={() => createInviteMutation.mutate()} disabled={createInviteMutation.isPending}>
-            {createInviteMutation.isPending ? "Creating…" : "Create invite"}
+            {createInviteMutation.isPending ? interfaceText("m_c79ed9492e3c17") : interfaceText("m_9f395b8f6e6bac")}
           </Button>
-          <span className="text-sm text-muted-foreground">Invite history below keeps the audit trail.</span>
+          <span className="text-sm text-muted-foreground">{interfaceText("m_030769230dd503")}</span>
         </div>
 
         {latestInviteUrl ? (
           <div className="space-y-3 rounded-lg border border-border px-4 py-4">
             <div className="space-y-1">
               <div className="flex items-center justify-between gap-3">
-                <div className="text-sm font-medium">Latest invite link</div>
+                <div className="text-sm font-medium">{interfaceText("m_ee47fab1ca3c28")}</div>
                 {latestInviteCopied ? (
                   <div className="inline-flex items-center gap-1 text-xs font-medium text-foreground">
-                    <Check className="h-3.5 w-3.5" />
-                    Copied
-                  </div>
+                    <Check className="h-3.5 w-3.5" />{interfaceText("m_8d525e5f158b9a")}</div>
                 ) : null}
               </div>
-              <div className="text-sm text-muted-foreground">
-                This URL includes the current Paperclip domain returned by the server.
-              </div>
+              <div className="text-sm text-muted-foreground">{interfaceText("m_3bad0330adbc29")}</div>
             </div>
             <label className="block space-y-1">
-              <span className="sr-only">Latest invite URL</span>
+              <span className="sr-only">{interfaceText("m_35fbc9bc2efb06")}</span>
               <input
                 ref={latestInviteInputRef}
                 readOnly
@@ -255,7 +244,7 @@ export function InvitesSection() {
                 onFocus={(event) => event.currentTarget.select()}
                 onClick={(event) => event.currentTarget.select()}
                 className="w-full rounded-md border border-border bg-muted/60 px-3 py-2 text-sm text-foreground outline-none transition-colors selection:bg-primary selection:text-primary-foreground focus:border-ring"
-                aria-label="Latest invite URL"
+                aria-label={interfaceText("m_35fbc9bc2efb06")}
               />
             </label>
             <div className="flex flex-wrap gap-2">
@@ -268,9 +257,7 @@ export function InvitesSection() {
                   setLatestInviteCopied(copied);
                 }}
               >
-                <Copy className="h-4 w-4" />
-                Copy link
-              </Button>
+                <Copy className="h-4 w-4" />{interfaceText("m_dbf362d4f210c7")}</Button>
             </div>
           </div>
         ) : null}
@@ -279,32 +266,26 @@ export function InvitesSection() {
       <section className="rounded-xl border border-border">
         <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div className="space-y-1">
-            <h2 className="text-sm font-semibold">Invite history</h2>
-            <p className="text-sm text-muted-foreground">
-              Review invite status, audience, inviter, and any linked join request.
-            </p>
+            <h2 className="text-sm font-semibold">{interfaceText("m_0269fea65ff5e5")}</h2>
+            <p className="text-sm text-muted-foreground">{interfaceText("m_bc3cae1e723ab7")}</p>
           </div>
-          <Link to="/inbox/requests" className="text-sm underline underline-offset-4">
-            Open join request queue
-          </Link>
+          <Link to="/inbox/requests" className="text-sm underline underline-offset-4">{interfaceText("m_3f3aa696e2b98c")}</Link>
         </div>
 
         {inviteHistory.length === 0 ? (
-          <div className="border-t border-border px-5 py-8 text-sm text-muted-foreground">
-            No invites have been created for this organization yet.
-          </div>
+          <div className="border-t border-border px-5 py-8 text-sm text-muted-foreground">{interfaceText("m_c20447f4073b9b")}</div>
         ) : (
           <div className="border-t border-border">
             <div className="overflow-x-auto">
               <table className="min-w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="px-5 py-3 font-medium text-muted-foreground">State</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">For</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Invited by</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Created</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Join request</th>
-                    <th className="px-5 py-3 text-right font-medium text-muted-foreground">Action</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{interfaceText("m_a3b50c476732c7")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{interfaceText("m_ca15ebc05a3c5c")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{interfaceText("m_c7a6f15607da63")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{interfaceText("m_d70b9e24bca26b")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{interfaceText("m_d7d9cd19632538")}</th>
+                    <th className="px-5 py-3 text-right font-medium text-muted-foreground">{interfaceText("m_64cff1319d2fd2")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -317,7 +298,7 @@ export function InvitesSection() {
                       </td>
                       <td className="px-5 py-3 align-top">{formatInviteAudience(invite)}</td>
                       <td className="px-5 py-3 align-top">
-                        <div>{invite.invitedByUser?.name || invite.invitedByUser?.email || "Unknown inviter"}</div>
+                        <div>{invite.invitedByUser?.name || invite.invitedByUser?.email || interfaceText("m_7cf15ed2a34f6b")}</div>
                         {invite.invitedByUser?.email && invite.invitedByUser.name ? (
                           <div className="text-xs text-muted-foreground">{invite.invitedByUser.email}</div>
                         ) : null}
@@ -327,9 +308,7 @@ export function InvitesSection() {
                       </td>
                       <td className="px-5 py-3 align-top">
                         {invite.relatedJoinRequestId ? (
-                          <Link to="/inbox/requests" className="underline underline-offset-4">
-                            Review request
-                          </Link>
+                          <Link to="/inbox/requests" className="underline underline-offset-4">{interfaceText("m_dcea8abbdff035")}</Link>
                         ) : (
                           <span className="text-muted-foreground">—</span>
                         )}
@@ -341,11 +320,9 @@ export function InvitesSection() {
                             variant="outline"
                             onClick={() => revokeMutation.mutate(invite.id)}
                             disabled={revokeMutation.isPending}
-                          >
-                            Revoke
-                          </Button>
+                          >{interfaceText("m_87e6d00bbf53ec")}</Button>
                         ) : (
-                          <span className="text-xs text-muted-foreground">Inactive</span>
+                          <span className="text-xs text-muted-foreground">{interfaceText("m_ac7c949f1211b7")}</span>
                         )}
                       </td>
                     </tr>
@@ -361,7 +338,7 @@ export function InvitesSection() {
                   onClick={() => invitesQuery.fetchNextPage()}
                   disabled={invitesQuery.isFetchingNextPage}
                 >
-                  {invitesQuery.isFetchingNextPage ? "Loading more…" : "View more"}
+                  {invitesQuery.isFetchingNextPage ? interfaceText("m_964e5f88d03630") : interfaceText("m_267e5558ef0217")}
                 </Button>
               </div>
             ) : null}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Copy, Check, Loader2 } from "lucide-react";
@@ -90,12 +91,13 @@ export function OnboardingLoginCard({
   loading?: boolean;
   children: ReactNode;
 }) {
+  useInterfaceLanguage();
   if (loading) {
     return (
       <div
         className="flex min-h-(--sz-108px) items-center justify-center rounded-xl bg-muted/40"
         role="status"
-        aria-label="Preparing the sign-in"
+        aria-label={interfaceText("m_9b3e70a44f9177")}
       >
         <Loader2 className="size-4 animate-spin text-muted-foreground" />
       </div>
@@ -225,6 +227,7 @@ export function OnboardingLoginCodeRow({
   code: string;
   autoCopy?: boolean;
 }) {
+  useInterfaceLanguage();
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoCopiedRef = useRef(false);
@@ -304,14 +307,12 @@ export function OnboardingLoginCodeRow({
             initial={{ opacity: 0, y: COPIED_REVEAL_TRAVEL }}
             animate={{ opacity: 1, y: 0, transition: COPIED_REVEAL }}
             exit={{ opacity: 0, transition: COPIED_REVEAL }}
-          >
-            Copied!
-          </motion.span>
+          >{interfaceText("m_ea61bc15688d1e")}</motion.span>
         )}
       </AnimatePresence>
       <LoginCardCopyButton
         value={code}
-        label="Copy the code"
+        label={interfaceText("m_80b7d4d239fd96")}
         onCopied={() => {
           // No wait here. A press is a direct action, and delaying its
           // acknowledgement would read as the button having missed.
@@ -361,8 +362,8 @@ export function OnboardingCardField({
   onSubmit,
   onPaste,
   disabled,
-  label = "Authorization code",
-  placeholder = "Paste authorization code here",
+  label = interfaceText("m_d778d58f77814a"),
+  placeholder = interfaceText("m_2b2b05566176d5"),
   masked = false,
   autoFocus = false,
 }: {
@@ -390,6 +391,7 @@ export function OnboardingCardField({
    */
   autoFocus?: boolean;
 }) {
+  useInterfaceLanguage();
   return (
     <input
       // eslint-disable-next-line jsx-a11y/no-autofocus -- see the prop's note
@@ -428,6 +430,7 @@ export function ProviderSubscriptionCard({
   loading?: boolean;
   children: ReactNode;
 }) {
+  useInterfaceLanguage();
   return (
     <OnboardingLoginCard
       loading={loading}
@@ -438,13 +441,12 @@ export function ProviderSubscriptionCard({
             target="_blank"
             rel="noreferrer noopener"
             className="underline underline-offset-2 hover:text-foreground"
-          >
-            Sign in to {providerName}
+          >{interfaceText("m_f5e5226a59e9ee")}{providerName}
           </a>
-          {mode === "browser_redirect" ? " then return here"
+          {mode === "browser_redirect" ? interfaceText("m_d4307e3863a449")
             : mode === "submitted_code"
-            ? " then come back and enter authorization code"
-            : " by providing the authorization code below"}
+            ? interfaceText("m_6cac26f1211956")
+            : interfaceText("m_7bf06fd04b1ea1")}
         </>
       }
     >
@@ -459,11 +461,12 @@ export function ProviderApiKeyCard({
 }: Omit<Parameters<typeof OnboardingCardField>[0], "masked" | "label"> & {
   providerName: string;
 }) {
+  useInterfaceLanguage();
   return (
     <OnboardingLoginCard
       instruction={`Provide your ${providerName} API key to connect`}
     >
-      <OnboardingCardField {...field} label="API key" masked />
+      <OnboardingCardField {...field} label={interfaceText("m_16f0ee47f993d6")} masked />
     </OnboardingLoginCard>
   );
 }
@@ -473,6 +476,7 @@ export function LocalProviderLoginInstructions({ adapterType, login }: {
   adapterType: string;
   login?: { isolated?: boolean; command?: string; authorizationUrl?: string | null; code?: string | null; accountLabel?: string | null; submitCode?: (code: string) => Promise<void>; preparing: boolean; status?: "ready" | "sign_in_required" | "expired" | null; error: string | null; retry: () => void };
 }) {
+  useInterfaceLanguage();
   const [showCommand, setShowCommand] = useState(false);
   const [browserCode, setBrowserCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -492,14 +496,14 @@ export function LocalProviderLoginInstructions({ adapterType, login }: {
       setSubmitting(false);
     }
   }
-  if (login?.preparing) return <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />Preparing sign-in…</p>;
+  if (login?.preparing) return <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{interfaceText("m_cdca9524ec00f4")}</p>;
   const ready = login?.status === "ready";
   return <div className="min-w-0 max-w-full space-y-3 text-sm text-muted-foreground">
     {ready ? <>
-      <p role="status" className="flex items-center gap-2 text-foreground"><Check className="size-4 shrink-0 text-(--status-task-icon-done)" />{login?.accountLabel ?? provider} is signed in. Click Connect to use this account.</p>
-      {!showCommand && <button type="button" className="underline underline-offset-4" onClick={() => browserLogin ? login?.retry() : setShowCommand(true)}>Use a different account</button>}
-    </> : !browserLogin && <p>{isolated ? `Sign in to ${provider} for this connection on the machine running Paperclip. Your existing terminal login stays separate.` : `Connect uses your local ${provider} account on the machine running Paperclip.`}</p>}
-    {browserLogin && !ready && !login?.authorizationUrl && !login?.error && <p role="status">Preparing browser sign-in…</p>}
+      <p role="status" className="flex items-center gap-2 text-foreground"><Check className="size-4 shrink-0 text-(--status-task-icon-done)" />{login?.accountLabel ?? provider}{interfaceText("m_d529269b0b2bf5")}</p>
+      {!showCommand && <button type="button" className="underline underline-offset-4" onClick={() => browserLogin ? login?.retry() : setShowCommand(true)}>{interfaceText("m_d2fe9116400cf3")}</button>}
+    </> : !browserLogin && <p>{isolated ? interfaceText("m_377904eeb9fcc3", { value0: (provider) }) : interfaceText("m_2c5ea16cf983cd", { value0: (provider) })}</p>}
+    {browserLogin && !ready && !login?.authorizationUrl && !login?.error && <p role="status">{interfaceText("m_f044ddff6ece3b")}</p>}
     {browserLogin && !ready && !login?.error && login?.authorizationUrl && <ProviderSubscriptionCard
       providerName={connectSourceName(adapterType)}
       authorizationUrl={login.authorizationUrl}
@@ -512,17 +516,17 @@ export function LocalProviderLoginInstructions({ adapterType, login }: {
           onSubmit={() => void submitBrowserCode()}
           disabled={submitting}
         />
-        <Button type="button" disabled={!browserCode.trim() || submitting} onClick={() => void submitBrowserCode()}>Submit code</Button>
-      </div> : adapterType === "antigravity_runtime" ? <p>Finish signing in in the Google browser window, then return here.</p> : <OnboardingLoginCodeRow code={login.code ?? ""} />}
+        <Button type="button" disabled={!browserCode.trim() || submitting} onClick={() => void submitBrowserCode()}>{interfaceText("m_833a3a4cefd5e9")}</Button>
+      </div> : adapterType === "antigravity_runtime" ? <p>{interfaceText("m_9b948e44f6ae76")}</p> : <OnboardingLoginCodeRow code={login.code ?? ""} />}
     </ProviderSubscriptionCard>}
     {!browserLogin && (!ready || showCommand) && !login?.error && <>
-      <p>Run this in a terminal on that machine and finish signing in in your browser. We’ll check automatically when you return.</p>
+      <p>{interfaceText("m_98b7fd47b3b8f2")}</p>
       {command && <div className="flex min-w-0 max-w-full items-start gap-2 rounded-md border bg-muted p-3 text-foreground">
         <pre className="min-w-0 flex-1 whitespace-pre-wrap break-all font-mono text-xs"><code>{command}</code></pre>
-        <LoginCardCopyButton value={command} label="Copy sign-in command" />
+        <LoginCardCopyButton value={command} label={interfaceText("m_20cc735b64b8fe")} />
       </div>}
     </>}
     {login?.error && <p role="alert">{login.error}</p>}
-    {login && !login.preparing && !ready && (isolated || login.error) && <button type="button" className="underline underline-offset-4" onClick={login.retry}>{isolated ? "Start sign-in again" : "Check again"}</button>}
+    {login && !login.preparing && !ready && (isolated || login.error) && <button type="button" className="underline underline-offset-4" onClick={login.retry}>{isolated ? interfaceText("m_cf00ad59c7cef6") : interfaceText("m_fb7099ad8e818d")}</button>}
   </div>;
 }

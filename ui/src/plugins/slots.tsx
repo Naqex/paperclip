@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * @fileoverview Plugin UI slot system — dynamic loading, error isolation,
  * and rendering of plugin-contributed UI extensions.
@@ -758,8 +759,7 @@ class PluginSlotErrorBoundary extends Component<PluginSlotErrorBoundaryProps, Pl
       if (this.props.fallback !== undefined) return this.props.fallback;
       return (
         <div className={cn("rounded-md border border-destructive/30 bg-destructive/5 px-2 py-1 text-xs text-destructive", this.props.className)}>
-          {this.props.slot.pluginDisplayName}: failed to render
-        </div>
+          {this.props.slot.pluginDisplayName}{interfaceText("m_40815c1018fe52")}</div>
       );
     }
     return this.props.children;

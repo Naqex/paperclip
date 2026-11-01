@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { isUuidLike } from "@paperclipai/shared";
 import { ApiError } from "@/api/client";
 import { AgentMailCredentialField } from "@/features/connections/AgentMailCredentialField";
@@ -83,13 +84,15 @@ function readEmailSetupDraft(key: string): Partial<EmailSetupDraft> {
 }
 
 export function EmailEndpointSetup() {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const [params] = useSearchParams();
-  if (!selectedCompanyId) return <p role="status" className="p-6 text-sm text-muted-foreground">Loading email setup…</p>;
+  if (!selectedCompanyId) return <p role="status" className="p-6 text-sm text-muted-foreground">{interfaceText("m_99851b1d17fde6")}</p>;
   return <EmailEndpointSetupForm key={`${selectedCompanyId}:${params.get("resume") ?? params.get("setupId") ?? params.get("connectionId") ?? "new"}:${params.get("agentId") ?? "choose"}`} companyId={selectedCompanyId} />;
 }
 
 function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const cache = useQueryClient();
@@ -324,55 +327,55 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
   };
   return <div className="mx-auto max-w-xl space-y-6 p-6">
     <header className="space-y-2">
-      <h1 className="text-xl font-bold">{step === 2 ? "Your agent’s email is ready" : "Give an agent an email address"}</h1>
+      <h1 className="text-xl font-bold">{step === 2 ? interfaceText("m_85c34512e2a38b") : interfaceText("m_1597b60b580d91")}</h1>
     </header>
     {step < 2 && inboxes.isError && <div role="alert" className="space-y-2 text-sm">
-      <p className="text-destructive">Could not load email setup progress. {inboxes.error.message}</p>
+      <p className="text-destructive">{interfaceText("m_e911d293a74252")}{inboxes.error.message}</p>
       <Button type="button" variant="outline" size="sm" disabled={busy || inboxes.isFetching} onClick={() => { void inboxes.refetch(); }}>
-        {inboxes.isFetching ? "Loading…" : "Retry loading inboxes"}
+        {inboxes.isFetching ? interfaceText("m_ba3bbbe10d8bef") : interfaceText("m_b33202c2a4de3e")}
       </Button>
     </div>}
-    {step < 2 && resumeId === requestId && inboxes.isSuccess && !pendingEndpoint && <p role="alert" className="text-sm text-destructive">This email setup could not be found. Return to Connectors and start a new connection.</p>}
+    {step < 2 && resumeId === requestId && inboxes.isSuccess && !pendingEndpoint && <p role="alert" className="text-sm text-destructive">{interfaceText("m_f16421fccf150b")}</p>}
     {step < 2 && <ChatSetupNavigation labels={["Agent", "Email address"]} step={step}
       availableStep={step} disabled={busy} onSelect={index => { setup.reset(); setStep(index as 0 | 1); }} />}
     {step === 0 && <form className="space-y-6" onSubmit={event => { event.preventDefault(); if (canContinue) connect.mutate(); }}>
       <div className="space-y-2">
         <Label htmlFor="email-agent">Agent</Label>
         <AgentSelect id="email-agent" value={agentId} disabled={busy || agents.isPending || !inboxes.isSuccess || !!pendingEndpoint}
-          placeholder="Choose an agent" emptyMessage="No agents found." triggerClassName="h-10"
+          placeholder={interfaceText("m_b6890bc23a9c54")} emptyMessage={interfaceText("m_61666542b1caa1")} triggerClassName="h-10"
           agents={(agents.data ?? []).filter(a => !["terminated", "pending_approval"].includes(a.status))}
           onChange={id => { setAgentId(id); setUsername((agents.data?.find(a => a.id === id)?.name ?? "").toLowerCase().replace(/[^a-z0-9._-]+/g, "-").slice(0, 64)); }} />
       </div>
       {!pendingAddress && <AgentMailCredentialField companyId={companyId} connectionId={selectedCredentialId}
         onConnectionChange={selectCredential} value={apiKey} onChange={value => { setApiKey(value); connect.reset(); }} disabled={busy} />}
       {restrictedInbox && <div className="space-y-2 text-sm">
-        <p className="text-muted-foreground">That key only connects {restrictedInbox}. Choose a saved account key or enter one to create a new address.</p>
+        <p className="text-muted-foreground">{interfaceText("m_48aa63c8ba4137")}{restrictedInbox}{interfaceText("m_a304191f06e8ca")}</p>
         <Button type="button" variant="link" size="sm" className="h-auto p-0" disabled={busy || !(selectedCredentialId || apiKey.trim())}
-          onClick={() => { setAllowInboxKey(true); setRestrictedInbox(""); connect.reset(); }}>Use the existing inbox instead</Button>
+          onClick={() => { setAllowInboxKey(true); setRestrictedInbox(""); connect.reset(); }}>{interfaceText("m_69515538f7b391")}</Button>
       </div>}
       {lowTrust && !scoped && <div role="alert" className="space-y-2 text-sm">
-        <p>This agent needs a work boundary before it can receive email.</p>
-        <Button type="button" variant="outline" size="sm" onClick={openTrust}>Configure work boundary</Button>
+        <p>{interfaceText("m_36e1f013c46f7b")}</p>
+        <Button type="button" variant="outline" size="sm" onClick={openTrust}>{interfaceText("m_a2eb390aa7fd1a")}</Button>
       </div>}
       {error && <p role="alert" className="text-sm text-destructive">{error.message}</p>}
       <div className="flex items-center justify-between gap-3 border-t border-border pt-5">
-        <Button type="button" variant="ghost" disabled={busy} onClick={cancel}>Cancel</Button>
-        <Button disabled={!canContinue}>{connect.isPending ? "Connecting…" : "Continue"}<ArrowRight className="size-4" /></Button>
+        <Button type="button" variant="ghost" disabled={busy} onClick={cancel}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+        <Button disabled={!canContinue}>{connect.isPending ? interfaceText("m_72021eb70e91b4") : interfaceText("m_31fbef162594de")}<ArrowRight className="size-4" /></Button>
       </div>
     </form>}
     {step === 1 && <form className="space-y-6" onSubmit={event => { event.preventDefault(); if (canCreate) setup.mutate(); }}>
       <div className="space-y-2">
-        <Label htmlFor={addressMode === "new" ? "email-name" : "email-existing"}>{chosen?.name}’s email address</Label>
+        <Label htmlFor={addressMode === "new" ? "email-name" : "email-existing"}>{chosen?.name}{interfaceText("m_c5184d00ac6cc4")}</Label>
         {pendingAddress ? <>
           <p className="text-sm font-medium">{pendingAddress}</p>
-          <p className="text-sm text-muted-foreground">This address was created in AgentMail. Finish connecting it to {chosen?.name}{scopedKey ? "." : ", or choose a different address. The original inbox will stay in AgentMail."}</p>
-          {!scopedKey && <Button type="button" variant="link" size="sm" className="h-auto p-0" disabled={busy} onClick={chooseAnotherAddress}>Choose a different address</Button>}
+          <p className="text-sm text-muted-foreground">{interfaceText("m_e77b98a4e5dbf0")}{chosen?.name}{scopedKey ? "." : interfaceText("m_f16cb217e91142")}</p>
+          {!scopedKey && <Button type="button" variant="link" size="sm" className="h-auto p-0" disabled={busy} onClick={chooseAnotherAddress}>{interfaceText("m_0ccb8a0c7c455a")}</Button>}
         </> : addressMode === "new" ? <>
           <div className="flex items-center gap-2">
             <Input id="email-name" className="min-w-0" value={username} maxLength={64} autoComplete="off" spellCheck={false} disabled={busy}
               aria-invalid={!!addressError} aria-describedby={addressError ? "email-address-error" : "email-address-status"}
               onChange={event => { setUsername(event.target.value.toLowerCase()); setup.reset(); }} />
-            <select id="email-domain" aria-label="Email domain" className={`${selectClass} max-w-1/2 shrink-0`} value={domain}
+            <select id="email-domain" aria-label={interfaceText("m_f865f1ee55b268")} className={`${selectClass} max-w-1/2 shrink-0`} value={domain}
               disabled={busy || !inspected.data} onChange={event => { setDomainSelected(true); setDomain(event.target.value); setup.reset(); }}>
               {[...new Set([...customDomains, "agentmail.to", domain])]
                 .map(value => <option key={value} value={value}>@{value}</option>)}
@@ -381,78 +384,75 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
         </> : <select id="email-existing" className={selectClass} value={pendingAddress ?? inboxId} disabled={busy || scopedKey || !!pendingAddress}
           aria-invalid={!!addressError} aria-describedby={addressError ? "email-address-error" : undefined}
           onChange={event => { setInboxId(event.target.value); setup.reset(); }}>
-          <option value="">Choose an inbox</option>
+          <option value="">{interfaceText("m_9678be09774263")}</option>
           {inspected.data?.inboxes.map(i => {
             const assigned = inboxes.data?.some(e => e.id !== requestId && e.address === i.inbox_id && e.status !== "archived");
-            return <option key={i.inbox_id} value={i.inbox_id} disabled={assigned}>{i.inbox_id}{assigned ? " — already assigned" : ""}</option>;
+            return <option key={i.inbox_id} value={i.inbox_id} disabled={assigned}>{i.inbox_id}{assigned ? interfaceText("m_0ed0b71910a8f9") : ""}</option>;
           })}
         </select>}
         {scopedKey && !pendingAddress && <Button type="button" variant="link" size="sm" className="h-auto p-0" disabled={busy}
-          onClick={() => { setAllowInboxKey(false); setStep(0); }}>Choose a key for a new address</Button>}
+          onClick={() => { setAllowInboxKey(false); setStep(0); }}>{interfaceText("m_00d6cfcbdc25d9")}</Button>}
         {addressError && <p id="email-address-error" role="alert" className="text-sm text-destructive">{addressError}</p>}
         {checkingNewAddress && !addressError && <p id="email-address-status" role="status" className="text-sm text-muted-foreground">
-          {addressCheck.checking ? "Checking address…" : addressCheck.error ? `Could not check this address. ${addressCheck.error}`
-            : addressCheck.result?.status === "unknown" ? "AgentMail confirms availability when you create the address." : null}
+          {addressCheck.checking ? interfaceText("m_ca18ac28f27266") : addressCheck.error ? interfaceText("m_7114d692220384", { value0: (addressCheck.error) })
+            : addressCheck.result?.status === "unknown" ? interfaceText("m_5be518d9fb6ae2") : null}
         </p>}
-        {suggestions.length > 0 && <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm" aria-label="Suggested email addresses">
-          <span className="text-muted-foreground">Try:</span>
+        {suggestions.length > 0 && <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm" aria-label={interfaceText("m_5b8d1fe750e1d5")}>
+          <span className="text-muted-foreground">{interfaceText("m_02895382125f0c")}</span>
           {suggestions.map(name => <Button key={name} type="button" variant="link" size="sm" className="h-auto p-0" disabled={busy}
             onClick={() => { setUsername(name); setup.reset(); }}>{name}@{domain}</Button>)}
         </div>}
         {!scopedKey && !pendingAddress && <Button type="button" variant="link" size="sm" className="h-auto p-0" disabled={busy}
           onClick={() => { setAddressMode(addressMode === "new" ? "existing" : "new"); setup.reset(); }}>
-          {addressMode === "new" ? "Use an existing inbox" : "Create a new address"}
+          {addressMode === "new" ? interfaceText("m_797916bdfe1e20") : interfaceText("m_71311ae115d03a")}
         </Button>}
       </div>
       <Card className="py-4">
         <CardHeader className="px-4">
-          <h2 className="text-sm font-medium">How it Works</h2>
-          <CardDescription>Incoming email creates tasks for {chosen?.name}. Replies stay in the same task.</CardDescription>
+          <h2 className="text-sm font-medium">{interfaceText("m_3a6dd514061baa")}</h2>
+          <CardDescription>{interfaceText("m_2daad643684667")}{chosen?.name}{interfaceText("m_cb792e9c973fa9")}</CardDescription>
         </CardHeader>
       </Card>
       <details className="space-y-4">
-        <summary className="cursor-pointer text-sm text-muted-foreground">Advanced options</summary>
+        <summary className="cursor-pointer text-sm text-muted-foreground">{interfaceText("m_9443ff69463ef4")}</summary>
         <div className="space-y-4">
           {addressMode === "new" && <div className="space-y-2">
-            <a className="text-sm underline" href="https://docs.agentmail.to/custom-domains" target="_blank" rel="noreferrer">Set up a custom domain ↗</a>
+            <a className="text-sm underline" href="https://docs.agentmail.to/custom-domains" target="_blank" rel="noreferrer">{interfaceText("m_5317d83e2de6f0")}</a>
           </div>}
           <div className="space-y-2">
-            <Label htmlFor="email-mode">Receiving</Label>
+            <Label htmlFor="email-mode">{interfaceText("m_fa8162869da5b5")}</Label>
             <select id="email-mode" value={mode} disabled={busy} className={selectClass} onChange={event => setMode(event.target.value as typeof mode)}>
-              <option value="websocket">Live connection</option><option value="webhook">Webhook</option>
+              <option value="websocket">{interfaceText("m_2f4eeda9ca9a0c")}</option><option value="webhook">Webhook</option>
             </select>
           </div>
           <EmailSafetyNotice />
           <div className="space-y-2 text-sm">
-            <p>{lowTrust && scoped ? "Low-trust review configured" : "Manage which tasks and tools this agent can access."}</p>
-            <Button type="button" variant="outline" size="sm" onClick={openTrust}>Review trust settings</Button>
+            <p>{lowTrust && scoped ? interfaceText("m_71c8f51d9efcd8") : interfaceText("m_8e7e4e6bd25076")}</p>
+            <Button type="button" variant="outline" size="sm" onClick={openTrust}>{interfaceText("m_a4f53058ca77c9")}</Button>
           </div>
         </div>
       </details>
       {error && <p role="alert" className="text-sm text-destructive">{error.message}</p>}
-      {inspected.isPending && <p role="status" className="text-sm text-muted-foreground">Loading email options…</p>}
+      {inspected.isPending && <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_edf09d7eff1020")}</p>}
       <div className="flex items-center justify-between gap-3 border-t border-border pt-5">
-        <Button type="button" variant="ghost" disabled={busy} onClick={() => { setup.reset(); setStep(0); }}><ArrowLeft className="size-4" />Back</Button>
+        <Button type="button" variant="ghost" disabled={busy} onClick={() => { setup.reset(); setStep(0); }}><ArrowLeft className="size-4" />{interfaceText("m_76900f1bfd16c8")}</Button>
         <Button disabled={!canCreate}>
-          {setup.isPending ? "Connecting…" : pendingAddress ? "Finish connecting" : addressMode === "new" ? "Create email address" : "Connect email address"}<ArrowRight className="size-4" />
+          {setup.isPending ? interfaceText("m_72021eb70e91b4") : pendingAddress ? interfaceText("m_802dfbb2c965e6") : addressMode === "new" ? interfaceText("m_4167dbc6e81d05") : interfaceText("m_41a136a450c81d")}<ArrowRight className="size-4" />
         </Button>
       </div>
     </form>}
     {step === 2 && <div className="space-y-6">
       <div className="space-y-2"><p className="flex items-center gap-2 font-medium"><Check className="size-4" />{setup.data?.address}</p>
-        <p className="text-sm text-muted-foreground">{chosen?.name} can now receive email at this address.</p></div>
+        <p className="text-sm text-muted-foreground">{chosen?.name}{interfaceText("m_8d07a2d48afacb")}</p></div>
       <div className="flex items-center justify-between gap-3 border-t border-border pt-5">
-        <Button variant="ghost" onClick={leave}>Email settings</Button><Button onClick={() => navigate("/apps")}>Done</Button>
+        <Button variant="ghost" onClick={leave}>{interfaceText("m_dd121554df6713")}</Button><Button onClick={() => navigate("/apps")}>{interfaceText("m_11a6767d5674c7")}</Button>
       </div>
     </div>}
       <Dialog open={trustOpen} onOpenChange={setTrustOpen}>
         <DialogContent className="max-h-screen overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Trust settings · {chosen?.name}</DialogTitle>
-            <DialogDescription>
-              Changes apply to all of this agent’s work. Use a dedicated email
-              agent if its other tasks need broader access.
-            </DialogDescription>
+            <DialogTitle>{interfaceText("m_7b5ed7ff8eb1a0")}{chosen?.name}</DialogTitle>
+            <DialogDescription>{interfaceText("m_1ee91e83388a1f")}</DialogDescription>
           </DialogHeader>
           <TrustPresetSection
             permissions={permissions}
@@ -469,19 +469,14 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
             allowSingleIssue={false}
             candidatesLoading={projects.isPending || boundaryIssues.isPending}
           />
-          <p className="text-xs text-muted-foreground">
-            Low trust limits Paperclip access; it does not sandbox the runtime.
-            Review filesystem, tool, and secret access separately.
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_b8f0a193434bf3")}</p>
           {(trust.error || projects.error || boundaryIssues.error) && (
             <p role="alert" className="text-sm text-destructive">
               {(trust.error ?? projects.error ?? boundaryIssues.error)?.message}
             </p>
           )}
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setTrustOpen(false)}>
-              Cancel
-            </Button>
+            <Button variant="ghost" onClick={() => setTrustOpen(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button
               disabled={
                 trust.isPending ||
@@ -491,9 +486,7 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
                   !lowTrustBoundaryHasScope(getLowTrustBoundary(permissions)))
               }
               onClick={() => trust.mutate()}
-            >
-              Save trust settings
-            </Button>
+            >{interfaceText("m_bf63250b446ce5")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -509,6 +502,7 @@ export function EmailConnectionInboxes({
   connectionId: string;
   canConfigure: boolean;
 }) {
+  useInterfaceLanguage();
   const query = useQuery({
     queryKey: ["email-inboxes", companyId],
     queryFn: () => emailApi.list(companyId),
@@ -531,20 +525,14 @@ export function EmailConnectionInboxes({
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border p-6">
         <div className="space-y-1">
-          <h2 className="text-lg font-semibold">
-            Give an agent an email address
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Each email conversation becomes a task.
-          </p>
+          <h2 className="text-lg font-semibold">{interfaceText("m_1597b60b580d91")}</h2>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_5a59f8ed7d0ab4")}</p>
         </div>
         {canConfigure && (
           <Button asChild size="lg">
             <Link
               to={`/apps/chat/connect?provider=agentmail&connectionId=${connectionId}`}
-            >
-              Give an agent an email address
-            </Link>
+            >{interfaceText("m_1597b60b580d91")}</Link>
           </Button>
         )}
       </div>
@@ -561,7 +549,7 @@ export function EmailConnectionInboxes({
           </Link>
           <span className="text-xs text-muted-foreground">
             {i.lastError ??
-              (i.status === "active" ? "Receiving email" : i.status)}
+              (i.status === "active" ? interfaceText("m_7a198ebd1a9fc3") : i.status)}
           </span>
         </div>
       ))}
@@ -583,6 +571,7 @@ export function EmailEndpointSettings({
   companyId: string;
   assignedAgentName: string;
 }) {
+  useInterfaceLanguage();
   const cache = useQueryClient();
   const query = useQuery({
     queryKey: ["email-inboxes", companyId],
@@ -624,77 +613,72 @@ export function EmailEndpointSettings({
     },
   });
   if (removed)
-    return <p>Inbox disconnected. Email history remains in its tasks.</p>;
+    return <p>{interfaceText("m_f8ffe56dc75e85")}</p>;
   if (!inbox)
     return (
       <p role={query.error ? "alert" : undefined}>
-        {query.error?.message ?? "Loading email inbox…"}
+        {query.error?.message ?? interfaceText("m_cb63b6b0830c9d")}
       </p>
     );
   return (
     <div className="max-w-2xl space-y-8 pb-8">
       <header className="space-y-2">
-        <p className="text-sm text-muted-foreground">{assignedAgentName}’s email address</p>
+        <p className="text-sm text-muted-foreground">{assignedAgentName}{interfaceText("m_c5184d00ac6cc4")}</p>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <h1 aria-label={inbox.address ?? undefined} className="min-w-0 break-all text-xl font-bold">
             {inbox.address ? (
-              <CopyText text={inbox.address} ariaLabel="Copy email address" title="Copy email address"
+              <CopyText text={inbox.address} ariaLabel="Copy email address" title={interfaceText("m_61b9484603b593")}
                 containerClassName="max-w-full" className="flex min-w-0 items-center gap-2 rounded-md text-left">
                 <span className="min-w-0 break-all">{inbox.address}</span>
                 <Copy aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
               </CopyText>
-            ) : "Email inbox"}
+            ) : interfaceText("m_f00606184e4ddf")}
           </h1>
           {inbox.address && (
             <a href={`https://console.agentmail.to/dashboard/inboxes/${encodeURIComponent(inbox.address)}`}
               target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground">
-              View inbox <ExternalLink aria-hidden="true" className="size-3" />
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground">{interfaceText("m_d57823df4e2b36")}<ExternalLink aria-hidden="true" className="size-3" />
             </a>
           )}
         </div>
         {inbox.status === "active" && inbox.address && (
-          <p className="text-sm text-muted-foreground">
-            Send an email to this address to start a task with {assignedAgentName}.
+          <p className="text-sm text-muted-foreground">{interfaceText("m_69a203bf40d548")}{assignedAgentName}.
           </p>
         )}
       </header>
 
       <Card className="gap-2 p-4">
-        <h2 className="text-sm font-semibold">How it Works</h2>
-        <p className="text-sm text-muted-foreground">
-          Incoming email creates tasks for {assignedAgentName}. Replies stay in the same task.
-          Task comments stay internal; use Email reply to send an email.
-        </p>
+        <h2 className="text-sm font-semibold">{interfaceText("m_3a6dd514061baa")}</h2>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_2daad643684667")}{assignedAgentName}{interfaceText("m_66f019064eedf3")}</p>
       </Card>
 
       <section aria-labelledby="email-receiving-heading" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <h2 id="email-receiving-heading" className="text-sm font-semibold">Receiving email</h2>
+            <h2 id="email-receiving-heading" className="text-sm font-semibold">{interfaceText("m_7a198ebd1a9fc3")}</h2>
             {(inbox.status !== "active" || inbox.lastError) && (
               <StatusBadge status={inbox.status === "active" ? "attention" : inbox.status}
-                label={inbox.status === "active" ? "Needs attention" : inbox.status === "revoked" ? "Access revoked" : undefined} />
+                label={inbox.status === "active" ? interfaceText("m_c1ebc7817870e5") : inbox.status === "revoked" ? interfaceText("m_42849e0bea5947") : undefined} />
             )}
           </div>
           {["active", "paused"].includes(inbox.status) && (
             <Button variant="outline" size="sm" disabled={control.isPending}
               onClick={() => control.mutate(inbox.status === "active" ? "pause" : "resume")}>
-              {inbox.status === "active" ? "Pause" : "Resume"}
+              {inbox.status === "active" ? interfaceText("m_858e4ba7a29fd3") : interfaceText("m_d640c7421da066")}
             </Button>
           )}
         </div>
         {inbox.status === "paused" && (
-          <p className="text-sm text-muted-foreground">Receiving is paused. Resume to receive new email.</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_4e0d3d97964b1f")}</p>
         )}
         <dl className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
-            <dt className="text-xs text-muted-foreground">Receiving mode</dt>
-            <dd className="text-sm">{inbox.receiveMode === "websocket" ? "Live connection" : "Webhook"}</dd>
+            <dt className="text-xs text-muted-foreground">{interfaceText("m_73551da4af8000")}</dt>
+            <dd className="text-sm">{inbox.receiveMode === "websocket" ? interfaceText("m_2f4eeda9ca9a0c") : "Webhook"}</dd>
           </div>
           <div className="space-y-1">
-            <dt className="text-xs text-muted-foreground">Last mail check</dt>
-            <dd className="font-mono text-xs">{inbox.lastSyncAt ? formatDateTime(inbox.lastSyncAt) : "Not checked yet"}</dd>
+            <dt className="text-xs text-muted-foreground">{interfaceText("m_060e9398bd3490")}</dt>
+            <dd className="font-mono text-xs">{inbox.lastSyncAt ? formatDateTime(inbox.lastSyncAt) : interfaceText("m_881d23f6ba5749")}</dd>
           </div>
         </dl>
         {inbox.lastError && <p role="alert" className="text-sm text-destructive">{inbox.lastError}</p>}
@@ -704,26 +688,24 @@ export function EmailEndpointSettings({
       </section>
 
       <details open={reconnectOpen} onToggle={(event) => setReconnectOpen(event.currentTarget.open)} className="border-t border-border pt-5">
-        <summary className="cursor-pointer text-sm font-medium">Reconnect inbox</summary>
+        <summary className="cursor-pointer text-sm font-medium">{interfaceText("m_fc11261ab7dad8")}</summary>
         <div className="space-y-4 pt-4">
-          <p className="text-sm text-muted-foreground">
-            Replace the API key or change how this inbox receives email. The email address and task history stay the same.
-          </p>
-          <AgentMailApiKeyField label="New API key" value={replacementKey} onChange={setReplacementKey} disabled={reconnect.isPending} />
+          <p className="text-sm text-muted-foreground">{interfaceText("m_c85c41f7547036")}</p>
+          <AgentMailApiKeyField label={interfaceText("m_e520a082286bb1")} value={replacementKey} onChange={setReplacementKey} disabled={reconnect.isPending} />
           <div className="space-y-2">
-            <Label htmlFor="email-reconnect-mode">Receiving mode</Label>
+            <Label htmlFor="email-reconnect-mode">{interfaceText("m_73551da4af8000")}</Label>
             <select id="email-reconnect-mode" className={selectClass}
               disabled={reconnect.isPending} value={receiveMode || inbox.receiveMode}
               onChange={(e) => setReceiveMode(e.target.value as "websocket" | "webhook")}>
-              <option value="websocket">Live connection</option>
+              <option value="websocket">{interfaceText("m_2f4eeda9ca9a0c")}</option>
               <option value="webhook">Webhook</option>
             </select>
           </div>
           {reconnect.error && <p role="alert" className="text-sm text-destructive">{reconnect.error.message}</p>}
-          {reconnect.isSuccess && <p role="status" className="text-sm">Inbox reconnected.</p>}
+          {reconnect.isSuccess && <p role="status" className="text-sm">{interfaceText("m_0ffeb92c4231a4")}</p>}
           <div className="flex justify-end">
             <Button variant="outline" disabled={!replacementKey || reconnect.isPending} onClick={() => reconnect.mutate()}>
-              {reconnect.isPending ? "Reconnecting…" : "Reconnect inbox"}
+              {reconnect.isPending ? interfaceText("m_27b80374e1151a") : interfaceText("m_fc11261ab7dad8")}
             </Button>
           </div>
         </div>
@@ -732,13 +714,11 @@ export function EmailEndpointSettings({
       <section aria-labelledby="email-disconnect-heading" className="space-y-3 border-t border-border pt-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
-            <h2 id="email-disconnect-heading" className="text-sm font-semibold">Disconnect inbox</h2>
-            <p className="text-sm text-muted-foreground">Stop receiving email in Paperclip. The inbox stays in AgentMail.</p>
+            <h2 id="email-disconnect-heading" className="text-sm font-semibold">{interfaceText("m_ad8f627077a042")}</h2>
+            <p className="text-sm text-muted-foreground">{interfaceText("m_486cd617491887")}</p>
           </div>
           <Button variant="outline" size="sm" disabled={control.isPending}
-            onClick={() => control.mutate("remove")}>
-            Disconnect inbox
-          </Button>
+            onClick={() => control.mutate("remove")}>{interfaceText("m_ad8f627077a042")}</Button>
         </div>
         {control.error && control.variables === "remove" && (
           <p role="alert" className="text-sm text-destructive">{control.error.message}</p>

@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { Download, ExternalLink, Maximize2, PanelRightOpen, type LucideIcon } from "lucide-react";
 import type { LabArtifact } from "../../kit";
 import { isTaskDocument, isTextLike, slug } from "./kinds";
@@ -23,15 +24,15 @@ export interface SolidAction {
 }
 
 export function downloadAction(a: LabArtifact): SolidAction {
-  return { id: "download", label: "Download", icon: Download, href: `#download-${a.id}` };
+  return { id: "download", label: interfaceText("m_d6eafe82359100"), icon: Download, href: `#download-${a.id}` };
 }
 
 export function threadAction(a: LabArtifact): SolidAction {
-  if (isTaskDocument(a)) return { id: "document", label: "Open document", icon: PanelRightOpen, href: `#document-${slug(a)}` };
-  if (a.kind === "link") return { id: "preview", label: "Open preview", icon: ExternalLink, href: a.url ?? "#", external: true };
-  if (a.kind === "image" || a.kind === "video") return { id: "gallery", label: "Open gallery", icon: Maximize2 };
+  if (isTaskDocument(a)) return { id: "document", label: interfaceText("m_07e93c9ea2c61d"), icon: PanelRightOpen, href: `#document-${slug(a)}` };
+  if (a.kind === "link") return { id: "preview", label: interfaceText("m_f7afe3dde18c14"), icon: ExternalLink, href: a.url ?? "#", external: true };
+  if (a.kind === "image" || a.kind === "video") return { id: "gallery", label: interfaceText("m_1f0a436c1f49d1"), icon: Maximize2 };
   // Text-like files open in the side panel; Download stays reachable as its own target.
-  if (isTextLike(a)) return { id: "tab", label: "Open in tab", icon: PanelRightOpen, href: `#attachment-${a.id}` };
+  if (isTextLike(a)) return { id: "tab", label: interfaceText("m_0e5d95967de31c"), icon: PanelRightOpen, href: `#attachment-${a.id}` };
   return downloadAction(a);
 }
 

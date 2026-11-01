@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect } from "react";
 import { useParams } from "@/lib/router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -31,6 +32,7 @@ export function GoalPropertiesToggleButton({
   panelVisible,
   onShowProperties,
 }: GoalPropertiesToggleButtonProps) {
+  useInterfaceLanguage();
   return (
     <Button
       variant="ghost"
@@ -40,7 +42,7 @@ export function GoalPropertiesToggleButton({
         panelVisible ? "opacity-0 pointer-events-none w-0 overflow-hidden" : "opacity-100",
       )}
       onClick={onShowProperties}
-      title="Show properties"
+      title={interfaceText("m_ae4293fcd74259")}
     >
       <SlidersHorizontal className="h-4 w-4" />
     </Button>
@@ -48,6 +50,7 @@ export function GoalPropertiesToggleButton({
 }
 
 export function GoalDetail() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { goalId } = useParams<{ goalId: string }>();
   const { selectedCompanyId, setSelectedCompanyId } = useCompany();
   const { openNewGoal } = useDialogActions();
@@ -117,10 +120,10 @@ export function GoalDetail() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Goals", href: "/goals" },
+      { label: interfaceText("m_116cd3982a9bc4"), href: "/goals" },
       { label: goal?.title ?? goalId ?? "Goal" }
     ]);
-  }, [setBreadcrumbs, goal, goalId]);
+  }, [setBreadcrumbs, goal, goalId, interfaceLanguage]);
 
   useEffect(() => {
     if (goal) {
@@ -136,7 +139,7 @@ export function GoalDetail() {
 
   if (isLoading || goalView.kind === "reconnecting") return <PageSkeleton variant="detail" />;
   if (goalView.kind === "error") {
-    return <QueryErrorState size="page" error={error} action="load this goal" onRetry={goalView.retry} retrying={goalView.isFetching} />;
+    return <QueryErrorState size="page" error={error} action={interfaceText("m_3bf2d4b6deef7f")} onRetry={goalView.retry} retrying={goalView.isFetching} />;
   }
   if (!goal) return null;
 
@@ -168,7 +171,7 @@ export function GoalDetail() {
           onSave={(description) => updateGoal.mutate({ description })}
           as="p"
           className="text-sm text-muted-foreground"
-          placeholder="Add a description..."
+          placeholder={interfaceText("m_eed0f05bd94207")}
           multiline
           imageUploadHandler={async (file) => {
             const asset = await uploadImage.mutateAsync(file);
@@ -179,11 +182,9 @@ export function GoalDetail() {
 
       <Tabs defaultValue="children">
         <TabsList>
-          <TabsTrigger value="children">
-            Sub-Goals ({childGoals.length})
+          <TabsTrigger value="children">{interfaceText("m_e8b1ab99d0d4f5")}{childGoals.length})
           </TabsTrigger>
-          <TabsTrigger value="projects">
-            Projects ({linkedProjects.length})
+          <TabsTrigger value="projects">{interfaceText("m_fd2a4674bbbb6b")}{linkedProjects.length})
           </TabsTrigger>
         </TabsList>
 
@@ -194,12 +195,10 @@ export function GoalDetail() {
               variant="outline"
               onClick={() => openNewGoal({ parentId: goalId })}
             >
-              <Plus className="h-3.5 w-3.5 mr-1.5" />
-              Sub Goal
-            </Button>
+              <Plus className="h-3.5 w-3.5 mr-1.5" />{interfaceText("m_7e686a3cdd3876")}</Button>
           </div>
           {childGoals.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No sub-goals.</p>
+            <p className="text-sm text-muted-foreground">{interfaceText("m_87edd3680e316d")}</p>
           ) : (
             <GoalTree goals={childGoals} goalLink={(g) => `/goals/${g.id}`} />
           )}
@@ -207,7 +206,7 @@ export function GoalDetail() {
 
         <TabsContent value="projects" className="mt-4">
           {linkedProjects.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No linked projects.</p>
+            <p className="text-sm text-muted-foreground">{interfaceText("m_ad16a257929d4a")}</p>
           ) : (
             <div className="border border-border">
               {linkedProjects.map((project) => (

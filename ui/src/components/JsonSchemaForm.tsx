@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronDown,
@@ -515,6 +516,7 @@ const EnumField = React.memo(({
   error?: string;
   options: unknown[];
 }) => {
+  useInterfaceLanguage();
   // Optional enums get a leading blank row so the user can express "not
   // configured"; it is also the selected row when no value is set.
   const showUnsetOption = !isRequired;
@@ -553,12 +555,12 @@ const EnumField = React.memo(({
         disabled={disabled}
       >
         <SelectTrigger className="w-full" aria-label={label} aria-required={isRequired}>
-          <SelectValue placeholder="Select an option" />
+          <SelectValue placeholder={interfaceText("m_fb1cbc38fb4060")} />
         </SelectTrigger>
         <SelectContent>
           {showUnsetOption && (
             <SelectItem value={ENUM_UNSET_VALUE} textValue="None">
-              <span className="text-muted-foreground">None</span>
+              <span className="text-muted-foreground">{interfaceText("m_dc937b59892604")}</span>
             </SelectItem>
           )}
           {options.map((option) => (
@@ -601,6 +603,7 @@ const SecretField = React.memo(({
   defaultValue?: unknown;
   maxLength?: number;
 }) => {
+  useInterfaceLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const isTextArea = maxLength != null && maxLength > TEXTAREA_THRESHOLD;
 
@@ -691,7 +694,7 @@ const SecretField = React.memo(({
           <Eye className="h-4 w-4 text-muted-foreground" />
         )}
         <span className="sr-only">
-          {isVisible ? "Hide secret" : "Show secret"}
+          {isVisible ? interfaceText("m_3e674e084ecdd5") : interfaceText("m_c18cc13351a124")}
         </span>
       </Button>
     </div>
@@ -722,7 +725,7 @@ const SecretField = React.memo(({
           <Eye className="h-4 w-4 text-muted-foreground" />
         )}
         <span className="sr-only">
-          {isVisible ? "Hide secret" : "Show secret"}
+          {isVisible ? interfaceText("m_3e674e084ecdd5") : interfaceText("m_c18cc13351a124")}
         </span>
       </Button>
     </div>
@@ -733,7 +736,7 @@ const SecretField = React.memo(({
       label={label}
       description={
         description ||
-        "Pick an existing organization secret, or paste a raw value (Paperclip will store it as a secret on save)."
+        interfaceText("m_2f7b8c63a325d4")
       }
       required={isRequired}
       error={error}
@@ -744,7 +747,7 @@ const SecretField = React.memo(({
           value={bindingValue}
           onChange={handlePickerChange}
           label=""
-          placeholder="Select an existing secret"
+          placeholder={interfaceText("m_485e486633d524")}
           allowVersionSelector={false}
           emptyHint="No active secrets yet. Create one or paste a raw value below."
           disabled={disabled}
@@ -762,9 +765,7 @@ const SecretField = React.memo(({
                     setIsVisible(false);
                   }}
                   disabled={disabled}
-                >
-                  Hide raw value input
-                </button>
+                >{interfaceText("m_7886a2cd020cf6")}</button>
               ) : null}
             </div>
           ) : (
@@ -773,9 +774,7 @@ const SecretField = React.memo(({
               className="text-(length:--text-micro) text-muted-foreground hover:text-foreground"
               onClick={() => setShowRawInput(true)}
               disabled={disabled}
-            >
-              Or paste a raw value
-            </button>
+            >{interfaceText("m_e04884c8a6f708")}</button>
           )
         ) : null}
       </div>
@@ -945,6 +944,7 @@ const ArrayField = React.memo(({
   errors: Record<string, string>;
   path: string;
 }) => {
+  useInterfaceLanguage();
   const items = Array.isArray(value) ? value : [];
   const itemSchema = propSchema.items as JsonSchemaNode;
   const isComplex = resolveType(itemSchema) === "object";
@@ -975,7 +975,7 @@ const ArrayField = React.memo(({
           }}
         >
           <Plus className="mr-2 h-4 w-4" />
-          {isComplex ? "Add item" : "Add"}
+          {isComplex ? interfaceText("m_d1a0b329a72b8f") : interfaceText("m_9fd728c66c9a25")}
         </Button>
       </div>
 
@@ -986,8 +986,7 @@ const ArrayField = React.memo(({
             className="group relative flex items-start space-x-2 rounded-lg border p-3"
           >
             <div className="flex-1">
-              <div className="mb-2 text-xs font-medium text-muted-foreground">
-                Item {index + 1}
+              <div className="mb-2 text-xs font-medium text-muted-foreground">{interfaceText("m_24573557a9d47f")}{index + 1}
               </div>
               <FormField
                 propSchema={itemSchema}
@@ -1020,14 +1019,12 @@ const ArrayField = React.memo(({
               }}
             >
               <Trash2 className="h-4 w-4" />
-              <span className="sr-only">Remove item</span>
+              <span className="sr-only">{interfaceText("m_5a89edf2867d98")}</span>
             </Button>
           </div>
         ))}
         {items.length === 0 && (
-          <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
-            No items added yet.
-          </div>
+          <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">{interfaceText("m_48dcdce6280584")}</div>
         )}
       </div>
       {error && (
@@ -1043,6 +1040,7 @@ ArrayField.displayName = "ArrayField";
 function JsonObjectField({ value, onChange, disabled, label, error }: {
   value: unknown; onChange: (value: unknown) => void; disabled: boolean; label: string; error?: string;
 }) {
+  useInterfaceLanguage();
   const format = (next: unknown) => typeof next === "string" ? next : JSON.stringify(next ?? {}, null, 2);
   const [text, setText] = useState(() => format(value));
   const emitted = useRef(value);
@@ -1061,8 +1059,8 @@ function JsonObjectField({ value, onChange, disabled, label, error }: {
     onChange(next);
   };
   return <div className="space-y-2">
-    <Textarea aria-label={`${label} JSON`} aria-invalid={!!error} value={text} onChange={(event) => change(event.target.value)} disabled={disabled} rows={5} className="font-mono text-sm" />
-    <p className="text-xs text-muted-foreground">Enter a JSON object using the action's argument names.</p>
+    <Textarea aria-label={interfaceText("m_54ec021532baac", { value0: (label) })} aria-invalid={!!error} value={text} onChange={(event) => change(event.target.value)} disabled={disabled} rows={5} className="font-mono text-sm" />
+    <p className="text-xs text-muted-foreground">{interfaceText("m_ab7f07a94f9b45")}</p>
     {error && <p role="alert" className="text-xs text-destructive">{error}</p>}
   </div>;
 }
@@ -1285,6 +1283,7 @@ export function JsonSchemaForm({
   className,
   advancedLabel = "Advanced options",
 }: JsonSchemaFormProps) {
+  useInterfaceLanguage();
   const type = resolveType(schema);
 
   const handleRootScalarChange = useCallback((newVal: unknown) => {
@@ -1388,9 +1387,7 @@ export function JsonSchemaForm({
           "py-4 text-center text-sm text-muted-foreground",
           className,
         )}
-      >
-        No configuration options available.
-      </div>
+      >{interfaceText("m_7027931a1cee29")}</div>
     );
   }
 

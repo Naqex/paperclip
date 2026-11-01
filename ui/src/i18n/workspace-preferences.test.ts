@@ -6,6 +6,8 @@ import { i18nextResources } from "./locales";
 import { validateLocaleMessages } from "./locale-validation";
 import en from "./workspace/en.json";
 import vietnamese from "./workspace/vi.json";
+import interfaceEn from "./workspace/interface-en.json";
+import interfaceVi from "./workspace/interface-vi.json";
 
 const origin = "http://127.0.0.1:5218";
 const payload = { type: "naqex:preferences", version: 1, language: "vi" };
@@ -32,12 +34,17 @@ function setup() {
 describe("workspace localization", () => {
   it("validates catalogs and falls back to English for other native locales", async () => {
     expect(validateLocaleMessages(vietnamese, en)).toEqual([]);
+    expect(validateLocaleMessages(interfaceVi, interfaceEn)).toEqual([]);
     const i18n = createInstance();
     await i18n.init({ resources: i18nextResources, lng: "vi", fallbackLng: "en", defaultNS: "workspace", interpolation: { escapeValue: false } });
     expect(i18n.t("tasks.create")).toBe("Tạo công việc");
     await i18n.changeLanguage("fr");
     expect(i18n.t("tasks.create")).toBe("Create Task");
     expect(i18n.t("tasks.createNamed", { name: "Owner's project" })).toBe("Create Owner's project");
+    expect(i18n.t("m_043a718774c572", { ns: "interface" })).toBe("s");
+    await i18n.changeLanguage("vi");
+    // Upstream appends English plural fragments after many count labels.
+    expect(i18n.t("m_043a718774c572", { ns: "interface" })).toBe("");
   });
 
   it("announces readiness to the configured parent and accepts both languages", () => {

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { CSSProperties, ReactNode } from "react";
 import type { To } from "react-router-dom";
 import { Link } from "@/lib/router";
@@ -125,6 +126,7 @@ export interface ArtifactRowProps {
  * it, so nothing interactive nests.
  */
 export function ArtifactRow({ subject, to, href, external = false, onClick, expanded, trailing, className, style, now, testId = "artifact-v1-row" }: ArtifactRowProps) {
+  useInterfaceLanguage();
   const name = subject.filename ?? subject.title;
   const [stem, ext] = splitName(name);
   const facts = [subject.sizeLabel, subject.updatedAt ? panelDateLabel(subject.updatedAt, now) : null].filter((fact): fact is string => Boolean(fact));
@@ -147,7 +149,7 @@ export function ArtifactRow({ subject, to, href, external = false, onClick, expa
       </span>
     </>
   );
-  const label = `Open ${name}`;
+  const label = interfaceText("m_b50808ac499900", { value0: (name) });
   const control = to ? (
     <Link to={to} aria-label={label} data-testid={`${testId}-open`} className={CONTROL_CLASS}>
       {content}

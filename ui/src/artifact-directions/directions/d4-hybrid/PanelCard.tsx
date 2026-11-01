@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../kit";
@@ -55,6 +56,7 @@ function Byline({ artifact }: { artifact: LabArtifact }) {
 }
 
 export function PanelCard({ artifact }: { artifact: LabArtifact }) {
+  useInterfaceLanguage();
   const [failed, setFailed] = useState(false);
   const lead = panelLeadKind(artifact, failed);
   const primary = panelAction(artifact);
@@ -113,7 +115,7 @@ export function PanelCard({ artifact }: { artifact: LabArtifact }) {
             />
           ))}
           {/* The button says "Open" (screen 10); its accessible name keeps the product's words — "Read document: …". */}
-          <ButtonAction action={{ ...primary, label: "Open" }} stretch="after:rounded-lg" className={secondary.length > 0 ? "ml-1" : undefined} />
+          <ButtonAction action={{ ...primary, label: interfaceText("m_ed077f3d8125d6") }} stretch="after:rounded-lg" className={secondary.length > 0 ? "ml-1" : undefined} />
         </div>
       </footer>
     </li>

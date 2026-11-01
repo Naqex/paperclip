@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Link } from "@/lib/router";
 import { Menu, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
@@ -54,6 +55,7 @@ function GlobalToolbar({
 }
 
 export function BreadcrumbBar({ taskDetailLayout = false }: { taskDetailLayout?: boolean }) {
+  useInterfaceLanguage();
   const coordinatorEnabled = useCoordinatorPresentation();
   const {
     breadcrumbs,
@@ -104,14 +106,14 @@ export function BreadcrumbBar({ taskDetailLayout = false }: { taskDetailLayout?:
       size="icon-sm"
       className="mr-2 shrink-0"
       onClick={toggleSidebar}
-      aria-label="Open sidebar"
+      aria-label={interfaceText("m_45609089ee73fb")}
     >
       <Menu className="h-5 w-5" />
     </Button>
   );
 
   const currentCrumb = breadcrumbs[breadcrumbs.length - 1];
-  if (isMobile && breadcrumbs[0]?.label === "Tasks" && currentCrumb.identifier) {
+  if (isMobile && /(?:^|\/)issues(?:[/?#]|$)/.test(breadcrumbs[0]?.href ?? "") && currentCrumb.identifier) {
     return (
       <div className="h-(--sz-60px) shrink-0 flex items-center border-b border-border px-4">
         {menuButton}
@@ -236,8 +238,8 @@ export function BreadcrumbBar({ taskDetailLayout = false }: { taskDetailLayout?:
           size="icon-sm"
           className="ml-5 size-9 shrink-0 text-muted-foreground"
           onClick={toggleTaskPanel}
-          aria-label={taskPanelOpen ? "Hide properties" : "Show properties"}
-          title={taskPanelOpen ? "Hide properties" : "Show properties"}
+          aria-label={taskPanelOpen ? interfaceText("m_dd66dbf97ac54e") : interfaceText("m_ae4293fcd74259")}
+          title={taskPanelOpen ? interfaceText("m_dd66dbf97ac54e") : interfaceText("m_ae4293fcd74259")}
         >
           {taskPanelOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
         </Button>

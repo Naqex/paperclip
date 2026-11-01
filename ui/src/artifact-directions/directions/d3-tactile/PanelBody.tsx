@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -44,15 +45,17 @@ function FilterButton({ pressed, onPress, count, children }: { pressed: boolean;
 const BLANK: LabArtifact = { id: "empty", kind: "file", title: "", author: "", updatedAt: "", updatedLabel: "", dayLabel: "", taskIdentifier: "", taskTitle: "" };
 
 function Empty() {
+  useInterfaceLanguage();
   return (
     <div className="flex items-center gap-4 px-1 py-6">
       <ArtifactObject artifact={BLANK} size="sm" flag="none" repose={2} />
-      <p className="text-sm text-(--tac-meta)">No artifacts yet. Work products, documents, and agent-produced files will appear here.</p>
+      <p className="text-sm text-(--tac-meta)">{interfaceText("m_b032412c097b00")}</p>
     </div>
   );
 }
 
 export function PanelBody({ artifacts }: { artifacts: LabArtifact[] }) {
+  useInterfaceLanguage();
   const [filter, setFilter] = useState<Filter>("all");
   const sections = useMemo(() => sectionsOf(artifacts), [artifacts]);
   const toReview = sections.reduce((sum, section) => sum + section.reviewCount, 0);
@@ -62,18 +65,14 @@ export function PanelBody({ artifacts }: { artifacts: LabArtifact[] }) {
   return (
     <div data-tac-desk className="-m-4 flex flex-col gap-7 bg-(--tac-desk) bg-(image:--tac-ground-grain) p-4 pb-6 shadow-(--tac-desk-rim)">
       {toReview > 0 ? (
-        <div role="group" aria-label="Show" className="-mb-2 flex items-center gap-1">
-          <FilterButton pressed={filter === "all"} onPress={() => setFilter("all")} count={artifacts.length}>
-            All
-          </FilterButton>
+        <div role="group" aria-label={interfaceText("m_0df6f1cad36c49")} className="-mb-2 flex items-center gap-1">
+          <FilterButton pressed={filter === "all"} onPress={() => setFilter("all")} count={artifacts.length}>{interfaceText("m_a52ace420f2175")}</FilterButton>
           <FilterButton pressed={filter === "review"} onPress={() => setFilter("review")} count={toReview}>
-            <span aria-hidden className="block h-2.5 w-3.5 bg-(--tac-flag)" style={FLAG} />
-            To review
-          </FilterButton>
+            <span aria-hidden className="block h-2.5 w-3.5 bg-(--tac-flag)" style={FLAG} />{interfaceText("m_573fb56ba78bc4")}</FilterButton>
         </div>
       ) : null}
       {shown.map((section) => (
-        <section key={section.id} aria-label={section.run ? `${section.label}, run started ${section.run.startedLabel}` : section.label} className="@container/desk flex flex-col">
+        <section key={section.id} aria-label={section.run ? interfaceText("m_613c09d34f88da", { value0: (section.label), value1: (section.run.startedLabel) }) : section.label} className="@container/desk flex flex-col">
           <PanelDivider section={section} />
           <ul className="flex flex-col">
             {section.items.map((artifact) => (

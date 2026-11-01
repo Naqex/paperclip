@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { IssueWorkProduct } from "@paperclipai/shared";
 import { Badge } from "@/components/ui/badge";
 import { pullRequestHref, pullRequestIdentity, pullRequestLabel, pullRequestNeedsReview, pullRequestState } from "@/lib/issue-pull-requests";
@@ -10,6 +11,7 @@ export function IssuePullRequestLinks({ products, externalObjects = [] }: {
   products: IssueWorkProduct[];
   externalObjects?: ExternalObjectPillData[];
 }) {
+  useInterfaceLanguage();
   return (
     <ul className="flex min-w-0 flex-col gap-2">
       {products.map((product) => {
@@ -28,7 +30,7 @@ export function IssuePullRequestLinks({ products, externalObjects = [] }: {
                 className="break-words text-sm text-primary underline-offset-2 hover:underline">
                 {label}
               </a>
-            ) : <span className="break-words text-sm">{label} · No PR link provided</span>}
+            ) : <span className="break-words text-sm">{label}{interfaceText("m_af39a87a1baa4d")}</span>}
             {provider ? (
               <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"
                 data-external-status={provider.statusCategory} data-external-liveness={provider.liveness}>
@@ -38,10 +40,10 @@ export function IssuePullRequestLinks({ products, externalObjects = [] }: {
               </span>
             ) : null}
             {pullRequestNeedsReview(product) && !providerTerminal ? (
-              <Badge variant="outline">Review requested</Badge>
+              <Badge variant="outline">{interfaceText("m_744f702808166d")}</Badge>
             ) : ["merged", "closed", "archived", "draft", "changes_requested"].includes(state)
               && providerStatus?.toLowerCase() !== state ? (
-              <span className="text-xs text-muted-foreground">{provider ? "Saved: " : ""}{state.replaceAll("_", " ")}</span>
+              <span className="text-xs text-muted-foreground">{provider ? interfaceText("m_4d9f3906b5b271") : ""}{state.replaceAll("_", " ")}</span>
             ) : null}
           </li>
         );

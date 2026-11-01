@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { aiConnectionsApi } from "@/api/ai-connections";
 import type { AiProvider } from "@paperclipai/shared";
 import { useQuery } from "@tanstack/react-query";
@@ -87,13 +88,14 @@ export function SavedProviderKeySelect({
   disabled?: boolean;
   kind?: "api" | "subscription";
 }) {
+  useInterfaceLanguage();
   return (
     <div className="space-y-2">
       {options.length > 0 && (
         <label className="block space-y-2 text-sm">
-          <span>{kind === "api" ? "API key" : "Subscription"}</span>
+          <span>{kind === "api" ? interfaceText("m_16f0ee47f993d6") : interfaceText("m_4999c6c6c7badf")}</span>
           <select
-            aria-label={kind === "api" ? "Saved API key" : "Saved subscription"}
+            aria-label={kind === "api" ? interfaceText("m_90acb76dcf19b3") : interfaceText("m_d4e6deb711205e")}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={value}
             onChange={(event) => onChange(event.target.value)}
@@ -106,27 +108,20 @@ export function SavedProviderKeySelect({
             ))}
             <option value="">
               {kind === "api"
-                ? "Enter a new API key"
-                : "Sign in to another account"}
+                ? interfaceText("m_9b6cc5e19d07df")
+                : interfaceText("m_49077ef2d8425d")}
             </option>
           </select>
         </label>
       )}
       {loading && (
-        <p role="status" className="text-sm text-muted-foreground">
-          Checking saved API keys…
-        </p>
+        <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_b34650f622971b")}</p>
       )}
       {error && (
-        <p role="alert" className="text-sm text-destructive">
-          Some saved keys could not be loaded. You can still enter a new key.
-        </p>
+        <p role="alert" className="text-sm text-destructive">{interfaceText("m_1af606f55aabec")}</p>
       )}
       {value && (
-        <p className="text-sm text-muted-foreground">
-          Reuse this saved {kind === "api" ? "key" : "subscription"} for this
-          agent.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_ad3d93a08a8628")}{kind === "api" ? interfaceText("m_2c70e12b7a0646") : interfaceText("m_a8fa7fd6089341")}{interfaceText("m_eb0425a0c9d05b")}</p>
       )}
     </div>
   );

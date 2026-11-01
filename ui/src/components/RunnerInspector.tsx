@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import {
   useCallback,
   useEffect,
@@ -88,9 +89,9 @@ const VIEW_OPTIONS: Array<{
   label: string;
   icon: typeof Layers3;
 }> = [
-  { value: "overview", label: "Overview", icon: Layers3 },
+  { value: "overview", get label() { return interfaceText("m_d4b1ea5708dd53"); }, icon: Layers3 },
   { value: "pipeline", label: "Pipeline", icon: ArrowRight },
-  { value: "trace", label: "Exact trace", icon: FileJson2 },
+  { value: "trace", get label() { return interfaceText("m_64c8a985fe20ca"); }, icon: FileJson2 },
 ];
 
 const RAW_TRACE_ACCESS_REVALIDATION_MS = 1_000;
@@ -151,15 +152,15 @@ function statusVariant(status: string | undefined) {
 }
 
 function traceBadgeLabel(status: string, expiresAt: string | Date) {
-  if (status === "capturing") return "Raw trace enabled";
-  if (status === "incomplete") return "Incomplete";
-  if (status === "truncated") return "Truncated";
-  if (status === "deleted") return "Deleted";
-  if (status === "expired") return "Expired";
+  if (status === "capturing") return interfaceText("m_258f625dce9365");
+  if (status === "incomplete") return interfaceText("m_75f33cdfc8e520");
+  if (status === "truncated") return interfaceText("m_d9d9fcf3bd8af3");
+  if (status === "deleted") return interfaceText("m_b48ff39c2e0f54");
+  if (status === "expired") return interfaceText("m_424a2551d35675");
   const remainingMs = new Date(expiresAt).getTime() - Date.now();
-  if (!Number.isFinite(remainingMs) || remainingMs <= 0) return "Expired";
+  if (!Number.isFinite(remainingMs) || remainingMs <= 0) return interfaceText("m_424a2551d35675");
   const hours = Math.max(1, Math.ceil(remainingMs / (60 * 60 * 1_000)));
-  return `Expires in ${hours}h`;
+  return interfaceText("m_a9baee71d90364", { value0: (hours) });
 }
 
 function frameParsed(entry: TraceEntry) {
@@ -315,7 +316,7 @@ function buildOperations(
     groupEvents.forEach((event) => claimedEvents.add(event.id));
     const methods = unique(groupFrames.map(frameMethod));
     const itemTypes = unique(groupFrames.map(frameItemType));
-    const title = itemTypes.at(-1) || methods.at(-1) || text(groupFrames[0]?.direction) || "Provider frame";
+    const title = itemTypes.at(-1) || methods.at(-1) || text(groupFrames[0]?.direction) || interfaceText("m_abe6ad0db3cab7");
     const firstFrame = groupFrames[0];
     const lastFrame = groupFrames.at(-1);
     const range = firstFrame === lastFrame
@@ -402,6 +403,7 @@ function JsonNode({
   depth: number;
   query: string;
 }) {
+  useInterfaceLanguage();
   const expandable = value !== null && typeof value === "object";
   const entries = Array.isArray(value)
     ? value.map((child, index) => [String(index), child] as const)
@@ -429,7 +431,7 @@ function JsonNode({
             type="button"
             className="mt-1 rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
             onClick={() => setExpanded(!isOpen)}
-            aria-label={isOpen ? "Collapse JSON value" : "Expand JSON value"}
+            aria-label={isOpen ? interfaceText("m_e5d6149eea9403") : interfaceText("m_dee3e421d4d443")}
           >
             {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
           </button>
@@ -447,7 +449,7 @@ function JsonNode({
         <span className="ml-auto hidden items-center gap-0.5 group-hover:flex">
           <button
             type="button"
-            title={pathCopy.copied ? "JSON path copied" : pathCopy.failed ? "Copy failed" : "Copy JSON path"}
+            title={pathCopy.copied ? interfaceText("m_67178a67a60c81") : pathCopy.failed ? interfaceText("m_5b50e7a693fee9") : interfaceText("m_5fe87335fe46a1")}
             className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
             onClick={() => void pathCopy.copy(path)}
           >
@@ -455,7 +457,7 @@ function JsonNode({
           </button>
           <button
             type="button"
-            title={valueCopy.copied ? "Value copied" : valueCopy.failed ? "Copy failed" : "Copy value"}
+            title={valueCopy.copied ? interfaceText("m_7a764ef31463ca") : valueCopy.failed ? interfaceText("m_5b50e7a693fee9") : interfaceText("m_c019c0f81132cb")}
             className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
             onClick={copyValue}
           >
@@ -476,7 +478,7 @@ function JsonNode({
             />
           ))}
           {query && visibleEntries.length === 0 ? (
-            <p className="pl-5 text-xs text-muted-foreground">No fields match.</p>
+            <p className="pl-5 text-xs text-muted-foreground">{interfaceText("m_663bc184d89c1d")}</p>
           ) : null}
         </div>
       ) : null}
@@ -484,7 +486,8 @@ function JsonNode({
   );
 }
 
-function JsonExplorer({ value, label = "Search this JSON" }: { value: unknown; label?: string }) {
+function JsonExplorer({ value, label = interfaceText("m_6c09b114f0642e") }: { value: unknown; label?: string }) {
+  useInterfaceLanguage();
   const [query, setQuery] = useState("");
   return (
     <div className="overflow-hidden rounded-md border border-border bg-muted/20">
@@ -537,6 +540,7 @@ function mappingTone(action: ProviderTraceFieldMapping["action"]) {
 }
 
 function InterpretationStage({ entry, last }: { entry: TraceEntry; last: boolean }) {
+  useInterfaceLanguage();
   const mappings = fieldMappings(entry);
   return (
     <div className="relative grid grid-cols-(--gtc-runner-inspector-stage) gap-3">
@@ -559,10 +563,10 @@ function InterpretationStage({ entry, last }: { entry: TraceEntry; last: boolean
             <table className="w-full min-w-(--sz-36rem) text-left text-xs">
               <thead className="bg-muted/30 text-muted-foreground">
                 <tr>
-                  <th className="px-3 py-1.5 font-medium">Action</th>
-                  <th className="px-3 py-1.5 font-medium">Provider path</th>
-                  <th className="px-3 py-1.5 font-medium">Output path</th>
-                  <th className="px-3 py-1.5 font-medium">Reason</th>
+                  <th className="px-3 py-1.5 font-medium">{interfaceText("m_64cff1319d2fd2")}</th>
+                  <th className="px-3 py-1.5 font-medium">{interfaceText("m_614206ab7796fb")}</th>
+                  <th className="px-3 py-1.5 font-medium">{interfaceText("m_b5ec4c3db6c151")}</th>
+                  <th className="px-3 py-1.5 font-medium">{interfaceText("m_f81ab834de5f84")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -580,7 +584,7 @@ function InterpretationStage({ entry, last }: { entry: TraceEntry; last: boolean
             </table>
           </div>
         ) : (
-          <p className="border-t border-border/70 px-3 py-2 text-(length:--text-nano) text-muted-foreground">No field-level mapping was recorded at this stage.</p>
+          <p className="border-t border-border/70 px-3 py-2 text-(length:--text-nano) text-muted-foreground">{interfaceText("m_6121eca53cdb9f")}</p>
         )}
       </div>
     </div>
@@ -602,6 +606,7 @@ function typedPrpFields(event: HeartbeatRunEvent) {
 }
 
 function ProductionSurfacePreview({ event, runId }: { event: HeartbeatRunEvent; runId: string }) {
+  useInterfaceLanguage();
   const prp = eventPrp(event);
   const ts = new Date(event.createdAt).toISOString();
   const entries = parsePaperclipRunnerStdoutLine(
@@ -622,8 +627,7 @@ function ProductionSurfacePreview({ event, runId }: { event: HeartbeatRunEvent; 
         <VisibleIcon className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div className="min-w-0">
           <p className="text-sm font-medium">{event.eventType}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Production surface: {decision.surface} · {decision.action} in {decision.container}
+          <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_cfdbb20f6dff99")}{decision.surface} · {decision.action}{interfaceText("m_2eb9d0d30d4cea")}{decision.container}
           </p>
         </div>
       </div>
@@ -654,6 +658,7 @@ export function RunnerInspector({
   onOpenChange: (open: boolean) => void;
   onRerunWithTrace?: () => void;
 }) {
+  useInterfaceLanguage();
   const [inspection, setInspection] = useState<ProviderTraceInspection | null>(null);
   const [events, setEvents] = useState<HeartbeatRunEvent[]>([]);
   const [loading, setLoading] = useState(false);
@@ -1025,7 +1030,7 @@ export function RunnerInspector({
       >
         <SheetHeader className="border-b border-border pr-12">
           <div className="flex flex-wrap items-center gap-2">
-            <SheetTitle>Runner Inspector</SheetTitle>
+            <SheetTitle>{interfaceText("m_02dc44081dcf42")}</SheetTitle>
             {inspection?.trace ? (
               <>
                 <Badge variant={statusVariant(inspection.trace.status)}>
@@ -1037,10 +1042,8 @@ export function RunnerInspector({
               </>
             ) : null}
           </div>
-          <SheetDescription id="runner-inspector-description">
-            Correlate exact provider traffic with every interpretation stage, canonical PRP event, and production surface.
-          </SheetDescription>
-          <div className="flex gap-1 pt-1" role="tablist" aria-label="Runner inspector views">
+          <SheetDescription id="runner-inspector-description">{interfaceText("m_58234f9c215db8")}</SheetDescription>
+          <div className="flex gap-1 pt-1" role="tablist" aria-label={interfaceText("m_fb8d8dd6496b9a")}>
             {VIEW_OPTIONS.map((option) => {
               const Icon = option.icon;
               return (
@@ -1066,18 +1069,18 @@ export function RunnerInspector({
           {error ? <div className="m-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">{error}</div> : null}
           {!loading && !error && canInspectRaw === false ? (
             <div className="m-4 rounded-md border border-border bg-muted/20 p-4">
-              <p className="font-medium">Raw provider traces require an instance administrator.</p>
-              <p className="mt-1 text-sm text-muted-foreground">Canonical PRP events and presentation decisions remain inspectable below.</p>
+              <p className="font-medium">{interfaceText("m_f26cd36ac504c7")}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_d42532917ff457")}</p>
             </div>
           ) : null}
           {!loading && !error && canInspectRaw === true && !inspection?.trace ? (
             <div className="m-4 flex items-start justify-between gap-4 rounded-md border border-border bg-muted/20 p-4">
               <div>
-                <p className="font-medium">Raw provider capture was off for this run.</p>
-                <p className="mt-1 text-sm text-muted-foreground">Canonical PRP events and persisted presentation decisions remain available below.</p>
+                <p className="font-medium">{interfaceText("m_0c24d8868eb1f2")}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_143b2bcd38a857")}</p>
               </div>
               {onRerunWithTrace && canInspectRaw === true ? (
-                <Button size="sm" onClick={onRerunWithTrace}><RefreshCw className="mr-1.5 h-4 w-4" />Re-run with provider trace</Button>
+                <Button size="sm" onClick={onRerunWithTrace}><RefreshCw className="mr-1.5 h-4 w-4" />{interfaceText("m_296d058ec7a02e")}</Button>
               ) : null}
             </div>
           ) : null}
@@ -1085,18 +1088,18 @@ export function RunnerInspector({
           {view === "overview" ? (
             <ScrollArea className="min-h-0 flex-1">
               <div className="space-y-6 p-5">
-                {loading ? <p className="text-sm text-muted-foreground">Loading run pipeline…</p> : null}
+                {loading ? <p className="text-sm text-muted-foreground">{interfaceText("m_b2b94be97ab475")}</p> : null}
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                  <StatCard label="Provider" value={capturedProviders.join(", ") || inspection?.trace?.provider || "PRP only"} detail={inspection?.trace ? `captured through ${inspection.trace.provider}` : "capture was off"} />
-                  <StatCard label="Raw frames" value={frames.length} detail={inspection?.trace ? formatBytes(inspection.trace.byteCount) : "no exact bytes"} />
-                  <StatCard label="Operations" value={operations.length} detail="correlated groups" />
-                  <StatCard label="PRP events" value={events.length} detail={`${visibleEventCount} visible`} />
-                  <StatCard label="Mappings" value={interpretations.length} detail={`${ignoredCount} ignored`} />
-                  <StatCard label="Run status" value={run?.status ?? "unknown"} detail={inspection?.trace ? traceBadgeLabel(inspection.trace.status, inspection.trace.expiresAt) : "Raw capture off"} />
+                  <StatCard label={interfaceText("m_472590ae974d4c")} value={capturedProviders.join(", ") || inspection?.trace?.provider || "PRP only"} detail={inspection?.trace ? `captured through ${inspection.trace.provider}` : "capture was off"} />
+                  <StatCard label={interfaceText("m_f1494b2231f64e")} value={frames.length} detail={inspection?.trace ? formatBytes(inspection.trace.byteCount) : "no exact bytes"} />
+                  <StatCard label={interfaceText("m_358cc201f87d9d")} value={operations.length} detail="correlated groups" />
+                  <StatCard label={interfaceText("m_8fe17fe8ca9a11")} value={events.length} detail={`${visibleEventCount} visible`} />
+                  <StatCard label={interfaceText("m_f64ec16b0d88b0")} value={interpretations.length} detail={`${ignoredCount} ignored`} />
+                  <StatCard label={interfaceText("m_3b75c8793470c1")} value={run?.status ?? "unknown"} detail={inspection?.trace ? traceBadgeLabel(inspection.trace.status, inspection.trace.expiresAt) : "Raw capture off"} />
                 </div>
                 <div className="grid gap-4 lg:grid-cols-2">
                   <section className="rounded-lg border border-border bg-card p-4">
-                    <h3 className="text-sm font-semibold">Interpretation outcomes</h3>
+                    <h3 className="text-sm font-semibold">{interfaceText("m_4c4e9640ff430a")}</h3>
                     <div className="mt-3 space-y-2">
                       {Object.entries(dispositionCounts).length ? Object.entries(dispositionCounts).map(([label, count]) => (
                         <div key={label} className="flex items-center gap-3 text-sm">
@@ -1104,11 +1107,11 @@ export function RunnerInspector({
                           <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${Math.max(4, (count / Math.max(1, interpretations.length)) * 100)}%` }} /></div>
                           <span className="w-8 text-right font-mono text-xs">{count}</span>
                         </div>
-                      )) : <p className="text-sm text-muted-foreground">No interpretation records were persisted.</p>}
+                      )) : <p className="text-sm text-muted-foreground">{interfaceText("m_8c605a40350841")}</p>}
                     </div>
                   </section>
                   <section className="rounded-lg border border-border bg-card p-4">
-                    <h3 className="text-sm font-semibold">Recent correlated operations</h3>
+                    <h3 className="text-sm font-semibold">{interfaceText("m_09634c8b0f8d49")}</h3>
                     <div className="mt-2 divide-y divide-border/70">
                       {operations.slice(-6).reverse().map((operation) => (
                         <button key={operation.key} type="button" onClick={() => selectOperation(operation)} className="flex w-full items-center gap-3 py-2 text-left hover:text-primary">
@@ -1121,7 +1124,7 @@ export function RunnerInspector({
                   </section>
                 </div>
                 <section className="rounded-lg border border-border bg-accent/30 p-4">
-                  <div className="flex gap-3"><ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent-foreground" /><div><h3 className="text-sm font-semibold">Sensitive debug data</h3><p className="mt-1 text-sm text-muted-foreground">Parsed frames are redacted on the server. Exact reveals and downloads are administrator-only, warned, audited, and automatically expire.</p></div></div>
+                  <div className="flex gap-3"><ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent-foreground" /><div><h3 className="text-sm font-semibold">{interfaceText("m_1244acdca2c624")}</h3><p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_c56d5c392c780f")}</p></div></div>
                 </section>
               </div>
             </ScrollArea>
@@ -1130,21 +1133,21 @@ export function RunnerInspector({
           {view === "pipeline" ? (
             <>
               <div className="grid gap-2 border-b border-border p-3 sm:grid-cols-2 xl:grid-cols-(--gtc-runner-inspector-filters)">
-                <div className="relative"><Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" /><Input className="pl-8" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search operations, fields, and events" /></div>
-                <Select value={direction} onValueChange={setDirection}><SelectTrigger><SelectValue placeholder="Direction" /></SelectTrigger><SelectContent><SelectItem value="all">All directions</SelectItem><SelectItem value="client_to_provider">Client → provider</SelectItem><SelectItem value="provider_to_client">Provider → client</SelectItem><SelectItem value="provider_stderr">Provider stderr</SelectItem></SelectContent></Select>
-                <Select value={nativeMethod} onValueChange={setNativeMethod}><SelectTrigger><SelectValue placeholder="Native method" /></SelectTrigger><SelectContent><SelectItem value="all">All native methods</SelectItem>{unique(frames.map(frameMethod)).sort().map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
-                <Select value={disposition} onValueChange={setDisposition}><SelectTrigger><SelectValue placeholder="Mapping" /></SelectTrigger><SelectContent><SelectItem value="all">All mappings</SelectItem>{["mapped", "generic", "ignored", "rejected", "operator_only"].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
-                <Select value={prpType} onValueChange={setPrpType}><SelectTrigger><SelectValue placeholder="PRP type" /></SelectTrigger><SelectContent><SelectItem value="all">All PRP types</SelectItem>{unique(events.map((event) => event.eventType)).sort().map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
-                <Select value={visibility} onValueChange={setVisibility}><SelectTrigger><SelectValue placeholder="Visibility" /></SelectTrigger><SelectContent><SelectItem value="all">Visible + hidden</SelectItem><SelectItem value="visible">Visible</SelectItem><SelectItem value="hidden">Hidden</SelectItem></SelectContent></Select>
+                <div className="relative"><Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" /><Input className="pl-8" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={interfaceText("m_535b98e7a6abca")} /></div>
+                <Select value={direction} onValueChange={setDirection}><SelectTrigger><SelectValue placeholder={interfaceText("m_9c8a9579abe55b")} /></SelectTrigger><SelectContent><SelectItem value="all">{interfaceText("m_6cc0f99954b869")}</SelectItem><SelectItem value="client_to_provider">{interfaceText("m_1bd07e0a3c0978")}</SelectItem><SelectItem value="provider_to_client">{interfaceText("m_a8950f0bd4348d")}</SelectItem><SelectItem value="provider_stderr">{interfaceText("m_63b3e297bb9fe1")}</SelectItem></SelectContent></Select>
+                <Select value={nativeMethod} onValueChange={setNativeMethod}><SelectTrigger><SelectValue placeholder={interfaceText("m_604030e94e2761")} /></SelectTrigger><SelectContent><SelectItem value="all">{interfaceText("m_217fc4c51e3521")}</SelectItem>{unique(frames.map(frameMethod)).sort().map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
+                <Select value={disposition} onValueChange={setDisposition}><SelectTrigger><SelectValue placeholder={interfaceText("m_1ff9a5f8b4bd53")} /></SelectTrigger><SelectContent><SelectItem value="all">{interfaceText("m_e1ff97d8a88c6a")}</SelectItem>{["mapped", "generic", "ignored", "rejected", "operator_only"].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
+                <Select value={prpType} onValueChange={setPrpType}><SelectTrigger><SelectValue placeholder={interfaceText("m_7b084b20988df2")} /></SelectTrigger><SelectContent><SelectItem value="all">{interfaceText("m_3cc13cd24bc561")}</SelectItem>{unique(events.map((event) => event.eventType)).sort().map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
+                <Select value={visibility} onValueChange={setVisibility}><SelectTrigger><SelectValue placeholder={interfaceText("m_7448611d5f93aa")} /></SelectTrigger><SelectContent><SelectItem value="all">{interfaceText("m_a27b96a9040759")}</SelectItem><SelectItem value="visible">{interfaceText("m_8411f5abb4c710")}</SelectItem><SelectItem value="hidden">{interfaceText("m_7e6fefff0f0aeb")}</SelectItem></SelectContent></Select>
               </div>
               <div className="grid min-h-0 flex-1 lg:grid-cols-(--gtc-runner-inspector-pipeline)">
                 <ScrollArea className="border-r border-border">
                   <div className="p-2">
-                    {loading ? <p className="p-3 text-sm text-muted-foreground">Loading run pipeline…</p> : null}
-                    {!loading && filteredOperations.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No operations match these filters.</p> : null}
+                    {loading ? <p className="p-3 text-sm text-muted-foreground">{interfaceText("m_b2b94be97ab475")}</p> : null}
+                    {!loading && filteredOperations.length === 0 ? <p className="p-3 text-sm text-muted-foreground">{interfaceText("m_bded3d63e92e21")}</p> : null}
                     {filteredOperations.map((operation) => (
                       <button key={operation.key} type="button" onClick={() => setSelectedKey(operation.key)} className="mb-1 w-full rounded-lg border border-transparent px-3 py-2.5 text-left hover:bg-muted/50 data-[selected=true]:border-border data-[selected=true]:bg-muted" data-selected={selectedOperation?.key === operation.key}>
-                        <span className="flex items-center gap-2"><span className={cn("h-2 w-2 shrink-0 rounded-full", operation.events.length ? operation.visible ? "bg-primary" : "bg-secondary-foreground" : "bg-muted-foreground")} role="img" aria-label={operation.events.length ? operation.visible ? "Visible production event" : "Hidden production event" : "No production event"} /><span className="min-w-0 flex-1 truncate text-sm font-medium">{operation.title}</span>{operation.frames.length > 1 ? <Badge variant="outline" className="px-1.5 text-(length:--text-nano)">{operation.frames.length} frames</Badge> : null}</span>
+                        <span className="flex items-center gap-2"><span className={cn("h-2 w-2 shrink-0 rounded-full", operation.events.length ? operation.visible ? "bg-primary" : "bg-secondary-foreground" : "bg-muted-foreground")} role="img" aria-label={operation.events.length ? operation.visible ? interfaceText("m_135026a8040c13") : interfaceText("m_534ae319743b09") : interfaceText("m_36bc0480e0fe7e")} /><span className="min-w-0 flex-1 truncate text-sm font-medium">{operation.title}</span>{operation.frames.length > 1 ? <Badge variant="outline" className="px-1.5 text-(length:--text-nano)">{operation.frames.length}{interfaceText("m_754663ed6caaa3")}</Badge> : null}</span>
                         <span className="mt-1 block truncate pl-4 text-(length:--text-nano) text-muted-foreground">{operation.subtitle}</span>
                         <span className="mt-1.5 flex flex-wrap gap-1 pl-4">{operation.prpTypes.slice(0, 3).map((type) => <span key={type} className="rounded bg-background px-1.5 py-0.5 font-mono text-(length:--text-nano) text-muted-foreground">{type}</span>)}</span>
                       </button>
@@ -1155,63 +1158,60 @@ export function RunnerInspector({
                   {selectedOperation ? (
                     <div className="space-y-6 p-5">
                       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-muted/20 px-4 py-3">
-                        <strong className="text-sm">{selectedOperation.title}</strong><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-xs text-muted-foreground">{selectedOperation.frames.length} raw frame{selectedOperation.frames.length === 1 ? "" : "s"}</span><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-xs text-muted-foreground">{selectedOperation.interpretations.length} mapping stage{selectedOperation.interpretations.length === 1 ? "" : "s"}</span><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-xs text-muted-foreground">{selectedEvents.length} PRP event{selectedEvents.length === 1 ? "" : "s"}</span>
+                        <strong className="text-sm">{selectedOperation.title}</strong><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-xs text-muted-foreground">{selectedOperation.frames.length}{interfaceText("m_fc333df1999840")}{selectedOperation.frames.length === 1 ? "" : interfaceText("m_043a718774c572")}</span><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-xs text-muted-foreground">{selectedOperation.interpretations.length}{interfaceText("m_a2552fdb1e5d38")}{selectedOperation.interpretations.length === 1 ? "" : interfaceText("m_043a718774c572")}</span><ArrowRight className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-xs text-muted-foreground">{selectedEvents.length}{interfaceText("m_90b0b9e87d6224")}{selectedEvents.length === 1 ? "" : interfaceText("m_043a718774c572")}</span>
                       </div>
                       <section>
-                        <div className="mb-2 flex flex-wrap items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">1</span><h3 className="text-sm font-semibold">Provider frames</h3><span className="text-xs text-muted-foreground">server-redacted by default</span></div>
+                        <div className="mb-2 flex flex-wrap items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">1</span><h3 className="text-sm font-semibold">{interfaceText("m_52af537bf185cc")}</h3><span className="text-xs text-muted-foreground">{interfaceText("m_4b8ddeed55c6a4")}</span></div>
                         {selectedOperation.frames.length > 1 ? <div className="mb-2 flex flex-wrap gap-1">{selectedOperation.frames.map((frame) => <button key={Number(frame.frameId)} type="button" onClick={() => setSelectedFrameId(Number(frame.frameId))} className={cn("rounded-md border px-2 py-1 font-mono text-xs", Number(frame.frameId) === Number(selectedFrame?.frameId) ? "border-primary/50 bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:bg-muted")}>#{String(frame.frameId)} {frameMethod(frame) || text(frame.direction)}</button>)}</div> : null}
                         {selectedFrame ? (
                           <div className="space-y-2">
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><Badge variant="outline">frame {String(selectedFrame.frameId)}</Badge><span>{text(selectedFrame.direction).replaceAll("_", " ")}</span><span>{formatBytes(Number(selectedFrame.byteLength) || 0)}</span><code className="truncate">{text(selectedFrame.digest)}</code></div>
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><Badge variant="outline">{interfaceText("m_c6159bf8a900e7")}{String(selectedFrame.frameId)}</Badge><span>{text(selectedFrame.direction).replaceAll("_", " ")}</span><span>{formatBytes(Number(selectedFrame.byteLength) || 0)}</span><code className="truncate">{text(selectedFrame.digest)}</code></div>
                             <JsonExplorer value={selectedFrame.parsed} />
-                            {Array.isArray(selectedFrame.withheldPaths) && selectedFrame.withheldPaths.length > 0 ? <div className="flex items-start gap-2 rounded-md border border-border bg-accent/30 px-3 py-2 text-xs text-muted-foreground"><ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-foreground" /><span>Withheld paths: {selectedFrame.withheldPaths.join(", ")}</span></div> : null}
-                            {canInspectRaw === true ? <Button size="sm" variant="outline" onClick={() => void reveal(Number(selectedFrame.frameId))}><Eye className="mr-1.5 h-4 w-4" />Reveal exact frame</Button> : null}
-                            {revealedFrame ? <div className="rounded-md border border-destructive/30 p-2"><p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-destructive"><ShieldAlert className="h-3.5 w-3.5" />Exact unredacted frame</p><JsonExplorer value={decodeExactFrame(revealedFrame.rawBase64)} label="Search exact frame" /></div> : null}
+                            {Array.isArray(selectedFrame.withheldPaths) && selectedFrame.withheldPaths.length > 0 ? <div className="flex items-start gap-2 rounded-md border border-border bg-accent/30 px-3 py-2 text-xs text-muted-foreground"><ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-foreground" /><span>{interfaceText("m_2e5035aa139673")}{selectedFrame.withheldPaths.join(", ")}</span></div> : null}
+                            {canInspectRaw === true ? <Button size="sm" variant="outline" onClick={() => void reveal(Number(selectedFrame.frameId))}><Eye className="mr-1.5 h-4 w-4" />{interfaceText("m_2a05878d478445")}</Button> : null}
+                            {revealedFrame ? <div className="rounded-md border border-destructive/30 p-2"><p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-destructive"><ShieldAlert className="h-3.5 w-3.5" />{interfaceText("m_01fa472359ab81")}</p><JsonExplorer value={decodeExactFrame(revealedFrame.rawBase64)} label={interfaceText("m_acf5cb2784db24")} /></div> : null}
                           </div>
-                        ) : <p className="text-sm text-muted-foreground">This PRP event has no recoverable raw frame.</p>}
+                        ) : <p className="text-sm text-muted-foreground">{interfaceText("m_60a2b9f51876f0")}</p>}
                       </section>
                       <section>
-                        <div className="mb-3 flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">2</span><h3 className="text-sm font-semibold">Interpretation stages</h3></div>
-                        {selectedInterpretations.length ? selectedInterpretations.map((entry, index) => <InterpretationStage key={`${entry.debugChannel}:${entry.debugSequence}:${index}`} entry={entry} last={index === selectedInterpretations.length - 1} />) : <p className="text-sm text-muted-foreground">No interpretation stage was recorded for this frame.</p>}
+                        <div className="mb-3 flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">2</span><h3 className="text-sm font-semibold">{interfaceText("m_f709de89f552dd")}</h3></div>
+                        {selectedInterpretations.length ? selectedInterpretations.map((entry, index) => <InterpretationStage key={`${entry.debugChannel}:${entry.debugSequence}:${index}`} entry={entry} last={index === selectedInterpretations.length - 1} />) : <p className="text-sm text-muted-foreground">{interfaceText("m_6c2197d8a9149f")}</p>}
                       </section>
                       <section>
-                        <div className="mb-3 flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">3</span><h3 className="text-sm font-semibold">Canonical PRP events</h3></div>
+                        <div className="mb-3 flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">3</span><h3 className="text-sm font-semibold">{interfaceText("m_a9a26523d5e12b")}</h3></div>
                         {selectedEvents.length ? selectedEvents.map((event) => (
                           <div key={event.id} className="mb-3 overflow-hidden rounded-lg border border-border bg-card">
-                            <div className="flex flex-wrap items-center gap-2 border-b border-border/70 px-3 py-2"><code className="text-xs font-semibold">{event.eventType}</code><Badge variant="outline">seq {event.seq}</Badge><button type="button" className="ml-auto text-xs text-primary underline-offset-4 hover:underline" onClick={() => { setVisibility(visibilityDecision(event).visible ? "visible" : "hidden"); setSelectedKey(selectedOperation.key); }}>Why isn’t this visible?</button></div>
+                            <div className="flex flex-wrap items-center gap-2 border-b border-border/70 px-3 py-2"><code className="text-xs font-semibold">{event.eventType}</code><Badge variant="outline">{interfaceText("m_932b25cc6662f3")}{event.seq}</Badge><button type="button" className="ml-auto text-xs text-primary underline-offset-4 hover:underline" onClick={() => { setVisibility(visibilityDecision(event).visible ? "visible" : "hidden"); setSelectedKey(selectedOperation.key); }}>{interfaceText("m_79081f4612c8fe")}</button></div>
                             <dl className="grid gap-x-4 gap-y-1 px-3 py-2 text-xs sm:grid-cols-(--gtc-runner-inspector-fields)">{typedPrpFields(event).map(([label, value]) => <div key={label} className="contents"><dt className="text-muted-foreground">{label}</dt><dd className="min-w-0 break-words font-mono">{value}</dd></div>)}</dl>
-                            <details className="border-t border-border/70"><summary className="flex cursor-pointer list-none items-center gap-1 px-3 py-2 text-xs font-medium text-muted-foreground"><ChevronDown className="h-3.5 w-3.5" />Canonical event JSON</summary><div className="p-3 pt-0"><JsonExplorer value={eventPrp(event)} /></div></details>
+                            <details className="border-t border-border/70"><summary className="flex cursor-pointer list-none items-center gap-1 px-3 py-2 text-xs font-medium text-muted-foreground"><ChevronDown className="h-3.5 w-3.5" />{interfaceText("m_66d09e17032a75")}</summary><div className="p-3 pt-0"><JsonExplorer value={eventPrp(event)} /></div></details>
                           </div>
-                        )) : <p className="text-sm text-muted-foreground">This provider operation emitted no canonical PRP events.</p>}
+                        )) : <p className="text-sm text-muted-foreground">{interfaceText("m_d4dc7c0de1b08a")}</p>}
                       </section>
                       <section>
-                        <div className="mb-3 flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">4</span><h3 className="text-sm font-semibold">Production presentation</h3></div>
+                        <div className="mb-3 flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-semibold text-foreground">4</span><h3 className="text-sm font-semibold">{interfaceText("m_11135d538a244d")}</h3></div>
                         {selectedEvents.length ? selectedEvents.map((event) => {
                           const decision = visibilityDecision(event);
-                          return <div key={event.id} className="mb-4 grid gap-3 xl:grid-cols-(--gtc-runner-inspector-presentation)"><dl className="grid grid-cols-(--gtc-runner-inspector-fields) gap-x-3 gap-y-1 rounded-lg border border-border p-3 text-sm"><dt className="text-muted-foreground">Visible</dt><dd className="flex items-center gap-1.5">{decision.visible ? <Check className="h-3.5 w-3.5 text-primary" /> : <CircleOff className="h-3.5 w-3.5 text-muted-foreground" />}{decision.visible ? "yes" : "no"}</dd><dt className="text-muted-foreground">Surface</dt><dd>{decision.surface}</dd><dt className="text-muted-foreground">Container</dt><dd>{decision.container}</dd><dt className="text-muted-foreground">State</dt><dd>{decision.state}</dd><dt className="text-muted-foreground">Action</dt><dd>{decision.action}</dd><dt className="text-muted-foreground">Reason</dt><dd>{decision.reason}</dd><dt className="text-muted-foreground">Reason code</dt><dd><code className="text-xs">{decision.reasonCode}</code></dd></dl><div><p className="mb-2 text-(length:--text-nano) font-medium uppercase tracking-wide text-muted-foreground">Production surface preview</p><ProductionSurfacePreview event={event} runId={runId} /></div></div>;
-                        }) : <p className="text-sm text-muted-foreground">No presentation surface was emitted for this operation.</p>}
-                        {Object.keys(presentationDecision).length > 0 ? <details className="rounded-lg border border-border"><summary className="cursor-pointer px-3 py-2 text-xs font-medium text-muted-foreground">Resolved final response decision</summary><div className="p-3 pt-0"><JsonExplorer value={presentationDecision} /></div></details> : null}
+                          return <div key={event.id} className="mb-4 grid gap-3 xl:grid-cols-(--gtc-runner-inspector-presentation)"><dl className="grid grid-cols-(--gtc-runner-inspector-fields) gap-x-3 gap-y-1 rounded-lg border border-border p-3 text-sm"><dt className="text-muted-foreground">{interfaceText("m_8411f5abb4c710")}</dt><dd className="flex items-center gap-1.5">{decision.visible ? <Check className="h-3.5 w-3.5 text-primary" /> : <CircleOff className="h-3.5 w-3.5 text-muted-foreground" />}{decision.visible ? interfaceText("m_8a798890fe9381") : interfaceText("m_9390298f3fb0c5")}</dd><dt className="text-muted-foreground">{interfaceText("m_0905f7f59021c2")}</dt><dd>{decision.surface}</dd><dt className="text-muted-foreground">Container</dt><dd>{decision.container}</dd><dt className="text-muted-foreground">{interfaceText("m_a3b50c476732c7")}</dt><dd>{decision.state}</dd><dt className="text-muted-foreground">{interfaceText("m_64cff1319d2fd2")}</dt><dd>{decision.action}</dd><dt className="text-muted-foreground">{interfaceText("m_f81ab834de5f84")}</dt><dd>{decision.reason}</dd><dt className="text-muted-foreground">{interfaceText("m_9e13ec9ee6a95a")}</dt><dd><code className="text-xs">{decision.reasonCode}</code></dd></dl><div><p className="mb-2 text-(length:--text-nano) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_9cf6232e66fc10")}</p><ProductionSurfacePreview event={event} runId={runId} /></div></div>;
+                        }) : <p className="text-sm text-muted-foreground">{interfaceText("m_74b2ae9d198d7b")}</p>}
+                        {Object.keys(presentationDecision).length > 0 ? <details className="rounded-lg border border-border"><summary className="cursor-pointer px-3 py-2 text-xs font-medium text-muted-foreground">{interfaceText("m_6c68abe08fd4ef")}</summary><div className="p-3 pt-0"><JsonExplorer value={presentationDecision} /></div></details> : null}
                         {verificationCaveats.length > 0 || ignoredAttentionRequests.length > 0 ? (
                           <div className="mt-3 rounded-lg border border-border bg-accent/30 p-3">
-                            <p className="text-xs font-semibold text-accent-foreground">Semantic finalization lineage</p>
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              Provider-native transport and model-authored tool arguments are separate layers. PRP normalized the model payload, then server policy chose the issue disposition.
-                            </p>
+                            <p className="text-xs font-semibold text-accent-foreground">{interfaceText("m_7ffc44824bbed8")}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_d452048cdf43d3")}</p>
                             {ignoredAttentionRequests.some((candidate) => record(candidate).sourceKind === "environment_constraint") ? (
                               <p className="mt-2 text-xs">
-                                <code>environment_constraint</code> was model-authored tool payload data, not a Codex app-server event. It was normalized into a non-blocking verification caveat.
-                              </p>
+                                <code>{interfaceText("m_f3aacd698c7a0b")}</code>{interfaceText("m_c0ea62c45288b2")}</p>
                             ) : null}
                             <dl className="mt-2 grid grid-cols-(--gtc-runner-inspector-fields) gap-x-3 gap-y-1 text-xs">
-                              <dt className="text-muted-foreground">Policy</dt><dd><code>{text(runResultJson.finalizationPolicyVersion) || "unknown"}</code></dd>
-                              <dt className="text-muted-foreground">Decision reason</dt><dd><code>{text(runResultJson.finalizationReasonCode) || "unknown"}</code></dd>
+                              <dt className="text-muted-foreground">{interfaceText("m_c611981fab983b")}</dt><dd><code>{text(runResultJson.finalizationPolicyVersion) || interfaceText("m_b23a6a8439c0dd")}</code></dd>
+                              <dt className="text-muted-foreground">{interfaceText("m_733f30ba30b55e")}</dt><dd><code>{text(runResultJson.finalizationReasonCode) || interfaceText("m_b23a6a8439c0dd")}</code></dd>
                             </dl>
-                            <details className="mt-2"><summary className="cursor-pointer text-xs font-medium text-muted-foreground">Normalized caveats and ignored requests</summary><div className="mt-2"><JsonExplorer value={{ verificationCaveats, ignoredAttentionRequests }} /></div></details>
+                            <details className="mt-2"><summary className="cursor-pointer text-xs font-medium text-muted-foreground">{interfaceText("m_1c5d7bb95ea04d")}</summary><div className="mt-2"><JsonExplorer value={{ verificationCaveats, ignoredAttentionRequests }} /></div></details>
                           </div>
                         ) : null}
                       </section>
                     </div>
-                  ) : <div className="p-5 text-sm text-muted-foreground">Select a correlated operation to inspect its pipeline.</div>}
+                  ) : <div className="p-5 text-sm text-muted-foreground">{interfaceText("m_d89e132017c242")}</div>}
                 </ScrollArea>
               </div>
             </>
@@ -1219,15 +1219,15 @@ export function RunnerInspector({
 
           {view === "trace" ? (
             <div className="grid min-h-0 flex-1 md:grid-cols-(--gtc-runner-inspector-trace)">
-              <ScrollArea className="border-r border-border"><div className="p-2">{frames.length ? [...frames].sort((left, right) => Number(left.frameId) - Number(right.frameId)).map((frame) => <button key={Number(frame.frameId)} type="button" onClick={() => { const operation = operations.find((candidate) => candidate.frames.some((candidateFrame) => Number(candidateFrame.frameId) === Number(frame.frameId))); if (operation) setSelectedKey(operation.key); setSelectedFrameId(Number(frame.frameId)); }} className={cn("mb-1 w-full rounded-md border px-3 py-2 text-left", Number(frame.frameId) === Number(selectedFrame?.frameId) ? "border-primary/40 bg-primary/10" : "border-transparent hover:bg-muted/50")}><span className="flex items-center gap-2 text-sm font-medium"><span className="font-mono text-xs text-muted-foreground">#{String(frame.frameId)}</span><span className="truncate">{frameMethod(frame) || text(frame.direction)}</span></span><span className="mt-1 block text-(length:--text-nano) text-muted-foreground">{text(frame.direction).replaceAll("_", " ")} · {formatBytes(Number(frame.byteLength) || 0)}</span></button>) : <p className="p-3 text-sm text-muted-foreground">No raw frames were captured for this run.</p>}</div></ScrollArea>
-              <ScrollArea><div className="space-y-3 p-5">{selectedFrame ? <><div className="flex flex-wrap items-center gap-2"><h3 className="text-sm font-semibold">Exact trace frame #{String(selectedFrame.frameId)}</h3><Badge variant="outline">{frameMethod(selectedFrame) || text(selectedFrame.direction)}</Badge></div><JsonExplorer value={selectedFrame.parsed} />{canInspectRaw === true ? <Button size="sm" variant="outline" onClick={() => void reveal(Number(selectedFrame.frameId))}><Eye className="mr-1.5 h-4 w-4" />Reveal exact frame</Button> : null}{revealedFrame ? <JsonExplorer value={decodeExactFrame(revealedFrame.rawBase64)} label="Search exact frame" /> : null}</> : <p className="text-sm text-muted-foreground">Select a frame from the chronological trace.</p>}</div></ScrollArea>
+              <ScrollArea className="border-r border-border"><div className="p-2">{frames.length ? [...frames].sort((left, right) => Number(left.frameId) - Number(right.frameId)).map((frame) => <button key={Number(frame.frameId)} type="button" onClick={() => { const operation = operations.find((candidate) => candidate.frames.some((candidateFrame) => Number(candidateFrame.frameId) === Number(frame.frameId))); if (operation) setSelectedKey(operation.key); setSelectedFrameId(Number(frame.frameId)); }} className={cn("mb-1 w-full rounded-md border px-3 py-2 text-left", Number(frame.frameId) === Number(selectedFrame?.frameId) ? "border-primary/40 bg-primary/10" : "border-transparent hover:bg-muted/50")}><span className="flex items-center gap-2 text-sm font-medium"><span className="font-mono text-xs text-muted-foreground">#{String(frame.frameId)}</span><span className="truncate">{frameMethod(frame) || text(frame.direction)}</span></span><span className="mt-1 block text-(length:--text-nano) text-muted-foreground">{text(frame.direction).replaceAll("_", " ")} · {formatBytes(Number(frame.byteLength) || 0)}</span></button>) : <p className="p-3 text-sm text-muted-foreground">{interfaceText("m_a953ddb59c9fec")}</p>}</div></ScrollArea>
+              <ScrollArea><div className="space-y-3 p-5">{selectedFrame ? <><div className="flex flex-wrap items-center gap-2"><h3 className="text-sm font-semibold">{interfaceText("m_3f73c89ab3de2c")}{String(selectedFrame.frameId)}</h3><Badge variant="outline">{frameMethod(selectedFrame) || text(selectedFrame.direction)}</Badge></div><JsonExplorer value={selectedFrame.parsed} />{canInspectRaw === true ? <Button size="sm" variant="outline" onClick={() => void reveal(Number(selectedFrame.frameId))}><Eye className="mr-1.5 h-4 w-4" />{interfaceText("m_2a05878d478445")}</Button> : null}{revealedFrame ? <JsonExplorer value={decodeExactFrame(revealedFrame.rawBase64)} label={interfaceText("m_acf5cb2784db24")} /> : null}</> : <p className="text-sm text-muted-foreground">{interfaceText("m_6cd161fb04cc62")}</p>}</div></ScrollArea>
             </div>
           ) : null}
 
           {canInspectRaw === true && inspection?.trace?.runId === runId ? (
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border p-3">
-              <p className="text-xs text-muted-foreground">{inspection.trace.frameCount} frames · {formatBytes(inspection.trace.byteCount)} · expires {new Date(inspection.trace.expiresAt).toLocaleString()}</p>
-              <div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => void downloadTrace()}><Download className="mr-1.5 h-4 w-4" />Download exact trace</Button><Button size="sm" variant="destructive" onClick={() => void deleteTrace()}><Trash2 className="mr-1.5 h-4 w-4" />Delete trace</Button></div>
+              <p className="text-xs text-muted-foreground">{inspection.trace.frameCount}{interfaceText("m_a3318f63c84282")}{formatBytes(inspection.trace.byteCount)}{interfaceText("m_886eec4c213e2c")}{new Date(inspection.trace.expiresAt).toLocaleString()}</p>
+              <div className="flex gap-2"><Button size="sm" variant="outline" onClick={() => void downloadTrace()}><Download className="mr-1.5 h-4 w-4" />{interfaceText("m_8ce74eafe42d30")}</Button><Button size="sm" variant="destructive" onClick={() => void deleteTrace()}><Trash2 className="mr-1.5 h-4 w-4" />{interfaceText("m_b0a07853519886")}</Button></div>
             </div>
           ) : null}
         </div>

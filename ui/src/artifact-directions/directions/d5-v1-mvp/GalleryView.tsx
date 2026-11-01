@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { ArrowLeft, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -19,13 +20,13 @@ import { SingleTile, StackTile } from "./Tile";
 type Filter = "tasks" | "all" | MediaKind;
 
 const FILTERS: Array<{ id: Filter; label: string }> = [
-  { id: "tasks", label: "Tasks" },
-  { id: "all", label: "All files" },
-  { id: "image", label: "Images" },
-  { id: "video", label: "Videos" },
-  { id: "document", label: "Documents" },
-  { id: "text", label: "Text" },
-  { id: "file", label: "Files" },
+  { id: "tasks", get label() { return interfaceText("m_b3a60e61a5233d"); } },
+  { id: "all", get label() { return interfaceText("m_866956901fd153"); } },
+  { id: "image", get label() { return interfaceText("m_be7e2f20129365"); } },
+  { id: "video", get label() { return interfaceText("m_c9a9639463c219"); } },
+  { id: "document", get label() { return interfaceText("m_b4e929d8bcfe04"); } },
+  { id: "text", get label() { return interfaceText("m_71988c4d8e0803"); } },
+  { id: "file", get label() { return interfaceText("m_abc7e9892806b0"); } },
 ];
 
 const newestFirst = (a: LabArtifact, b: LabArtifact) => b.updatedAt.localeCompare(a.updatedAt);
@@ -35,13 +36,14 @@ function everyArtifact(groups: LabGroup[]): LabArtifact[] {
 }
 
 function Toolbar({ filter, onFilter }: { filter: Filter; onFilter: (filter: Filter) => void }) {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="relative w-full sm:max-w-sm">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input readOnly className="h-9 pl-9 pr-9 text-sm" placeholder="Search artifacts..." aria-label="Search artifacts" />
+        <Input readOnly className="h-9 pl-9 pr-9 text-sm" placeholder={interfaceText("m_59aadbdf0d35a2")} aria-label={interfaceText("m_c71436cce0eb86")} />
       </div>
-      <div role="tablist" aria-label="Show artifacts by task or by type" className="flex flex-wrap items-center gap-1.5">
+      <div role="tablist" aria-label={interfaceText("m_faa1d8e27ffd38")} className="flex flex-wrap items-center gap-1.5">
         {FILTERS.map(({ id, label }) => (
           <button
             key={id}
@@ -63,12 +65,11 @@ function Toolbar({ filter, onFilter }: { filter: Filter; onFilter: (filter: Filt
 }
 
 function StackHeader({ group }: { group: LabGroup }) {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm">
       <span className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground">
-        <ArrowLeft className="h-3.5 w-3.5" />
-        All stacks
-      </span>
+        <ArrowLeft className="h-3.5 w-3.5" />{interfaceText("m_278e106339d2dd")}</span>
       <span className="truncate text-muted-foreground">
         <span className="text-foreground/80">{group.taskIdentifier}</span> {group.title}
       </span>

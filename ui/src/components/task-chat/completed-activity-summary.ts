@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { Brain, CirclePause, Gauge, Layers3 } from "lucide-react";
 import type { TaskChatActivityPhaseItem } from "./task-chat-model";
 import {
@@ -101,7 +102,7 @@ export function completedActivitySummary(items: Activity[]) {
               workspace_file: "Referenced files",
               resource: "Added resources",
             } as Record<string, string>
-          )[family] ?? "Used tools";
+          )[family] ?? interfaceText("m_836c94ab8f0d0f");
         add(label, p.icon, order);
       }
     }
@@ -111,12 +112,12 @@ export function completedActivitySummary(items: Activity[]) {
       ?? notices.find((notice) => notice.severity === "warning")
       ?? notices[0]!;
     const label = notices.length === 1
-      ? strongest.summary || "Received a provider update"
+      ? strongest.summary || interfaceText("m_7bd94199ab6064")
       : strongest.severity === "error"
-        ? "Provider error reported"
+        ? interfaceText("m_f6a4be1b5ed598")
         : strongest.severity === "warning"
-          ? "Provider warning reported"
-          : "Received provider updates";
+          ? interfaceText("m_f2bd48f5d1ba4c")
+          : interfaceText("m_f715dd774686a9");
     // One notice category leaves room for actual work. Keep warnings and errors
     // visible when the compact label truncates other activity categories.
     add(label, strongest.icon, strongest.severity === "info" ? notices[0]!.order : -1);
@@ -129,9 +130,9 @@ export function completedActivitySummary(items: Activity[]) {
     const succeeded = completedFamilies.has(tool.family);
     const label =
       tool.family === "read" && !succeeded
-        ? "Checked files"
+        ? interfaceText("m_5eccc3a120c7fd")
         : tool.family === "edit" && !succeeded
-          ? "Worked on files"
+          ? interfaceText("m_624abb5df7ca0a")
           : labels[tool.family];
     add(label, tool.icon, tool.order);
   }

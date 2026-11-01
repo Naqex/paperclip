@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { configFieldsForSection } from "../config-sections";
 import type { AdapterConfigFieldsProps } from "../types";
 import {
@@ -23,6 +24,7 @@ export function GeminiLocalConfigFields({
   hideInstructionsFile,
   managedSandboxOnly,
 }: AdapterConfigFieldsProps) {
+  useInterfaceLanguage();
   const rawEngine = isCreate
     ? values!.geminiEngine ?? "auto"
     : eff("adapterConfig", "engine", String(config.engine ?? "auto"));
@@ -36,7 +38,7 @@ export function GeminiLocalConfigFields({
         the ACP sub-fields below name host paths. The platform-managed
         environment owns both, so the managed-sandbox-only policy hides them.
       */}
-      {!managedSandboxOnly && <Field label="Execution engine" hint="Default uses ACP. If ACP is unavailable, the run fails with a setup error. Choose CLI explicitly to use it.">
+      {!managedSandboxOnly && <Field label={interfaceText("m_da96ed44c9414c")} hint={interfaceText("m_3c378609aa8d26")}>
         <select
           className={inputClass}
           value={engine}
@@ -47,7 +49,7 @@ export function GeminiLocalConfigFields({
               : mark("adapterConfig", "engine", value === "auto" ? undefined : value);
           }}
         >
-          <option value="auto">Default (ACP)</option>
+          <option value="auto">{interfaceText("m_db3da2a98fda28")}</option>
           <option value="cli">Gemini CLI</option>
           <option value="acp">ACP</option>
         </select>
@@ -56,8 +58,8 @@ export function GeminiLocalConfigFields({
         <>
           {!managedSandboxOnly && (
             <Field configSection="advanced"
-              label="ACP server command"
-              hint="Optional override for the Gemini ACP server command. Defaults to gemini --acp."
+              label={interfaceText("m_3a0d4f5f957064")}
+              hint={interfaceText("m_69f78b94e8530f")}
             >
               <DraftInput
                 value={
@@ -76,7 +78,7 @@ export function GeminiLocalConfigFields({
               />
             </Field>
           )}
-          <Field configSection="runPolicy" label="ACP session mode" hint="Persistent keeps ACP session state between runs. One-shot starts fresh each run.">
+          <Field configSection="runPolicy" label={interfaceText("m_6b7415b4b77c69")} hint={interfaceText("m_2f4fdb5f420f3e")}>
             <select
               className={inputClass}
               value={
@@ -91,13 +93,13 @@ export function GeminiLocalConfigFields({
                   : mark("adapterConfig", "mode", value);
               }}
             >
-              <option value="persistent">Persistent</option>
-              <option value="oneshot">One-shot</option>
+              <option value="persistent">{interfaceText("m_f067b731a9eb7f")}</option>
+              <option value="oneshot">{interfaceText("m_4c6e65c60f5bd2")}</option>
             </select>
           </Field>
           <Field
-            label="ACP non-interactive permissions"
-            hint="Fallback if the ACP agent asks for input outside an interactive session."
+            label={interfaceText("m_775568b9ccf2a0")}
+            hint={interfaceText("m_17fa0b5190ae80")}
           >
             <select
               className={inputClass}
@@ -113,14 +115,14 @@ export function GeminiLocalConfigFields({
                   : mark("adapterConfig", "nonInteractivePermissions", value);
               }}
             >
-              <option value="deny">Deny</option>
-              <option value="fail">Fail</option>
+              <option value="deny">{interfaceText("m_05a2d7332eb9d8")}</option>
+              <option value="fail">{interfaceText("m_09230b3dbc3563")}</option>
             </select>
           </Field>
           {!managedSandboxOnly && (
             <Field
-              label="ACP state directory"
-              hint="Optional ACP session state directory. Defaults to Paperclip-managed organization/agent scoped storage."
+              label={interfaceText("m_519b9622e450f6")}
+              hint={interfaceText("m_74622178516831")}
             >
               <div className="flex items-center gap-2">
                 <DraftInput
@@ -143,8 +145,8 @@ export function GeminiLocalConfigFields({
             </Field>
           )}
           <Field configSection="runPolicy"
-            label="ACP warm process idle ms"
-            hint="Defaults to 0, which closes the ACP process after each run while retaining persistent session state."
+            label={interfaceText("m_4d464a532c7faf")}
+            hint={interfaceText("m_01653b2fd423ba")}
           >
             {isCreate ? (
               <input
@@ -169,7 +171,7 @@ export function GeminiLocalConfigFields({
         </>
       )}
       {!hideInstructionsFile && (
-        <Field label="Agent instructions file" hint={instructionsFileHint}>
+        <Field label={interfaceText("m_ce46e7f310ea3f")} hint={instructionsFileHint}>
           <div className="flex items-center gap-2">
             <DraftInput
               value={

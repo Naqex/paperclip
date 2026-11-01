@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { Clock3, FileDiff, GitCommit, type LucideIcon } from "lucide-react";
 import { healthApi, type HealthStatus } from "@/api/health";
@@ -24,17 +25,17 @@ function restartTimestamp(health: HealthStatus | undefined): string | null {
 
 function commitLabel(health: HealthStatus | undefined): string {
   const git = health?.serverInfo?.git;
-  if (!git?.available) return "Commit unavailable";
+  if (!git?.available) return interfaceText("m_ff6a66094c47fa");
   return `${git.shortSha} · ${git.subject}`;
 }
 
 function localChangesLabel(health: HealthStatus | undefined): string {
   const git = health?.serverInfo?.git;
-  if (!git?.available) return "Unavailable";
+  if (!git?.available) return interfaceText("m_ca184496974204");
   const localChanges = git.localChanges;
-  if (!localChanges) return "Change status unavailable";
-  if (!localChanges.available) return "Change status unavailable";
-  if (!localChanges.hasLocalChanges) return "Clean checkout";
+  if (!localChanges) return interfaceText("m_50e3e180cb9978");
+  if (!localChanges.available) return interfaceText("m_50e3e180cb9978");
+  if (!localChanges.hasLocalChanges) return interfaceText("m_f208aaf4929268");
 
   const parts = [
     [localChanges.stagedFileCount, "staged"],
@@ -44,7 +45,7 @@ function localChangesLabel(health: HealthStatus | undefined): string {
     .filter(([count]) => Number(count) > 0)
     .map(([count, label]) => `${count} ${label}`);
 
-  return parts.length > 0 ? `Local changes present (${parts.join(", ")})` : "Local changes present";
+  return parts.length > 0 ? interfaceText("m_67d3811746a2bf", { value0: (parts.join(", ")) }) : interfaceText("m_a2d5803b34a493");
 }
 
 function ServerInfoRow({
@@ -78,6 +79,7 @@ function ServerInfoRow({
 }
 
 export function SidebarServerInfo() {
+  useInterfaceLanguage();
   const experimentalQuery = useQuery({
     queryKey: queryKeys.instance.experimentalSettings,
     queryFn: () => instanceSettingsApi.getExperimental(),
@@ -106,9 +108,9 @@ export function SidebarServerInfo() {
   const restartedAt = restartTimestamp(health);
   const restartedAtIsValid = isValidTimestamp(restartedAt);
   const lastRestartedLabel = healthUnavailable
-    ? "Health unavailable"
+    ? interfaceText("m_ea4edd2b452cbd")
     : isWaitingForHealth
-      ? "Loading..."
+      ? interfaceText("m_47d2a515ef2f05")
       : formatTimestamp(restartedAt);
   const commit = healthUnavailable
     ? "Health unavailable"
@@ -123,17 +125,15 @@ export function SidebarServerInfo() {
 
   return (
     <div className="mt-2 border-t border-border pt-2">
-      <p className="px-3 pb-1 pt-1 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-        Server
-      </p>
+      <p className="px-3 pb-1 pt-1 text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{interfaceText("m_aef7de28d52977")}</p>
       <ServerInfoRow
         icon={Clock3}
-        label="Last restarted"
+        label={interfaceText("m_865e87f0f1469a")}
         value={lastRestartedLabel}
         dateTime={!healthUnavailable && !isWaitingForHealth && restartedAtIsValid ? restartedAt : null}
       />
-      <ServerInfoRow icon={GitCommit} label="Running commit" value={commit} />
-      <ServerInfoRow icon={FileDiff} label="Checkout state" value={localChanges} />
+      <ServerInfoRow icon={GitCommit} label={interfaceText("m_ac45532841c6f6")} value={commit} />
+      <ServerInfoRow icon={FileDiff} label={interfaceText("m_93896287e5a3e8")} value={localChanges} />
     </div>
   );
 }

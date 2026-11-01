@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Profiler, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Agent, DocumentAnnotationThreadWithComments, IssueDocument } from "@paperclipai/shared";
@@ -396,6 +397,7 @@ export function DocumentAnnotationsCountChip({
   panelOpen,
   onToggle,
 }: DocumentAnnotationsCountChipProps) {
+  useInterfaceLanguage();
   const annotationsQuery = useQuery({
     queryKey: target?.kind === "routine"
       ? queryKeys.routines.documentAnnotations(target.routineId, target.documentKey, "all")
@@ -427,14 +429,14 @@ export function DocumentAnnotationsCountChip({
       onClick={onToggle}
       data-testid={`document-annotation-count-${docKey}`}
       aria-label={openCount === 0
-        ? `Open comments on ${docKey}`
-        : `Open ${openCount} unresolved comments on ${docKey}`}
+        ? interfaceText("m_5f00d870252ee1", { value0: (docKey) })
+        : interfaceText("m_187c5f4fef3515", { value0: (openCount), value1: (docKey) })}
       aria-expanded={panelOpen}
     >
       <MessageSquare className="h-3 w-3" aria-hidden="true" />
       <span className="tabular-nums">{openCount}</span>
       <span className="hidden sm:inline">
-        {openCount === 1 ? "comment" : "comments"}
+        {openCount === 1 ? interfaceText("m_c44bb2fd516909") : interfaceText("m_2b4244fb266371")}
       </span>
     </Button>
   );

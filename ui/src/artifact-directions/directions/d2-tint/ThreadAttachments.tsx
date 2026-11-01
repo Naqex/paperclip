@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../kit";
@@ -44,6 +45,7 @@ function Words({ artifact, tall }: { artifact: LabArtifact; tall: boolean }) {
 }
 
 function Cell({ artifact }: { artifact: LabArtifact }) {
+  useInterfaceLanguage();
   const [failed, setFailed] = useState(false);
   const name = artifact.filename ?? artifact.title;
   const picture = Boolean(artifact.thumbnailUrl);
@@ -57,7 +59,7 @@ function Cell({ artifact }: { artifact: LabArtifact }) {
         <FoldedPreview artifact={artifact} fold="md" className={PICTURE_BOX} onError={() => setFailed(true)} />
       )}
       <Words artifact={artifact} tall={picture} />
-      <a href={`#attachment-${artifact.id}`} aria-label={`Open ${name}`} title={name} className={`absolute inset-0 rounded-lg ${FOCUS_RING}`} />
+      <a href={`#attachment-${artifact.id}`} aria-label={interfaceText("m_b50808ac499900", { value0: (name) })} title={name} className={`absolute inset-0 rounded-lg ${FOCUS_RING}`} />
     </li>
   );
 }
@@ -65,6 +67,7 @@ function Cell({ artifact }: { artifact: LabArtifact }) {
 const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
 
 export function ThreadAttachments({ artifacts }: { artifacts: LabArtifact[] }) {
+  useInterfaceLanguage();
   const [all, setAll] = useState(false);
   if (artifacts.length === 0) return null;
   // Pictures first, as the product's Images block leads its Files block.
@@ -74,9 +77,8 @@ export function ThreadAttachments({ artifacts }: { artifacts: LabArtifact[] }) {
   const capped = !all && ordered.length > CAP;
   const shown = capped ? ordered.slice(0, CAP - 1) : ordered;
   return (
-    <section aria-label={`Attachments, ${artifacts.length}`} className="@container flex w-full flex-col gap-2 pb-1 pt-0.5">
-      <p className="text-xs leading-4 text-(--tint-ink-2)">
-        Attachments · <span className="font-mono text-(length:--text-micro)">{artifacts.length}</span>
+    <section aria-label={interfaceText("m_08d8c0ee248c41", { value0: (artifacts.length) })} className="@container flex w-full flex-col gap-2 pb-1 pt-0.5">
+      <p className="text-xs leading-4 text-(--tint-ink-2)">{interfaceText("m_aaca685f1d0bd2")}<span className="font-mono text-(length:--text-micro)">{artifacts.length}</span>
         {pictures.length > 0 && files.length > 0 ? (
           <span className="ml-2 font-mono text-(length:--text-micro)">
             {count(pictures.length, "image")}
@@ -97,8 +99,7 @@ export function ThreadAttachments({ artifacts }: { artifacts: LabArtifact[] }) {
               data-show-all
               onClick={() => setAll(true)}
               className={`flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-(--tint-slab) px-3 text-xs font-medium text-foreground hover:bg-(--tint-slab-raised) active:bg-(--tint-button) ${MOTION} ${FOCUS_RING}`}
-            >
-              Show all <span className="font-mono text-(length:--text-micro)">{ordered.length}</span>
+            >{interfaceText("m_6134b89407a608")}<span className="font-mono text-(length:--text-micro)">{ordered.length}</span>
             </button>
           </li>
         ) : null}

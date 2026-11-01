@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { tenantSessionRecovery } from "@/lib/tenant-session-recovery";
 import { api } from "./client";
 
@@ -115,7 +116,7 @@ export const auditApi = {
       const body = await res.json().catch(() => null);
       const recovery = tenantSessionRecovery.recoverIfNeeded(res.status, body);
       if (recovery) return recovery;
-      const message = (body as { error?: string } | null)?.error ?? `Export failed: ${res.status}`;
+      const message = (body as { error?: string } | null)?.error ?? interfaceText("m_478190e723653f", { value0: (res.status) });
       throw new Error(message);
     }
     return res.blob();

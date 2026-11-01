@@ -3,6 +3,8 @@ import type { Resource } from "i18next";
 import { assertValidLocaleMessages } from "./locale-validation";
 import workspaceEn from "./workspace/en.json";
 import workspaceVi from "./workspace/vi.json";
+import interfaceEn from "./workspace/interface-en.json";
+import interfaceVi from "./workspace/interface-vi.json";
 
 export const DEFAULT_LOCALE = "en" as const;
 
@@ -36,11 +38,12 @@ for (const [locale, messages] of Object.entries(localeMessages)) {
 
 export const supportedLocales = Object.keys(localeMessages);
 assertValidLocaleMessages(workspaceVi, workspaceEn);
+assertValidLocaleMessages(interfaceVi, interfaceEn);
 
 export const i18nextResources: Resource = Object.fromEntries(
   Object.entries(localeMessages).map(([locale, messages]) => [locale, {
     translation: messages,
-    ...(locale === "en" ? { workspace: workspaceEn } : locale === "vi" ? { workspace: workspaceVi } : {}),
+    ...(locale === "en" ? { workspace: workspaceEn, interface: interfaceEn } : locale === "vi" ? { workspace: workspaceVi, interface: interfaceVi } : {}),
   }]),
 ) as Resource;
 

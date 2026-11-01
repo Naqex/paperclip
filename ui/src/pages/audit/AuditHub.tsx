@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback, useEffect } from "react";
 import { History } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
@@ -20,6 +21,7 @@ import {
 } from "./audit-navigation";
 
 export function AuditHub({ section }: { section: AuditSection }) {
+  const interfaceLanguage = useInterfaceLanguage();
   const navigate = useNavigate();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -44,10 +46,10 @@ export function AuditHub({ section }: { section: AuditSection }) {
   useEffect(() => {
     const current = AUDIT_SECTIONS.find((candidate) => candidate.value === section);
     setBreadcrumbs([
-      { label: "Audit", href: section === "activity" ? undefined : "/activity" },
+      { label: interfaceText("m_bb6aea28739637"), href: section === "activity" ? undefined : "/activity" },
       ...(section === "activity" || !current ? [] : [{ label: current.label }]),
     ]);
-  }, [section, setBreadcrumbs]);
+  }, [section, setBreadcrumbs, interfaceLanguage]);
 
   const handleModeChange = useCallback(
     (next: AuditFeedMode) => {
@@ -109,13 +111,13 @@ export function AuditHub({ section }: { section: AuditSection }) {
   }, [setSearchParams]);
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={History} message="Select an organization to view Audit." />;
+    return <EmptyState icon={History} message={interfaceText("m_d3c397fc7ee839")} />;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Audit</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{interfaceText("m_bb6aea28739637")}</h1>
       </div>
 
       <Tabs

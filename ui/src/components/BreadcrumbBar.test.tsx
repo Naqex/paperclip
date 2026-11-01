@@ -47,12 +47,14 @@ function TaskBreadcrumbs({
   taskDetailLayout = false,
   identifier = "PAP-16679",
   sourceHref = "/issues",
+  sourceLabel = "Tasks",
 }: {
   onOpen?: () => void;
   panelControl?: { open: boolean; onToggle: () => void };
   taskDetailLayout?: boolean;
   identifier?: string;
   sourceHref?: string;
+  sourceLabel?: string;
 }) {
   const {
     setBreadcrumbs,
@@ -62,7 +64,7 @@ function TaskBreadcrumbs({
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Tasks", href: sourceHref },
+      { label: sourceLabel, href: sourceHref },
       {
         label: "Hire your first engineer and create a hiring plan",
         identifier,
@@ -89,6 +91,7 @@ function TaskBreadcrumbs({
     setBreadcrumbToolbar,
     setBreadcrumbs,
     sourceHref,
+    sourceLabel,
   ]);
 
   return <BreadcrumbBar taskDetailLayout={taskDetailLayout} />;
@@ -177,6 +180,15 @@ describe("BreadcrumbBar", () => {
 
     act(() => launcher?.click());
     expect(onOpen).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the mobile task layout independent of the translated source label", async () => {
+    viewport.isMobile = true;
+    await act(async () => {
+      root.render(<BreadcrumbProvider><TaskBreadcrumbs sourceHref="/TES/issues?view=all" sourceLabel="Công việc" /></BreadcrumbProvider>);
+    });
+    expect(container.querySelector('a[href="/TES/issues?view=all"]')).toBeNull();
+    expect(container.querySelector('[data-slot="task-title-identifier"]')?.textContent).toBe("PAP-16679");
   });
 
   it("appends the task identifier to the task title in the task-detail header", async () => {

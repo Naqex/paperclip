@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Tooltip,
@@ -382,6 +383,7 @@ export function DraftNumberInput({
  * type the path due to browser security limitations.
  */
 export function ChoosePathButton() {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -389,26 +391,21 @@ export function ChoosePathButton() {
         type="button"
         className="inline-flex items-center rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-accent/50 transition-colors shrink-0"
         onClick={() => setOpen(true)}
-      >
-        Choose
-      </button>
+      >{interfaceText("m_c7f937836f5d82")}</button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Specify path manually</DialogTitle>
-            <DialogDescription>
-              Browser security blocks apps from reading full local paths via a file picker.
-              Copy the absolute path and paste it into the input.
-            </DialogDescription>
+            <DialogTitle>{interfaceText("m_b1b6afc26151e1")}</DialogTitle>
+            <DialogDescription>{interfaceText("m_aa16b49c7f7632")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 text-sm">
             <section className="space-y-1.5">
               <p className="font-medium">macOS (Finder)</p>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-                <li>Find the folder in Finder.</li>
-                <li>Hold <kbd>Option</kbd> and right-click the folder.</li>
-                <li>Click "Copy &lt;folder name&gt; as Pathname".</li>
-                <li>Paste the result into the path input.</li>
+                <li>{interfaceText("m_3aa7d055e671b8")}</li>
+                <li>{interfaceText("m_50691a64ba5a1d")}<kbd>Option</kbd>{interfaceText("m_b03002f14e4e40")}</li>
+                <li>{interfaceText("m_fe070e7cdd2a64")}</li>
+                <li>{interfaceText("m_658a102fdcf5f4")}</li>
               </ol>
               <p className="rounded-md bg-muted px-2 py-1 font-mono text-xs">
                 /Users/yourname/Documents/project
@@ -417,21 +414,21 @@ export function ChoosePathButton() {
             <section className="space-y-1.5">
               <p className="font-medium">Windows (File Explorer)</p>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-                <li>Find the folder in File Explorer.</li>
-                <li>Hold <kbd>Shift</kbd> and right-click the folder.</li>
-                <li>Click "Copy as path".</li>
-                <li>Paste the result into the path input.</li>
+                <li>{interfaceText("m_2301a201d35233")}</li>
+                <li>{interfaceText("m_50691a64ba5a1d")}<kbd>Shift</kbd>{interfaceText("m_b03002f14e4e40")}</li>
+                <li>{interfaceText("m_9f26034891f692")}</li>
+                <li>{interfaceText("m_658a102fdcf5f4")}</li>
               </ol>
               <p className="rounded-md bg-muted px-2 py-1 font-mono text-xs">
                 C:\Users\yourname\Documents\project
               </p>
             </section>
             <section className="space-y-1.5">
-              <p className="font-medium">Terminal fallback (macOS/Linux)</p>
+              <p className="font-medium">{interfaceText("m_e1983af87a3dee")}</p>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-                <li>Run <code>cd /path/to/folder</code>.</li>
-                <li>Run <code>pwd</code>.</li>
-                <li>Copy the output and paste it into the path input.</li>
+                <li>{interfaceText("m_1950947bd11c64")}<code>cd /path/to/folder</code>.</li>
+                <li>{interfaceText("m_1950947bd11c64")}<code>pwd</code>.</li>
+                <li>{interfaceText("m_71bb95f3e92a5c")}</li>
               </ol>
             </section>
           </div>

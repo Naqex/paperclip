@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * Live adapter: map a run's streaming TranscriptEntry[] (from
  * useLiveRunTranscripts — the same source the current thread consumes) into the
@@ -211,8 +212,8 @@ function thoughtDurationLabel(
   const secs = Math.round((end - start) / 1000);
   if (secs < 1) return undefined;
   return secs < 60
-    ? `Thought for ${secs}s`
-    : `Thought for ${Math.floor(secs / 60)}m ${secs % 60}s`;
+    ? interfaceText("m_1f1da1779904f3", { value0: (secs) })
+    : interfaceText("m_83b008626b1485", { value0: (Math.floor(secs / 60)), value1: (secs % 60) });
 }
 
 /** Append token deltas onto the open logical line while preserving real newlines. */
@@ -1043,7 +1044,7 @@ export function transcriptToTaskChatItems(
           kind: "usage",
           ...(entry.subtype === "paperclip_runner_session_usage"
             ? {
-                label: "Provider session total",
+                label: interfaceText("m_4c72ae7d1d481b"),
                 detail:
                   entry.text ||
                   "This cumulative usage can include earlier runs in the resumed provider session.",
@@ -1815,16 +1816,16 @@ function formatDurationLabel(ms: number): string | undefined {
   if (!Number.isFinite(ms) || ms <= 0) return undefined;
   const totalSec = Math.round(ms / 1000);
   if (totalSec < 1) return "1s";
-  if (totalSec < 60) return `${totalSec}s`;
+  if (totalSec < 60) return interfaceText("m_852fe3718c6cfd", { value0: (totalSec) });
   const min = Math.floor(totalSec / 60);
   const sec = totalSec % 60;
-  return sec === 0 ? `${min}m` : `${min}m ${sec}s`;
+  return sec === 0 ? `${min}m` : interfaceText("m_bb409db730adb8", { value0: (min), value1: (sec) });
 }
 
 function formatTokensLabel(tokens: number): string | undefined {
   if (!Number.isFinite(tokens) || tokens <= 0) return undefined;
   const label = tokens >= 1000 ? `${(tokens / 1000).toFixed(1)}k` : `${tokens}`;
-  return `${label} tokens`;
+  return interfaceText("m_2bf89c4034df34", { value0: (label) });
 }
 
 /** First→last ts span of a transcript, or undefined when unknowable. */
@@ -2163,11 +2164,11 @@ export function deriveRunStatusLabel(entries: readonly TranscriptEntry[]): {
         }
       }
       const selfTalk = flattenSelfTalk(parts.join(""));
-      return { label: "Responding", selfTalk: selfTalk || undefined };
+      return { label: interfaceText("m_98047c1e6a79f7"), selfTalk: selfTalk || undefined };
     }
-    if (entry.kind === "thinking") return { label: "Thinking" };
+    if (entry.kind === "thinking") return { label: interfaceText("m_a20d12c5e9c428") };
     if (entry.kind === "system" && entry.text === "Reasoning started")
-      return { label: "Thinking" };
+      return { label: interfaceText("m_a20d12c5e9c428") };
   }
-  return { label: "Running" };
+  return { label: interfaceText("m_f4ccae29e1bb0c") };
 }

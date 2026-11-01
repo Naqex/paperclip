@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentIdentity } from "./AgentIdentity";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { memo, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
@@ -184,9 +185,9 @@ function formatTimelineAssigneeLabel(
     return agentMap?.get(assignee.agentId)?.name ?? assignee.agentId.slice(0, 8);
   }
   if (assignee.userId) {
-    return formatAssigneeUserLabel(assignee.userId, currentUserId) ?? "Board";
+    return formatAssigneeUserLabel(assignee.userId, currentUserId) ?? interfaceText("m_4816cbfd74aa82");
   }
-  return "Unassigned";
+  return interfaceText("m_14d33bd014e6b4");
 }
 
 function formatTimelineActorName(
@@ -215,7 +216,7 @@ function initialsForName(name: string) {
 function formatRunStatusLabel(status: string) {
   switch (status) {
     case "timed_out":
-      return "timed out";
+      return interfaceText("m_3dcd80f1b15f79");
     default:
       return status.replace(/_/g, " ");
   }
@@ -247,6 +248,7 @@ function runStatusClass(status: string) {
 }
 
 function CopyMarkdownButton({ text }: { text: string }) {
+  useInterfaceLanguage();
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -256,7 +258,7 @@ function CopyMarkdownButton({ text }: { text: string }) {
     }
   }, []);
 
-  const label = status === "copied" ? "Copied" : status === "failed" ? "Copy failed" : "Copy";
+  const label = status === "copied" ? interfaceText("m_8d525e5f158b9a") : status === "failed" ? interfaceText("m_5b50e7a693fee9") : interfaceText("m_e21f935f11d7e9");
 
   return (
     <button
@@ -270,7 +272,7 @@ function CopyMarkdownButton({ text }: { text: string }) {
             : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
       )}
       title={label}
-      aria-label="Copy comment as markdown"
+      aria-label={interfaceText("m_35d33330406093")}
       onClick={() => {
         void copyTextToClipboard(text)
           .then(() => setStatus("copied"))
@@ -324,6 +326,7 @@ function CommentCard({
   queued?: boolean;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   const isHighlighted = highlightCommentId === comment.id;
   const isPending = comment.clientStatus === "pending";
   const isQueued = queued || comment.queueState === "queued" || comment.clientStatus === "queued";
@@ -355,14 +358,10 @@ function CommentCard({
         )}
         <span className="flex items-center gap-1.5">
           {isQueued ? (
-            <Badge variant="outline" className="border-amber-400/60 bg-amber-100/70 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-amber-800 dark:border-amber-400/40 dark:bg-amber-500/20 dark:text-amber-200">
-              Queued
-            </Badge>
+            <Badge variant="outline" className="border-amber-400/60 bg-amber-100/70 text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-amber-800 dark:border-amber-400/40 dark:bg-amber-500/20 dark:text-amber-200">{interfaceText("m_661ff40a07e037")}</Badge>
           ) : null}
           {followUpRequested ? (
-            <Badge variant="outline" className="text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow)">
-              Follow-up
-            </Badge>
+            <Badge variant="outline" className="text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow)">{interfaceText("m_09b2d9cd112379")}</Badge>
           ) : null}
           {companyId && !isPending && !isDeleted ? (
             <PluginSlotOutlet
@@ -381,7 +380,7 @@ function CommentCard({
             />
           ) : null}
           {isPending ? (
-            <span className="text-xs text-muted-foreground">{isQueued ? "Queueing..." : "Sending..."}</span>
+            <span className="text-xs text-muted-foreground">{isQueued ? interfaceText("m_d6e3ff1af9acec") : interfaceText("m_286a3af7348e83")}</span>
           ) : (
             <a
               href={`#comment-${comment.id}`}
@@ -394,7 +393,7 @@ function CommentCard({
         </span>
       </div>
       {isDeleted ? (
-        <div className="text-sm italic text-muted-foreground">Comment deleted</div>
+        <div className="text-sm italic text-muted-foreground">{interfaceText("m_7199a134a33912")}</div>
       ) : (
         <MarkdownBody className="text-sm" softBreaks externalReferences={externalReferences}>{comment.body}</MarkdownBody>
       )}
@@ -428,12 +427,10 @@ function CommentCard({
               <Link
                 to={`/agents/${comment.runAgentId}/runs/${comment.runId}`}
                 className="inline-flex items-center rounded-md border border-border bg-accent/30 px-2 py-1 text-(length:--text-nano) font-mono text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
-              >
-                run {comment.runId.slice(0, 8)}
+              >{interfaceText("m_3330b30ee29389")}{comment.runId.slice(0, 8)}
               </Link>
             ) : (
-              <span className="inline-flex items-center rounded-md border border-border bg-accent/30 px-2 py-1 text-(length:--text-nano) font-mono text-muted-foreground">
-                run {comment.runId.slice(0, 8)}
+              <span className="inline-flex items-center rounded-md border border-border bg-accent/30 px-2 py-1 text-(length:--text-nano) font-mono text-muted-foreground">{interfaceText("m_3330b30ee29389")}{comment.runId.slice(0, 8)}
               </span>
             )
           ) : undefined}
@@ -445,12 +442,10 @@ function CommentCard({
             <Link
               to={`/agents/${comment.runAgentId}/runs/${comment.runId}`}
               className="inline-flex items-center rounded-md border border-border bg-accent/30 px-2 py-1 text-(length:--text-nano) font-mono text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
-            >
-              run {comment.runId.slice(0, 8)}
+            >{interfaceText("m_3330b30ee29389")}{comment.runId.slice(0, 8)}
             </Link>
           ) : (
-            <span className="inline-flex items-center rounded-md border border-border bg-accent/30 px-2 py-1 text-(length:--text-nano) font-mono text-muted-foreground">
-              run {comment.runId.slice(0, 8)}
+            <span className="inline-flex items-center rounded-md border border-border bg-accent/30 px-2 py-1 text-(length:--text-nano) font-mono text-muted-foreground">{interfaceText("m_3330b30ee29389")}{comment.runId.slice(0, 8)}
             </span>
           )}
         </div>
@@ -474,8 +469,9 @@ function TimelineEventCard({
   agentMap?: Map<string, Agent>;
   currentUserId?: string | null;
 }) {
+  useInterfaceLanguage();
   const actorName = formatTimelineActorName(event.actorType, event.actorId, agentMap, currentUserId);
-  const actionLabel = event.followUpRequested ? "requested follow-up" : "updated this task";
+  const actionLabel = event.followUpRequested ? interfaceText("m_23f52c48c48556") : interfaceText("m_9cc0b812eefb0a");
 
   return (
     <div id={`activity-${event.id}`} className="flex items-start gap-2.5 py-1.5">
@@ -497,9 +493,7 @@ function TimelineEventCard({
 
         {event.statusChange ? (
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="w-14 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-              Status
-            </span>
+            <span className="w-14 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_920e413c7d411b")}</span>
             <span className="text-muted-foreground">
               {humanizeValue(event.statusChange.from)}
             </span>
@@ -512,9 +506,7 @@ function TimelineEventCard({
 
         {event.assigneeChange ? (
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="w-14 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-              Assignee
-            </span>
+            <span className="w-14 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_5e20d20e3978dc")}</span>
             <span className="text-muted-foreground">
               {formatTimelineAssigneeLabel(event.assigneeChange.from, agentMap, currentUserId)}
             </span>
@@ -527,9 +519,7 @@ function TimelineEventCard({
 
         {event.workspaceChange ? (
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="w-14 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-              Workspace
-            </span>
+            <span className="w-14 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_87bb59ba2f92f2")}</span>
             <span className="text-muted-foreground">
               {formatTimelineWorkspaceLabel(event.workspaceChange.from)}
             </span>
@@ -584,8 +574,9 @@ const TimelineList = memo(function TimelineList({
   highlightCommentId?: string | null;
   externalReferences?: MarkdownExternalReferenceMap;
 }) {
+  useInterfaceLanguage();
   if (timeline.length === 0) {
-    return <p className="text-sm text-muted-foreground">No timeline entries yet.</p>;
+    return <p className="text-sm text-muted-foreground">{interfaceText("m_a3f327b5ce04a1")}</p>;
   }
 
   return (
@@ -632,7 +623,7 @@ const TimelineList = memo(function TimelineList({
                   <Link to={`/agents/${run.agentId}`} className="font-medium text-foreground transition-colors hover:underline">
                     {actorName}
                   </Link>
-                  <span className="text-muted-foreground">run</span>
+                  <span className="text-muted-foreground">{interfaceText("m_acba25512100f8")}</span>
                   <Link
                     to={`/agents/${run.agentId}/runs/${run.runId}`}
                     className="inline-flex items-center rounded-md border border-border bg-accent/40 px-2 py-1 font-mono text-xs text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
@@ -653,8 +644,7 @@ const TimelineList = memo(function TimelineList({
               {run.environment || run.environmentLease ? (
                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-(length:--text-micro) text-muted-foreground">
                   {run.environment ? (
-                    <span>
-                      Environment <span className="text-foreground">{run.environment.name}</span>
+                    <span>{interfaceText("m_4a08ee9ecc601c")}<span className="text-foreground">{run.environment.name}</span>
                       {/* The raw "sandbox" driver key stays off run details — the
                           environment's name and the Provider entry below already
                           identify it; other drivers (ssh, local) remain useful. */}
@@ -664,13 +654,11 @@ const TimelineList = memo(function TimelineList({
                     </span>
                   ) : null}
                   {run.environmentLease?.provider ? (
-                    <span>
-                      Provider <span className="text-foreground">{run.environmentLease.provider}</span>
+                    <span>{interfaceText("m_39d0d9de7248d0")}<span className="text-foreground">{run.environmentLease.provider}</span>
                     </span>
                   ) : null}
                   {run.environmentLease ? (
-                    <span>
-                      Lease{" "}
+                    <span>{interfaceText("m_a789e9e05ec6ae")}{" "}
                       <span className="font-mono text-foreground">
                         {run.environmentLease.id.slice(0, 8)}
                       </span>
@@ -683,8 +671,7 @@ const TimelineList = memo(function TimelineList({
                     </span>
                   ) : null}
                   {run.environmentLease?.failureReason ? (
-                    <span className="text-destructive">
-                      Failure: {run.environmentLease.failureReason}
+                    <span className="text-destructive">{interfaceText("m_3ec630c3e18434")}{run.environmentLease.failureReason}
                     </span>
                   ) : null}
                 </div>
@@ -748,6 +735,7 @@ export function CommentThread({
   composerDisabledReason = null,
   externalReferences,
 }: CommentThreadProps) {
+  useInterfaceLanguage();
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [attaching, setAttaching] = useState(false);
@@ -960,7 +948,7 @@ export function CommentThread({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-semibold">Timeline ({timeline.length + queuedComments.length})</h3>
+      <h3 className="text-sm font-semibold">{interfaceText("m_83613dc5acdb2d")}{timeline.length + queuedComments.length})</h3>
 
       <TimelineList
         timeline={timeline}
@@ -985,8 +973,7 @@ export function CommentThread({
       {queuedComments.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <h4 className="text-xs font-semibold uppercase tracking-(--tracking-eyebrow) text-amber-700 dark:text-amber-300">
-              Queued Comments ({queuedComments.length})
+            <h4 className="text-xs font-semibold uppercase tracking-(--tracking-eyebrow) text-amber-700 dark:text-amber-300">{interfaceText("m_7d936b234e37f5")}{queuedComments.length})
             </h4>
             {onInterruptQueued && queuedComments[0]?.queueTargetRunId ? (
               <Button
@@ -996,7 +983,7 @@ export function CommentThread({
                 disabled={interruptingQueuedRunId === queuedComments[0].queueTargetRunId}
                 onClick={() => void onInterruptQueued(queuedComments[0]!.queueTargetRunId!)}
               >
-                {interruptingQueuedRunId === queuedComments[0].queueTargetRunId ? "Interrupting..." : "Interrupt"}
+                {interruptingQueuedRunId === queuedComments[0].queueTargetRunId ? interfaceText("m_f60f33ede21dce") : interfaceText("m_b62523141249e0")}
               </Button>
             ) : null}
           </div>
@@ -1027,7 +1014,7 @@ export function CommentThread({
             ref={editorRef}
             value={body}
             onChange={setBody}
-            placeholder="Leave a comment..."
+            placeholder={interfaceText("m_4dff58ab688832")}
             mentions={mentions}
             onSubmit={handleSubmit}
             imageUploadHandler={imageUploadHandler}
@@ -1048,7 +1035,7 @@ export function CommentThread({
                   size="icon-sm"
                   onClick={() => attachInputRef.current?.click()}
                   disabled={attaching}
-                  title="Attach image"
+                  title={interfaceText("m_2eacc5e02758c0")}
                 >
                   <Paperclip className="h-4 w-4" />
                 </Button>
@@ -1058,14 +1045,14 @@ export function CommentThread({
               <InlineEntitySelector
                 value={reassignTarget}
                 options={reassignOptions}
-                placeholder="Responsible"
+                placeholder={interfaceText("m_bc110a6d072209")}
                 noneLabel="No responsible"
-                searchPlaceholder="Search responsible..."
-                emptyMessage="No responsible found."
+                searchPlaceholder={interfaceText("m_9cb8d79fc8b40d")}
+                emptyMessage={interfaceText("m_045a8ffe4067d6")}
                 onChange={selectAssignee}
                 className="text-xs h-8"
                 renderTriggerValue={(option) => {
-                  if (!option) return <span className="text-muted-foreground">Responsible</span>;
+                  if (!option) return <span className="text-muted-foreground">{interfaceText("m_bc110a6d072209")}</span>;
                   const agentId = option.id.startsWith("agent:") ? option.id.slice("agent:".length) : null;
                   const agent = agentId ? agentMap?.get(agentId) : null;
                   return (
@@ -1093,7 +1080,7 @@ export function CommentThread({
               />
             )}
             <Button size="sm" disabled={!canSubmit} onClick={handleSubmit}>
-              {submitting ? "Posting..." : "Comment"}
+              {submitting ? interfaceText("m_e24da73ee9535f") : interfaceText("m_44f5e3fbec57be")}
             </Button>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { configFieldsForSection } from "../config-sections";
 import type { AdapterConfigFieldsProps } from "../types";
 import {
@@ -29,10 +30,11 @@ export function ClaudeLocalConfigFields({
   models,
   hideInstructionsFile,
 }: AdapterConfigFieldsProps) {
+  useInterfaceLanguage();
   return configFieldsForSection(section, (
     <>
       {!hideInstructionsFile && (
-        <Field label="Agent instructions file" hint={instructionsFileHint}>
+        <Field label={interfaceText("m_ce46e7f310ea3f")} hint={instructionsFileHint}>
           <div className="flex items-center gap-2">
             <DraftInput
               value={
@@ -82,6 +84,7 @@ export function ClaudeLocalAdvancedFields({
   mark,
   managedSandboxOnly,
 }: AdapterConfigFieldsProps) {
+  useInterfaceLanguage();
   const rawEngine = isCreate
     ? values!.claudeEngine ?? "auto"
     : eff("adapterConfig", "engine", String(config.engine ?? "auto"));
@@ -96,7 +99,7 @@ export function ClaudeLocalAdvancedFields({
         environment owns both, so the managed-sandbox-only policy hides them,
         the same way `runnerManaged` hides them for the Paperclip Runner.
       */}
-      {!managedSandboxOnly && <Field label="Execution engine" hint="Default uses ACP. If ACP is unavailable, the run fails with a setup error. Choose CLI explicitly to use it.">
+      {!managedSandboxOnly && <Field label={interfaceText("m_da96ed44c9414c")} hint={interfaceText("m_3c378609aa8d26")}>
         <select
           className={inputClass}
           value={engine}
@@ -107,7 +110,7 @@ export function ClaudeLocalAdvancedFields({
               : mark("adapterConfig", "engine", value === "auto" ? undefined : value);
           }}
         >
-          <option value="auto">Default (ACP)</option>
+          <option value="auto">{interfaceText("m_db3da2a98fda28")}</option>
           <option value="cli">Claude CLI</option>
           <option value="acp">ACP</option>
         </select>
@@ -116,8 +119,8 @@ export function ClaudeLocalAdvancedFields({
         <>
           {!managedSandboxOnly && (
             <Field configSection="advanced"
-              label="ACP server command"
-              hint="Optional override for the Claude ACP server command. Defaults to the package-local claude-agent-acp binary."
+              label={interfaceText("m_3a0d4f5f957064")}
+              hint={interfaceText("m_11a60acc5a8c79")}
             >
               <DraftInput
                 value={
@@ -136,7 +139,7 @@ export function ClaudeLocalAdvancedFields({
               />
             </Field>
           )}
-          <Field configSection="runPolicy" label="ACP session mode" hint="Persistent keeps ACP session state between runs. One-shot starts fresh each run.">
+          <Field configSection="runPolicy" label={interfaceText("m_6b7415b4b77c69")} hint={interfaceText("m_2f4fdb5f420f3e")}>
             <select
               className={inputClass}
               value={
@@ -151,13 +154,13 @@ export function ClaudeLocalAdvancedFields({
                   : mark("adapterConfig", "mode", value);
               }}
             >
-              <option value="persistent">Persistent</option>
-              <option value="oneshot">One-shot</option>
+              <option value="persistent">{interfaceText("m_f067b731a9eb7f")}</option>
+              <option value="oneshot">{interfaceText("m_4c6e65c60f5bd2")}</option>
             </select>
           </Field>
           <Field
-            label="ACP non-interactive permissions"
-            hint="Fallback if the ACP agent asks for input outside an interactive session."
+            label={interfaceText("m_775568b9ccf2a0")}
+            hint={interfaceText("m_17fa0b5190ae80")}
           >
             <select
               className={inputClass}
@@ -173,14 +176,14 @@ export function ClaudeLocalAdvancedFields({
                   : mark("adapterConfig", "nonInteractivePermissions", value);
               }}
             >
-              <option value="deny">Deny</option>
-              <option value="fail">Fail</option>
+              <option value="deny">{interfaceText("m_05a2d7332eb9d8")}</option>
+              <option value="fail">{interfaceText("m_09230b3dbc3563")}</option>
             </select>
           </Field>
           {!managedSandboxOnly && (
             <Field
-              label="ACP state directory"
-              hint="Optional ACP session state directory. Defaults to Paperclip-managed organization/agent scoped storage."
+              label={interfaceText("m_519b9622e450f6")}
+              hint={interfaceText("m_74622178516831")}
             >
               <div className="flex items-center gap-2">
                 <DraftInput
@@ -203,8 +206,8 @@ export function ClaudeLocalAdvancedFields({
             </Field>
           )}
           <Field configSection="runPolicy"
-            label="ACP warm process idle ms"
-            hint="Defaults to 0, which closes the ACP process after each run while retaining persistent session state."
+            label={interfaceText("m_4d464a532c7faf")}
+            hint={interfaceText("m_01653b2fd423ba")}
           >
             {isCreate ? (
               <input
@@ -229,7 +232,7 @@ export function ClaudeLocalAdvancedFields({
         </>
       )}
       <ToggleField
-        label="Enable Chrome"
+        label={interfaceText("m_bccd54aea4c5cc")}
         hint={help.chrome}
         checked={
           isCreate
@@ -243,7 +246,7 @@ export function ClaudeLocalAdvancedFields({
         }
       />
       <ToggleField
-        label="Skip permissions"
+        label={interfaceText("m_77c4c0c6d19bf9")}
         hint={help.dangerouslySkipPermissions}
         checked={
           isCreate
@@ -260,7 +263,7 @@ export function ClaudeLocalAdvancedFields({
             : mark("adapterConfig", "dangerouslySkipPermissions", v)
         }
       />
-      <Field label="Max turns per run" hint={help.maxTurnsPerRun}>
+      <Field label={interfaceText("m_25c125e0557d50")} hint={help.maxTurnsPerRun}>
         {isCreate ? (
           <input
             type="number"

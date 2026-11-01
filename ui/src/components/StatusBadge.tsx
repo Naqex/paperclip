@@ -10,6 +10,7 @@ import {
   taskStatusVarDefault,
 } from "../lib/status-colors";
 import { StatusGlyph } from "./StatusGlyph";
+import { useTranslation } from "@/i18n";
 
 /** Inline `--sc` local var pointing a status helper at a base-hue CSS var. */
 function scStyle(cssVar: string): CSSProperties {
@@ -28,6 +29,7 @@ function sentenceCaseStatus(status: string): string {
 // design-allow(pill-pattern): DECISION-SHEET.md C8 - status badges keep the bespoke WCAG-tuned
 // .status-chip color-mix mechanic and do not wrap the Badge primitive.
 export function StatusBadge({ status, label, className }: { status: string; label?: string; className?: string }) {
+  const { t, i18n } = useTranslation("workspace");
   return (
     <span
       className={cn(
@@ -36,7 +38,9 @@ export function StatusBadge({ status, label, className }: { status: string; labe
         className
       )}
     >
-      {label ?? status.replace(/[_-]/g, " ")}
+      {label ?? (i18n.resolvedLanguage === "vi"
+        ? t(`states.${status}`, { defaultValue: status.replace(/[_-]/g, " ") })
+        : status.replace(/[_-]/g, " "))}
     </span>
   );
 }
@@ -47,6 +51,7 @@ export function StatusBadge({ status, label, className }: { status: string; labe
  * renders as "idle" (alias for dead code).
  */
 export function AgentStatusBadge({ status }: { status: string }) {
+  const { t, i18n } = useTranslation("workspace");
   const cssVar = agentStatusVar[status] ?? agentStatusVarDefault;
   const label = status === "active" ? "idle" : status;
   return (
@@ -54,7 +59,7 @@ export function AgentStatusBadge({ status }: { status: string }) {
       className="status-chip inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium leading-none whitespace-nowrap shrink-0"
       style={scStyle(cssVar)}
     >
-      {label.replace(/_/g, " ")}
+      {i18n.resolvedLanguage === "vi" ? t(`states.${label}`, { defaultValue: label.replace(/_/g, " ") }) : label.replace(/_/g, " ")}
     </span>
   );
 }
@@ -85,8 +90,12 @@ export function AgentStatusCapsule({ status }: { status: string }) {
  * unaffected.
  */
 export function IssueStatusBadge({ status: taskStatus, externalConversationState }: { status: string; externalConversationState?: "active" | "waiting" | null }) {
+  const { t, i18n } = useTranslation("workspace");
   const status = taskStatus === "in_review" && externalConversationState === "waiting" ? "idle" : taskStatus;
   const cssVar = taskStatusVar[status] ?? taskStatusVarDefault;
+  const displayStatus = i18n.resolvedLanguage === "vi"
+    ? t(`states.${status}`, { defaultValue: sentenceCaseStatus(status) })
+    : sentenceCaseStatus(status);
   return (
     <span
       className={cn(
@@ -96,7 +105,7 @@ export function IssueStatusBadge({ status: taskStatus, externalConversationState
       style={scStyle(cssVar)}
     >
       <StatusGlyph status={status} size="sm" />
-      {sentenceCaseStatus(status)}
+      {displayStatus.charAt(0).toLocaleUpperCase() + displayStatus.slice(1)}
     </span>
   );
 }

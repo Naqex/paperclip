@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -12,27 +13,27 @@ import { useToastActions } from "../context/ToastContext";
 
 const explanations: Record<CostDataQualityReason, { label: string; description: string }> = {
   unknown_billing: {
-    label: "Billing category unknown",
+    get label() { return interfaceText("m_a545221d406481"); },
     description: "This run did not identify API or subscription billing. Any recorded charges are included in the inference ledger. For future runs, select an AI connection in the agent’s configuration so Paperclip can identify its billing.",
   },
   missing_model: {
-    label: "Model not reported",
+    get label() { return interfaceText("m_794a63740481b1"); },
     description: "Token usage was recorded without a model, so Paperclip cannot estimate its cost. Select an explicit model in the agent’s configuration for future runs. Changing settings will not reprice this past run.",
   },
   missing_price: {
-    label: "Cost unavailable",
+    get label() { return interfaceText("m_b1e2387a957beb"); },
     description: "The provider did not supply a reliable price for this usage. There is no action required for this past entry. New API runs with complete usage and a supported model are estimated automatically.",
   },
   waiting_for_receipt: {
-    label: "Receiving usage",
+    get label() { return interfaceText("m_52dce6c3a32757"); },
     description: "This run has stopped. Paperclip is waiting for its final usage data and will record it automatically. You do not need to rerun the agent.",
   },
   receipt_unavailable: {
-    label: "Final usage unavailable",
+    get label() { return interfaceText("m_0acba8cbd24cb9"); },
     description: "This run stopped without final usage data. Its cost remains unresolved for budget checks. Paperclip will record a late receipt if one arrives; rerunning the agent will not recover this usage.",
   },
   retryable: {
-    label: "Ready to record",
+    get label() { return interfaceText("m_faf7eee20c49c4"); },
     description: "Saved usage data is ready to be recorded. Paperclip retries automatically, or you can retry now. This records costs only; it does not rerun the agent.",
   },
 };
@@ -41,6 +42,7 @@ export function CostDataQualityNotice({ companyId, from, to, reportKey, unpriced
   companyId: string; from?: string; to?: string; reportKey: readonly unknown[];
   unpricedCount: number; pendingCount: number; unknownBillingCount: number;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const unavailableCount = unpricedCount + pendingCount;
   const hasCostGaps = unavailableCount > 0 || unknownBillingCount > 0;
@@ -58,8 +60,8 @@ export function CostDataQualityNotice({ companyId, from, to, reportKey, unpriced
     mutationFn: (runId: string) => costsApi.retryAccounting(companyId, runId),
     onSuccess: result => {
       pushToast({
-        title: result.accounted ? "Costs recorded." : "No new cost data is available.",
-        body: "The agent was not rerun.",
+        title: result.accounted ? interfaceText("m_5968d6d63a1987") : interfaceText("m_dae054421f5702"),
+        body: interfaceText("m_1cf192c04e0748"),
         tone: result.accounted ? "success" : "info",
       });
       client.invalidateQueries({ queryKey: ["costs", companyId] });
@@ -68,8 +70,8 @@ export function CostDataQualityNotice({ companyId, from, to, reportKey, unpriced
     },
   });
   const label = unavailableCount > 0
-    ? `${unavailableCount} run ${unavailableCount === 1 ? "cost" : "costs"} unavailable`
-    : `${unknownBillingCount} billing ${unknownBillingCount === 1 ? "type" : "types"} unknown`;
+    ? interfaceText("m_6a7e56a15666b0", { value0: (unavailableCount), value1: (unavailableCount === 1 ? "cost" : "costs") })
+    : interfaceText("m_d2d8b365f06e2d", { value0: (unknownBillingCount), value1: (unknownBillingCount === 1 ? "type" : "types") });
 
   const groups = new Map<string | null, {
     agent: { id?: string; name: string; appearance?: CostDataQualityItem["agentAppearance"] };
@@ -99,14 +101,14 @@ export function CostDataQualityNotice({ companyId, from, to, reportKey, unpriced
         <Badge variant="outline" className="font-normal text-muted-foreground">{explanation.label}</Badge>
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <time dateTime={item.occurredAt}>{formatDateTime(item.occurredAt)}</time>
-          {item.runId && item.agentId && <Link className="text-primary underline underline-offset-4 hover:text-primary/80" to={`/agents/${item.agentId}/runs/${item.runId}`}>View run</Link>}
+          {item.runId && item.agentId && <Link className="text-primary underline underline-offset-4 hover:text-primary/80" to={`/agents/${item.agentId}/runs/${item.runId}`}>{interfaceText("m_aaf7fccc7d1315")}</Link>}
           {item.reason === "retryable" && item.runId && data?.canRetry && <Button type="button" variant="link" size="sm" className="h-auto p-0 text-xs font-normal underline hover:text-primary/80" disabled={retry.isPending}
-            onClick={() => { retry.reset(); retry.mutate(item.runId!); }}>Retry cost recording</Button>}
+            onClick={() => { retry.reset(); retry.mutate(item.runId!); }}>{interfaceText("m_ba3ca96329bc23")}</Button>}
         </div>
       </div>
       <p>{explanation.description}</p>
-      {retry.variables === item.runId && retry.isPending && <p role="status">Recording saved costs…</p>}
-      {retry.variables === item.runId && retry.error && <p role="status">Cost recording failed. Try again shortly.</p>}
+      {retry.variables === item.runId && retry.isPending && <p role="status">{interfaceText("m_f6dcf9eb8aecd8")}</p>}
+      {retry.variables === item.runId && retry.error && <p role="status">{interfaceText("m_a3e7c2053f97e2")}</p>}
     </li>;
   }
 
@@ -116,21 +118,21 @@ export function CostDataQualityNotice({ companyId, from, to, reportKey, unpriced
       {label}
     </Button>
     {open && <div id={detailsId} className="space-y-2">
-      {hasCostGaps && isPending && <p role="status">Loading affected runs…</p>}
-      {hasCostGaps && error && !data && <div className="flex flex-wrap items-center gap-2"><p role="status">Cost details could not be loaded.</p><Button variant="outline" size="sm" onClick={() => refetch()}>Retry loading</Button></div>}
+      {hasCostGaps && isPending && <p role="status">{interfaceText("m_3dd744c710c76a")}</p>}
+      {hasCostGaps && error && !data && <div className="flex flex-wrap items-center gap-2"><p role="status">{interfaceText("m_aadf8e2370b1f4")}</p><Button variant="outline" size="sm" onClick={() => refetch()}>{interfaceText("m_a0f859bc4db2c2")}</Button></div>}
       {hasCostGaps && data && <>
-        {error && <p role="status">Showing the last loaded cost details. Updates will resume automatically.</p>}
-        {data.events.length === 0 && data.runs.length === 0 && <p role="status">No cost gaps remain in this period.</p>}
-        <ul aria-label="Cost details by agent" className="space-y-4">
+        {error && <p role="status">{interfaceText("m_115d4a4efacac4")}</p>}
+        {data.events.length === 0 && data.runs.length === 0 && <p role="status">{interfaceText("m_4349449b01d5b7")}</p>}
+        <ul aria-label={interfaceText("m_3be96e075f41b0")} className="space-y-4">
           {sortedGroups.map(group => <li key={group.agent.id ?? "services"}>
             <h3 className="flex items-center gap-2 font-medium text-foreground">
               <AgentAvatar agent={group.agent} size={20} />
               {group.agent.id ? <Link className="text-primary underline underline-offset-4 hover:text-primary/80" to={`/agents/${group.agent.id}/configuration`}>{group.agent.name}</Link> : group.agent.name}
             </h3>
-            <ul aria-label={`${group.agent.name} cost details`}>{group.items.map(({ item, source }) => itemRow(item, source))}</ul>
+            <ul aria-label={interfaceText("m_7df5d0442bd454", { value0: (group.agent.name) })}>{group.items.map(({ item, source }) => itemRow(item, source))}</ul>
           </li>)}
         </ul>
-        {(data.hasMoreEvents || data.hasMoreRuns) && <p className="text-xs">Showing the 25 most recent entries in each category. Select a shorter date range to inspect more.</p>}
+        {(data.hasMoreEvents || data.hasMoreRuns) && <p className="text-xs">{interfaceText("m_771282d2a447c6")}</p>}
       </>}
     </div>}
   </div>;

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import { RepositoryBranchSelect, type RepositoryBranch } from '@/components/RepositoryBranchSelect';
@@ -16,6 +17,7 @@ export function SkillSourceBranchRepairDialog({ repository, currentBranch, branc
   onClose: () => void;
   onReturnFocus?: () => void;
 }) {
+  useInterfaceLanguage();
   const [branch, setBranch] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,16 +32,16 @@ export function SkillSourceBranchRepairDialog({ repository, currentBranch, branc
     <DialogContent showCloseButton={!pending} onOpenAutoFocus={event => { event.preventDefault(); title.current?.focus(); }}
       onCloseAutoFocus={event => { if (onReturnFocus) { event.preventDefault(); onReturnFocus(); } }}>
       <DialogHeader>
-        <DialogTitle ref={title} tabIndex={-1} className="outline-none">Choose a new branch</DialogTitle>
-        <DialogDescription className="break-words">{repository} · Currently tracking {currentBranch === 'HEAD' ? 'the default branch' : currentBranch}</DialogDescription>
+        <DialogTitle ref={title} tabIndex={-1} className="outline-none">{interfaceText("m_b5eff3d0793078")}</DialogTitle>
+        <DialogDescription className="break-words">{repository}{interfaceText("m_02791932187bc2")}{currentBranch === 'HEAD' ? interfaceText("m_69fa18e11c27a8") : currentBranch}</DialogDescription>
       </DialogHeader>
       <form className="flex min-w-0 flex-col gap-4" onSubmit={event => { event.preventDefault(); if (branch && !pending) void save(); }}>
         <RepositoryBranchSelect value={branch} branches={branches} loading={loading} error={loadError} disabled={pending}
           onChange={value => { setBranch(value); setError(null); }} onRetry={onRetry} />
         {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
         <div className="flex items-center justify-between gap-3">
-          <Button type="button" variant="ghost" disabled={pending} onClick={onClose}>Cancel</Button>
-          <Button type="submit" disabled={!branch || pending}>{pending && <LoaderCircle className="size-4 animate-spin motion-reduce:animate-none" />}{pending ? 'Changing branch…' : 'Change branch'}</Button>
+          <Button type="button" variant="ghost" disabled={pending} onClick={onClose}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+          <Button type="submit" disabled={!branch || pending}>{pending && <LoaderCircle className="size-4 animate-spin motion-reduce:animate-none" />}{pending ? interfaceText("m_187aeafb2a31c5") : interfaceText("m_97452a5ba2a16b")}</Button>
         </div>
       </form>
     </DialogContent>

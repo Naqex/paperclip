@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { auditSectionHref, type AuditSection } from "./audit/audit-navigation";
 
 export type AgentDetailView =
@@ -23,27 +24,27 @@ export const AGENT_DETAIL_NAVIGATION: ReadonlyArray<{
   {
     label: "Agent",
     items: [
-      { value: "overview", label: "Overview" },
-      { value: "instructions", label: "Instructions" },
-      { value: "skills", label: "Skills" },
+      { value: "overview", get label() { return interfaceText("m_d4b1ea5708dd53"); } },
+      { value: "instructions", get label() { return interfaceText("m_934652dce41d62"); } },
+      { value: "skills", get label() { return interfaceText("m_66d0f523a379b2"); } },
     ],
   },
   {
-    label: "Runtime",
+    get label() { return interfaceText("m_1093115897879a"); },
     items: [
-      { value: "runtime", label: "Harness / Runtime" },
-      { value: "secrets", label: "Secrets" },
-      { value: "tools", label: "Tools" },
-      { value: "channels", label: "Channels" },
+      { value: "runtime", get label() { return interfaceText("m_6711e546a022db"); } },
+      { value: "secrets", get label() { return interfaceText("m_d8707d411d9976"); } },
+      { value: "tools", get label() { return interfaceText("m_ea93d6a262ecb8"); } },
+      { value: "channels", get label() { return interfaceText("m_4c8906cf76f574"); } },
     ],
   },
   {
-    label: "Governance",
+    get label() { return interfaceText("m_86f8a694159b71"); },
     items: [
-      { value: "permissions", label: "Permissions / Trust" },
-      { value: "api-keys", label: "API Keys" },
-      { value: "revisions", label: "Revisions" },
-      { value: "advanced", label: "Advanced" },
+      { value: "permissions", get label() { return interfaceText("m_183c6ae80610fd"); } },
+      { value: "api-keys", get label() { return interfaceText("m_c08f17eb9e11a3"); } },
+      { value: "revisions", get label() { return interfaceText("m_da80b1d5740caa"); } },
+      { value: "advanced", get label() { return interfaceText("m_9f088dbebd6c3c"); } },
     ],
   },
 ] as const;

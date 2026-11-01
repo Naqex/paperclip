@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { AdapterModel } from "../../api/agents";
 import type { Issue, Project } from "@paperclipai/shared";
 import { extractProviderIdWithFallback } from "../../lib/model-utils";
@@ -55,19 +56,19 @@ export function toDateTimeLocalValue(value: string | null | undefined) {
 
 export const ISSUE_THINKING_EFFORT_OPTIONS = {
   claude_local: [
-    { value: "", label: "Default" },
-    { value: "low", label: "Low" },
-    { value: "medium", label: "Medium" },
-    { value: "high", label: "High" },
+    { value: "", get label() { return interfaceText("m_21b111cbfe6e8f"); } },
+    { value: "low", get label() { return interfaceText("m_f793de205ead5a"); } },
+    { value: "medium", get label() { return interfaceText("m_8e588cd187741f"); } },
+    { value: "high", get label() { return interfaceText("m_c4ebc6d4a5832c"); } },
   ],
   opencode_local: [
-    { value: "", label: "Default" },
-    { value: "minimal", label: "Minimal" },
-    { value: "low", label: "Low" },
-    { value: "medium", label: "Medium" },
-    { value: "high", label: "High" },
-    { value: "xhigh", label: "X-High" },
-    { value: "max", label: "Max" },
+    { value: "", get label() { return interfaceText("m_21b111cbfe6e8f"); } },
+    { value: "minimal", get label() { return interfaceText("m_057b5de48d7b90"); } },
+    { value: "low", get label() { return interfaceText("m_f793de205ead5a"); } },
+    { value: "medium", get label() { return interfaceText("m_8e588cd187741f"); } },
+    { value: "high", get label() { return interfaceText("m_c4ebc6d4a5832c"); } },
+    { value: "xhigh", get label() { return interfaceText("m_393d3e4bf2eea4"); } },
+    { value: "max", get label() { return interfaceText("m_a1a5936d3b0f8a"); } },
   ],
 } as const;
 

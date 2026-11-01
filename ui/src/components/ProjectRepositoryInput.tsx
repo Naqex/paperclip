@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import type { ProjectRepository } from "@paperclipai/shared";
 import { projectsApi } from "@/api/projects";
@@ -13,6 +14,7 @@ export function ProjectRepositoryInput({ companyId, selected, onChange, onConnec
   onConnect: () => void;
   disabled?: boolean;
 }) {
+  useInterfaceLanguage();
   const query = useQuery({ queryKey: repositoryOptionsKey(companyId), queryFn: () => projectsApi.repositoryOptions(companyId), staleTime: 30_000 });
   const state = query.isPending ? "loading" : query.isError ? "error"
     : !query.data.connectionCount ? "disconnected"
@@ -21,9 +23,7 @@ export function ProjectRepositoryInput({ companyId, selected, onChange, onConnec
   return <div className="flex min-w-0 flex-col gap-3">
     <RepositoryEditor selected={selected.map((repo) => query.data?.repositories.find((available) => available.id === repo.id) ?? repo)} onChange={onChange} available={query.data?.repositories} state={state}
       onRetry={() => void query.refetch()} onConnect={onConnect} disabled={disabled} />
-    {!!query.data?.failedConnectionCount && query.data.repositories.length > 0 && <div role="alert" className="flex flex-wrap items-center gap-2 text-xs text-destructive">
-      Some GitHub connections could not load. Reconnect them in Apps or try again.
-      <Button type="button" variant="ghost" size="sm" disabled={query.isFetching} onClick={() => void query.refetch()}>Try again</Button>
+    {!!query.data?.failedConnectionCount && query.data.repositories.length > 0 && <div role="alert" className="flex flex-wrap items-center gap-2 text-xs text-destructive">{interfaceText("m_53f3a77d7652df")}<Button type="button" variant="ghost" size="sm" disabled={query.isFetching} onClick={() => void query.refetch()}>{interfaceText("m_d8b8392e2c5429")}</Button>
     </div>}
   </div>;
 }

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { type ReactNode, useMemo, useState } from "react";
 import { Check, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,13 +58,14 @@ function summarizeTrigger(label: string, selected: string[], options: FilterMenu
 }
 
 export function SearchFilterMenu(props: SearchFilterMenuProps) {
+  useInterfaceLanguage();
   const {
     label,
     options,
     selected,
     searchable = false,
     searchPlaceholder = "Search…",
-    emptyMessage = "No options",
+    emptyMessage = interfaceText("m_d7a8974566f771"),
     triggerClassName,
     contentClassName,
     align = "start",
@@ -102,7 +104,7 @@ export function SearchFilterMenu(props: SearchFilterMenuProps) {
             active && "border-primary/60 text-foreground",
             triggerClassName,
           )}
-          aria-label={`Filter by ${label}`}
+          aria-label={interfaceText("m_6b9a77a0c1c9c3", { value0: (label) })}
         >
           <span className="truncate">{summarizeTrigger(label, selected, options)}</span>
           {active ? (
@@ -122,9 +124,7 @@ export function SearchFilterMenu(props: SearchFilterMenuProps) {
               type="button"
               className="text-xs text-muted-foreground hover:text-foreground"
               onClick={() => props.onClear()}
-            >
-              Clear
-            </button>
+            >{interfaceText("m_83b12c2216efb4")}</button>
           ) : null}
         </div>
 

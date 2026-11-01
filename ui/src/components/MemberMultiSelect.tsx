@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import { Identity } from "@/components/Identity";
@@ -44,7 +45,7 @@ export function MemberMultiSelect({
   triggerFullWidth = true,
   triggerClassName,
   contentAlign = "start",
-  emptyMessage = "No members yet.",
+  emptyMessage = interfaceText("m_12dc83c54e6c9f"),
   showSelectionPreview = true,
   filterPlaceholder = "Filter people",
   onOpenChange,
@@ -68,6 +69,7 @@ export function MemberMultiSelect({
   filterPlaceholder?: string;
   onOpenChange?: (open: boolean) => void;
 }): ReactNode {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [draftUserIds, setDraftUserIds] = useState<Set<string>>(new Set(selectedUserIds));
@@ -123,8 +125,8 @@ export function MemberMultiSelect({
             <span className="flex min-w-0 items-center">
               <span className="truncate">
                 {triggerLabel ?? (selectedCount === 0
-                  ? "Select people"
-                  : `${selectedCount} ${selectedCount === 1 ? "person" : "people"} selected`)}
+                  ? interfaceText("m_45008c0dc6a21a")
+                  : interfaceText("m_0a2185ee6661d1", { value0: (selectedCount), value1: (selectedCount === 1 ? "person" : "people") }))}
               </span>
             </span>
             <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -160,7 +162,7 @@ export function MemberMultiSelect({
                   >
                     <Checkbox
                       checked={workingUserIds.has(member.userId)}
-                      aria-label={`Allow ${label}`}
+                      aria-label={interfaceText("m_b4dbe3efd3ebcf", { value0: (label) })}
                       onCheckedChange={(checked) => {
                         const next = new Set(workingUserIds);
                         if (checked) next.add(member.userId);
@@ -178,19 +180,17 @@ export function MemberMultiSelect({
                 );
               })}
               {filteredMembers.length === 0 ? (
-                <div className="px-3 py-4 text-sm text-muted-foreground">No matches.</div>
+                <div className="px-3 py-4 text-sm text-muted-foreground">{interfaceText("m_d6572bd2e77380")}</div>
               ) : null}
             </div>
           )}
           <div className="flex items-center justify-between border-t border-border px-3 py-2">
             <span className="text-xs text-muted-foreground" aria-live="polite">
-              {workingUserIds.size === 0 ? "No people selected" : `${workingUserIds.size} selected`}
+              {workingUserIds.size === 0 ? interfaceText("m_24d7ce4525a0f9") : interfaceText("m_a81a1ef645f4df", { value0: (workingUserIds.size) })}
             </span>
             <div className="flex items-center gap-2">
               {staged ? (
-                <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)} disabled={pending}>
-                  Cancel
-                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)} disabled={pending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
               ) : null}
               <Button
                 type="button"
@@ -201,7 +201,7 @@ export function MemberMultiSelect({
                 }}
                 disabled={pending}
               >
-                {staged ? (pending ? "Saving…" : "Save") : "Done"}
+                {staged ? (pending ? interfaceText("m_23e39291d61358") : interfaceText("m_1509f561f24165")) : interfaceText("m_11a6767d5674c7")}
               </Button>
             </div>
           </div>
@@ -215,9 +215,7 @@ export function MemberMultiSelect({
             </div>
           ))}
           {selectedMembers.length > 3 ? (
-            <p className="px-1.5 pt-0.5 text-xs text-muted-foreground">
-              and {selectedMembers.length - 3} more
-            </p>
+            <p className="px-1.5 pt-0.5 text-xs text-muted-foreground">{interfaceText("m_427a379ae3e6b7")}{selectedMembers.length - 3}{interfaceText("m_226ba18bbcdb75")}</p>
           ) : null}
         </div>
       ) : null}

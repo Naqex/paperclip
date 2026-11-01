@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlarmClock, CalendarClock, ChevronDown, Loader2, Plus, UserPlus, X } from "lucide-react";
@@ -27,15 +28,15 @@ const DAY_MS = 24 * HOUR_MS;
 
 /** Snooze presets shared with the row menu, resolved at click time. */
 const SNOOZE_PRESETS: ReadonlyArray<{ label: string; resolve: () => string }> = [
-  { label: "1 hour", resolve: () => new Date(Date.now() + HOUR_MS).toISOString() },
-  { label: "4 hours", resolve: () => new Date(Date.now() + 4 * HOUR_MS).toISOString() },
-  { label: "Tomorrow", resolve: () => {
+  { get label() { return interfaceText("m_f8b8883f0c9d8d"); }, resolve: () => new Date(Date.now() + HOUR_MS).toISOString() },
+  { get label() { return interfaceText("m_e5bc9927884951"); }, resolve: () => new Date(Date.now() + 4 * HOUR_MS).toISOString() },
+  { get label() { return interfaceText("m_456a73bbcefb1d"); }, resolve: () => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     d.setHours(9, 0, 0, 0);
     return d.toISOString();
   } },
-  { label: "Next week", resolve: () => new Date(Date.now() + 7 * DAY_MS).toISOString() },
+  { get label() { return interfaceText("m_21fbde19cfb095"); }, resolve: () => new Date(Date.now() + 7 * DAY_MS).toISOString() },
 ];
 
 /** Slugify a queue title into a URL-safe kebab key the API will accept. */
@@ -77,6 +78,7 @@ interface DecisionTriageStripProps {
  * expiry chip surfaces the underlying decision's TTL read-only.
  */
 export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageStripProps) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const sourceKind = item.sourceKind;
@@ -94,7 +96,7 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
 
   const onError = (verb: string) => (error: unknown) =>
     pushToast({
-      title: `Could not ${verb}`,
+      title: interfaceText("m_4ce1cf6e3e9d6d", { value0: (verb) }),
       body: error instanceof Error ? error.message : "Please try again.",
       tone: "error",
     });
@@ -132,7 +134,7 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
     },
     onSuccess: (_result, agent) => {
       invalidate();
-      pushToast({ title: `Asked ${agent.name} for a recommendation`, tone: "success" });
+      pushToast({ title: interfaceText("m_1a242db4b609df", { value0: (agent.name) }), tone: "success" });
     },
     onError: onError("ask that agent for a recommendation"),
   });
@@ -163,8 +165,8 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
 
       {/* When to decide — the importance signal that drives desk ordering. */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-muted-foreground">When to decide</span>
-        <div className="flex flex-wrap items-center gap-1" role="group" aria-label="When to decide">
+        <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_0c240a7e8968eb")}</span>
+        <div className="flex flex-wrap items-center gap-1" role="group" aria-label={interfaceText("m_0c240a7e8968eb")}>
           {DECIDE_BY_OPTIONS.map(([value, label]) => (
             <SegmentButton
               key={value}
@@ -179,7 +181,7 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
             <PopoverTrigger asChild>
               <SegmentButton active={isDatePreset} disabled={pending}>
                 <CalendarClock className="h-3.5 w-3.5" />
-                {isDatePreset ? decideByLabel(decideBy) : "Pick date"}
+                {isDatePreset ? decideByLabel(decideBy) : interfaceText("m_9ad828afb62738")}
               </SegmentButton>
             </PopoverTrigger>
             <PopoverContent align="start" className="w-auto p-2">
@@ -201,7 +203,7 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
 
       {/* Queues — current membership as removable chips + add/create. */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-muted-foreground">Queues</span>
+        <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_be77db1156d1f1")}</span>
         {item.queues.map((queue) => (
           <span
             key={queue.key}
@@ -211,7 +213,7 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
             <button
               type="button"
               className="text-muted-foreground hover:text-destructive disabled:opacity-50"
-              aria-label={`Remove from ${queue.title}`}
+              aria-label={interfaceText("m_15de2ef738f4e2", { value0: (queue.title) })}
               disabled={pending}
               onClick={() => removeFromQueue.mutate(queue.key)}
             >
@@ -231,24 +233,19 @@ export function DecisionTriageStrip({ item, companyId, agents }: DecisionTriageS
       <div className="flex flex-wrap items-center gap-2">
         {item.snoozedUntil ? (
           <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-            <AlarmClock className="h-3.5 w-3.5" />
-            Snoozed until {new Date(item.snoozedUntil).toLocaleString()}
+            <AlarmClock className="h-3.5 w-3.5" />{interfaceText("m_59a61db9917d9a")}{new Date(item.snoozedUntil).toLocaleString()}
             <button
               type="button"
               className="text-muted-foreground hover:text-foreground"
               disabled={pending}
               onClick={() => setSnooze.mutate(null)}
-            >
-              Clear
-            </button>
+            >{interfaceText("m_83b12c2216efb4")}</button>
           </span>
         ) : (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button type="button" variant="outline" size="xs" className="h-7 gap-1" disabled={pending}>
-                <AlarmClock className="h-3.5 w-3.5" />
-                Snooze
-                <ChevronDown className="h-3 w-3" />
+                <AlarmClock className="h-3.5 w-3.5" />{interfaceText("m_52102940fe58e0")}<ChevronDown className="h-3 w-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
@@ -313,6 +310,7 @@ function QueuePicker({
   disabled?: boolean;
   onAdd: (key: string) => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const [open, setOpen] = useState(false);
@@ -335,8 +333,8 @@ function QueuePicker({
     },
     onError: (error) =>
       pushToast({
-        title: "Could not create queue",
-        body: error instanceof Error ? error.message : "Please try again.",
+        title: interfaceText("m_73ca3d5c71a885"),
+        body: error instanceof Error ? error.message : interfaceText("m_eea4fb33efd382"),
         tone: "error",
       }),
   });
@@ -347,9 +345,7 @@ function QueuePicker({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button type="button" variant="outline" size="xs" className="h-7 gap-1" disabled={disabled}>
-          <Plus className="h-3.5 w-3.5" />
-          Queue
-        </Button>
+          <Plus className="h-3.5 w-3.5" />{interfaceText("m_3b2fe03e368939")}</Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-56 p-1">
         {creating ? (
@@ -362,23 +358,19 @@ function QueuePicker({
                 if (event.key === "Enter" && title.trim()) create.mutate(title);
                 if (event.key === "Escape") setCreating(false);
               }}
-              placeholder="New queue name…"
+              placeholder={interfaceText("m_6d6839d80dd044")}
               className="w-full rounded-sm border border-border bg-background px-2 py-1 text-xs"
             />
             <div className="flex justify-end gap-1">
-              <Button type="button" variant="ghost" size="xs" onClick={() => setCreating(false)}>
-                Cancel
-              </Button>
+              <Button type="button" variant="ghost" size="xs" onClick={() => setCreating(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
               <Button type="button" size="xs" disabled={!title.trim() || create.isPending} onClick={() => create.mutate(title)}>
-                {create.isPending && <Loader2 className="h-3 w-3 animate-spin" />}
-                Create
-              </Button>
+                {create.isPending && <Loader2 className="h-3 w-3 animate-spin" />}{interfaceText("m_4759498ac2a719")}</Button>
             </div>
           </div>
         ) : (
           <div className="max-h-64 space-y-0.5 overflow-y-auto">
             {available.length === 0 && (
-              <p className="px-2 py-1.5 text-xs text-muted-foreground">No other queues yet.</p>
+              <p className="px-2 py-1.5 text-xs text-muted-foreground">{interfaceText("m_7b01ab545f3d81")}</p>
             )}
             {available.map((queue) => (
               <button
@@ -404,9 +396,7 @@ function QueuePicker({
               className="flex w-full items-center gap-1.5 rounded-sm px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-accent/50 hover:text-foreground"
               onClick={() => setCreating(true)}
             >
-              <Plus className="h-3.5 w-3.5" />
-              New queue…
-            </button>
+              <Plus className="h-3.5 w-3.5" />{interfaceText("m_627d34e0cd4b21")}</button>
           </div>
         )}
       </PopoverContent>
@@ -435,6 +425,7 @@ function AskAgentPicker({
   disabledReason?: string;
   onRoute: (agent: Agent) => void;
 }) {
+  useInterfaceLanguage();
   const active = agents.filter((agent) => agent.status !== "terminated");
   return (
     <DropdownMenu>
@@ -447,9 +438,7 @@ function AskAgentPicker({
           disabled={disabled || active.length === 0}
           title={disabledReason}
         >
-          <UserPlus className="h-3.5 w-3.5" />
-          Ask agent for recommendation
-          <ChevronDown className="h-3 w-3" />
+          <UserPlus className="h-3.5 w-3.5" />{interfaceText("m_100f13522b6a0d")}<ChevronDown className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">

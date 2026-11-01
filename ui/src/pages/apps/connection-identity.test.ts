@@ -1,9 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import { i18n } from "@/i18n";
 import {
   connectionNameForCredentialPolicy,
   connectionNameForGrantKind,
   connectionTypeLabel,
 } from "./connection-identity";
+
+afterEach(async () => { await i18n.changeLanguage("en"); });
 
 describe("connectionTypeLabel", () => {
   it("names each credential policy", () => {
@@ -52,6 +55,18 @@ describe("connectionNameForGrantKind", () => {
 });
 
 describe("connectionNameForCredentialPolicy", () => {
+  it("keeps ownership and persisted names independent of display language", async () => {
+    for (const language of ["vi", "en"]) {
+      await i18n.changeLanguage(language);
+      expect(connectionTypeLabel("shared")).toBe(language === "vi" ? "Tổ chức" : "Organization");
+      for (const policy of ["shared", "per_user_with_fallback"] as const) {
+        expect(connectionNameForCredentialPolicy("Notion", policy)).toBe("Notion for the organization");
+      }
+      for (const policy of ["per_user", "per_agent"] as const) {
+        expect(connectionNameForCredentialPolicy("Notion", policy)).toBe("Notion");
+      }
+    }
+  });
   it("suffixes a shared credential and leaves a personal one alone", () => {
     expect(connectionNameForCredentialPolicy("Notion", "shared")).toBe("Notion for the organization");
     expect(connectionNameForCredentialPolicy("Notion", "per_user")).toBe("Notion");

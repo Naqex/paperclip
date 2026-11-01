@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { cn } from "@/lib/utils";
 import type { LabGroup } from "../../kit";
 import { Counts } from "./Counts";
@@ -35,7 +36,8 @@ const GRID = "grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3";
 const COUNT_LINE = cn(META_TEXT, "px-1 text-muted-foreground");
 
 export function GalleryStacks({ groups }: { groups: LabGroup[] }) {
-  if (groups.length === 0) return <p className="px-1 py-16 text-center text-sm font-medium text-foreground">No artifact stacks yet.</p>;
+  useInterfaceLanguage();
+  if (groups.length === 0) return <p className="px-1 py-16 text-center text-sm font-medium text-foreground">{interfaceText("m_7f21bb0ea0e278")}</p>;
   const all = groups.flatMap((group) => group.artifacts);
   const total = groups.reduce((sum, group) => sum + group.count, 0);
   return (
@@ -86,8 +88,9 @@ function Day({ id, section }: { id: string; section: DaySection }) {
 const flat = () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("days") === "off";
 
 export function GalleryStack({ group }: { group: LabGroup }) {
+  useInterfaceLanguage();
   if (group.artifacts.length === 0) {
-    return <p className="px-1 py-16 text-center text-sm font-medium text-foreground">No artifacts in this stack match the current filters.</p>;
+    return <p className="px-1 py-16 text-center text-sm font-medium text-foreground">{interfaceText("m_16f4a28e29bb6e")}</p>;
   }
   return (
     <div data-solid="gallery-stack" className="flex flex-col gap-6">

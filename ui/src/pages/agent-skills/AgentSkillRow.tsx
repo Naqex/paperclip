@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { Lock, type LucideIcon } from "lucide-react";
 import { Link } from "@/lib/router";
@@ -65,6 +66,7 @@ export function AgentSkillRow({
   badge,
   accessory,
 }: AgentSkillRowProps) {
+  useInterfaceLanguage();
   const readOnly = variant === "readonly";
   const SourceIcon = data.sourceMeta?.icon;
 
@@ -120,7 +122,7 @@ export function AgentSkillRow({
   );
 
   const trailing = readOnly ? (
-    <Lock className="h-4 w-4 shrink-0 text-muted-foreground/60" aria-label="Read-only" />
+    <Lock className="h-4 w-4 shrink-0 text-muted-foreground/60" aria-label={interfaceText("m_72bb90897ab1ea")} />
   ) : (
     (() => {
       const toggle = (

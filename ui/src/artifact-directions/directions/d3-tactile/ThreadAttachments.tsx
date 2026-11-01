@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../kit";
@@ -49,11 +50,12 @@ function Place({ children }: { children: ReactNode }) {
 }
 
 function DeskItem({ artifact }: { artifact: LabArtifact }) {
+  useInterfaceLanguage();
   const [base, ext] = splitName(artifact);
   const media = artifact.kind === "image" || artifact.kind === "video";
   const name = `${base}${ext}`;
   // The flag on the object is decorative, so the state is said in the item's name.
-  const label = `Open ${name}${artifact.review ? ` — ${REVIEW_LABEL[artifact.review]}` : ""}`;
+  const label = interfaceText("m_e3440af9bb3ed3", { value0: (name), value1: (artifact.review ? ` — ${REVIEW_LABEL[artifact.review]}` : "") });
   const content = (
     <>
       <Place>
@@ -81,8 +83,9 @@ function DeskItem({ artifact }: { artifact: LabArtifact }) {
 
 /** The pile that stands for the prints that did not fit. */
 function MorePrints({ count }: { count: number }) {
+  useInterfaceLanguage();
   return (
-    <button type="button" aria-label={`Open ${count} more images`} className={ITEM}>
+    <button type="button" aria-label={interfaceText("m_9401c01c071f0e", { value0: (count) })} className={ITEM}>
       <Place>
         <span data-tac-size="sm" className="relative block aspect-4/3 w-(--tac-print-ws) filter-(--tac-filter-rest)">
           <span className="absolute inset-0 block rotate-(--tac-tilt-d) rounded-(--tac-print-r) bg-(--tac-paper-back)" />
@@ -92,7 +95,7 @@ function MorePrints({ count }: { count: number }) {
           </span>
         </span>
       </Place>
-      <span className="text-(length:--text-micro) leading-4 text-(--tac-meta)">more images</span>
+      <span className="text-(length:--text-micro) leading-4 text-(--tac-meta)">{interfaceText("m_287182af549ac2")}</span>
     </button>
   );
 }
@@ -106,6 +109,7 @@ function Count({ label, count }: { label: string; count: number }) {
 }
 
 export function ThreadAttachments({ artifacts }: { artifacts: LabArtifact[] }) {
+  useInterfaceLanguage();
   const images = artifacts.filter((a) => a.kind === "image");
   const files = artifacts.filter((a) => a.kind !== "image");
   const prints = images.length > MAX_PRINTS ? images.slice(0, MAX_PRINTS - 1) : images;
@@ -117,10 +121,10 @@ export function ThreadAttachments({ artifacts }: { artifacts: LabArtifact[] }) {
   return (
     // The column, measured: like a row's tray, the full tray keeps 40rem in a wide column and fills a narrow one.
     <div className="@container/col w-full">
-      <section aria-label="Attachments" className={cn("relative flex flex-col gap-2 pt-1", full ? "w-full max-w-(--tac-tray-max) @max-3xl/col:max-w-none" : "w-fit max-w-full")}>
+      <section aria-label={interfaceText("m_634de114775082")} className={cn("relative flex flex-col gap-2 pt-1", full ? "w-full max-w-(--tac-tray-max) @max-3xl/col:max-w-none" : "w-fit max-w-full")}>
         <p className="flex gap-3 px-1 text-xs text-muted-foreground">
-          {images.length > 0 ? <Count label="Images" count={images.length} /> : null}
-          {files.length > 0 ? <Count label="Files" count={files.length} /> : null}
+          {images.length > 0 ? <Count label={interfaceText("m_be7e2f20129365")} count={images.length} /> : null}
+          {files.length > 0 ? <Count label={interfaceText("m_abc7e9892806b0")} count={files.length} /> : null}
         </p>
         <div className="relative">
           {/* Clips on the x axis: each place's ledge runs out to the tray's edges. */}

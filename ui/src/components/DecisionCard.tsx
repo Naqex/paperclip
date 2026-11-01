@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertTriangle,
@@ -71,7 +72,7 @@ function humanStatus(status: string | null | undefined): string {
 function issueLabel(ref: DecisionIssueRef | null, fallbackId: string): string {
   if (ref?.identifier) return ref.identifier;
   if (ref?.title) return ref.title;
-  return `issue ${fallbackId.slice(0, 8)}`;
+  return interfaceText("m_e137d80087669c", { value0: (fallbackId.slice(0, 8)) });
 }
 
 function pluralize(count: number, singular: string): string {
@@ -239,6 +240,7 @@ export function DecisionCard({
   onDismiss,
   className,
 }: DecisionCardProps) {
+  useInterfaceLanguage();
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [confirmOptionId, setConfirmOptionId] = useState<string | null>(null);
   const [confirmText, setConfirmText] = useState("");
@@ -271,18 +273,18 @@ export function DecisionCard({
             : "failed";
 
   const badgeLabel = open
-    ? "Pending"
+    ? interfaceText("m_331551b0de4157")
     : decision.status === "expired"
-      ? "Expired"
+      ? interfaceText("m_424a2551d35675")
       : decision.status === "cancelled"
-        ? "Cancelled"
+        ? interfaceText("m_d353a99eb45568")
         : dismissed
-          ? "Dismissed"
+          ? interfaceText("m_9d74727714dba7")
           : decision.executionStatus === "succeeded"
-            ? "Decided"
+            ? interfaceText("m_30ba702eee51c2")
             : decision.executionStatus === "partial"
-              ? "Partial"
-              : "Failed";
+              ? interfaceText("m_a4d50fb8540365")
+              : interfaceText("m_031a8f0f659df8");
 
   const requiredUnmet = (decision.inputs ?? []).some(
     (field) => field.required && !(inputValues[field.id] ?? "").trim(),
@@ -333,8 +335,7 @@ export function DecisionCard({
         <div className="flex shrink-0 items-center gap-1.5">
           {open && hasCancelTree && (
             <span className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-(length:--text-micro) font-semibold uppercase tracking-wide", BADGE.destructive)}>
-              <ShieldAlert className="h-3 w-3" aria-hidden /> Destructive
-            </span>
+              <ShieldAlert className="h-3 w-3" aria-hidden />{interfaceText("m_c4d2ea50bfedc4")}</span>
           )}
           <span className={cn("inline-flex items-center rounded-full border px-2 py-0.5 text-(length:--text-micro) font-semibold uppercase tracking-wide", BADGE[tone])}>
             {badgeLabel}
@@ -343,11 +344,10 @@ export function DecisionCard({
       </div>
 
       {/* Provenance */}
-      <p className="mt-1 text-xs text-muted-foreground">
-        Proposed by <span className="font-medium text-foreground">{originAgentName ?? "an agent"}</span>
+      <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_9627fc0ba090a8")}<span className="font-medium text-foreground">{originAgentName ?? interfaceText("m_647936ec3e4078")}</span>
         {originIssue && (
           <>
-            {" "}while running{" "}
+            {" "}{interfaceText("m_59c39d72e6cad2")}{" "}
             <a href={originIssue.href} className="font-medium text-primary underline-offset-2 hover:underline">
               {issueLabel(originIssue, originIssue.id)}
             </a>
@@ -355,7 +355,7 @@ export function DecisionCard({
         )}
         {targetRefs.length > 0 && (
           <>
-            {" · applies to "}
+            {interfaceText("m_74a2cf3421d3f5")}
             {targetRefs.map(({ id, ref }, index) => (
               <span key={id}>
                 {index > 0 && ", "}
@@ -373,7 +373,7 @@ export function DecisionCard({
         {runHref && (
           <>
             {" · "}
-            <a href={runHref} className="hover:underline">view run</a>
+            <a href={runHref} className="hover:underline">{interfaceText("m_252314e6c88697")}</a>
           </>
         )}
       </p>
@@ -390,8 +390,7 @@ export function DecisionCard({
         <div className="mt-3 rounded-lg border border-amber-500/50 bg-amber-500/10 px-3 py-2">
           <div className="flex items-center gap-2 text-sm font-medium text-amber-800 dark:text-amber-200">
             <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden />
-            {pluralize(staleTargetIds.length, "target")} changed since this was proposed
-          </div>
+            {pluralize(staleTargetIds.length, "target")}{interfaceText("m_e8c450724ff5eb")}</div>
           <ul className="mt-1.5 space-y-1 text-xs text-amber-900/90 dark:text-amber-100/90">
             {staleTargetIds.map((id) => {
               const ref = resolveIssue(id);
@@ -401,14 +400,12 @@ export function DecisionCard({
                   <span className="font-medium">{issueLabel(ref, id)}:</span>
                   <span className="tabular-nums">{humanStatus(from?.status)}</span>
                   <ArrowRight className="h-3 w-3" aria-hidden />
-                  <span className="tabular-nums">{humanStatus(ref?.status) || "changed"}</span>
+                  <span className="tabular-nums">{humanStatus(ref?.status) || interfaceText("m_d67e2e94499449")}</span>
                 </li>
               );
             })}
           </ul>
-          <p className="mt-1.5 text-xs text-amber-800/80 dark:text-amber-200/80">
-            Options that require an unchanged target are disabled below.
-          </p>
+          <p className="mt-1.5 text-xs text-amber-800/80 dark:text-amber-200/80">{interfaceText("m_d48689f3cb1cd0")}</p>
         </div>
       )}
 
@@ -466,9 +463,7 @@ export function DecisionCard({
                       {option.label}
                     </span>
                     {blockedStale && (
-                      <span className="shrink-0 rounded-full border border-amber-500/60 bg-amber-500/10 px-2 py-0.5 text-(length:--text-micro) font-medium text-amber-800 dark:text-amber-200">
-                        Blocked · stale
-                      </span>
+                      <span className="shrink-0 rounded-full border border-amber-500/60 bg-amber-500/10 px-2 py-0.5 text-(length:--text-micro) font-medium text-amber-800 dark:text-amber-200">{interfaceText("m_eee222481970f8")}</span>
                     )}
                   </div>
                   {option.description && (
@@ -496,13 +491,11 @@ export function DecisionCard({
                 {confirming && cancelTree && (
                   <div className="rounded-lg border border-rose-500/50 bg-rose-500/5 p-3">
                     <div className="flex items-center gap-2 text-sm font-semibold text-rose-700 dark:text-rose-300">
-                      <Ban className="h-4 w-4" aria-hidden /> This cancels an entire issue tree
-                    </div>
+                      <Ban className="h-4 w-4" aria-hidden />{interfaceText("m_70e7c22b705ef6")}</div>
                     {previewRows && previewRows.length > 0 ? (
                       <>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          {pluralize(previewRows.length, "issue")} will be cancelled:
-                        </p>
+                          {pluralize(previewRows.length, "issue")}{interfaceText("m_a91e8d6978263a")}</p>
                         <ul className="mt-1 max-h-40 space-y-0.5 overflow-auto text-xs">
                           {previewRows.map((row) => (
                             <li key={row.id} className="flex items-center gap-1.5">
@@ -516,18 +509,14 @@ export function DecisionCard({
                         </ul>
                       </>
                     ) : (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        This issue and every sub-issue beneath it will be cancelled.
-                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_683863bcf5f9fa")}</p>
                     )}
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      Type <span className="font-mono font-medium text-foreground">{confirmToken}</span> to confirm.
-                    </p>
+                    <p className="mt-2 text-xs text-muted-foreground">{interfaceText("m_068e513fa6f421")}<span className="font-mono font-medium text-foreground">{confirmToken}</span>{interfaceText("m_2a2486519fe99e")}</p>
                     <Input
                       value={confirmText}
                       onChange={(event) => setConfirmText(event.target.value)}
                       placeholder={confirmToken}
-                      aria-label="Type the issue identifier to confirm"
+                      aria-label={interfaceText("m_f3deefa7ccf424")}
                       autoFocus
                       className="mt-1"
                     />
@@ -539,9 +528,7 @@ export function DecisionCard({
                           setConfirmOptionId(null);
                           setConfirmText("");
                         }}
-                      >
-                        Cancel
-                      </Button>
+                      >{interfaceText("m_19766ed6ccb2f4")}</Button>
                       <Button
                         variant="destructive"
                         size="sm"
@@ -549,7 +536,7 @@ export function DecisionCard({
                         onClick={() => onDecide?.(option.id, inputValues)}
                       >
                         {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                        {previewRows ? `Cancel ${pluralize(previewRows.length, "issue")}` : "Cancel tree"}
+                        {previewRows ? interfaceText("m_262c2e3e8d3c75", { value0: (pluralize(previewRows.length, "issue")) }) : interfaceText("m_85c1703a0f8265")}
                       </Button>
                     </div>
                   </div>
@@ -561,10 +548,8 @@ export function DecisionCard({
           {/* Always-present zero-effect Dismiss (telemetered "no", distinct from expiry) */}
           {!decision.options.some((option) => option.effects.length === 0) && (
             <div className="flex items-center justify-between gap-2 pt-1">
-              <span className="text-xs text-muted-foreground">Not now?</span>
-              <Button variant="ghost" size="sm" disabled={busy} onClick={() => onDismiss?.()}>
-                Dismiss — no effects
-              </Button>
+              <span className="text-xs text-muted-foreground">{interfaceText("m_1fd18036400257")}</span>
+              <Button variant="ghost" size="sm" disabled={busy} onClick={() => onDismiss?.()}>{interfaceText("m_e04bd6c4a23033")}</Button>
             </div>
           )}
           {errorMessage && <p className="text-xs text-rose-600 dark:text-rose-400">{errorMessage}</p>}
@@ -577,27 +562,22 @@ export function DecisionCard({
           {decision.status === "expired" && (
             <div className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2 font-medium text-foreground">
-                <Clock className="h-4 w-4" aria-hidden /> The decision window closed
-              </div>
+                <Clock className="h-4 w-4" aria-hidden />{interfaceText("m_3940019d229390")}</div>
               <p className="mt-1">
                 {expiredReason === "target_gone"
-                  ? "A target issue was cancelled before this was decided."
+                  ? interfaceText("m_08f64658f7c6fe")
                   : expiredReason === "target_completed"
-                    ? "All target issues were completed before this was decided."
-                    : "No response before the expiry deadline."}
-                {decision.continuationPolicy === "wake_origin_agent" && " The proposer was re-woken."}
+                    ? interfaceText("m_873ce659deb295")
+                    : interfaceText("m_27314a757e5ea1")}
+                {decision.continuationPolicy === "wake_origin_agent" && interfaceText("m_bd03ab48a2ee27")}
               </p>
             </div>
           )}
           {decision.status === "cancelled" && (
-            <p className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
-              This decision was withdrawn by the proposer before a response.
-            </p>
+            <p className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">{interfaceText("m_a5bdb32aa31a1b")}</p>
           )}
           {decision.status === "decided" && dismissed && (
-            <p className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
-              Dismissed — no effects were run.
-            </p>
+            <p className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">{interfaceText("m_7a9d63ee826b3c")}</p>
           )}
           {decision.status === "decided" && !dismissed && (executions ?? []).length > 0 && (
             <>
@@ -614,9 +594,7 @@ export function DecisionCard({
                 })}
               </ul>
               {decision.executionStatus !== "succeeded" && (
-                <p className="text-xs text-muted-foreground">
-                  Some effects may already have been applied. Review the results before asking the proposer to re-propose.
-                </p>
+                <p className="text-xs text-muted-foreground">{interfaceText("m_cd7735ed6f1b03")}</p>
               )}
             </>
           )}

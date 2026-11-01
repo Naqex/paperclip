@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useId, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Camera, LoaderCircle, Save, Trash2, UserRoundPen } from "lucide-react";
@@ -21,6 +22,7 @@ function deriveInitials(name: string) {
 }
 
 export function ProfileSettings() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { selectedCompanyId, selectedCompany } = useCompany();
   const queryClient = useQueryClient();
@@ -37,10 +39,10 @@ export function ProfileSettings() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Settings", href: "/company/settings" },
-      { label: "Profile" },
+      { label: interfaceText("m_74a883a037bc22"), href: "/company/settings" },
+      { label: interfaceText("m_d696a35bdd1883") },
     ]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   useEffect(() => {
     const session = sessionQuery.data;
@@ -120,13 +122,13 @@ export function ProfileSettings() {
   });
 
   if (sessionQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading profile...</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_4a47f12d23c4a6")}</div>;
   }
 
   if (sessionQuery.error || !sessionQuery.data) {
     return (
       <div className="text-sm text-destructive">
-        {sessionQuery.error instanceof Error ? sessionQuery.error.message : "Failed to load profile."}
+        {sessionQuery.error instanceof Error ? sessionQuery.error.message : interfaceText("m_530aef9d0b9be2")}
       </div>
     );
   }
@@ -144,11 +146,9 @@ export function ProfileSettings() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <UserRoundPen className="h-5 w-5 text-muted-foreground" />
-          <h1 className="text-lg font-semibold">Profile</h1>
+          <h1 className="text-lg font-semibold">{interfaceText("m_d696a35bdd1883")}</h1>
         </div>
-        <p className="text-sm text-muted-foreground">
-          Control how your account appears in the sidebar and other board surfaces.
-        </p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_d05fd497afc64c")}</p>
       </div>
 
       {actionError ? (
@@ -199,7 +199,7 @@ export function ProfileSettings() {
                     disabled={!selectedCompanyId || isSavingProfile}
                   >
                     {uploadAvatarMutation.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Camera className="size-4" />}
-                    {currentImage ? "Change photo" : "Upload photo"}
+                    {currentImage ? interfaceText("m_c5fbcb8b00ea0d") : interfaceText("m_32258ba63e8086")}
                   </Button>
                   {currentImage ? (
                     <Button
@@ -208,9 +208,7 @@ export function ProfileSettings() {
                       onClick={() => removeAvatarMutation.mutate()}
                       disabled={isSavingProfile}
                     >
-                      {removeAvatarMutation.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-                      Remove
-                    </Button>
+                      {removeAvatarMutation.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Trash2 className="size-4" />}{interfaceText("m_c3812fc4acb861")}</Button>
                   ) : null}
                 </div>
               </div>
@@ -218,10 +216,9 @@ export function ProfileSettings() {
               <div className="min-w-0 flex-1 space-y-2 pb-1">
                 <div>
                   <h2 className="truncate text-2xl font-semibold text-foreground">{currentName}</h2>
-                  <p className="truncate text-sm text-muted-foreground">{sessionQuery.data.user.email ?? "No email"}</p>
+                  <p className="truncate text-sm text-muted-foreground">{sessionQuery.data.user.email ?? interfaceText("m_2f44d9d0a44fa8")}</p>
                 </div>
-                <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                  Click the avatar to upload a new image. {uploadHint}
+                <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{interfaceText("m_9cd9bff6f325db")}{uploadHint}
                 </p>
               </div>
             </div>
@@ -236,17 +233,15 @@ export function ProfileSettings() {
           }}
         >
           <div className="space-y-2">
-            <Label htmlFor="profile-name">Display name</Label>
+            <Label htmlFor="profile-name">{interfaceText("m_2b7f6a84de917e")}</Label>
             <Input
               id="profile-name"
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={120}
-              placeholder="Board"
+              placeholder={interfaceText("m_4816cbfd74aa82")}
             />
-            <p className="text-xs text-muted-foreground">
-              Shown in the sidebar account footer and comment author surfaces.
-            </p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_8d1d6d3451f026")}</p>
           </div>
 
           <div className="space-y-2">
@@ -257,15 +252,13 @@ export function ProfileSettings() {
               readOnly
               disabled
             />
-            <p className="text-xs text-muted-foreground">
-              Email is managed by your auth session and is read-only here.
-            </p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_c7439573e7fcf1")}</p>
           </div>
 
           <div className="md:col-span-2 flex justify-end">
             <Button type="submit" disabled={isSavingProfile || !name.trim()}>
               {updateMutation.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Save className="size-4" />}
-              {updateMutation.isPending ? "Saving..." : "Save profile"}
+              {updateMutation.isPending ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_0c8209e72ec87d")}
             </Button>
           </div>
         </form>

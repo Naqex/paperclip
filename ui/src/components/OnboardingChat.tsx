@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { IssueComment } from "@paperclipai/shared";
@@ -67,15 +68,15 @@ function getRunStatusMessage(status: string, agentName: string, elapsed: number)
     case "running":
       return getCyclingMessage(RUNNING_MESSAGES, elapsed, agentName);
     case "succeeded":
-      return `${agentName} finished`;
+      return interfaceText("m_f100f8a70bed62", { value0: (agentName) });
     case "failed":
-      return `${agentName} encountered an error`;
+      return interfaceText("m_4459baece6f954", { value0: (agentName) });
     case "cancelled":
-      return `${agentName}'s run was cancelled`;
+      return interfaceText("m_b4e1b9be51f0d2", { value0: (agentName) });
     case "timed_out":
-      return `${agentName}'s run timed out`;
+      return interfaceText("m_d095a6b375f199", { value0: (agentName) });
     default:
-      return `${agentName} is thinking...`;
+      return interfaceText("m_05eb12ab1b4cf2", { value0: (agentName) });
   }
 }
 
@@ -88,6 +89,7 @@ export function OnboardingChat({
   onPlanDetected,
   onReviewPlan,
 }: OnboardingChatProps) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -248,9 +250,7 @@ export function OnboardingChat({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8 text-muted-foreground text-sm">
-        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-        Loading conversation...
-      </div>
+        <Loader2 className="h-4 w-4 mr-2 animate-spin" />{interfaceText("m_05ddf541f5c7e7")}</div>
     );
   }
 
@@ -296,13 +296,11 @@ export function OnboardingChat({
                       : "text-foreground/70",
                   )}
                 >
-                  {isAgent ? agentName : "You"}
+                  {isAgent ? agentName : interfaceText("m_08b041935798fb")}
                 </span>
                 {isPlan && (
                   <span className="inline-flex items-center gap-0.5 text-(length:--text-nano) text-green-600 dark:text-green-400 font-medium">
-                    <CheckCircle2 className="h-3 w-3" />
-                    Hiring plan detected
-                  </span>
+                    <CheckCircle2 className="h-3 w-3" />{interfaceText("m_889b9608479169")}</span>
                 )}
               </div>
               <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
@@ -350,16 +348,11 @@ export function OnboardingChat({
               <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
               <div>
                 <p className="text-sm font-medium">
-                  {agentName} has prepared a hiring plan
-                </p>
-                <p className="text-(length:--text-micro) text-muted-foreground">
-                  Review it, make edits, then approve.
-                </p>
+                  {agentName}{interfaceText("m_b253f6c0f73970")}</p>
+                <p className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_7cd07c93a77da6")}</p>
               </div>
             </div>
-            <Button size="sm" onClick={onReviewPlan}>
-              Review plan
-              <ArrowRight className="h-3.5 w-3.5 ml-1" />
+            <Button size="sm" onClick={onReviewPlan}>{interfaceText("m_71146ca693e010")}<ArrowRight className="h-3.5 w-3.5 ml-1" />
             </Button>
           </div>
         </div>
@@ -371,7 +364,7 @@ export function OnboardingChat({
           ref={inputRef}
           type="text"
           className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-ring placeholder:text-muted-foreground/50"
-          placeholder={detectedPlanCommentId ? `Ask ${agentName} to revise the plan...` : `Message ${agentName}...`}
+          placeholder={detectedPlanCommentId ? interfaceText("m_2e2b131bd94071", { value0: (agentName) }) : interfaceText("m_3c15cdc9ca64c7", { value0: (agentName) })}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -409,6 +402,7 @@ function WelcomeMessage({
   onDiscuss: () => void;
   onStart: () => void;
 }) {
+  useInterfaceLanguage();
   const [phase, setPhase] = useState<"waking" | "composing" | "message" | "chips">("waking");
 
   useEffect(() => {
@@ -431,15 +425,11 @@ function WelcomeMessage({
               {agentName}
             </span>
           </div>
-          <p>
-            Hi! Thanks for bringing me on to lead <strong>{companyName}</strong>.
+          <p>{interfaceText("m_9b6d1047076d11")}<strong>{companyName}</strong>.
           </p>
-          <p className="mt-1">
-            Our mission is: <em>{companyGoal}</em>
+          <p className="mt-1">{interfaceText("m_2167ad498e484a")}<em>{companyGoal}</em>
           </p>
-          <p className="mt-1">
-            I'm ready to put together a plan for who we should bring on. Want me to get started?
-          </p>
+          <p className="mt-1">{interfaceText("m_68554bd4cceecc")}</p>
         </div>
       )}
 
@@ -449,15 +439,11 @@ function WelcomeMessage({
           <button
             className="rounded-full border border-border px-3 py-1 text-xs hover:bg-accent/50 transition-colors text-muted-foreground hover:text-foreground"
             onClick={onDiscuss}
-          >
-            Let's discuss first
-          </button>
+          >{interfaceText("m_0334a9f2007a18")}</button>
           <button
             className="rounded-full border border-foreground bg-foreground text-background px-3 py-1 text-xs hover:opacity-90 transition-opacity"
             onClick={onStart}
-          >
-            Yes, get started!
-          </button>
+          >{interfaceText("m_75735cbed3416e")}</button>
         </div>
       )}
 
@@ -472,8 +458,8 @@ function WelcomeMessage({
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500" />
           </span>
           {phase === "waking"
-            ? `${agentName} is waking up...`
-            : `${agentName} is composing a message...`}
+            ? interfaceText("m_dc05ce8570ad13", { value0: (agentName) })
+            : interfaceText("m_6afc356900a90f", { value0: (agentName) })}
         </div>
       )}
     </>

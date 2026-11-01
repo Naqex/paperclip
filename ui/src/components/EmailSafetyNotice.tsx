@@ -1,5 +1,7 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AlertTriangle } from "lucide-react";
 export function EmailSafetyNotice() {
+  useInterfaceLanguage();
   return (
     <div
       role="note"
@@ -8,17 +10,9 @@ export function EmailSafetyNotice() {
       <div className="flex items-start gap-2">
         <AlertTriangle className="size-4 shrink-0 text-(--status-agent-paused)" />
         <div className="space-y-1">
-          <p className="text-sm font-medium">
-            Anyone can email an unrestricted inbox
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Incoming email can create tasks and trigger agent work. Set up an
-            allowlist in AgentMail to limit who can contact this inbox.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Paperclip does not verify sender restrictions. AgentMail controls
-            new messages and replies separately; check both lists.
-          </p>
+          <p className="text-sm font-medium">{interfaceText("m_850d77abd7ec64")}</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_50c1c42c86a48a")}</p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_db40f3b549c8f9")}</p>
         </div>
       </div>
       <div className="flex flex-wrap gap-4 text-sm">
@@ -27,17 +21,13 @@ export function EmailSafetyNotice() {
           target="_blank"
           rel="noreferrer"
           className="underline underline-offset-4"
-        >
-          Open AgentMail ↗
-        </a>
+        >{interfaceText("m_1d9d67d1ac149a")}</a>
         <a
           href="https://docs.agentmail.to/knowledge-base/allowlists-blocklists"
           target="_blank"
           rel="noreferrer"
           className="text-muted-foreground underline underline-offset-4"
-        >
-          Set up allowlists ↗
-        </a>
+        >{interfaceText("m_0bf5ad9e26216b")}</a>
       </div>
     </div>
   );

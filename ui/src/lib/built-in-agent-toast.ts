@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { ToastInput } from "@/context/ToastContext";
 
 export interface BuiltInAgentPausedToastOptions {
@@ -23,6 +24,6 @@ export function buildBuiltInAgentPausedToast(options: BuiltInAgentPausedToastOpt
     title: `${options.displayName} is paused`,
     body: `Resume the agent to generate this ${noun}.`,
     tone: "warn",
-    action: { label: "View agent", href: options.agentHref },
+    action: { label: interfaceText("m_7ce7832e35e85d"), href: options.agentHref },
   };
 }

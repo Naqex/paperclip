@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   AttentionDetailImage,
   AttentionFeed,
@@ -48,18 +49,18 @@ interface SourceMeta {
 }
 
 const SOURCE_META: Record<AttentionSourceKind, SourceMeta> = {
-  approval: { label: "Approval" },
-  decision: { label: "Decision" },
-  issue_thread_interaction: { label: "Decision requested" },
-  join_request: { label: "Join request" },
-  recovery_action: { label: "Recovery" },
+  approval: { get label() { return interfaceText("m_147fb813a25157"); } },
+  decision: { get label() { return interfaceText("m_640ae4baf96061"); } },
+  issue_thread_interaction: { get label() { return interfaceText("m_a1db1b31d8647e"); } },
+  join_request: { get label() { return interfaceText("m_d7d9cd19632538"); } },
+  recovery_action: { get label() { return interfaceText("m_48f6a8d5688b0c"); } },
   // Read compatibility for persisted decisions from the retired feature.
-  productivity_review: { label: "Task" },
-  blocker_attention: { label: "Blocked dependency" },
-  review: { label: "Review" },
-  failed_run: { label: "Failed run" },
-  budget_alert: { label: "Budget" },
-  agent_error_alert: { label: "Agent error" },
+  productivity_review: { get label() { return interfaceText("m_4bc74b21357c6c"); } },
+  blocker_attention: { get label() { return interfaceText("m_c4b95fcddef41e"); } },
+  review: { get label() { return interfaceText("m_aff0766a5290e1"); } },
+  failed_run: { get label() { return interfaceText("m_3f23cd69ecb80f"); } },
+  budget_alert: { get label() { return interfaceText("m_1c6225ec7092ad"); } },
+  agent_error_alert: { get label() { return interfaceText("m_2934a62999d9ee"); } },
 };
 
 export function sourceMeta(kind: AttentionSourceKind): SourceMeta {
@@ -74,10 +75,10 @@ interface SeverityStyle {
 }
 
 const SEVERITY_STYLE: Record<AttentionSeverity, SeverityStyle> = {
-  critical: { accent: "bg-red-500", dot: "bg-red-500", label: "Critical" },
-  high: { accent: "bg-orange-500", dot: "bg-orange-500", label: "High" },
-  medium: { accent: "bg-yellow-500", dot: "bg-yellow-500", label: "Medium" },
-  low: { accent: "bg-blue-500", dot: "bg-blue-500", label: "Low" },
+  critical: { accent: "bg-red-500", dot: "bg-red-500", get label() { return interfaceText("m_427dd2969bd140"); } },
+  high: { accent: "bg-orange-500", dot: "bg-orange-500", get label() { return interfaceText("m_c4ebc6d4a5832c"); } },
+  medium: { accent: "bg-yellow-500", dot: "bg-yellow-500", get label() { return interfaceText("m_8e588cd187741f"); } },
+  low: { accent: "bg-blue-500", dot: "bg-blue-500", get label() { return interfaceText("m_f793de205ead5a"); } },
 };
 
 export function severityStyle(severity: AttentionSeverity): SeverityStyle {
@@ -224,7 +225,7 @@ export function attentionDetailLine(item: AttentionItem): string | null {
     }
     case "item_verdicts": {
       const q = quote(detail.promptExcerpt);
-      const label = `${countNoun(detail.itemCount, "item")} to verdict`;
+      const label = interfaceText("m_760002b663f38d", { value0: (countNoun(detail.itemCount, "item")) });
       return q ? `${label} — ${q}` : label;
     }
     case "failed_run":
@@ -371,9 +372,9 @@ export function buildDeskShelves(items: AttentionItem[], now: number): DeskShelf
   const earlier = rest.filter((item) => !attentionIsNewToday(item, now));
 
   const shelves: DeskShelf[] = [];
-  if (decideNow.length > 0) shelves.push({ key: "desk:decide-now", label: "Decide now", items: decideNow });
-  if (newToday.length > 0) shelves.push({ key: "desk:new-today", label: "New today", items: newToday });
-  if (earlier.length > 0) shelves.push({ key: "desk:earlier", label: "Earlier", items: earlier });
+  if (decideNow.length > 0) shelves.push({ key: "desk:decide-now", label: interfaceText("m_8b60cfd14d5a36"), items: decideNow });
+  if (newToday.length > 0) shelves.push({ key: "desk:new-today", label: interfaceText("m_51a7540f41dcb9"), items: newToday });
+  if (earlier.length > 0) shelves.push({ key: "desk:earlier", label: interfaceText("m_e10ae990740118"), items: earlier });
   return shelves;
 }
 
@@ -420,10 +421,10 @@ export const DECIDE_BY_OPTIONS: ReadonlyArray<[DecideByPreset, string]> = [
 
 /** Human label for any stored `decideBy` value (preset or `YYYY-MM-DD`). */
 export function decideByLabel(decideBy: string | null): string {
-  if (!decideBy) return "Not set";
-  if (decideBy === "today") return "Today";
-  if (decideBy === "this_week") return "This week";
-  if (decideBy === "whenever") return "Whenever";
+  if (!decideBy) return interfaceText("m_4895f73177ab5d");
+  if (decideBy === "today") return interfaceText("m_2b065c7c9ce466");
+  if (decideBy === "this_week") return interfaceText("m_8c4eef5ab25325");
+  if (decideBy === "whenever") return interfaceText("m_4591883cc05620");
   if (/^\d{4}-\d{2}-\d{2}$/.test(decideBy)) {
     const parsed = new Date(`${decideBy}T00:00:00.000Z`);
     return Number.isFinite(parsed.getTime())
@@ -904,7 +905,7 @@ export function groupAttentionItems(
         ? { key: `type:${item.sourceKind}`, label: sourceMeta(item.sourceKind).label }
         : item.project
           ? { key: `project:${item.project.id}`, label: item.project.name }
-          : { key: `project:${NO_GROUP_SENTINEL}`, label: "No project" };
+          : { key: `project:${NO_GROUP_SENTINEL}`, label: interfaceText("m_f34c2be0d1c5f5") };
     const existing = groups.get(resolved.key);
     const ts = attentionActivityTimestamp(item);
     if (existing) {

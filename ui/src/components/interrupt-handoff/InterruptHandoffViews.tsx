@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AlertTriangle, Info, PauseCircle, User, X } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { AgentAvatar, type AvatarAgent } from "../AgentAvatar";
@@ -39,7 +40,7 @@ function agentIcon(agentId: string, resolvers: HandoffChipResolvers): string | n
 function userLabel(userId: string, resolvers: HandoffChipResolvers): string {
   const label = resolvers.resolveUserLabel?.(userId) ?? null;
   const base = label ?? "Board";
-  return resolvers.currentUserId && resolvers.currentUserId === userId ? `${base} (you)` : base;
+  return resolvers.currentUserId && resolvers.currentUserId === userId ? interfaceText("m_62d58551faf498", { value0: (base) }) : base;
 }
 
 const CHIP_CLASS =
@@ -56,6 +57,7 @@ export function AssigneeChip({
   resolvers: HandoffChipResolvers;
   className?: string;
 }) {
+  useInterfaceLanguage();
   if (assignee.agentId) {
     return (
       <span className={cn(CHIP_CLASS, className)} data-testid="handoff-assignee-chip" data-kind="agent">
@@ -68,7 +70,7 @@ export function AssigneeChip({
   if (assignee.userId) {
     return (
       <span className={cn(CHIP_CLASS, className)} data-testid="handoff-assignee-chip" data-kind="user">
-        <span className="sr-only">User </span>
+        <span className="sr-only">{interfaceText("m_d3d9fc67a668e7")}</span>
         <User className="h-3 w-3 shrink-0 text-muted-foreground" />
         <span className="max-w-(--sz-12rem) truncate">{userLabel(assignee.userId, resolvers)}</span>
       </span>
@@ -80,9 +82,7 @@ export function AssigneeChip({
       data-testid="handoff-assignee-chip"
       data-kind="unassigned"
     >
-      <span className="sr-only">No responsible — </span>
-      Unassigned
-    </span>
+      <span className="sr-only">{interfaceText("m_28de9128042f09")}</span>{interfaceText("m_14d33bd014e6b4")}</span>
   );
 }
 
@@ -97,6 +97,7 @@ export function HandoffWakeRow({
   resolvers: HandoffChipResolvers;
   interruptedRunAttached?: boolean;
 }) {
+  useInterfaceLanguage();
   const info = classifyAssigneeHandoff(to, {
     agentName: to.agentId ? agentName(to.agentId, resolvers) : null,
     interruptedRunAttached,
@@ -107,7 +108,7 @@ export function HandoffWakeRow({
       data-testid="handoff-wake-row"
       data-kind={info.kind}
     >
-      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Wake</span>
+      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{interfaceText("m_33a7e908344d7d")}</span>
       <span className={cn(info.kind === "agent_wake" ? "text-foreground" : "text-muted-foreground")}>
         {info.wakeText}
       </span>
@@ -194,6 +195,7 @@ export function ComposerMentionCoach({
   onInsert: () => void;
   onDismiss: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div
       className="flex items-center gap-2 rounded-md border border-amber-300/40 bg-amber-50/70 px-2 py-1.5 text-xs text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
@@ -202,23 +204,18 @@ export function ComposerMentionCoach({
       aria-live="polite"
     >
       <Info className="h-3.5 w-3.5 shrink-0" aria-hidden />
-      <span className="min-w-0 flex-1">
-        Did you mean <span className="font-medium">@{candidate.matchedText}</span>? Plain text won't
-        notify or assign an agent.
-      </span>
+      <span className="min-w-0 flex-1">{interfaceText("m_ffefb20b410568")}<span className="font-medium">@{candidate.matchedText}</span>{interfaceText("m_db3936a5b722ef")}</span>
       <button
         type="button"
         onClick={onInsert}
         className="shrink-0 rounded border border-amber-400/50 px-1.5 py-0.5 font-medium hover:bg-amber-100/60 dark:hover:bg-amber-500/20"
-        aria-label={`Insert mention for ${agentDisplayName} into your comment`}
-      >
-        Insert mention
-      </button>
+        aria-label={interfaceText("m_e84b22807bd85a", { value0: (agentDisplayName) })}
+      >{interfaceText("m_3fa5e7ca2d5187")}</button>
       <button
         type="button"
         onClick={onDismiss}
         className="shrink-0 rounded p-0.5 hover:bg-amber-100/60 dark:hover:bg-amber-500/20"
-        aria-label="Dismiss suggestion"
+        aria-label={interfaceText("m_ae5e3911d51a7d")}
       >
         <X className="h-3.5 w-3.5" aria-hidden />
       </button>
@@ -267,6 +264,7 @@ export function InterruptAssignConfirm({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div
       data-testid="interrupt-assign-confirm"
@@ -277,7 +275,7 @@ export function InterruptAssignConfirm({
         <div className="min-w-0 flex-1 space-y-1">
           <p className="font-medium">{copy.confirmTitle}</p>
           <p className="flex flex-wrap items-center gap-1 text-amber-700/90 dark:text-amber-300/90">
-            <span>Hand off to</span>
+            <span>{interfaceText("m_7bcbd89d7d5d6f")}</span>
             <AssigneeChip assignee={to} resolvers={resolvers} />
           </p>
         </div>
@@ -311,6 +309,7 @@ export function PauseAffectsSummaryView({
   summary: PauseAffectsSummary;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const visibleBuckets = summary.buckets.filter((bucket) => bucket.count > 0);
   return (
     <div
@@ -318,14 +317,9 @@ export function PauseAffectsSummaryView({
       className={cn("space-y-2 rounded-md border border-border bg-muted/30 p-3", className)}
     >
       <div className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        <PauseCircle className="h-3.5 w-3.5" aria-hidden />
-        What this affects
-      </div>
+        <PauseCircle className="h-3.5 w-3.5" aria-hidden />{interfaceText("m_b06916c5112dce")}</div>
       {summary.nothingLive ? (
-        <p role="status" className="text-xs text-muted-foreground" data-testid="pause-nothing-live">
-          Nothing live to pause — no agent run is in flight or queued. This records a hold so new work
-          won't start until you resume.
-        </p>
+        <p role="status" className="text-xs text-muted-foreground" data-testid="pause-nothing-live">{interfaceText("m_322ccbc8f66e9c")}</p>
       ) : null}
       {visibleBuckets.length > 0 ? (
         <ul className="space-y-1">
@@ -342,7 +336,7 @@ export function PauseAffectsSummaryView({
           ))}
         </ul>
       ) : (
-        <p className="text-xs text-muted-foreground">No tasks are affected.</p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_9f04a13faf9fce")}</p>
       )}
     </div>
   );

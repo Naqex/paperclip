@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import animatedHero from "../../../announcements/examples/animated/assets/78bafb6adbfd9da899cdbb5d934b4c0b9df5d419d6f0a5104a87a7b25dcc6bd8.html?raw";
 import type { Announcement } from "@paperclipai/shared";
 
@@ -8,8 +9,8 @@ export const announcementPreview: Announcement = {
   title: "Give your next idea a team",
   description: "Bring agents, projects, and work together. Set the direction, then follow your team’s progress in Paperclip.",
   image: { path: `assets/${"0".repeat(64)}.png`, alt: "Paperclip — ideas become work" },
-  secondaryLink: { kind: "external", label: "Learn more", url: "https://paperclip.ing" },
-  primaryAction: { kind: "route", label: "Explore your projects", path: "/projects" },
+  secondaryLink: { kind: "external", get label() { return interfaceText("m_1445799c033a2d"); }, url: "https://paperclip.ing" },
+  primaryAction: { kind: "route", get label() { return interfaceText("m_44b5675508a159"); }, path: "/projects" },
 };
 
 export const announcementAnimationPreview: Announcement = {

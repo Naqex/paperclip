@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GOAL_STATUSES, GOAL_LEVELS } from "@paperclipai/shared";
@@ -34,6 +35,7 @@ const levelLabels: Record<string, string> = {
 };
 
 export function NewGoalDialog() {
+  useInterfaceLanguage();
   const { newGoalOpen, newGoalDefaults, closeNewGoal } = useDialog();
   const { selectedCompanyId, selectedCompany } = useCompany();
   const queryClient = useQueryClient();
@@ -128,7 +130,7 @@ export function NewGoalDialog() {
               </span>
             )}
             <span className="text-muted-foreground/60">&rsaquo;</span>
-            <span>{newGoalDefaults.parentId ? "New sub-goal" : "New goal"}</span>
+            <span>{newGoalDefaults.parentId ? interfaceText("m_691ebb169b2e21") : interfaceText("m_f326ad6eff87f7")}</span>
           </div>
           <div className="flex items-center gap-1">
             <Button
@@ -154,7 +156,7 @@ export function NewGoalDialog() {
         <div className="px-4 pt-4 pb-2 shrink-0">
           <input
             className="w-full text-lg font-semibold bg-transparent outline-none placeholder:text-muted-foreground/50"
-            placeholder="Goal title"
+            placeholder={interfaceText("m_adb0cfb01ae1d9")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onKeyDown={(e) => {
@@ -173,7 +175,7 @@ export function NewGoalDialog() {
             ref={descriptionEditorRef}
             value={description}
             onChange={setDescription}
-            placeholder="Add description..."
+            placeholder={interfaceText("m_94123522b73f30")}
             bordered={false}
             contentClassName={cn("text-sm text-muted-foreground", expanded ? "min-h-(--sz-220px)" : "min-h-(--sz-120px)")}
             imageUploadHandler={async (file) => {
@@ -237,7 +239,7 @@ export function NewGoalDialog() {
             <PopoverTrigger asChild>
               <button className="inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs hover:bg-accent/50 transition-colors">
                 <Target className="h-3 w-3 text-muted-foreground" />
-                {currentParent ? currentParent.title : "Parent goal"}
+                {currentParent ? currentParent.title : interfaceText("m_9ff9195cb53c4a")}
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-48 p-1" align="start">
@@ -247,9 +249,7 @@ export function NewGoalDialog() {
                   !appliedParentId && "bg-accent"
                 )}
                 onClick={() => { setParentId(""); setParentOpen(false); }}
-              >
-                No parent
-              </button>
+              >{interfaceText("m_bfc4337cf757dd")}</button>
               {(goals ?? []).map((g) => (
                 <button
                   key={g.id}
@@ -273,7 +273,7 @@ export function NewGoalDialog() {
             disabled={!title.trim() || createGoal.isPending}
             onClick={handleSubmit}
           >
-            {createGoal.isPending ? "Creating…" : newGoalDefaults.parentId ? "Create sub-goal" : "Create goal"}
+            {createGoal.isPending ? interfaceText("m_c79ed9492e3c17") : newGoalDefaults.parentId ? interfaceText("m_f6444df95f47ef") : interfaceText("m_9f58bb981d441e")}
           </Button>
         </div>
       </DialogContent>

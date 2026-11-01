@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, useState } from "react";
 import { Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export function WorkspaceRetryButton({ onRetry, unavailableReason }: {
   onRetry: () => Promise<void>;
   unavailableReason: string | null;
 }) {
+  useInterfaceLanguage();
   const inFlight = useRef(false);
   const [pending, setPending] = useState(false);
   const [requested, setRequested] = useState(false);
@@ -29,7 +31,7 @@ export function WorkspaceRetryButton({ onRetry, unavailableReason }: {
     <Button size="xs" variant="outline" disabled={pending || requested || Boolean(unavailableReason)}
       title={unavailableReason ?? undefined} onClick={() => void retry()}>
       {pending ? <Loader2 aria-hidden className="size-3 animate-spin motion-reduce:animate-none" /> : <RotateCcw aria-hidden className="size-3" />}
-      {pending || requested ? "Retrying…" : "Retry"}
+      {pending || requested ? interfaceText("m_a16c8b1c95956f") : interfaceText("m_942087cc2d41e0")}
     </Button>
     {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
   </div>;

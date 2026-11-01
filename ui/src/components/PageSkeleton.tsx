@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface PageSkeletonProps {
@@ -14,6 +15,7 @@ interface PageSkeletonProps {
 }
 
 export function PageSkeleton({ variant = "list", collectionHeading }: PageSkeletonProps) {
+  useInterfaceLanguage();
   if (variant === "dashboard") {
     return (
       <div className="space-y-6">
@@ -114,12 +116,12 @@ export function PageSkeleton({ variant = "list", collectionHeading }: PageSkelet
 
   if (variant === "issues-list" || variant === "inbox") {
     return (
-      <div role="status" aria-label="Loading tasks" className="-mx-2 sm:mx-0">
+      <div role="status" aria-label={interfaceText("m_cad82c71cbc7de")} className="-mx-2 sm:mx-0">
         {collectionHeading ? (
           <div aria-hidden="true" className={collectionHeading === "date"
             ? "flex items-center justify-center py-1.5 text-(length:--text-nano)"
             : "flex items-center py-1.5 text-sm"}>
-            <span className="invisible">Loading</span>
+            <span className="invisible">{interfaceText("m_dc380888c4e2c7")}</span>
           </div>
         ) : null}
         {Array.from({ length: 8 }, (_, index) => (

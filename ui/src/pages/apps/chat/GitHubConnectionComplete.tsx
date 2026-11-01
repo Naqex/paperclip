@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Copy } from "lucide-react";
 import { resolveAgentAppearance, type GitHubAppWizardState } from "@paperclipai/shared";
@@ -32,6 +33,7 @@ export function GitHubConnectionComplete({
   onClose: () => void;
   onCloseAutoFocus?: () => void;
 }) {
+  useInterfaceLanguage();
   const repositories = useQuery({
     queryKey: ["github-connected-repositories", endpoint.id],
     queryFn: () => githubChatApi.repositories(endpoint.id, { limit: 1 }),
@@ -54,7 +56,7 @@ export function GitHubConnectionComplete({
           <header className="space-y-5">
             <div className="flex items-center gap-3">
               <CheckCircle2 className="size-6 shrink-0 text-(--status-task-done)" />
-              <DialogTitle className="text-xl leading-normal">GitHub connected</DialogTitle>
+              <DialogTitle className="text-xl leading-normal">{interfaceText("m_f69b1053398f54")}</DialogTitle>
             </div>
             <div className="flex items-center gap-3">
               <AgentAvatar agent={avatar} size={48} />
@@ -75,14 +77,14 @@ export function GitHubConnectionComplete({
                   </>}
                 </p>
                 <Link to={`/apps/chat/${endpoint.id}/access`} className="inline-block text-xs text-muted-foreground underline underline-offset-4">
-                  {repositories.isError ? "Repository access unavailable" : count === undefined ? "Repository access" : count === 0 ? "No repositories enabled" : `${count} ${count === 1 ? "repository" : "repositories"} enabled`}
+                  {repositories.isError ? interfaceText("m_4d9cb1e21bdb7d") : count === undefined ? interfaceText("m_3e3d7edf97eeaf") : count === 0 ? interfaceText("m_b75b5a4da6850a") : interfaceText("m_36c809a695fe37", { value0: (count), value1: (count === 1 ? "repository" : "repositories") })}
                 </Link>
               </div>
             </div>
           </header>
           {incomplete.length > 0 && (
             <section className="space-y-2">
-              <h2 className="text-sm font-medium">Before your first review</h2>
+              <h2 className="text-sm font-medium">{interfaceText("m_564abdb67f0b34")}</h2>
               {incomplete.map((check) => (
                 <p key={check.key} className="text-sm text-muted-foreground">{check.detail}</p>
               ))}
@@ -90,17 +92,17 @@ export function GitHubConnectionComplete({
           )}
           <section className="space-y-3">
             <div className="space-y-1">
-              <h2 className="text-base font-semibold">Try your bot</h2>
+              <h2 className="text-base font-semibold">{interfaceText("m_49629f94557385")}</h2>
               <p className="text-sm text-muted-foreground">
                 {count === 0
-                  ? "Enable a repository in Access to try your bot."
-                  : "Post this on a pull request in an enabled repository."}
+                  ? interfaceText("m_52092f089dfa41")
+                  : interfaceText("m_e8fc3f17746bd4")}
               </p>
             </div>
             <CopyText
               text={mention}
               ariaLabel="Copy mention"
-              title="Copy mention"
+              title={interfaceText("m_5b5d5535d4b4f1")}
               containerClassName="w-full"
               className="flex w-full items-center gap-3 rounded-md border border-border bg-muted/30 p-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
@@ -113,7 +115,7 @@ export function GitHubConnectionComplete({
             avatarUrl={agentAvatarUrl(resolveAgentAppearance(avatar.appearance, endpoint.assignedAgentId), 512, 1, "rest")}
           />
           <DialogFooter>
-            <Button onClick={onClose}>Done</Button>
+            <Button onClick={onClose}>{interfaceText("m_11a6767d5674c7")}</Button>
           </DialogFooter>
         </div>
       </DialogContent>

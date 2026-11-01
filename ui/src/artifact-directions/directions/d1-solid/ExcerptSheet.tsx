@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 import type { LabArtifact } from "../../kit";
@@ -96,6 +97,7 @@ const SHOWN = [
 ];
 
 function Table({ csv, rows, single, mono, className }: { csv: string; rows: number; single: boolean; mono: string; className?: string }) {
+  useInterfaceLanguage();
   const [head, ...body] = csv
     .trim()
     .split("\n")
@@ -117,7 +119,7 @@ function Table({ csv, rows, single, mono, className }: { csv: string; rows: numb
               total > note.columns ? (
                 <th key={note.columns} className={cn("w-7 text-right font-normal whitespace-nowrap @2xs:w-14", note.when)}>
                   +{total - note.columns}
-                  <span className="hidden @2xs:inline"> {total - note.columns === 1 ? "col" : "cols"}</span>
+                  <span className="hidden @2xs:inline"> {total - note.columns === 1 ? interfaceText("m_57cda594148cb4") : interfaceText("m_4447b987c654c2")}</span>
                 </th>
               ) : null,
             )}

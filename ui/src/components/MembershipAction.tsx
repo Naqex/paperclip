@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { MouseEvent } from "react";
 import { Loader2, LogIn, LogOut } from "lucide-react";
 import type { ResourceMembershipState } from "@paperclipai/shared";
@@ -23,10 +24,11 @@ export function MembershipAction({
   onJoin,
   onLeave,
 }: MembershipActionProps) {
+  useInterfaceLanguage();
   const isLeft = state === "left";
   const label = pending
-    ? pendingState === "left" ? "Leaving..." : "Joining..."
-    : isLeft ? "Join" : "Leave";
+    ? pendingState === "left" ? interfaceText("m_9b6b4fb63c666d") : interfaceText("m_7c56c61fe58db6")
+    : isLeft ? interfaceText("m_fd30fe681b4b2d") : interfaceText("m_fc6e4a408d56be");
   const ariaLabel = `${isLeft ? "Join" : "Leave"} ${resourceName}`;
   const Icon = pending ? Loader2 : isLeft ? LogIn : LogOut;
 

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -14,10 +15,10 @@ import { ToggleField } from "@/components/agent-config-primitives";
 
 type HeaderDraft = { id: number; originalName: string | null; name: string; value: string };
 const captureLabels: Array<{ key: keyof AgentObservabilityCapture; label: string }> = [
-  { key: "userPrompts", label: "User prompts" },
-  { key: "assistantResponses", label: "Assistant responses" },
-  { key: "toolContent", label: "Tool output and content" },
-  { key: "toolDetails", label: "Additional tool details (Claude Code)" },
+  { key: "userPrompts", get label() { return interfaceText("m_218ee0bc346e3a"); } },
+  { key: "assistantResponses", get label() { return interfaceText("m_441bc642393f42"); } },
+  { key: "toolContent", get label() { return interfaceText("m_bc91e29f279f67"); } },
+  { key: "toolDetails", get label() { return interfaceText("m_e33d57941a67f6"); } },
 ];
 export interface AgentObservabilitySettingsViewProps {
   companyId: string;
@@ -38,6 +39,7 @@ export interface AgentObservabilitySettingsViewProps {
 }
 
 export function AgentObservabilitySettingsView(props: AgentObservabilitySettingsViewProps) {
+  useInterfaceLanguage();
   const { companyId, settings, canManage = true, saving, testing, removing, error, conflict, onSave, onTest, onRemove, onReload } = props;
   const [provider, setProvider] = useState<"braintrust" | "otlp">("braintrust");
   const [projectId, setProjectId] = useState("");
@@ -93,68 +95,68 @@ export function AgentObservabilitySettingsView(props: AgentObservabilitySettings
   const receipt = props.result?.revision === revision ? props.result : settings?.lastTest;
   return <section aria-labelledby="agent-observability-heading" className="max-w-2xl space-y-4">
     <div className="space-y-1">
-      <h2 id="agent-observability-heading" className="text-lg font-medium">Agent observability</h2>
-      <p className="text-sm text-muted-foreground">Send Codex, Claude Code and native OpenCode execution data to your observability service.</p>
+      <h2 id="agent-observability-heading" className="text-lg font-medium">{interfaceText("m_88e9eaa25e4ce3")}</h2>
+      <p className="text-sm text-muted-foreground">{interfaceText("m_dab6469f43a1a5")}</p>
     </div>
-    {!canManage ? <p className="text-sm text-muted-foreground">Manage connections permission is required to configure agent observability.</p> : <>
+    {!canManage ? <p className="text-sm text-muted-foreground">{interfaceText("m_a80f6a57c3ec11")}</p> : <>
       <fieldset disabled={busy} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="agent-observability-provider">Destination</Label>
+          <Label htmlFor="agent-observability-provider">{interfaceText("m_293d404a500f5f")}</Label>
           <select id="agent-observability-provider" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm" value={provider}
             onChange={event => { setProvider(event.target.value as "braintrust" | "otlp"); setApiKey(""); setReplaceKey(false); setValidation(null); }}>
-            <option value="braintrust">Braintrust</option><option value="otlp">Custom OTLP</option>
+            <option value="braintrust">Braintrust</option><option value="otlp">{interfaceText("m_e3f3526e831094")}</option>
           </select>
         </div>
         {provider === "braintrust" ? <>
-          <div className="space-y-2"><Label htmlFor="agent-observability-project">Project ID</Label>
-            <Input id="agent-observability-project" value={projectId} onChange={event => setProjectId(event.target.value)} placeholder="Braintrust project UUID" autoComplete="off" />
+          <div className="space-y-2"><Label htmlFor="agent-observability-project">{interfaceText("m_e511470b21a90c")}</Label>
+            <Input id="agent-observability-project" value={projectId} onChange={event => setProjectId(event.target.value)} placeholder={interfaceText("m_69277b6e22a43e")} autoComplete="off" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="agent-observability-key">API key</Label>
+            <Label htmlFor="agent-observability-key">{interfaceText("m_16f0ee47f993d6")}</Label>
             {!providerChanged && original?.credentialsConfigured && !replaceKey ? <div className="flex items-center justify-between gap-3">
-              <span className="text-sm text-muted-foreground">API key configured</span><Button type="button" variant="outline" size="sm" onClick={() => setReplaceKey(true)}>Replace API key</Button>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_73449404d84574")}</span><Button type="button" variant="outline" size="sm" onClick={() => setReplaceKey(true)}>{interfaceText("m_f97925f1e14bff")}</Button>
             </div> : <Input id="agent-observability-key" type="password" value={apiKey} onChange={event => setApiKey(event.target.value)} autoComplete="new-password" />}
           </div>
         </> : <>
-          <div className="space-y-2"><Label htmlFor="agent-observability-endpoint">OTLP base URL</Label>
+          <div className="space-y-2"><Label htmlFor="agent-observability-endpoint">{interfaceText("m_f1d4c59f5fd1dc")}</Label>
             <Input id="agent-observability-endpoint" value={endpoint} onChange={event => setEndpoint(event.target.value)} placeholder="https://collector.example.com" autoComplete="off" />
-            <p className="text-xs text-muted-foreground">Use the base URL without /v1/logs or /v1/traces. It must be reachable from each agent environment.</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_1ecb367271e39c")}</p>
           </div>
-          <div className="space-y-2"><div className="flex items-center justify-between gap-3"><Label>Headers</Label>
-            <Button type="button" variant="outline" size="sm" disabled={headers.length >= 16} onClick={() => setHeaders(rows => [...rows, { id: nextHeader.current++, originalName: null, name: "", value: "" }])}>Add header</Button></div>
-            {headers.length === 0 && <p className="text-sm text-muted-foreground">No authentication headers.</p>}
+          <div className="space-y-2"><div className="flex items-center justify-between gap-3"><Label>{interfaceText("m_194e9fe656a1bc")}</Label>
+            <Button type="button" variant="outline" size="sm" disabled={headers.length >= 16} onClick={() => setHeaders(rows => [...rows, { id: nextHeader.current++, originalName: null, name: "", value: "" }])}>{interfaceText("m_1192c90dd4972a")}</Button></div>
+            {headers.length === 0 && <p className="text-sm text-muted-foreground">{interfaceText("m_f9ffc360b46090")}</p>}
             {headers.map(row => <div key={row.id} className="flex flex-wrap items-center gap-2">
-              <Input className="min-w-0 flex-1" aria-label="Header name" value={row.name} onChange={event => setHeaders(rows => rows.map(item => item.id === row.id ? { ...item, name: event.target.value } : item))} autoComplete="off" />
-              <Input className="min-w-0 flex-1" aria-label={`Value for ${row.name || "header"}`} type="password" value={row.value} placeholder={row.originalName && !requireFreshHeaders ? "Keep saved value" : "Header value"}
+              <Input className="min-w-0 flex-1" aria-label={interfaceText("m_c1dcc8fb31f6ee")} value={row.name} onChange={event => setHeaders(rows => rows.map(item => item.id === row.id ? { ...item, name: event.target.value } : item))} autoComplete="off" />
+              <Input className="min-w-0 flex-1" aria-label={interfaceText("m_6937517a774c9b", { value0: (row.name || "header") })} type="password" value={row.value} placeholder={row.originalName && !requireFreshHeaders ? interfaceText("m_884e111c195029") : interfaceText("m_f9a9058c0c22e5")}
                 onChange={event => setHeaders(rows => rows.map(item => item.id === row.id ? { ...item, value: event.target.value } : item))} autoComplete="new-password" />
-              <Button type="button" size="sm" variant="ghost" aria-label={`Remove ${row.name || "header"}`} onClick={() => setHeaders(rows => rows.filter(item => item.id !== row.id))}>Remove</Button>
+              <Button type="button" size="sm" variant="ghost" aria-label={interfaceText("m_e224cf245aada5", { value0: (row.name || "header") })} onClick={() => setHeaders(rows => rows.filter(item => item.id !== row.id))}>{interfaceText("m_c3812fc4acb861")}</Button>
             </div>)}
           </div>
         </>}
-        <p className="text-xs text-muted-foreground">The agent harness receives these credentials. Use a key limited to telemetry ingestion.</p>
-        <ToggleField label="Enable export" checked={enabled} onChange={setEnabled} hint="Applies to executions that start preparation after saving." />
-        <details><summary className="cursor-pointer text-sm font-medium">Content capture</summary>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_9c8b751417d141")}</p>
+        <ToggleField label={interfaceText("m_64c2a9cf272391")} checked={enabled} onChange={setEnabled} hint={interfaceText("m_6363e56800a408")} />
+        <details><summary className="cursor-pointer text-sm font-medium">{interfaceText("m_3d5b30d0812373")}</summary>
           <div className="space-y-3 pt-3">{captureLabels.map(row => <ToggleField key={row.key} label={row.label} checked={capture[row.key]} onChange={value => setCapture(current => ({ ...current, [row.key]: value }))} />)}
-            <p className="text-xs text-muted-foreground">Native limits apply. Exported records can contain task content, including prompts and tool output. A collector can forward records to multiple services.</p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_3e399d01ff5a5a")}</p>
           </div>
         </details>
       </fieldset>
-      {(validation || error || hasConflict) && <p role="alert" className="text-sm text-destructive">{validation || error || "Another administrator changed these settings. Reload the saved settings to continue."}</p>}
-      {hasConflict && <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => { reset(); onReload?.(); }}>Reload saved settings</Button>}
+      {(validation || error || hasConflict) && <p role="alert" className="text-sm text-destructive">{validation || error || interfaceText("m_f11812727aa9fa")}</p>}
+      {hasConflict && <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => { reset(); onReload?.(); }}>{interfaceText("m_415db71a129627")}</Button>}
       {!dirty && receipt && <div role="status" className="space-y-1 text-sm">
-        <p className="font-medium">{receipt.status === "accepted" ? "Test payload accepted" : receipt.status === "partial" ? "Some test records were rejected" : "Test payload failed"}</p>
-        <p className="text-xs text-muted-foreground">{new Date(receipt.finishedAt).toLocaleString()} · Sent from the Paperclip server.</p>
-        {(["logs", "traces"] as const).map(signal => receipt.signals[signal].message && <p key={signal}>{signal === "logs" ? "Logs" : "Traces"}: {receipt.signals[signal].message}</p>)}
+        <p className="font-medium">{receipt.status === "accepted" ? interfaceText("m_52d6b87c89bc10") : receipt.status === "partial" ? interfaceText("m_feee591c0fe63a") : interfaceText("m_151fc55b5bce69")}</p>
+        <p className="text-xs text-muted-foreground">{new Date(receipt.finishedAt).toLocaleString()}{interfaceText("m_104d628dfc740c")}</p>
+        {(["logs", "traces"] as const).map(signal => receipt.signals[signal].message && <p key={signal}>{signal === "logs" ? interfaceText("m_ea2100dc89ae9f") : interfaceText("m_998741a58ed2b4")}: {receipt.signals[signal].message}</p>)}
       </div>}
       <div className="flex items-center justify-between gap-3">
-        <Button type="button" variant="ghost" disabled={busy || !dirty} onClick={reset}>Cancel</Button>
-        <Button type="button" disabled={busy || !dirty || hasConflict} onClick={() => save()}>{saving ? "Saving…" : "Save changes"}</Button>
+        <Button type="button" variant="ghost" disabled={busy || !dirty} onClick={reset}>{interfaceText("m_19766ed6ccb2f4")}</Button>
+        <Button type="button" disabled={busy || !dirty || hasConflict} onClick={() => save()}>{saving ? interfaceText("m_23e39291d61358") : interfaceText("m_dd0ae7a5cbcf23")}</Button>
       </div>
-      {dirty && settings && <p className="text-xs text-muted-foreground">Save changes before testing.</p>}
+      {dirty && settings && <p className="text-xs text-muted-foreground">{interfaceText("m_10a5f254580803")}</p>}
       {settings && <div className="flex flex-wrap items-center gap-2">
-        <Button type="button" variant="outline" disabled={busy || dirty || hasConflict} onClick={onTest}>{testing ? "Testing…" : "Test saved settings"}</Button>
-        {settings.enabled && <Button type="button" size="sm" variant="ghost" disabled={busy || dirty || hasConflict} onClick={() => save(false)}>Disable export</Button>}
-        <Button type="button" size="sm" variant="ghost" disabled={busy || dirty || hasConflict} onClick={onRemove}>{removing ? "Removing…" : "Remove configuration"}</Button>
+        <Button type="button" variant="outline" disabled={busy || dirty || hasConflict} onClick={onTest}>{testing ? interfaceText("m_407b7a04662f2a") : interfaceText("m_46f4577c611eda")}</Button>
+        {settings.enabled && <Button type="button" size="sm" variant="ghost" disabled={busy || dirty || hasConflict} onClick={() => save(false)}>{interfaceText("m_c82de6679205f4")}</Button>}
+        <Button type="button" size="sm" variant="ghost" disabled={busy || dirty || hasConflict} onClick={onRemove}>{removing ? interfaceText("m_d4b09919ec929f") : interfaceText("m_b2556f83e5d49e")}</Button>
       </div>}
     </>}
   </section>;
@@ -164,6 +166,7 @@ export function AgentObservabilitySettingsSection({ companyId }: { companyId: st
   return <AgentObservabilitySettingsContainer key={companyId} companyId={companyId} />;
 }
 function AgentObservabilitySettingsContainer({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const client = useQueryClient();
   const queryKey = ["agent-observability", companyId];
   const query = useQuery({ queryKey, queryFn: () => agentObservabilityApi.settings(companyId) });
@@ -183,8 +186,8 @@ function AgentObservabilitySettingsContainer({ companyId }: { companyId: string 
       ? { ...current, settings: { ...current.settings, lastTest: receipt } } : current);
   }, onError: reject });
   useEffect(() => { setError(null); setConflict(false); save.reset(); test.reset(); remove.reset(); }, [companyId]);
-  if (query.isPending) return <p className="text-sm text-muted-foreground">Loading agent observability…</p>;
-  if (!query.data) return <div role="alert" className="space-y-2 text-sm"><p>Agent observability settings could not be loaded.</p><Button variant="outline" size="sm" onClick={() => void query.refetch()}>Retry</Button></div>;
+  if (query.isPending) return <p className="text-sm text-muted-foreground">{interfaceText("m_ecf5efdd800918")}</p>;
+  if (!query.data) return <div role="alert" className="space-y-2 text-sm"><p>{interfaceText("m_cf9d16b1442af9")}</p><Button variant="outline" size="sm" onClick={() => void query.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button></div>;
   return <AgentObservabilitySettingsView key={companyId} companyId={companyId} settings={query.data.settings} canManage={query.data.canManage}
     saving={save.isPending} removing={remove.isPending} testing={test.isPending} error={error ?? (query.isError ? "Saved settings could not be refreshed. Your draft is unchanged." : null)} conflict={conflict} resetKey={resetKey}
     onSave={input => save.mutate(input)} onTest={() => { if (query.data.settings) test.mutate(query.data.settings.revision); }}

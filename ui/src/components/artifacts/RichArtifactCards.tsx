@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import {
@@ -135,6 +136,7 @@ interface DiffProps {
   filesChanged?: number | null;
 }
 function Diff({ additions, deletions, filesChanged }: DiffProps) {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-wrap gap-2 font-mono text-xs">
       {additions != null && (
@@ -149,7 +151,7 @@ function Diff({ additions, deletions, filesChanged }: DiffProps) {
       )}
       {filesChanged != null && (
         <span className="text-muted-foreground">
-          {filesChanged} {filesChanged === 1 ? "file" : "files"}
+          {filesChanged} {filesChanged === 1 ? interfaceText("m_3b9c358f36f0a3") : interfaceText("m_3d7db37d08f914")}
         </span>
       )}
     </div>
@@ -183,6 +185,7 @@ const stateLabel = {
 };
 
 export function PullRequestCard(props: PullRequestCardProps) {
+  useInterfaceLanguage();
   const {
     number,
     repository,
@@ -255,14 +258,13 @@ export function PullRequestCard(props: PullRequestCardProps) {
           <p className="text-xs leading-relaxed">{reviewSummary}</p>
         )}
         {evidenceSource && (
-          <p className="text-xs text-muted-foreground">
-            Source: {evidenceSource}
+          <p className="text-xs text-muted-foreground">{interfaceText("m_1a5ac0bd0b6b57")}{evidenceSource}
           </p>
         )}
       </div>
       <Footer
         {...props}
-        action={<SourceLink url={url}>Open pull request</SourceLink>}
+        action={<SourceLink url={url}>{interfaceText("m_439996522e2126")}</SourceLink>}
       />
     </Card>
   );
@@ -275,6 +277,7 @@ export interface CommitCardProps extends ArtifactIdentity, DiffProps {
   url: string;
 }
 export function CommitCard(props: CommitCardProps) {
+  useInterfaceLanguage();
   return (
     <Card>
       <div className="flex flex-col gap-4 p-5">
@@ -296,13 +299,14 @@ export function CommitCard(props: CommitCardProps) {
       </div>
       <Footer
         {...props}
-        action={<SourceLink url={props.url}>View commit</SourceLink>}
+        action={<SourceLink url={props.url}>{interfaceText("m_83b2eddb4177dc")}</SourceLink>}
       />
     </Card>
   );
 }
 
 function Markdown({ body }: { body: string }) {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-col gap-3 text-sm leading-relaxed">
       <ReactMarkdown
@@ -343,7 +347,7 @@ function Markdown({ body }: { body: string }) {
                 rel="noreferrer"
                 className="underline underline-offset-4"
               >
-                {alt || "Open image"}
+                {alt || interfaceText("m_1b5fe59610ba67")}
               </a>
             ) : (
               <span>{alt}</span>
@@ -376,6 +380,7 @@ export interface DocumentCardProps extends ArtifactIdentity {
   actions?: ReactNode;
 }
 export function DocumentCard(props: DocumentCardProps) {
+  useInterfaceLanguage();
   return (
     <Card>
       {props.body && (
@@ -389,7 +394,7 @@ export function DocumentCard(props: DocumentCardProps) {
       <div className="flex flex-col gap-3 p-5">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
           <FileText className="size-4" /> Markdown
-          {props.revision != null && ` · revision ${props.revision}`}
+          {props.revision != null && interfaceText("m_475554d9249702", { value0: (props.revision) })}
         </span>
         <Identity {...props} />
         <span className="break-all font-mono text-xs text-muted-foreground">
@@ -408,13 +413,13 @@ export function DocumentCard(props: DocumentCardProps) {
                 aria-expanded={props.expanded}
                 onClick={props.onOpen}
               >
-                {props.expanded ? "Close document" : "Read document"}
+                {props.expanded ? interfaceText("m_9e0dfdc1e5317f") : interfaceText("m_a6be85ca28653f")}
               </Button>
             ) : (
               <Viewer
                 title={props.title}
                 description={props.filename}
-                action="Read document"
+                action={interfaceText("m_a6be85ca28653f")}
               >
                 <Markdown body={props.body} />
               </Viewer>
@@ -435,6 +440,7 @@ export interface DataCardProps extends ArtifactIdentity {
   actions?: ReactNode;
 }
 function DataTable({ columns, rows }: Pick<DataCardProps, "columns" | "rows">) {
+  useInterfaceLanguage();
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
@@ -463,12 +469,13 @@ function DataTable({ columns, rows }: Pick<DataCardProps, "columns" | "rows">) {
         </tbody>
       </table>
       {rows.length === 0 && (
-        <p className="p-4 text-xs text-muted-foreground">No rows</p>
+        <p className="p-4 text-xs text-muted-foreground">{interfaceText("m_1a715b4b93b3c9")}</p>
       )}
     </div>
   );
 }
 export function DataCard(props: DataCardProps) {
+  useInterfaceLanguage();
   const csv = [props.columns, ...props.rows]
     .map((row) =>
       row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(","),
@@ -481,10 +488,10 @@ export function DataCard(props: DataCardProps) {
       </div>
       <div className="flex flex-col gap-3 p-5">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Table2 className="size-4" /> CSV · {props.truncated ? "First " : ""}
-          {props.rows.length} {props.rows.length === 1 ? "row" : "rows"} ·{" "}
+          <Table2 className="size-4" /> CSV · {props.truncated ? interfaceText("m_2024afa3bc2ecb") : ""}
+          {props.rows.length} {props.rows.length === 1 ? interfaceText("m_634768dae14745") : interfaceText("m_bc51e9e65d79e1")} ·{" "}
           {props.columns.length}{" "}
-          {props.columns.length === 1 ? "column" : "columns"}
+          {props.columns.length === 1 ? interfaceText("m_881d5fb60090f5") : interfaceText("m_0e624a1a135e44")}
         </span>
         <Identity {...props} />
         <span className="break-all font-mono text-xs text-muted-foreground">
@@ -499,7 +506,7 @@ export function DataCard(props: DataCardProps) {
             <Viewer
               title={props.title}
               description={props.filename}
-              action="View data"
+              action={interfaceText("m_249495a1a8ee38")}
             >
               <DataTable {...props} />
               <Button asChild variant="outline" size="sm" className="w-fit">
@@ -509,9 +516,7 @@ export function DataCard(props: DataCardProps) {
                     props.downloadUrl ||
                     `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`
                   }
-                >
-                  Download CSV
-                </a>
+                >{interfaceText("m_a4023b89022f32")}</a>
               </Button>
             </Viewer>
           </div>
@@ -522,6 +527,7 @@ export function DataCard(props: DataCardProps) {
 }
 
 function ImageContent({ src, alt }: { src: string; alt: string }) {
+  useInterfaceLanguage();
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   return src && failedUrl !== src ? (
     <img
@@ -534,7 +540,7 @@ function ImageContent({ src, alt }: { src: string; alt: string }) {
   ) : (
     <div className="flex aspect-video flex-col items-center justify-center gap-3 text-muted-foreground">
       <ImageIcon className="size-8" />
-      <span className="text-xs">No preview available</span>
+      <span className="text-xs">{interfaceText("m_e5c083cf41ff64")}</span>
     </div>
   );
 }
@@ -548,6 +554,7 @@ export interface ImageCardProps extends ArtifactIdentity {
   onOpen?: () => void;
 }
 export function ImageCard(props: ImageCardProps) {
+  useInterfaceLanguage();
   return (
     <Card>
       <div className="border-b border-border bg-muted/20">
@@ -555,8 +562,7 @@ export function ImageCard(props: ImageCardProps) {
       </div>
       <div className="flex flex-col gap-3 p-5">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
-          <ImageIcon className="size-4" /> Image
-          {props.width && props.height
+          <ImageIcon className="size-4" />{interfaceText("m_24673191585c6b")}{props.width && props.height
             ? ` · ${props.width} × ${props.height}`
             : ""}
         </span>
@@ -572,16 +578,14 @@ export function ImageCard(props: ImageCardProps) {
             <Button
               size="sm"
               variant="outline"
-              aria-label={`View image: ${props.title}`}
+              aria-label={interfaceText("m_08ad21f773977f", { value0: (props.title) })}
               onClick={props.onOpen}
-            >
-              View image
-            </Button>
+            >{interfaceText("m_5bb55a4bb4fd0e")}</Button>
           ) : (
             <Viewer
               title={props.title}
               description={props.filename}
-              action="View image"
+              action={interfaceText("m_5bb55a4bb4fd0e")}
             >
               <ImageContent src={props.imageUrl} alt={props.alt} />
             </Viewer>
@@ -600,6 +604,7 @@ export interface VideoCardProps extends ArtifactIdentity {
   onOpen?: () => void;
 }
 export function VideoCard(props: VideoCardProps) {
+  useInterfaceLanguage();
   return (
     <Card>
       <video
@@ -628,13 +633,11 @@ export function VideoCard(props: VideoCardProps) {
             <Button
               size="sm"
               variant="outline"
-              aria-label={`Open video: ${props.title}`}
+              aria-label={interfaceText("m_91b9dbb8ed0777", { value0: (props.title) })}
               onClick={props.onOpen}
-            >
-              Open video
-            </Button>
+            >{interfaceText("m_6ac7b387e42df1")}</Button>
           ) : (
-            <SourceLink url={props.videoUrl}>Open video</SourceLink>
+            <SourceLink url={props.videoUrl}>{interfaceText("m_6ac7b387e42df1")}</SourceLink>
           )
         }
       />
@@ -648,6 +651,7 @@ export interface LinkPreviewCardProps extends ArtifactIdentity {
   imageAlt: string;
 }
 export function LinkPreviewCard(props: LinkPreviewCardProps) {
+  useInterfaceLanguage();
   return (
     <Card>
       {props.imageUrl && (
@@ -657,8 +661,7 @@ export function LinkPreviewCard(props: LinkPreviewCardProps) {
       )}
       <div className="flex flex-col gap-4 p-5">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Globe className="size-4" /> Link preview
-        </span>
+          <Globe className="size-4" />{interfaceText("m_065fc9c5a1af82")}</span>
         <Identity {...props} />
         <span className="break-all font-mono text-xs text-muted-foreground">
           {props.url}
@@ -666,7 +669,7 @@ export function LinkPreviewCard(props: LinkPreviewCardProps) {
       </div>
       <Footer
         {...props}
-        action={<SourceLink url={props.url}>Open link</SourceLink>}
+        action={<SourceLink url={props.url}>{interfaceText("m_aab63f85c7f1cd")}</SourceLink>}
       />
     </Card>
   );
@@ -682,12 +685,12 @@ export interface FileCardProps extends ArtifactIdentity {
   actions?: ReactNode;
 }
 export function FileCard(props: FileCardProps) {
+  useInterfaceLanguage();
   return (
     <Card>
       <div className="flex flex-col gap-4 p-5">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
-          <File className="size-4" /> File
-          {props.fileSize && ` · ${props.fileSize}`}
+          <File className="size-4" />{interfaceText("m_c193d0090411ca")}{props.fileSize && ` · ${props.fileSize}`}
         </span>
         <Identity {...props} />
         <div className="flex flex-col gap-1">
@@ -716,18 +719,14 @@ export function FileCard(props: FileCardProps) {
           <div className="flex flex-wrap items-center gap-2">
             {props.actions}
             {props.openUrl && (
-              <SourceLink url={props.openUrl}>Open file</SourceLink>
+              <SourceLink url={props.openUrl}>{interfaceText("m_4190c0c7ec7270")}</SourceLink>
             )}
             {props.downloadUrl ? (
               <Button asChild size="sm" variant="outline">
-                <a href={props.downloadUrl} download={props.filename}>
-                  Download file
-                </a>
+                <a href={props.downloadUrl} download={props.filename}>{interfaceText("m_9de4149fb9716c")}</a>
               </Button>
             ) : (
-              <Button size="sm" variant="outline" disabled>
-                Download unavailable
-              </Button>
+              <Button size="sm" variant="outline" disabled>{interfaceText("m_2f180e49010d45")}</Button>
             )}
           </div>
         }

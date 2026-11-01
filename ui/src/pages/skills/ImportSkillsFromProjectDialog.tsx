@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -92,11 +93,11 @@ function workspaceKindLabel(sourceType: ProjectWorkspace["sourceType"]): string 
     case "git_repo":
       return "git";
     case "local_path":
-      return "local";
+      return interfaceText("m_25bf8e1a2393f1");
     case "non_git_path":
-      return "folder";
+      return interfaceText("m_034a0062488256");
     case "remote_managed":
-      return "remote";
+      return interfaceText("m_b71199ebd070b3");
     default:
       return sourceType;
   }
@@ -218,10 +219,10 @@ export function isValidSelectionSlug(selection: SkillSelection): boolean {
 
 function readableErrorMessage(error: unknown): string {
   if (error instanceof ApiError) {
-    return error.message || `Request failed: ${error.status}`;
+    return error.message || interfaceText("m_dbdf6f44727f11", { value0: (error.status) });
   }
   if (error instanceof Error) return error.message;
-  return "Unexpected error";
+  return interfaceText("m_d24c41ae530aa2");
 }
 
 export function isGrantError(error: unknown): boolean {
@@ -234,6 +235,7 @@ function CandidateStatusBadge({
 }: {
   status: CompanySkillProjectScanCandidate["status"];
 }) {
+  useInterfaceLanguage();
   switch (status) {
     case "already_imported":
       return (
@@ -241,8 +243,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-muted-foreground border-border/60"
         >
-          <Link2 className="h-3 w-3" /> Imported
-        </Badge>
+          <Link2 className="h-3 w-3" />{interfaceText("m_fffbb91c2e7e96")}</Badge>
       );
     case "conflict":
       return (
@@ -250,8 +251,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-amber-600 border-amber-500/40 dark:text-amber-400"
         >
-          <AlertTriangle className="h-3 w-3" /> Conflict
-        </Badge>
+          <AlertTriangle className="h-3 w-3" />{interfaceText("m_e65c3f007bf170")}</Badge>
       );
     case "skipped":
       return (
@@ -259,8 +259,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-muted-foreground border-border/60"
         >
-          <FileWarning className="h-3 w-3" /> Skipped
-        </Badge>
+          <FileWarning className="h-3 w-3" />{interfaceText("m_5e1420844fd6aa")}</Badge>
       );
     case "new":
     default:
@@ -269,8 +268,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-emerald-600 border-emerald-500/40 dark:text-emerald-400"
         >
-          <CheckCircle2 className="h-3 w-3" /> New
-        </Badge>
+          <CheckCircle2 className="h-3 w-3" />{interfaceText("m_c80638f5f901dd")}</Badge>
       );
   }
 }
@@ -281,6 +279,7 @@ export function ImportSkillsFromProjectDialog({
   companyId,
   onImportFromPath,
 }: ImportSkillsFromProjectDialogProps) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const toast = useToastActions();
 
@@ -367,7 +366,7 @@ export function ImportSkillsFromProjectDialog({
       const importedCount = result.imported.length;
       toast.pushToast({
         tone: importedCount > 0 ? "success" : "warn",
-        title: importedCount > 0 ? "Skills imported" : "Nothing imported",
+        title: importedCount > 0 ? interfaceText("m_9894287afa0ffe") : interfaceText("m_dfdcdf9f27c0f2"),
         body:
           importedCount > 0
             ? `${importedCount} skill${importedCount === 1 ? "" : "s"} imported as references from ${selectedProject?.name ?? "the project"}.`
@@ -377,7 +376,7 @@ export function ImportSkillsFromProjectDialog({
     onError: (error) => {
       toast.pushToast({
         tone: "error",
-        title: "Import failed",
+        title: interfaceText("m_0a26f41abd00f9"),
         body: readableErrorMessage(error),
       });
     },
@@ -463,12 +462,12 @@ export function ImportSkillsFromProjectDialog({
       } else {
         toast.pushToast({
           tone: "warn",
-          title: candidate?.status === "already_imported" ? "Skill already imported" : "Skill could not be added",
+          title: candidate?.status === "already_imported" ? interfaceText("m_d62f6f8331dba0") : interfaceText("m_24c3ea4d615335"),
           body: candidate?.reason ?? "The selected folder does not contain a valid SKILL.md file.",
         });
       }
     } catch (error) {
-      toast.pushToast({ tone: "error", title: "Could not inspect skill", body: readableErrorMessage(error) });
+      toast.pushToast({ tone: "error", title: interfaceText("m_ce3b184f52a76c"), body: readableErrorMessage(error) });
     } finally {
       setBrowseAddingKey(null);
     }
@@ -512,18 +511,14 @@ export function ImportSkillsFromProjectDialog({
       >
         <header className="flex shrink-0 items-start justify-between gap-3 border-b border-border/60 px-5 py-4">
           <div className="flex flex-col gap-1">
-            <DialogTitle className="text-base font-semibold">
-              Import skills from project
-            </DialogTitle>
-            <DialogDescription className="text-xs text-muted-foreground">
-              Pick a project, scan its workspaces for skills, and import them as references.
-            </DialogDescription>
+            <DialogTitle className="text-base font-semibold">{interfaceText("m_364c89b0f1b44d")}</DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">{interfaceText("m_ca4ed80b1ad607")}</DialogDescription>
           </div>
           <button
             type="button"
             className="rounded-sm text-muted-foreground opacity-70 transition-opacity hover:opacity-100"
             onClick={handleClose}
-            aria-label="Close import dialog"
+            aria-label={interfaceText("m_0dbadc41afe7ec")}
           >
             <X className="h-4 w-4" />
           </button>
@@ -569,9 +564,7 @@ export function ImportSkillsFromProjectDialog({
           {step === "select" && !scanError && candidates.length > 0 ? (
             <div className="min-w-0 flex-1 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
-                <Link2 className="h-3.5 w-3.5 shrink-0" />
-                Files stay in the project — Studio edits save directly to them.
-              </span>
+                <Link2 className="h-3.5 w-3.5 shrink-0" />{interfaceText("m_43a69b6356598f")}</span>
             </div>
           ) : (
             <div className="hidden min-w-0 flex-1 sm:block" />
@@ -587,23 +580,18 @@ export function ImportSkillsFromProjectDialog({
                       onClick={selectAll}
                       disabled={selectableCandidates.length === 0}
                       data-testid="select-all"
-                    >
-                      Select all
-                    </Button>
+                    >{interfaceText("m_1fc9a387654d41")}</Button>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={deselectAll}
                       disabled={selectedCount === 0}
                       data-testid="deselect-all"
-                    >
-                      Deselect all
-                    </Button>
+                    >{interfaceText("m_967549497036d5")}</Button>
                   </div>
                 )}
                 <Button variant="outline" size="sm" onClick={backToPick}>
-                  <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Back
-                </Button>
+                  <ArrowLeft className="mr-1 h-3.5 w-3.5" />{interfaceText("m_709d9085c264e6")}</Button>
                 {!scanError && candidates.length > 0 && (
                   <Button
                     size="sm"
@@ -613,24 +601,19 @@ export function ImportSkillsFromProjectDialog({
                   >
                     {importMutation.isPending ? (
                       <>
-                        <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> Importing…
-                      </>
+                        <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />{interfaceText("m_6abd430530e231")}</>
                     ) : (
-                      `Import ${selectedCount} skill${selectedCount === 1 ? "" : "s"}`
+                      interfaceText("m_66c1f049a0d4cc", { value0: (selectedCount), value1: (selectedCount === 1 ? "" : interfaceText("m_043a718774c572")) })
                     )}
                   </Button>
                 )}
               </>
             )}
             {step === "pick" && (
-              <Button variant="ghost" size="sm" onClick={handleClose}>
-                Cancel
-              </Button>
+              <Button variant="ghost" size="sm" onClick={handleClose}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             )}
             {step === "result" && (
-              <Button size="sm" onClick={handleClose}>
-                Done
-              </Button>
+              <Button size="sm" onClick={handleClose}>{interfaceText("m_11a6767d5674c7")}</Button>
             )}
           </div>
         </footer>
@@ -658,6 +641,7 @@ function PickProjectStep({
   onFilterChange,
   onPick,
 }: PickProjectStepProps) {
+  useInterfaceLanguage();
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="border-b border-border/60 px-5 py-3">
@@ -666,16 +650,16 @@ function PickProjectStep({
           <Input
             value={filter}
             onChange={(event) => onFilterChange(event.target.value)}
-            placeholder="Filter projects"
+            placeholder={interfaceText("m_8fd82c567aa71d")}
             className="pl-7 text-xs"
-            aria-label="Filter projects"
+            aria-label={interfaceText("m_8fd82c567aa71d")}
             data-testid="project-filter"
           />
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {loading ? (
-          <div className="p-6 text-center text-sm text-muted-foreground">Loading projects…</div>
+          <div className="p-6 text-center text-sm text-muted-foreground">{interfaceText("m_6970a1ced73ddb")}</div>
         ) : error ? (
           <div
             className="m-5 flex items-start gap-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive"
@@ -685,9 +669,9 @@ function PickProjectStep({
             <div>{readableErrorMessage(error)}</div>
           </div>
         ) : totalProjects === 0 ? (
-          <EmptyState icon={Layers} message="This organization has no projects yet." />
+          <EmptyState icon={Layers} message={interfaceText("m_9d0d78cc1ccab0")} />
         ) : projects.length === 0 ? (
-          <EmptyState icon={Search} message={`No projects match "${filter}".`} />
+          <EmptyState icon={Search} message={interfaceText("m_e2ff692aeaf2e5", { value0: (filter) })} />
         ) : (
           <ul className="divide-y divide-border/60" data-testid="project-list">
             {projects.map((project) => {
@@ -713,20 +697,16 @@ function PickProjectStep({
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{project.name}</div>
                       <div className="mt-0.5 text-xs text-muted-foreground">
-                        {project.workspaces.length} workspace
-                        {project.workspaces.length === 1 ? "" : "s"}
+                        {project.workspaces.length}{interfaceText("m_4be0369b18383e")}{project.workspaces.length === 1 ? "" : interfaceText("m_043a718774c572")}
                         {kinds ? ` · ${kinds}` : ""}
                       </div>
                       {disabled && (
-                        <div className="mt-1 text-(length:--text-micro) text-muted-foreground">
-                          Remote-only project — no locally scannable workspaces to import from.
-                        </div>
+                        <div className="mt-1 text-(length:--text-micro) text-muted-foreground">{interfaceText("m_d2cc84ce0ba5cb")}</div>
                       )}
                     </div>
                     {!disabled && (
                       <Badge variant="outline" className="shrink-0 px-1.5 py-0 font-normal">
-                        {scannable.length} scannable
-                      </Badge>
+                        {scannable.length}{interfaceText("m_7917d4a6f58707")}</Badge>
                     )}
                   </button>
                 </li>
@@ -740,6 +720,7 @@ function PickProjectStep({
 }
 
 function ScanningStep({ projectName }: { projectName: string }) {
+  useInterfaceLanguage();
   return (
     <div
       className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 p-8 text-center"
@@ -750,10 +731,8 @@ function ScanningStep({ projectName }: { projectName: string }) {
         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
       <div>
-        <p className="text-sm font-medium">Scanning {projectName || "project"} for skills…</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Looking in well-known skill folders across each workspace.
-        </p>
+        <p className="text-sm font-medium">{interfaceText("m_8ab484ea26119b")}{projectName || interfaceText("m_244210e48437b6")}{interfaceText("m_d51ddb81276f03")}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_d15a3bde00aebc")}</p>
       </div>
       <div className="flex max-w-md flex-wrap justify-center gap-1.5">
         {HIGHLIGHTED_SCAN_FOLDERS.map((folder) => (
@@ -769,8 +748,7 @@ function ScanningStep({ projectName }: { projectName: string }) {
           variant="outline"
           className="px-1.5 py-0 text-(length:--text-micro) font-normal text-muted-foreground"
         >
-          +{APPROX_TOTAL_SCAN_FOLDERS - HIGHLIGHTED_SCAN_FOLDERS.length} more
-        </Badge>
+          +{APPROX_TOTAL_SCAN_FOLDERS - HIGHLIGHTED_SCAN_FOLDERS.length}{interfaceText("m_226ba18bbcdb75")}</Badge>
       </div>
     </div>
   );
@@ -790,6 +768,7 @@ function ProjectSkillBrowser({
   onAddSkill: (workspaceId: string, path: string) => void;
   addingKey: string | null;
 }) {
+  useInterfaceLanguage();
   const workspaces = scannableWorkspaces(project);
   const initialWorkspace = workspaces.find((workspace) => workspace.isPrimary) ?? workspaces[0] ?? null;
   const [workspaceId, setWorkspaceId] = useState(initialWorkspace?.id ?? "");
@@ -815,15 +794,14 @@ function ProjectSkillBrowser({
       <div className="shrink-0 border-b border-border/60 px-5 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-medium">Browse project folders</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">Open any folder and add directories or individual SKILL.md files.</p>
+            <p className="text-sm font-medium">{interfaceText("m_2bef76acf5d7f8")}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_28acd6296b6ca4")}</p>
           </div>
           <Button variant="outline" size="sm" onClick={onBack}>
-            <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Discovered skills
-          </Button>
+            <ArrowLeft className="mr-1 h-3.5 w-3.5" />{interfaceText("m_0110c08fbf19e5")}</Button>
         </div>
         {workspaces.length > 1 && (
-          <div className="mt-3 flex flex-wrap gap-1.5" aria-label="Project workspace">
+          <div className="mt-3 flex flex-wrap gap-1.5" aria-label={interfaceText("m_ce016e7f0a41c4")}>
             {workspaces.map((workspace) => (
               <Button
                 key={workspace.id}
@@ -844,7 +822,7 @@ function ProjectSkillBrowser({
           size="sm"
           onClick={() => result?.parentPath && setFolderPath(result.parentPath)}
           disabled={!result?.parentPath}
-          aria-label="Open parent folder"
+          aria-label={interfaceText("m_a00d48483e7b4d")}
         >
           <ArrowLeft className="h-3.5 w-3.5" />
         </Button>
@@ -853,8 +831,7 @@ function ProjectSkillBrowser({
       <div className="min-h-0 flex-1 overflow-y-auto">
         {browseQuery.isLoading ? (
           <div className="flex items-center justify-center gap-2 p-8 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Loading folder…
-          </div>
+            <Loader2 className="h-4 w-4 animate-spin" />{interfaceText("m_19d0367edfbc18")}</div>
         ) : browseQuery.error ? (
           <div className="p-6 text-sm text-destructive">{readableErrorMessage(browseQuery.error)}</div>
         ) : result?.entries.length ? (
@@ -881,7 +858,7 @@ function ProjectSkillBrowser({
                   </button>
                   {entry.isSkill ? (
                     <Button size="sm" onClick={() => onAddSkill(workspaceId, entry.path)} disabled={addingKey === key}>
-                      {addingKey === key ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Add skill"}
+                      {addingKey === key ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : interfaceText("m_bc4db5d337610b")}
                     </Button>
                   ) : entry.kind === "directory" ? (
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -891,10 +868,10 @@ function ProjectSkillBrowser({
             })}
           </ul>
         ) : (
-          <div className="p-8 text-center text-sm text-muted-foreground">This folder is empty.</div>
+          <div className="p-8 text-center text-sm text-muted-foreground">{interfaceText("m_bd88d713ecd339")}</div>
         )}
         {result?.truncated && (
-          <p className="border-t border-border/60 px-5 py-2 text-xs text-muted-foreground">Showing the first 250 entries.</p>
+          <p className="border-t border-border/60 px-5 py-2 text-xs text-muted-foreground">{interfaceText("m_ba9ceb98d16f70")}</p>
         )}
       </div>
     </div>
@@ -938,6 +915,7 @@ function SelectStep({
   onAddBrowsedSkill,
   browseAddingKey,
 }: SelectStepProps) {
+  useInterfaceLanguage();
   if (scanError) {
     const grant = isGrantError(scanError);
     return (
@@ -951,17 +929,15 @@ function SelectStep({
             )}
           </div>
           <p className="text-base font-semibold">
-            {grant ? "You can't import skills here" : "Scan failed"}
+            {grant ? interfaceText("m_85c13086c92c66") : interfaceText("m_4a490e4bdcc954")}
           </p>
           <p className="mt-1.5 text-sm text-muted-foreground">
             {grant
-              ? "Your account doesn't have permission to add skills to this organization. Ask an owner to grant the skills permission, then try again."
+              ? interfaceText("m_646b4894cc510a")
               : readableErrorMessage(scanError)}
           </p>
           {!grant && (
-            <Button variant="outline" size="sm" className="mt-4" onClick={onRetry}>
-              Try again
-            </Button>
+            <Button variant="outline" size="sm" className="mt-4" onClick={onRetry}>{interfaceText("m_d8b8392e2c5429")}</Button>
           )}
         </div>
       </div>
@@ -990,14 +966,11 @@ function SelectStep({
           <div className="mx-auto mb-4 w-fit bg-muted/50 p-4">
             <FolderSearch className="h-10 w-10 text-muted-foreground/50" />
           </div>
-          <p className="text-base font-semibold">No skills found</p>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            None of the well-known skill folders in this project's workspaces contain a{" "}
-            <code className="rounded bg-muted px-1 py-0.5 text-xs">SKILL.md</code>. We searched{" "}
-            {HIGHLIGHTED_SCAN_FOLDERS.join(", ")} and {APPROX_TOTAL_SCAN_FOLDERS -
-              HIGHLIGHTED_SCAN_FOLDERS.length}{" "}
-            other agent-harness folders.
-          </p>
+          <p className="text-base font-semibold">{interfaceText("m_52777c2d5f9c50")}</p>
+          <p className="mt-1.5 text-sm text-muted-foreground">{interfaceText("m_7fbdcbc0a1b85a")}{" "}
+            <code className="rounded bg-muted px-1 py-0.5 text-xs">SKILL.md</code>{interfaceText("m_adbd80d061f2e8")}{" "}
+            {HIGHLIGHTED_SCAN_FOLDERS.join(", ")}{interfaceText("m_e3ee915a8e8c7a")}{APPROX_TOTAL_SCAN_FOLDERS -
+              HIGHLIGHTED_SCAN_FOLDERS.length}{" "}{interfaceText("m_e598ffca75f89f")}</p>
           <Button
             variant="outline"
             size="sm"
@@ -1005,18 +978,14 @@ function SelectStep({
             onClick={() => onBrowseOpenChange(true)}
             data-testid="browse-project-folders-empty"
           >
-            <FolderOpen className="mr-1.5 h-3.5 w-3.5" /> Browse project folders
-          </Button>
+            <FolderOpen className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_2c9b47a0b479d5")}</Button>
           {onImportFromPath && (
-            <p className="mt-3 text-sm text-muted-foreground">
-              For skills in non-standard folders, use{" "}
+            <p className="mt-3 text-sm text-muted-foreground">{interfaceText("m_9632a1c8f0dafd")}{" "}
               <button
                 type="button"
                 className="font-medium text-foreground underline underline-offset-2"
                 onClick={onImportFromPath}
-              >
-                Import from path or URL
-              </button>
+              >{interfaceText("m_abed2dfba3bf7b")}</button>
               .
             </p>
           )}
@@ -1028,10 +997,9 @@ function SelectStep({
   return (
     <div className="flex min-h-0 flex-1 flex-col" data-testid="candidate-list">
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border/60 px-5 py-2.5">
-        <p className="text-xs text-muted-foreground">Choose discovered skills, or browse any workspace folder.</p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_d2115eb1676560")}</p>
         <Button variant="outline" size="sm" onClick={() => onBrowseOpenChange(true)} data-testid="browse-project-folders">
-          <FolderOpen className="mr-1.5 h-3.5 w-3.5" /> Browse folders
-        </Button>
+          <FolderOpen className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_08472eb67f8b6c")}</Button>
       </div>
       <div className="shrink-0 border-b border-border/60 px-5 py-2.5">
         <div className="relative">
@@ -1039,24 +1007,21 @@ function SelectStep({
           <Input
             value={filter}
             onChange={(event) => onFilterChange(event.target.value)}
-            placeholder="Search discovered skills…"
+            placeholder={interfaceText("m_f2e858d5bfed81")}
             className="h-8 pl-8 text-xs"
-            aria-label="Search discovered skills"
+            aria-label={interfaceText("m_5777aeadd74cac")}
           />
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {groups.length === 0 ? (
-          <div className="flex h-full items-center justify-center p-6 text-sm text-muted-foreground">
-            No skills match “{filter.trim()}”.
+          <div className="flex h-full items-center justify-center p-6 text-sm text-muted-foreground">{interfaceText("m_1a1d05d7d636e9")}{filter.trim()}”.
           </div>
         ) : (
           groups.map((group, groupIndex) => (
             <section key={group.key}>
               {groupIndex > 0 && !group.isPrimary && groups[groupIndex - 1]?.isPrimary && (
-                <header className="border-y border-border/60 bg-muted/30 px-5 py-2 text-xs uppercase tracking-wide text-muted-foreground">
-                  Other Workspaces
-                </header>
+                <header className="border-y border-border/60 bg-muted/30 px-5 py-2 text-xs uppercase tracking-wide text-muted-foreground">{interfaceText("m_1f41d204e6e522")}</header>
               )}
               <header className="sticky top-0 z-10 border-b border-border/60 bg-background px-5 py-2 text-sm font-medium text-foreground">
                 {group.workspaceName}
@@ -1090,7 +1055,7 @@ function SelectStep({
                               checked={isSelected}
                               onCheckedChange={() => toggleCandidate(candidate)}
                               disabled={!selectable}
-                              aria-label={`Select ${candidate.name}`}
+                              aria-label={interfaceText("m_33de0e8b35aac1", { value0: (candidate.name) })}
                             />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -1128,9 +1093,7 @@ function SelectStep({
                                 <label
                                   htmlFor={`rename-${candidate.workspaceId}-${candidate.slug}`}
                                   className="shrink-0 text-xs text-muted-foreground"
-                                >
-                                  Import as
-                                </label>
+                                >{interfaceText("m_ab3fa4e6af9d1f")}</label>
                                 <Input
                                   id={`rename-${candidate.workspaceId}-${candidate.slug}`}
                                   value={selectedValue?.slug ?? ""}
@@ -1138,7 +1101,7 @@ function SelectStep({
                                     renameCandidate(candidate, event.target.value)
                                   }
                                   className="h-7 max-w-xs font-mono text-xs"
-                                  aria-label={`Rename ${candidate.name}`}
+                                  aria-label={interfaceText("m_cee97abddbecc4", { value0: (candidate.name) })}
                                   aria-invalid={
                                     selectedValue
                                       ? !isValidSelectionSlug(selectedValue)
@@ -1146,9 +1109,7 @@ function SelectStep({
                                   }
                                 />
                                 {selectedValue && !isValidSelectionSlug(selectedValue) && (
-                                  <span className="text-xs text-destructive">
-                                    Use a lowercase URL-safe slug.
-                                  </span>
+                                  <span className="text-xs text-destructive">{interfaceText("m_dd6a3d5232c965")}</span>
                                 )}
                               </div>
                             )}
@@ -1172,6 +1133,7 @@ interface ResultStepProps {
 }
 
 function ResultStep({ result }: ResultStepProps) {
+  useInterfaceLanguage();
   const importedSkills: CompanySkill[] = useMemo(
     () => [...result.imported, ...result.updated],
     [result],
@@ -1183,24 +1145,19 @@ function ResultStep({ result }: ResultStepProps) {
         <div className="flex items-start gap-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3">
           <Link2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <div className="text-xs leading-relaxed text-muted-foreground">
-            <span className="font-medium text-foreground">No files were copied.</span> These skills
-            reference the files in the project workspace — editing them in Skill Studio saves
-            directly back to those files.
-          </div>
+            <span className="font-medium text-foreground">{interfaceText("m_7f32af54e7becb")}</span>{interfaceText("m_b2c0de1d3764c4")}</div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
           <span className="text-emerald-600 dark:text-emerald-400">
-            ✓ {result.imported.length} imported
-          </span>
-          {result.updated.length > 0 && <span>↻ {result.updated.length} updated</span>}
-          {result.skipped.length > 0 && <span>⊘ {result.skipped.length} skipped</span>}
+            ✓ {result.imported.length}{interfaceText("m_47b98f794ec328")}</span>
+          {result.updated.length > 0 && <span>↻ {result.updated.length}{interfaceText("m_f04a0271fe26e4")}</span>}
+          {result.skipped.length > 0 && <span>⊘ {result.skipped.length}{interfaceText("m_24c76fca204914")}</span>}
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {importedSkills.length > 0 && (
           <section>
-            <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Imported · {importedSkills.length}
+            <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">{interfaceText("m_7b4e1ae405d3c5")}{importedSkills.length}
             </header>
             <ul className="divide-y divide-border/60" data-testid="result-imported">
               {importedSkills.map((skill) => (
@@ -1219,8 +1176,7 @@ function ResultStep({ result }: ResultStepProps) {
                   <Link
                     to={skillStudioRoute(skill.id)}
                     className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-foreground no-underline hover:underline"
-                  >
-                    Open <ExternalLink className="h-3 w-3" />
+                  >{interfaceText("m_b8039d1d54bf9e")}<ExternalLink className="h-3 w-3" />
                   </Link>
                 </li>
               ))}
@@ -1229,8 +1185,7 @@ function ResultStep({ result }: ResultStepProps) {
         )}
         {result.skipped.length > 0 && (
           <section>
-            <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Skipped · {result.skipped.length}
+            <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">{interfaceText("m_8babc1e2f5abdd")}{result.skipped.length}
             </header>
             <ul className="divide-y divide-border/60" data-testid="result-skipped">
               {result.skipped.map((row, index) => (
@@ -1252,8 +1207,7 @@ function ResultStep({ result }: ResultStepProps) {
         )}
         {result.warnings.length > 0 && (
           <section>
-            <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Warnings · {result.warnings.length}
+            <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">{interfaceText("m_d4994b3f7204c2")}{result.warnings.length}
             </header>
             <ul className="divide-y divide-border/60" data-testid="result-warnings">
               {result.warnings.map((warning, index) => (

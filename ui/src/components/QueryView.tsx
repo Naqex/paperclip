@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 /**
  * One way to render a read.
  *
@@ -138,6 +139,7 @@ const NOT_RETRYABLE: ReadonlySet<ErrorKind> = new Set(["auth", "forbidden", "not
  * from `describeError` and a Retry button. Never renders a raw error code.
  */
 export function QueryErrorState({ error, size = "panel", action, onRetry, retrying = false, className }: QueryErrorStateProps) {
+  useInterfaceLanguage();
   const kind = classifyError(error);
   const { title, body } = describeError(error, { action });
   const retryButton = onRetry && !NOT_RETRYABLE.has(kind) ? (
@@ -149,7 +151,7 @@ export function QueryErrorState({ error, size = "panel", action, onRetry, retryi
       disabled={retrying}
     >
       <RefreshCcw aria-hidden="true" className={cn(retrying && "animate-spin")} />
-      {retrying ? "Retrying…" : "Retry"}
+      {retrying ? interfaceText("m_a16c8b1c95956f") : interfaceText("m_942087cc2d41e0")}
     </Button>
   ) : null;
 
@@ -201,7 +203,8 @@ export interface QueryPlaceholderProps {
 }
 
 /** A quiet placeholder for `loading` and `reconnecting`: it fills in by itself. */
-export function QueryPlaceholder({ size = "panel", label = "Loading", className }: QueryPlaceholderProps) {
+export function QueryPlaceholder({ size = "panel", label = interfaceText("m_dc380888c4e2c7"), className }: QueryPlaceholderProps) {
+  useInterfaceLanguage();
   if (size === "page") {
     return (
       <div role="status" aria-busy="true" aria-label={label} data-query-view="placeholder" className={className}>
@@ -227,10 +230,9 @@ export function QueryPlaceholder({ size = "panel", label = "Loading", className 
 
 /** The small hint above stale content, for surfaces that opt in with `staleHint`. */
 export function QueryStaleHint({ className }: { className?: string }) {
+  useInterfaceLanguage();
   return (
-    <p role="status" data-query-view="stale" className={cn("text-xs text-muted-foreground", className)}>
-      Updating paused while reconnecting…
-    </p>
+    <p role="status" data-query-view="stale" className={cn("text-xs text-muted-foreground", className)}>{interfaceText("m_686e97456019d4")}</p>
   );
 }
 
@@ -266,12 +268,13 @@ export function QueryView<TData>({
   className,
   children,
 }: QueryViewProps<TData>) {
+  useInterfaceLanguage();
   const view = useQueryView(query);
   switch (view.kind) {
     case "loading":
       return <>{loading ?? <QueryPlaceholder size={size} className={className} />}</>;
     case "reconnecting":
-      return <>{reconnecting ?? loading ?? <QueryPlaceholder size={size} label="Reconnecting" className={className} />}</>;
+      return <>{reconnecting ?? loading ?? <QueryPlaceholder size={size} label={interfaceText("m_afb118fcb16c37")} className={className} />}</>;
     case "error":
       if (view.errorKind === "not_found" && notFound !== undefined) return <>{notFound}</>;
       return (

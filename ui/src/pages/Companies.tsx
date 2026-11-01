@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCompany } from "../context/CompanyContext";
@@ -33,6 +34,7 @@ import {
 } from "lucide-react";
 
 export function Companies() {
+  const interfaceLanguage = useInterfaceLanguage();
   const {
     companies,
     selectedCompanyId,
@@ -89,8 +91,8 @@ export function Companies() {
   });
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Organizations" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_2730183d6b776b") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   function startEdit(companyId: string, currentName: string) {
     setEditingId(companyId);
@@ -112,14 +114,12 @@ export function Companies() {
       <div className="flex items-center justify-end">
         {isCloud ? null : (
           <Button size="sm" onClick={() => openOnboarding()}>
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
-            New Organization
-          </Button>
+            <Plus className="h-3.5 w-3.5 mr-1.5" />{interfaceText("m_4876e6473616e2")}</Button>
         )}
       </div>
 
       <div className="h-6">
-        {loading && <p className="text-sm text-muted-foreground">Loading organizations...</p>}
+        {loading && <p className="text-sm text-muted-foreground">{interfaceText("m_a47e333dbd2e36")}</p>}
         {error && <p className="text-sm text-destructive">{error.message}</p>}
       </div>
 
@@ -235,26 +235,20 @@ export function Companies() {
                       <DropdownMenuItem
                         onClick={() => startEdit(company.id, company.name)}
                       >
-                        <Pencil className="h-3.5 w-3.5" />
-                        Rename
-                      </DropdownMenuItem>
+                        <Pencil className="h-3.5 w-3.5" />{interfaceText("m_3064d79a295cef")}</DropdownMenuItem>
                       {company.status === "archived" && (
                         <DropdownMenuItem
                           disabled={unarchiveMutation.isPending}
                           onClick={() => unarchiveMutation.mutate(company.id)}
                         >
-                          <ArchiveRestore className="h-3.5 w-3.5" />
-                          Unarchive
-                        </DropdownMenuItem>
+                          <ArchiveRestore className="h-3.5 w-3.5" />{interfaceText("m_f565318d124534")}</DropdownMenuItem>
                       )}
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         variant="destructive"
                         onClick={() => setConfirmDeleteId(company.id)}
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        Delete Organization
-                      </DropdownMenuItem>
+                        <Trash2 className="h-3.5 w-3.5" />{interfaceText("m_54b2edc724ceeb")}</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -265,13 +259,13 @@ export function Companies() {
                 <div className="flex items-center gap-1.5">
                   <Users className="h-3.5 w-3.5" />
                   <span>
-                    {agentCount} {agentCount === 1 ? "agent" : "agents"}
+                    {agentCount} {agentCount === 1 ? "agent" : interfaceText("m_8c70b25cbbbe8e")}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CircleDot className="h-3.5 w-3.5" />
                   <span>
-                    {issueCount} {issueCount === 1 ? "task" : "tasks"}
+                    {issueCount} {issueCount === 1 ? interfaceText("m_0ebb429fa86d48") : interfaceText("m_085154084c7427")}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 tabular-nums">
@@ -280,12 +274,12 @@ export function Companies() {
                     {formatCents(company.spentMonthlyCents)}
                     {company.budgetMonthlyCents > 0
                       ? <> / {formatCents(company.budgetMonthlyCents)} <span className="text-xs">({budgetPct}%)</span></>
-                      : <span className="text-xs ml-1">Unlimited budget</span>}
+                      : <span className="text-xs ml-1">{interfaceText("m_3c7719943f33a6")}</span>}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 ml-auto">
                   <Calendar className="h-3.5 w-3.5" />
-                  <span>Created {relativeTime(company.createdAt)}</span>
+                  <span>{interfaceText("m_f21b805903d722")}{relativeTime(company.createdAt)}</span>
                 </div>
               </div>
 
@@ -295,25 +289,21 @@ export function Companies() {
                   className="mt-4 flex items-center justify-between bg-destructive/5 border border-destructive/20 rounded-md px-4 py-3"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <p className="text-sm text-destructive font-medium">
-                    Delete this organization and all its data? This cannot be undone.
-                  </p>
+                  <p className="text-sm text-destructive font-medium">{interfaceText("m_6287a8fc9dc012")}</p>
                   <div className="flex items-center gap-2 ml-4 shrink-0">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setConfirmDeleteId(null)}
                       disabled={deleteMutation.isPending}
-                    >
-                      Cancel
-                    </Button>
+                    >{interfaceText("m_19766ed6ccb2f4")}</Button>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => deleteMutation.mutate(company.id)}
                       disabled={deleteMutation.isPending}
                     >
-                      {deleteMutation.isPending ? "Deleting…" : "Delete"}
+                      {deleteMutation.isPending ? interfaceText("m_43b5894c3e4e2b") : interfaceText("m_e2d0a54968ead2")}
                     </Button>
                   </div>
                 </div>

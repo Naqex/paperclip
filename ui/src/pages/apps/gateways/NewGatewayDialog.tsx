@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { type FormEvent, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ToolMcpGatewayContextScopeType, ToolProfileWithDetails } from "@paperclipai/shared";
@@ -34,6 +35,7 @@ export function NewGatewayDialog({
   onOpenChange: (open: boolean) => void;
   onCreated?: (gatewayId: string) => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
   const [name, setName] = useState("");
@@ -63,7 +65,7 @@ export function NewGatewayDialog({
         contextScopeType: "company" satisfies ToolMcpGatewayContextScopeType,
       }),
     onSuccess: async (gateway) => {
-      pushToast({ title: "Gateway created", body: gateway.name, tone: "success" });
+      pushToast({ title: interfaceText("m_bf088b7fd83252"), body: gateway.name, tone: "success" });
       await queryClient.invalidateQueries({ queryKey: gatewaysQueryKey(companyId) });
       setName("");
       setDescription("");
@@ -72,7 +74,7 @@ export function NewGatewayDialog({
     },
     onError: (error) => {
       pushToast({
-        title: "Gateway was not created",
+        title: interfaceText("m_449e74ea73b90f"),
         body: error instanceof Error ? error.message : String(error),
         tone: "error",
       });
@@ -92,25 +94,22 @@ export function NewGatewayDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>New gateway</DialogTitle>
-          <DialogDescription>
-            One safe MCP endpoint that exposes only the apps in its access profile. Hand it to a client
-            like Cursor or Claude Desktop.
-          </DialogDescription>
+          <DialogTitle>{interfaceText("m_9dff4bab33a8fa")}</DialogTitle>
+          <DialogDescription>{interfaceText("m_ae7344ca9921ad")}</DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={submit}>
           <label className="block space-y-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Name</span>
+            <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_dcd1d5223f73b3")}</span>
             <Input
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="CTO agents"
+              placeholder={interfaceText("m_244581983ef454")}
               required
               autoFocus
             />
           </label>
           <label className="block space-y-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Access profile</span>
+            <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_0ffe9da7f6bb4e")}</span>
             <select
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={profileId}
@@ -119,7 +118,7 @@ export function NewGatewayDialog({
               disabled={noProfiles}
             >
               <option value="" disabled>
-                {profilesLoading ? "Loading profiles…" : "Choose a profile"}
+                {profilesLoading ? interfaceText("m_16b0bbfd1d1194") : interfaceText("m_416c3478ef2c73")}
               </option>
               {activeProfiles.map((profile) => (
                 <option key={profile.id} value={profile.id}>
@@ -127,33 +126,27 @@ export function NewGatewayDialog({
                 </option>
               ))}
             </select>
-            <span className="text-xs text-muted-foreground">
-              The profile decides which tools this gateway allows. You can change it later.
-            </span>
+            <span className="text-xs text-muted-foreground">{interfaceText("m_846e00817404a6")}</span>
           </label>
           <label className="block space-y-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Description (optional)</span>
+            <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_f6cbe2f0c1f8a3")}</span>
             <textarea
               className="min-h-16 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="Who this endpoint is for and when it should be rotated."
+              placeholder={interfaceText("m_1f1384e32cfac3")}
             />
           </label>
           {noProfiles ? (
-            <p className="text-xs text-destructive">
-              Create an access profile under Advanced before adding a gateway.
-            </p>
+            <p className="text-xs text-destructive">{interfaceText("m_fc0145280c4aa4")}</p>
           ) : null}
           <DialogFooter>
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button
               type="submit"
               disabled={createMutation.isPending || noProfiles || !name.trim() || !profileId}
             >
-              {createMutation.isPending ? "Creating…" : "Create gateway"}
+              {createMutation.isPending ? interfaceText("m_c79ed9492e3c17") : interfaceText("m_f1d4a6bb0e6773")}
             </Button>
           </DialogFooter>
         </form>

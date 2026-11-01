@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { MouseEvent, ReactNode } from "react";
 import { FileCode2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ export function ArtifactFileChip({
   showIcon = true,
   title,
 }: ArtifactFileChipProps) {
+  useInterfaceLanguage();
   const viewer = useFileViewer();
   const display = typeof label !== "undefined" ? label : artifactFileDisplay(workspaceFileRef);
   const canOpen = !!(onOpen || viewer);
@@ -36,8 +38,8 @@ export function ArtifactFileChip({
     ? ` line ${workspaceFileRef.line}${workspaceFileRef.column ? ` column ${workspaceFileRef.column}` : ""}`
     : "";
   const ariaLabel = canOpen
-    ? `Open ${workspaceFileRef.displayPath}${lineSuffix} in the file viewer`
-    : `Workspace file ${workspaceFileRef.displayPath}${lineSuffix}`;
+    ? interfaceText("m_bdb39e8d9fc176", { value0: (workspaceFileRef.displayPath), value1: (lineSuffix) })
+    : interfaceText("m_36a647d948facc", { value0: (workspaceFileRef.displayPath), value1: (lineSuffix) });
   const tooltip = title ?? (canOpen
     ? `Open ${workspaceFileRef.displayPath}${lineSuffix} in the file viewer`
     : `Workspace file ${workspaceFileRef.displayPath}${lineSuffix}`);

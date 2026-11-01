@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ChangeEvent, useEffect, useState } from "react";
 import { AgentObservabilitySettingsSection } from "../components/observability/AgentObservabilitySettings";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +33,7 @@ import {
 import { InstanceGeneralSettings } from "./InstanceGeneralSettings";
 
 export function CompanySettings() {
+  const interfaceLanguage = useInterfaceLanguage();
   const {
     companies,
     selectedCompany,
@@ -166,7 +168,7 @@ export function CompanySettings() {
       }
       if (departure.kind === "company") {
         toastActions?.pushToast({
-          title: `${archivedName} is archived`,
+          title: interfaceText("m_b00f6d360058d8", { value0: (archivedName) }),
           body: `Switched to ${departure.company.name}.`,
           tone: "info",
           dedupeKey: `company-archive-departure:${companyId}`,
@@ -175,7 +177,7 @@ export function CompanySettings() {
         navigate(`/${departure.company.issuePrefix}/dashboard`, { replace: true });
       } else {
         toastActions?.pushToast({
-          title: `${archivedName} is archived`,
+          title: interfaceText("m_b00f6d360058d8", { value0: (archivedName) }),
           body: "You can unarchive it from this list.",
           tone: "info",
           dedupeKey: `company-archive-departure:${companyId}`,
@@ -194,15 +196,13 @@ export function CompanySettings() {
   useEffect(() => {
     setBreadcrumbs([
       { label: selectedCompany?.name ?? "Company", href: "/dashboard" },
-      { label: "Settings" }
+      { label: interfaceText("m_74a883a037bc22") }
     ]);
-  }, [setBreadcrumbs, selectedCompany?.name]);
+  }, [setBreadcrumbs, selectedCompany?.name, interfaceLanguage]);
 
   if (!selectedCompany) {
     return (
-      <div className="text-sm text-muted-foreground">
-        No organization selected. Select an organization from the switcher above.
-      </div>
+      <div className="text-sm text-muted-foreground">{interfaceText("m_9133af154f20a9")}</div>
     );
   }
 
@@ -217,16 +217,14 @@ export function CompanySettings() {
     <div className="max-w-6xl space-y-8">
       <div className="flex items-center gap-2">
         <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
-        <h1 className="text-lg font-semibold">General</h1>
+        <h1 className="text-lg font-semibold">{interfaceText("m_c910d474dcd724")}</h1>
       </div>
 
       {/* General */}
       <div className="max-w-2xl space-y-4">
-        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          General
-        </div>
+        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{interfaceText("m_c910d474dcd724")}</div>
         <div className="space-y-3">
-          <Field label="Organization name" hint="The display name for your organization.">
+          <Field label={interfaceText("m_9a807d52ba2160")} hint={interfaceText("m_51280e67f5c36c")}>
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
               type="text"
@@ -234,21 +232,18 @@ export function CompanySettings() {
               onChange={(e) => setCompanyName(e.target.value)}
             />
             {isCloudManaged && (
-              <p className="mt-1 text-xs text-muted-foreground">
-                Renaming can change this company's task ID prefix. Existing task IDs are
-                renumbered and old task links stop resolving.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_2766ca5b87767c")}</p>
             )}
           </Field>
           <Field
-            label="Description"
-            hint="Optional description shown in the organization profile."
+            label={interfaceText("m_526e0087cc3f25")}
+            hint={interfaceText("m_1053d046fa5068")}
           >
             <input
               className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
               type="text"
               value={description}
-              placeholder="Optional organization description"
+              placeholder={interfaceText("m_4322c2356e4210")}
               onChange={(e) => setDescription(e.target.value)}
             />
           </Field>
@@ -257,9 +252,7 @@ export function CompanySettings() {
 
       {/* Appearance */}
       <div className="max-w-2xl space-y-4">
-        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Appearance
-        </div>
+        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{interfaceText("m_3907fa7f80722a")}</div>
         <div className="space-y-3">
           <div className="flex items-start gap-4">
             <div className="shrink-0">
@@ -272,7 +265,7 @@ export function CompanySettings() {
             <div className="flex-1 space-y-3">
               <Field
                 label="Logo"
-                hint="Upload a PNG, JPEG, WEBP, GIF, or SVG logo image."
+                hint={interfaceText("m_fd8a49c56c55e9")}
               >
                 <div className="space-y-2">
                   <input
@@ -289,7 +282,7 @@ export function CompanySettings() {
                         onClick={handleClearLogo}
                         disabled={clearLogoMutation.isPending}
                       >
-                        {clearLogoMutation.isPending ? "Removing..." : "Remove logo"}
+                        {clearLogoMutation.isPending ? interfaceText("m_60d18e42fd5a5b") : interfaceText("m_f1c1afa450870b")}
                       </Button>
                     </div>
                   )}
@@ -298,7 +291,7 @@ export function CompanySettings() {
                       {logoUploadError ??
                         (logoUploadMutation.error instanceof Error
                           ? logoUploadMutation.error.message
-                          : "Logo upload failed")}
+                          : interfaceText("m_9faf7b94275244"))}
                     </span>
                   )}
                   {clearLogoMutation.isError && (
@@ -307,7 +300,7 @@ export function CompanySettings() {
                     </span>
                   )}
                   {logoUploadMutation.isPending && (
-                    <span className="text-xs text-muted-foreground">Uploading logo...</span>
+                    <span className="text-xs text-muted-foreground">{interfaceText("m_def73c874daa50")}</span>
                   )}
                 </div>
               </Field>
@@ -324,16 +317,16 @@ export function CompanySettings() {
             onClick={handleSaveGeneral}
             disabled={generalMutation.isPending || !companyName.trim()}
           >
-            {generalMutation.isPending ? "Saving..." : "Save changes"}
+            {generalMutation.isPending ? interfaceText("m_dc85af8f2b1d0d") : interfaceText("m_dd0ae7a5cbcf23")}
           </Button>
           {generalMutation.isSuccess && (
-            <span className="text-xs text-muted-foreground">Saved</span>
+            <span className="text-xs text-muted-foreground">{interfaceText("m_b5c120b316c237")}</span>
           )}
           {generalMutation.isError && (
             <span className="text-xs text-destructive">
               {generalMutation.error instanceof Error
                   ? generalMutation.error.message
-                  : "Failed to save"}
+                  : interfaceText("m_2c07997249abaa")}
             </span>
           )}
         </div>
@@ -341,13 +334,11 @@ export function CompanySettings() {
 
       {/* Hiring */}
       <div className="max-w-2xl space-y-4" data-testid="company-settings-team-section">
-        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Hiring
-        </div>
+        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{interfaceText("m_4e414af41b7d48")}</div>
         <div>
           <ToggleField
-            label="Require board approval for new hires"
-            hint="New agent hires stay pending until approved by board."
+            label={interfaceText("m_411a6ac4e07494")}
+            hint={interfaceText("m_67728aa69055ee")}
             checked={!!selectedCompany.requireBoardApprovalForNewAgents}
             onChange={(v) => settingsMutation.mutate(v)}
             toggleTestId="company-settings-team-approval-toggle"
@@ -364,7 +355,7 @@ export function CompanySettings() {
           governanceMutation.isError
             ? governanceMutation.error instanceof Error
               ? governanceMutation.error.message
-              : "Failed to save interaction governance"
+              : interfaceText("m_d33b037f371764")
             : null
         }
       />
@@ -375,14 +366,9 @@ export function CompanySettings() {
 
       {/* Danger Zone */}
       <div className="space-y-4">
-        <div className="text-xs font-medium text-destructive uppercase tracking-wide">
-          Danger Zone
-        </div>
+        <div className="text-xs font-medium text-destructive uppercase tracking-wide">{interfaceText("m_3c1c01b4058535")}</div>
         <div className="space-y-3 bg-destructive/5 px-4 py-4">
-          <p className="text-sm text-muted-foreground">
-            Archive this organization to hide it from the sidebar. This persists in
-            the database.
-          </p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_490473488c7a47")}</p>
           <div className="flex items-center gap-2">
             <Button
               size="sm"
@@ -401,16 +387,16 @@ export function CompanySettings() {
               }}
             >
               {archiveMutation.isPending
-                ? "Archiving..."
+                ? interfaceText("m_6f3407113f0774")
                 : selectedCompany.status === "archived"
-                ? "Already archived"
-                : "Archive organization"}
+                ? interfaceText("m_ca88c0193c1079")
+                : interfaceText("m_00e7fa80dc2b63")}
             </Button>
             {archiveMutation.isError && (
               <span className="text-xs text-destructive">
                 {archiveMutation.error instanceof Error
                   ? archiveMutation.error.message
-                  : "Failed to archive organization"}
+                  : interfaceText("m_45dfcd8f4d71ad")}
               </span>
             )}
           </div>

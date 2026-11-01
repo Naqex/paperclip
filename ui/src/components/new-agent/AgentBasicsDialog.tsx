@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCompany } from "@/context/CompanyContext";
 import { PAPERCLIP_RUNNER_ACPX_PROFILES } from "@paperclipai/adapter-utils";
 import { useAgentAppearanceDraft } from "@/hooks/useAgentAppearanceDraft";
@@ -58,6 +59,7 @@ export function AgentBasicsDialog({
   setupAgentId?: string;
   onInvite?: () => void;
 }) {
+  useInterfaceLanguage();
   const id = useId();
   const { selectedCompanyId: companyId } = useCompany();
   const cache = useQueryClient();
@@ -194,19 +196,15 @@ export function AgentBasicsDialog({
       >
         <div
           className="flex items-center gap-2 px-6 py-5 text-xs text-muted-foreground"
-          aria-label="New agent progress"
+          aria-label={interfaceText("m_260193aa8a064d")}
         >
           <span
             className={cn(step === "name" && "font-medium text-foreground")}
-          >
-            1. Name
-          </span>
+          >{interfaceText("m_6dce9cbb76b5bf")}</span>
           <ChevronRight className="size-3" />
           <span
             className={cn(step === "adapter" && "font-medium text-foreground")}
-          >
-            2. Adapter
-          </span>
+          >{interfaceText("m_f692efe7c246d2")}</span>
         </div>
         <form
           className="flex min-h-0 flex-col"
@@ -221,27 +219,25 @@ export function AgentBasicsDialog({
               <div className="space-y-2">
                 <DialogTitle className="text-3xl font-semibold tracking-tight">
                   {step === "name"
-                    ? "Meet your next agent"
-                    : "Choose an adapter"}
+                    ? interfaceText("m_945b95776ed6e2")
+                    : interfaceText("m_ea43ab7d464433")}
                 </DialogTitle>
                 <DialogDescription className="text-base">
                   {step === "name"
-                    ? "Start with a name. Make them your own."
-                    : `How should ${name.trim()} work?`}
+                    ? interfaceText("m_8d8fc9f2333c03")
+                    : interfaceText("m_aa51cc431e7898", { value0: (name.trim()) })}
                 </DialogDescription>
               </div>
             </div>
             {step === "name" ? (
               <div className="space-y-2">
-                <label htmlFor={id} className="text-sm font-medium">
-                  Agent name
-                </label>
+                <label htmlFor={id} className="text-sm font-medium">{interfaceText("m_1cfb21871a0357")}</label>
                 <Input
                   id={id}
                   autoFocus
                   disabled={saving}
                   maxLength={100}
-                  placeholder="e.g. Darnold"
+                  placeholder={interfaceText("m_4c64e4feedf5fa")}
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   className="h-12 text-base"
@@ -252,18 +248,14 @@ export function AgentBasicsDialog({
                     variant="link"
                     className="px-0 text-muted-foreground"
                     onClick={onInvite}
-                  >
-                    Invite an external agent
-                  </Button>
+                  >{interfaceText("m_0c21d4548b1504")}</Button>
                 )}
               </div>
             ) : (
               <fieldset className="space-y-4">
                 <legend className="sr-only">Adapter</legend>
                 {isPending && (
-                  <p role="status" className="text-sm text-muted-foreground">
-                    Loading adapters…
-                  </p>
+                  <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_89e30959db8cec")}</p>
                 )}
                 {error && (
                   <p role="alert" className="text-sm text-destructive">
@@ -300,7 +292,7 @@ export function AgentBasicsDialog({
                             {display.label}
                           </span>
                           {adapter.type === "antigravity_runtime" && !antigravityQualified && (
-                            <span className="text-xs text-muted-foreground">{antigravityCandidate ? "Candidate" : "Not available yet"}</span>
+                            <span className="text-xs text-muted-foreground">{antigravityCandidate ? interfaceText("m_b2452d1eba3225") : interfaceText("m_787406ddea2a10")}</span>
                           )}
                           {adapterType === adapter.type && (
                             <Check className="absolute right-2 top-2 size-3.5" />
@@ -311,12 +303,12 @@ export function AgentBasicsDialog({
                   })}
                 </div>
                 {experimentalRunnerAvailable && <details className="space-y-3">
-                  <summary className="cursor-pointer text-sm text-muted-foreground">Advanced</summary>
+                  <summary className="cursor-pointer text-sm text-muted-foreground">{interfaceText("m_9f088dbebd6c3c")}</summary>
                   <div className="space-y-2">
-                    <label className="text-sm text-muted-foreground">Experimental harness</label>
-                    <SelectPopover aria-label="Experimental harness"
+                    <label className="text-sm text-muted-foreground">{interfaceText("m_8dc43aba0b2aba")}</label>
+                    <SelectPopover aria-label={interfaceText("m_8dc43aba0b2aba")}
                       value={adapterType === "paperclip_runner" ? runnerProvider : ""}
-                      placeholder="Choose a native harness…"
+                      placeholder={interfaceText("m_0eb0d31d47b50f")}
                       onValueChange={provider => { setRunnerProvider(provider); setAdapterType("paperclip_runner"); }}
                       options={[
                         { value: "grok", label: "Grok Build (Paperclip Runner)" },
@@ -336,19 +328,17 @@ export function AgentBasicsDialog({
               onClick={() => (step === "name" ? onClose() : setStep("name"))}
             >
               {step === "name" ? (
-                "Cancel"
+                interfaceText("m_19766ed6ccb2f4")
               ) : (
                 <>
-                  <ArrowLeft className="size-4" />
-                  Back
-                </>
+                  <ArrowLeft className="size-4" />{interfaceText("m_76900f1bfd16c8")}</>
               )}
             </Button>
             <Button
               type="submit"
               disabled={saving || !name.trim() || (step === "adapter" && !validAdapter)}
             >
-              {saving ? "Saving…" : step === "name" ? "Choose adapter" : "Configure agent"}
+              {saving ? interfaceText("m_23e39291d61358") : step === "name" ? interfaceText("m_83a3d0a902c86b") : interfaceText("m_14c603bd68de75")}
               <ArrowRight className="size-4" />
             </Button>
           </div>

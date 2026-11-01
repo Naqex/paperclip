@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { createContext, useContext, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Mail, Paperclip } from "lucide-react";
@@ -49,6 +50,7 @@ export function EmailMessageCard({
   publication?: EmailPublicationSummary;
   issueId: string;
 }) {
+  useInterfaceLanguage();
   const attachments = useQuery({
     queryKey: ["email-attachments", issueId],
     queryFn: () => issuesApi.listAttachments(issueId),
@@ -57,14 +59,14 @@ export function EmailMessageCard({
   return (
     <article
       aria-label={
-        message.direction === "inbound" ? "Email received" : "Email sent"
+        message.direction === "inbound" ? interfaceText("m_1bd1d0b5dea744") : interfaceText("m_a5e14a58d737e1")
       }
       className={contextNotice ? "task-context-notice space-y-3" : "space-y-4 rounded-xl border border-border bg-card p-5"}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="flex items-center gap-2 text-sm font-semibold">
           <Mail className="size-4" />
-          {message.direction === "inbound" ? "Email received" : "Email sent"}
+          {message.direction === "inbound" ? interfaceText("m_1bd1d0b5dea744") : interfaceText("m_a5e14a58d737e1")}
         </span>
         <span className="text-xs text-muted-foreground">
           {new Date(message.timestamp).toLocaleString()}
@@ -74,13 +76,10 @@ export function EmailMessageCard({
         <p className="text-sm font-medium">
           {message.from}
           {message.direction === "inbound" && (
-            <span className="ml-2 rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-              External
-            </span>
+            <span className="ml-2 rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">{interfaceText("m_68c114ea9c8c66")}</span>
           )}
         </p>
-        <p className="break-words text-xs text-muted-foreground">
-          To: {message.to.join(", ")}
+        <p className="break-words text-xs text-muted-foreground">{interfaceText("m_e38ec11fedb3a1")}{message.to.join(", ")}
         </p>
         {!!message.cc?.length && (
           <p className="break-words text-xs text-muted-foreground">
@@ -90,7 +89,7 @@ export function EmailMessageCard({
         <p className="text-sm font-semibold">{message.subject}</p>
       </div>
       <div className="whitespace-pre-wrap break-words text-sm">
-        {message.text || "(No text body)"}
+        {message.text || interfaceText("m_b47872fc10ec2e")}
       </div>
       {!!message.attachmentIds.length && (
         <div className="flex flex-wrap gap-2">
@@ -105,17 +104,17 @@ export function EmailMessageCard({
                 className="flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs"
               >
                 <Paperclip className="size-3.5" />
-                {attachment?.originalFilename ?? "Open attachment"}
+                {attachment?.originalFilename ?? interfaceText("m_9aeeab931bf594")}
               </a>
             );
           })}
         </div>
       )}
       <details className="text-xs text-muted-foreground">
-        <summary className="cursor-pointer">Email details</summary>
+        <summary className="cursor-pointer">{interfaceText("m_2f33e40a3c9689")}</summary>
         <div className="space-y-2 pt-3">
           {!!message.bcc?.length && <p>Bcc: {message.bcc.join(", ")}</p>}
-          <p className="break-all">Message ID: {message.providerMessageId}</p>
+          <p className="break-all">{interfaceText("m_61753628ddc895")}{message.providerMessageId}</p>
           {message.fullText !== message.text && (
             <div className="whitespace-pre-wrap break-words">
               {message.fullText}
@@ -126,21 +125,19 @@ export function EmailMessageCard({
       {publication && (
         <p className="border-t border-border pt-3 text-xs text-muted-foreground">
           {publication.outcome === "delivered"
-            ? "Delivered"
+            ? interfaceText("m_906115657390f3")
             : publication.outcome === "failed"
-              ? "Delivery failed"
+              ? interfaceText("m_b486522010d5f8")
               : publication.outcome === "uncertain"
-                ? "Delivery uncertain"
+                ? interfaceText("m_0308cc74ba61f6")
                 : publication.outcome === "queued"
-                  ? "Queued"
-                  : "Sent"}
+                  ? interfaceText("m_661ff40a07e037")
+                  : interfaceText("m_c16bc82bf1f04e")}
           {publication.error ? ` · ${publication.error}` : ""}
         </p>
       )}
       {attachments.error && (
-        <p role="alert" className="text-xs text-destructive">
-          Attachments could not be loaded.
-        </p>
+        <p role="alert" className="text-xs text-destructive">{interfaceText("m_0d3fe62700451b")}</p>
       )}
     </article>
   );

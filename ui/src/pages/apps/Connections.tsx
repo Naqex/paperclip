@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { isRetiredComposioConnection, RETIRED_COMPOSIO_MESSAGE } from "@paperclipai/shared";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,7 +58,7 @@ const BROWSE_HREF = "/apps";
 type StatusFilter = "all" | "attention";
 
 type AppStatus = {
-  label: "Healthy" | "Needs attention" | "Paused" | "Not connected" | "Retired";
+  label: string;
   tone: "connected" | "attention" | "paused" | "not_connected";
 };
 
@@ -81,21 +82,21 @@ type AppRow = {
  * pill's `attention` tone and the row highlight are now the *same* predicate.
  */
 function statusFor(application: ToolApplication, connections: ToolConnection[]): AppStatus {
-  if (connections.some(isRetiredComposioConnection)) return { label: "Retired", tone: "attention" };
+  if (connections.some(isRetiredComposioConnection)) return { label: interfaceText("m_a9f71bc2404c91"), tone: "attention" };
   if (connections.length === 0) {
-    return { label: "Not connected", tone: "not_connected" };
+    return { label: interfaceText("m_0303e182467081"), tone: "not_connected" };
   }
   if (
     application.status === "disabled" ||
     application.status === "archived" ||
     connections.every((connection) => connection.enabled === false || connection.status === "disabled")
   ) {
-    return { label: "Paused", tone: "paused" };
+    return { label: interfaceText("m_e159b06187d369"), tone: "paused" };
   }
   if (connections.some((connection) => isAttentionHealthStatus(connection.healthStatus))) {
-    return { label: "Needs attention", tone: "attention" };
+    return { label: interfaceText("m_c1ebc7817870e5"), tone: "attention" };
   }
-  return { label: "Healthy", tone: "connected" };
+  return { label: interfaceText("m_7f1e323b6272c6"), tone: "connected" };
 }
 
 /** The single health-derived predicate that drives highlight, pill, banner, filter (F6). */
@@ -111,6 +112,8 @@ const STATUS_CLASS: Record<AppStatus["tone"], string> = {
 };
 
 export function Connections() {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
@@ -127,11 +130,11 @@ export function Connections() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
-      { label: "Connections" },
+      { label: interfaceText("m_c3d2e79ebdd046"), href: "/apps" },
+      { label: interfaceText("m_dc273117482b44") },
     ]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   const galleryQuery = useQuery({
     queryKey: queryKeys.apps.gallery(selectedCompanyId ?? "__none__"),
@@ -168,8 +171,8 @@ export function Connections() {
       if (status.verificationUrl) window.location.assign(status.verificationUrl);
     },
     onError: (error) => pushToast({
-      title: "Couldn’t reach Paperclip Cloud",
-      body: error instanceof Error ? error.message : "Try again in a moment.",
+      title: interfaceText("m_79f035657540a3"),
+      body: error instanceof Error ? error.message : interfaceText("m_29cc3339fce99f"),
       tone: "error",
     }),
   });
@@ -187,18 +190,18 @@ export function Connections() {
       queryClient.invalidateQueries({ queryKey: queryKeys.tools.applications(selectedCompanyId!) });
       queryClient.invalidateQueries({ queryKey: queryKeys.apps.attention(selectedCompanyId!) });
       pushToast({
-        title: "Connection deleted",
+        title: interfaceText("m_d0294a63a52c33"),
         body: target.remainingConnectionCount > 0
-          ? `${target.appName} still has ${target.remainingConnectionCount} active ${target.remainingConnectionCount === 1 ? "connection" : "connections"} available to agents.`
-          : `${target.appName} is no longer available to agents and its credentials are deleted. Connecting it again needs a new sign-in or key.`,
+          ? interfaceText("m_4b9e080b64cf14", { value0: (target.appName), value1: (target.remainingConnectionCount), value2: (target.remainingConnectionCount === 1 ? "connection" : "connections") })
+          : interfaceText("m_8fcc4fa0e4d27b", { value0: (target.appName) }),
         tone: "success",
       });
       setConnectionToDelete(null);
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't delete the connection",
-        body: error instanceof Error ? error.message : "Please try again.",
+        title: interfaceText("m_1ef396039a6f63"),
+        body: error instanceof Error ? error.message : interfaceText("m_eea4fb33efd382"),
         tone: "error",
       }),
   });
@@ -272,8 +275,7 @@ export function Connections() {
       }
       return appConnections.map((connection) => {
         const owner = connectionOwnerProfile(connection, userProfileById);
-        const type = connectionTypeLabel(connection.credentialPolicy);
-        const displayName = type === "Organization"
+        const displayName = connection.credentialPolicy === "shared" || connection.credentialPolicy === "per_user_with_fallback"
           ? connectionNameForCredentialPolicy(
               humanizeConnectionDisplayName(connection),
               connection.credentialPolicy,
@@ -304,7 +306,7 @@ export function Connections() {
   const visibleRows = filter === "attention" ? rowsNeedingAttention : rows;
 
   if (!selectedCompanyId) {
-    return <div className="p-6 text-sm text-muted-foreground">Select an organization to manage apps.</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{interfaceText("m_c62bf64e9f0c2f")}</div>;
   }
 
   const loading = applicationsQuery.isLoading || connectionsQuery.isLoading || galleryQuery.isLoading;
@@ -334,25 +336,21 @@ export function Connections() {
         <div className="space-y-5">
           <header className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                The tools you’ve connected, and whether they’re working.
-              </p>
+              <h1 className="text-2xl font-bold tracking-tight">{interfaceText("m_dc273117482b44")}</h1>
+              <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_86c96136650cf3")}</p>
             </div>
-            <Button onClick={() => navigate(BROWSE_HREF)}>Connect an app</Button>
+            <Button onClick={() => navigate(BROWSE_HREF)}>{interfaceText("m_bf6c07f8707584")}</Button>
           </header>
 
           <div className="flex flex-wrap items-center gap-2">
-            <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
-              All ({rows.length})
+            <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>{interfaceText("m_6ddbebadc0708e")}{rows.length})
             </FilterChip>
             <FilterChip
               active={filter === "attention"}
               tone="danger"
               disabled={rowsNeedingAttention.length === 0}
               onClick={() => setFilter("attention")}
-            >
-              Needs attention ({rowsNeedingAttention.length})
+            >{interfaceText("m_41b551ee391c0b")}{rowsNeedingAttention.length})
             </FilterChip>
           </div>
 
@@ -365,13 +363,10 @@ export function Connections() {
               <ShieldQuestion className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold text-amber-900 dark:text-amber-100">
-                  {reviewCount} {reviewCount === 1 ? "action is" : "actions are"} waiting for your OK
-                </div>
-                <div className="truncate text-xs text-amber-700 dark:text-amber-300">
-                  Your agents paused to check with you before making a change.
-                </div>
+                  {reviewCount} {reviewCount === 1 ? interfaceText("m_547602d87c05f6") : interfaceText("m_5273e4e9e2bc4d")}{interfaceText("m_44e95243c51b5a")}</div>
+                <div className="truncate text-xs text-amber-700 dark:text-amber-300">{interfaceText("m_c81a8bf451c4e8")}</div>
               </div>
-              <span className="shrink-0 text-xs font-semibold text-amber-800 dark:text-amber-200">Review →</span>
+              <span className="shrink-0 text-xs font-semibold text-amber-800 dark:text-amber-200">{interfaceText("m_ab7681eab1638a")}</span>
             </button>
           )}
 
@@ -384,13 +379,12 @@ export function Connections() {
               <ShieldAlert className="h-5 w-5 shrink-0 text-red-600 dark:text-red-400" />
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold text-red-900 dark:text-red-100">
-                  {rowsNeedingAttention.length} {rowsNeedingAttention.length === 1 ? "connection needs" : "connections need"} attention
-                </div>
+                  {rowsNeedingAttention.length} {rowsNeedingAttention.length === 1 ? interfaceText("m_015cb24780ba83") : interfaceText("m_9b7c9d6dfbabe4")}{interfaceText("m_0e593b3ef7e900")}</div>
                 <div className="truncate text-xs text-red-700 dark:text-red-300">
                   {floatSummary(rowsNeedingAttention)}
                 </div>
               </div>
-              <span className="shrink-0 text-xs font-semibold text-red-800 dark:text-red-200">Fix →</span>
+              <span className="shrink-0 text-xs font-semibold text-red-800 dark:text-red-200">{interfaceText("m_9049952f0b0af5")}</span>
             </button>
           )}
 
@@ -398,12 +392,12 @@ export function Connections() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/40 text-left text-(length:--text-micro) font-semibold uppercase tracking-wide text-muted-foreground">
-                  <th className="px-4 py-2.5">Connection</th>
-                  <th className="px-4 py-2.5">Type</th>
-                  <th className="px-4 py-2.5">Connected by</th>
-                  <th className="px-4 py-2.5">Status</th>
-                  <th className="px-4 py-2.5">Actions</th>
-                  <th className="px-4 py-2.5">Last used</th>
+                  <th className="px-4 py-2.5">{interfaceText("m_639a40e82b9a96")}</th>
+                  <th className="px-4 py-2.5">{interfaceText("m_baaddf70fb5d43")}</th>
+                  <th className="px-4 py-2.5">{interfaceText("m_9952ce521b7857")}</th>
+                  <th className="px-4 py-2.5">{interfaceText("m_920e413c7d411b")}</th>
+                  <th className="px-4 py-2.5">{interfaceText("m_ff8059dc6752af")}</th>
+                  <th className="px-4 py-2.5">{interfaceText("m_830ec7f812f9d8")}</th>
                   <th className="px-4 py-2.5" />
                 </tr>
               </thead>
@@ -428,11 +422,11 @@ export function Connections() {
                     ? `/apps/${connection.id}/permissions`
                     : `/apps/app/${application.id}/permissions`;
                   const actionLabel = !connection
-                    ? "Connect"
-                    : connection && isRetiredComposioConnection(connection) ? "Review"
+                    ? interfaceText("m_1a2303ede07493")
+                    : connection && isRetiredComposioConnection(connection) ? interfaceText("m_aff0766a5290e1")
                     : status.tone === "attention"
-                      ? "Reconnect"
-                      : "Permissions";
+                      ? interfaceText("m_bf8a9eab9e7e14")
+                      : interfaceText("m_abccc78cc93c07");
                   return (
                     <tr
                       key={connection?.id ?? application.id}
@@ -481,7 +475,7 @@ export function Connections() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-xs text-muted-foreground">{row.actionCount} on</span>
+                        <span className="text-xs text-muted-foreground">{row.actionCount}{interfaceText("m_582bfe13a74808")}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className="text-xs text-muted-foreground">
@@ -505,7 +499,7 @@ export function Connections() {
                               variant="ghost"
                               size="icon-sm"
                               className="text-muted-foreground hover:text-destructive"
-                              aria-label={`Delete ${row.displayName} connection`}
+                              aria-label={interfaceText("m_3fad8392143123", { value0: (row.displayName) })}
                               onClick={(event) => {
                                 event.stopPropagation();
                                 setConnectionToDelete({
@@ -529,9 +523,7 @@ export function Connections() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-xs text-muted-foreground">
-              Apps you connect become available to every agent unless you change “Who can use it”.
-            </p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_b1c276b4f72104")}</p>
           </div>
         </div>
       )}
@@ -544,17 +536,15 @@ export function Connections() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Delete {connectionToDelete?.appName ?? "this"} connection?
-            </AlertDialogTitle>
+            <AlertDialogTitle>{interfaceText("m_85941fb9c99253")}{connectionToDelete?.appName ?? interfaceText("m_1eb79602411ef0")}{interfaceText("m_4849412e36f699")}</AlertDialogTitle>
             <AlertDialogDescription>
               {connectionToDelete && connectionToDelete.remainingConnectionCount > 0
-                ? `This connection's saved credentials are deleted and agents lose access through it immediately. Agents can still use ${connectionToDelete.appName} through ${connectionToDelete.remainingConnectionCount} other active ${connectionToDelete.remainingConnectionCount === 1 ? "connection" : "connections"}.`
-                : "The saved credentials are deleted and agents lose access immediately. Connecting it again later needs a new sign-in or key."}
+                ? interfaceText("m_4da27f466cf5c4", { value0: (connectionToDelete.appName), value1: (connectionToDelete.remainingConnectionCount), value2: (connectionToDelete.remainingConnectionCount === 1 ? "connection" : "connections") })
+                : interfaceText("m_a1f881ceeabde6")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteConnection.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteConnection.isPending}>{interfaceText("m_19766ed6ccb2f4")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={!connectionToDelete || deleteConnection.isPending}
@@ -564,7 +554,7 @@ export function Connections() {
               }}
             >
               {deleteConnection.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {deleteConnection.isPending ? "Deleting..." : "Delete connection"}
+              {deleteConnection.isPending ? interfaceText("m_685ecb984ac29c") : interfaceText("m_e960651babb1d7")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -584,15 +574,14 @@ function CloudConnectorEnrollmentBanner({
   busy: boolean;
   onEnable: () => void;
 }) {
+  useInterfaceLanguage();
   if (status?.configured) {
     return (
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
         <ShieldCheck className="h-5 w-5 text-primary" />
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-semibold text-foreground">Paperclip-managed sign-in is ready</div>
-          <div className="truncate text-xs text-muted-foreground">
-            Provider authorization uses {status.brokerBaseUrl}; credentials stay in this instance.
-          </div>
+          <div className="text-sm font-semibold text-foreground">{interfaceText("m_267735c56afaf1")}</div>
+          <div className="truncate text-xs text-muted-foreground">{interfaceText("m_e56312c18f224d")}{status.brokerBaseUrl}{interfaceText("m_d404b53aabe640")}</div>
         </div>
       </div>
     );
@@ -601,7 +590,7 @@ function CloudConnectorEnrollmentBanner({
     return (
       <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
         <Cloud className="h-5 w-5 text-muted-foreground" />
-        <div className="text-sm text-muted-foreground">Paperclip Cloud enrollment status is unavailable.</div>
+        <div className="text-sm text-muted-foreground">{interfaceText("m_92a8b2077bb666")}</div>
       </div>
     );
   }
@@ -610,15 +599,13 @@ function CloudConnectorEnrollmentBanner({
       <Cloud className="h-5 w-5 text-muted-foreground" />
       <div className="min-w-0 flex-1">
         <div className="text-sm font-semibold text-foreground">
-          {status?.status === "pending" ? "Finish Paperclip Cloud enrollment" : "Enable Paperclip-managed sign-in"}
+          {status?.status === "pending" ? interfaceText("m_7a2c43bceb52ca") : interfaceText("m_fd849c5675861b")}
         </div>
-        <div className="text-xs text-muted-foreground">
-          Confirm this server’s exact address before Cloud can return encrypted Google credentials to it.
-        </div>
+        <div className="text-xs text-muted-foreground">{interfaceText("m_895b87768fb3b3")}</div>
       </div>
       <Button variant="outline" size="sm" disabled={busy} onClick={onEnable}>
         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-        {status?.status === "pending" ? "Continue enrollment" : "Enable"}
+        {status?.status === "pending" ? interfaceText("m_97317cdb204147") : interfaceText("m_5342e09f2729fb")}
       </Button>
     </div>
   );
@@ -672,27 +659,21 @@ function floatSummary(rows: AppRow[]): string {
 }
 
 function EmptyConnections({ onBrowse }: { onBrowse: () => void }) {
+  useInterfaceLanguage();
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          The tools you’ve connected, and whether they’re working.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{interfaceText("m_dc273117482b44")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_86c96136650cf3")}</p>
       </header>
 
       <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
           <AppWindow className="h-6 w-6 text-muted-foreground" />
         </div>
-        <p className="mt-4 text-sm font-medium text-foreground">No connections yet.</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Add one from <span className="font-medium text-foreground">Apps</span> to give your agents
-          the tools they need.
-        </p>
-        <Button className="mt-6" onClick={onBrowse}>
-          Browse apps
-        </Button>
+        <p className="mt-4 text-sm font-medium text-foreground">{interfaceText("m_643013cde6f1db")}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_41d18cd9179281")}<span className="font-medium text-foreground">{interfaceText("m_89dd748442c194")}</span>{interfaceText("m_0be83219d07832")}</p>
+        <Button className="mt-6" onClick={onBrowse}>{interfaceText("m_cc28cdd0d000cd")}</Button>
       </div>
     </div>
   );

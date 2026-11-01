@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, useRef, useEffect, useCallback, useId } from "react";
 import { cn } from "../lib/utils";
 import { MarkdownBody, type MarkdownExternalReferenceMap } from "./MarkdownBody";
@@ -77,7 +78,7 @@ function OwnedInlineEditor({
   onSave,
   as: Tag = "span",
   className,
-  placeholder = "Click to edit...",
+  placeholder = interfaceText("m_f946cfd876474a"),
   multiline = false,
   nullable = false,
   imageUploadHandler,
@@ -90,6 +91,7 @@ function OwnedInlineEditor({
   draftKey,
   draftOwner,
 }: InlineEditorProps & { draftOwner: string | undefined }) {
+  useInterfaceLanguage();
   const [editing, setEditing] = useState(false);
   const [multilineEditing, setMultilineEditing] = useState(multiline && defaultEditing);
   const [multilineFocused, setMultilineFocused] = useState(false);
@@ -462,9 +464,9 @@ function OwnedInlineEditor({
             )}
             role={autosaveState === "error" ? "alert" : "status"}
           >
-            {autosave.label ?? "Idle"}
+            {autosave.label ?? interfaceText("m_ab0171ca0494d4")}
           </span>
-          {autosaveState === "stalled" ? <button type="button" className="ml-2 text-xs text-foreground underline" onClick={autosave.resendNow}>Retry saving</button> : null}
+          {autosaveState === "stalled" ? <button type="button" className="ml-2 text-xs text-foreground underline" onClick={autosave.resendNow}>{interfaceText("m_3adee60b233635")}</button> : null}
         </div>
       </div>
     );
@@ -511,7 +513,7 @@ function OwnedInlineEditor({
     >
       {value || placeholder}
     </DisplayTag>
-    {autosaveState === "stalled" ? <button type="button" className="text-xs text-foreground underline" onClick={autosave.resendNow}>Retry saving</button> : null}
+    {autosaveState === "stalled" ? <button type="button" className="text-xs text-foreground underline" onClick={autosave.resendNow}>{interfaceText("m_3adee60b233635")}</button> : null}
     </>
   );
 }

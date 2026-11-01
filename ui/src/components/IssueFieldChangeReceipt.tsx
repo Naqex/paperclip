@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import type { ActivityEvent } from "@paperclipai/shared";
 import {
@@ -30,6 +31,7 @@ export function IssueFieldChangeReceipt({
   resolveUserLabel?: (userId: string) => string | null | undefined;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const rows = readIssueChangeReceipt(event.details, { resolveAgentLabel, resolveUserLabel });
   const reason = issueAuthorizationReasonLabel(
     typeof event.details?.authorizationReason === "string"
@@ -65,9 +67,7 @@ export function IssueFieldChangeReceipt({
                 {/* Long text is stored as a preview, so the receipt says so
                     rather than implying the whole value is shown. */}
                 {row.truncated ? (
-                  <span className="text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-                    preview
-                  </span>
+                  <span className="text-(length:--text-nano) uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_5975cf1bba4323")}</span>
                 ) : null}
               </dd>
             </div>
@@ -84,12 +84,10 @@ export function IssueFieldChangeReceipt({
             aria-hidden="true"
           />
           {responsibleUserName ? (
-            <>
-              for <span className="text-foreground">{responsibleUserName}</span>
+            <>{interfaceText("m_21f4c696f93fb9")}<span className="text-foreground">{responsibleUserName}</span>
               {" · "}
             </>
-          ) : null}
-          authorized by {reason}
+          ) : null}{interfaceText("m_1e787c0a3e0aaf")}{reason}
         </p>
       ) : null}
     </div>

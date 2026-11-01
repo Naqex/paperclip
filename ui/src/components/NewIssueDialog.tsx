@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useTranslation } from "@/i18n";
 import { usePrimaryAgentPresentation } from "./primary-agent/PrimaryAgentPresentation";
 import { useWorkspaceIsolationControls } from "@/hooks/useWorkspaceIsolationControls";
@@ -453,6 +454,7 @@ export function NewIssueDialog() {
 }
 
 function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) {
+  useInterfaceLanguage();
   const { t } = useTranslation("workspace");
   const { visible: workspaceIsolationControlsVisible } = useWorkspaceIsolationControls();
   const { newIssueOpen, newIssueDefaults: sharedDefaults, closeNewIssue } = useDialog();
@@ -661,14 +663,14 @@ function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) 
         : undefined;
       if (failures.length > 0) {
         pushToast({
-          title: `Created ${issueRef} with upload warnings`,
+          title: interfaceText("m_753b1fc86f3a9c", { value0: (issueRef) }),
           body: `${failures.length} staged ${failures.length === 1 ? "file" : "files"} could not be added.`,
           tone: "warn",
           action: openIssueAction,
         });
       } else {
         pushToast({
-          title: `Created ${issueRef}`,
+          title: interfaceText("m_4bc4d3b0dc4e72", { value0: (issueRef) }),
           tone: "success",
           action: openIssueAction,
         });
@@ -1546,7 +1548,7 @@ function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) 
                             if (awaitingFilesKey && key) clearPendingSend(awaitingFilesKey, key);
                             if (key) { stagedFilesByKey.current.delete(key); clearCreateUploadReceipts(key); }
                             createRequestRef.current = null; setRestoredLaunch(null); setResendError(null);
-                          }}>Cancel saved request</Button> : null}
+                          }}>{interfaceText("m_7833472206cff9")}</Button> : null}
                         </div>
                       ) : null}
                       {hasTitle ? (
@@ -1584,14 +1586,14 @@ function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) 
                   <>
                     {parentPrivacyUnresolved ? (
                       <div role={parentPrivacyError ? "alert" : "status"} className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{parentPrivacyError ? "Couldn't check parent access." : "Checking parent access…"}</span>
-                        {parentPrivacyError ? <Button variant="ghost" size="sm" onClick={() => void refetchParentPrivacy()}>Retry</Button> : null}
+                        <span>{parentPrivacyError ? interfaceText("m_86e99488f15eca") : interfaceText("m_f08c79f896608f")}</span>
+                        {parentPrivacyError ? <Button variant="ghost" size="sm" onClick={() => void refetchParentPrivacy()}>{interfaceText("m_942087cc2d41e0")}</Button> : null}
                       </div>
                     ) : null}
                     {worktreeSelectionIncomplete && !worktreesLoading ? (
                       <p role="alert" className="mb-2 text-xs text-destructive">
-                        {worktreesError ? "Couldn't check the selected worktree. Retry in Worktrees or choose New worktree."
-                          : "The selected worktree is no longer available. Choose another worktree or start a new one."}
+                        {worktreesError ? interfaceText("m_90e7ee24d8a463")
+                          : interfaceText("m_950aafd4fa1b07")}
                       </p>
                     ) : null}
                     {stagedFiles.length > 0 ? (
@@ -1679,11 +1681,9 @@ function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) 
                         className="mx-4 mb-2 flex items-start gap-2 rounded-md border border-amber-300/70 bg-amber-50/90 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100"
                       >
                         <Flag className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-300" />
-                        <span className="leading-snug">
-                          Assigning implies executable intent - leave status as{" "}
-                          <span className="font-medium">Backlog</span> only to deliberately park this. The assignee will
-                          not be woken until status moves to <span className="font-medium">Todo</span> or{" "}
-                          <span className="font-medium">In Progress</span>.
+                        <span className="leading-snug">{interfaceText("m_9fc3338d948fe3")}{" "}
+                          <span className="font-medium">{interfaceText("m_bf986e9a4f860e")}</span>{interfaceText("m_d686dadef1cdba")}<span className="font-medium">{interfaceText("m_4ff402d7682110")}</span>{interfaceText("m_a181281759ee7d")}{" "}
+                          <span className="font-medium">{interfaceText("m_b4cc4b07c30010")}</span>.
                         </span>
                       </div>
                     ) : null}
@@ -1691,13 +1691,9 @@ function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) 
                     {selectedAssigneeAgent?.status === "paused" ? (
                       <div data-testid="new-issue-paused-assignee-note" className="mx-4 mb-2">
                         <InlineBanner tone="warning" icon={PauseCircle} compact>
-                          <span className="font-medium">{selectedAssigneeAgent.name}</span> is paused and will not start
-                          work on this task until it is resumed
-                          {selectedAssigneeAgent.pauseReason === "import"
-                            ? " — it arrived paused from an organization import"
-                            : ""}
-                          . You can resume it from the task page after creating the task.
-                        </InlineBanner>
+                          <span className="font-medium">{selectedAssigneeAgent.name}</span>{interfaceText("m_82ee60fbd21daa")}{selectedAssigneeAgent.pauseReason === "import"
+                            ? interfaceText("m_a1186289d25f82")
+                            : ""}{interfaceText("m_b0733d3b0f9d22")}</InlineBanner>
                       </div>
                     ) : null}
 
@@ -1707,18 +1703,13 @@ function AccountNewIssueDialog({ ignoreDefaults }: { ignoreDefaults: boolean }) 
                         className="mx-4 mb-2 flex items-start gap-2 rounded-md border border-amber-300/70 bg-amber-50/90 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100"
                       >
                         <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-300" />
-                        <span className="leading-snug">
-                          Low-trust review agent. It can only act inside its assigned review boundary; task, project, or
-                          run policy defines the concrete scope.
-                        </span>
+                        <span className="leading-snug">{interfaceText("m_d92516ba432f4c")}</span>
                       </div>
                     ) : null}
 
                     {showParentWorkspaceWarning ? (
                       <div className="mb-2">
-                        <InlineBanner tone="warning" compact>
-                          This sub-task will no longer use the parent task workspace
-                          {parentExecutionWorkspaceLabel ? ` (${parentExecutionWorkspaceLabel})` : ""}.
+                        <InlineBanner tone="warning" compact>{interfaceText("m_dbdb1f2b9a7789")}{parentExecutionWorkspaceLabel ? ` (${parentExecutionWorkspaceLabel})` : ""}.
                         </InlineBanner>
                       </div>
                     ) : null}

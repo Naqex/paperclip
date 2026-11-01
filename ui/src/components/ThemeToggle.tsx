@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,9 +36,10 @@ const MENU_ACTION_DESCRIPTION = "Toggle the app appearance.";
  * icon, and toggle behaviour stay in sync as the theme model evolves.
  */
 export function ThemeToggle({ className, variant = "icon", onAfterToggle }: ThemeToggleProps) {
+  useInterfaceLanguage();
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
-  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+  const label = isDark ? interfaceText("m_bfa0cab91d75f7") : interfaceText("m_fc43ea9804c7f5");
   const Icon = isDark ? Sun : Moon;
 
   function handleClick() {

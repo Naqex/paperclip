@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import type { DecisionHistoryItem, DecisionHistoryPage } from "@paperclipai/shared";
@@ -49,12 +50,13 @@ export function CoordinatorChatDecisionReceipt({ receipt }: { receipt: DecisionH
 }
 
 export function CoordinatorChatReceiptStatus({ query, scroll = false }: { scroll?: boolean; query: ReturnType<typeof useCoordinatorChatDecisionReceipts> }) {
+  useInterfaceLanguage();
   if (!query.enabled) return null;
   if (query.isError) return <div role="status" className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-    <span>Decision updates couldn’t load.</span><Button size="sm" variant="ghost" onClick={() => void query.refetch()}>Retry</Button>
+    <span>{interfaceText("m_ad3c6d1406e728")}</span><Button size="sm" variant="ghost" onClick={() => void query.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button>
   </div>;
   if (!scroll && query.hasNextPage) return <Button size="sm" variant="ghost" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>
-    {query.isFetchingNextPage ? "Loading earlier decisions…" : "Load earlier decisions"}
+    {query.isFetchingNextPage ? interfaceText("m_d1d990b696f20f") : interfaceText("m_54ae26e94fd793")}
   </Button>;
   return null;
 }

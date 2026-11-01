@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { CompanySkillVersionSummary } from "@paperclipai/shared";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -39,7 +40,7 @@ export function releaseName(release: CompanySkillVersionSummary): string {
 export function releaseOptionLabel(release: CompanySkillVersionSummary): string {
   const name = releaseName(release);
   const date = formatReleaseDate(release.releasedAt);
-  return date ? `${name} · released ${date}` : name;
+  return date ? interfaceText("m_1a58d991509e82", { value0: (name), value1: (date) }) : name;
 }
 
 /** Compact badge label for a pinned release, e.g. `V7`. */
@@ -68,6 +69,7 @@ export function AgentSkillReleasePicker({
   disabled = false,
   onChange,
 }: AgentSkillReleasePickerProps) {
+  useInterfaceLanguage();
   const selected = value ? releases.find((release) => release.id === value) ?? null : null;
   // Closed trigger shows the release name only; the `· released <date>` suffix
   // lives in the open menu, where dates are meaningful for comparing options.
@@ -82,7 +84,7 @@ export function AgentSkillReleasePicker({
       <SelectTrigger
         size="sm"
         className="w-full max-w-(--sz-16rem) sm:w-(--sz-16rem)"
-        aria-label="Skill release"
+        aria-label={interfaceText("m_461c13432a5043")}
       >
         <SelectValue placeholder={DEFAULT_LABEL}>{triggerLabel}</SelectValue>
       </SelectTrigger>

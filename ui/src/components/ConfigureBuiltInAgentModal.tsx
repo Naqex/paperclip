@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { agentHarnessType, agentRunner, type AgentRunnerChoice } from "@paperclipai/shared";
 import { adaptersApi } from "@/api/adapters";
@@ -64,6 +65,7 @@ export function ConfigureBuiltInAgentModal({
   onOpenChange,
   onConfigured,
 }: ConfigureBuiltInAgentModalProps) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { definition } = state;
 
@@ -127,8 +129,8 @@ export function ConfigureBuiltInAgentModal({
     modelKnown &&
     (setupSupportedInModal ? !modelRequired || normalizedModel.length > 0 : true);
   const submitLabel = setupSupportedInModal
-    ? `Configure & enable ${definition.displayName}`
-    : `Provision ${definition.displayName}`;
+    ? interfaceText("m_7a69aa02730c71", { value0: (definition.displayName) })
+    : interfaceText("m_25ef40c9e0c741", { value0: (definition.displayName) });
 
   const provision = useMutation({
     mutationFn: async () => {
@@ -166,18 +168,15 @@ export function ConfigureBuiltInAgentModal({
     <Dialog open={open} onOpenChange={(next) => (provision.isPending ? undefined : onOpenChange(next))}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Set up the {definition.displayName}</DialogTitle>
+          <DialogTitle>{interfaceText("m_7e2db3ca75c551")}{definition.displayName}</DialogTitle>
           <DialogDescription>{definition.shortPurpose}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
-          <InlineBanner tone="info" compact>
-            Creates <strong>{definition.displayName}</strong> in your roster, badged{" "}
-            <strong>Built-in</strong>. Organizations that require hire approval will queue this for the
-            board.
-          </InlineBanner>
+          <InlineBanner tone="info" compact>{interfaceText("m_21c951ef83fbc5")}<strong>{definition.displayName}</strong>{interfaceText("m_18258ce82a6ecd")}{" "}
+            <strong>{interfaceText("m_1f43948106d1d4")}</strong>{interfaceText("m_879d69665aac07")}</InlineBanner>
 
-          <Field label="Harness">
+          <Field label={interfaceText("m_e3b5b45953d79a")}>
             <AdapterTypeDropdown
               value={adapterType}
               onChange={(next) => {
@@ -190,7 +189,7 @@ export function ConfigureBuiltInAgentModal({
           </Field>
 
           {["codex_local", "claude_local", "opencode_local", "pi_local"].includes(adapterType) && <details className="space-y-3">
-            <summary className="cursor-pointer text-sm text-muted-foreground">Advanced</summary>
+            <summary className="cursor-pointer text-sm text-muted-foreground">{interfaceText("m_9f088dbebd6c3c")}</summary>
             <AgentRunnerSelect value={runner ?? (state.agent ? agentRunner(state.agent.adapterType) : "auto")}
               pending={adapters.isFetching} error={adapters.error?.message} onRetry={() => { void adapters.refetch(); }}
               defaultRunner={runnerAvailability?.defaultRunner} supportedRunners={runnerAvailability?.supportedRunners}
@@ -220,13 +219,10 @@ export function ConfigureBuiltInAgentModal({
           )}
 
           {!setupSupportedInModal && (
-            <InlineBanner tone="warning" compact>
-              This adapter needs command or endpoint fields before it can run. Provision the
-              built-in row now, then finish those fields from the full agent configuration.
-            </InlineBanner>
+            <InlineBanner tone="warning" compact>{interfaceText("m_a9f99369f0203e")}</InlineBanner>
           )}
 
-          <Field label="Monthly budget (optional)" hint="Leave blank for no cap.">
+          <Field label={interfaceText("m_4e4490135805f0")} hint={interfaceText("m_819c7fa8019f3a")}>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">$</span>
               <Input
@@ -239,7 +235,7 @@ export function ConfigureBuiltInAgentModal({
                 onChange={(event) => setBudgetDollars(event.target.value)}
                 className="w-32"
               />
-              <span className="text-sm text-muted-foreground">/ month</span>
+              <span className="text-sm text-muted-foreground">{interfaceText("m_57cbd84fd6e049")}</span>
             </div>
           </Field>
 
@@ -255,9 +251,7 @@ export function ConfigureBuiltInAgentModal({
             variant="ghost"
             onClick={() => onOpenChange(false)}
             disabled={provision.isPending}
-          >
-            Not now
-          </Button>
+          >{interfaceText("m_a0e63d7c7125d2")}</Button>
           <Button
             onClick={() => {
               setError(null);
@@ -265,7 +259,7 @@ export function ConfigureBuiltInAgentModal({
             }}
             disabled={!canSubmit || provision.isPending}
           >
-            {provision.isPending ? "Configuring…" : submitLabel}
+            {provision.isPending ? interfaceText("m_b66afe5b6cff33") : submitLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import type { CostByBiller, CostByProviderModel } from "@paperclipai/shared";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -23,6 +24,7 @@ export function BillerSpendCard({
   totalCompanySpendCents,
   providerRows,
 }: BillerSpendCardProps) {
+  useInterfaceLanguage();
   const providerBreakdown = useMemo(() => {
     const map = new Map<string, { provider: string; costCents: number; inputTokens: number; outputTokens: number }>();
     for (const entry of providerRows) {
@@ -63,13 +65,11 @@ export function BillerSpendCard({
               {providerDisplayName(row.biller)}
             </CardTitle>
             <CardDescription className="text-xs mt-0.5">
-              <span className="font-mono">{formatTokens(row.inputTokens + row.cachedInputTokens)}</span> in
+              <span className="font-mono">{formatTokens(row.inputTokens + row.cachedInputTokens)}</span>{interfaceText("m_8f6b9ac6b27608")}{" · "}
+              <span className="font-mono">{formatTokens(row.outputTokens)}</span>{interfaceText("m_34ae63eca17174")}{" · "}
+              {row.providerCount}{interfaceText("m_fc7ef838489d40")}{row.providerCount === 1 ? "" : interfaceText("m_043a718774c572")}
               {" · "}
-              <span className="font-mono">{formatTokens(row.outputTokens)}</span> out
-              {" · "}
-              {row.providerCount} provider{row.providerCount === 1 ? "" : "s"}
-              {" · "}
-              {row.modelCount} model{row.modelCount === 1 ? "" : "s"}
+              {row.modelCount}{interfaceText("m_a791e1e893ea42")}{row.modelCount === 1 ? "" : interfaceText("m_043a718774c572")}
             </CardDescription>
           </div>
           <div className="text-xl shrink-0">
@@ -82,7 +82,7 @@ export function BillerSpendCard({
       <CardContent className="px-4 pb-4 pt-3 space-y-4">
         {showBudgetUtilization && budgetMonthlyCents > 0 && (
           <QuotaBar
-            label="Period spend"
+            label={interfaceText("m_9c4819e645eeec")}
             percentUsed={budgetPct}
             leftLabel={formatCents(row.costCents)}
             rightLabel={`${Math.round(budgetPct)}% of company budget`}
@@ -90,22 +90,19 @@ export function BillerSpendCard({
         )}
 
         <div className="text-xs text-muted-foreground">
-          {row.apiRunCount > 0 ? `${row.apiRunCount} metered run${row.apiRunCount === 1 ? "" : "s"}` : "0 metered runs"}
+          {row.apiRunCount > 0 ? interfaceText("m_bd040d0ccf3a0d", { value0: (row.apiRunCount), value1: (row.apiRunCount === 1 ? "" : interfaceText("m_043a718774c572")) }) : interfaceText("m_2f11c82ec0ccc0")}
           {" · "}
           {row.subscriptionRunCount > 0
-            ? `${row.subscriptionRunCount} subscription run${row.subscriptionRunCount === 1 ? "" : "s"}`
-            : "0 subscription runs"}
+            ? interfaceText("m_4824cdf6ed8c29", { value0: (row.subscriptionRunCount), value1: (row.subscriptionRunCount === 1 ? "" : interfaceText("m_043a718774c572")) })
+            : interfaceText("m_92a4a1c9068854")}
           {" · "}
-          {formatCents(weekSpendCents)} this week
-        </div>
+          {formatCents(weekSpendCents)}{interfaceText("m_8dbf3082826436")}</div>
 
         {billingTypeBreakdown.length > 0 && (
           <>
             <div className="border-t border-border" />
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Billing types
-              </p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{interfaceText("m_2ebd3c26f0d8f8")}</p>
               <div className="space-y-1.5">
                 {billingTypeBreakdown.map(([billingType, costCents]) => (
                   <div key={billingType} className="flex items-center justify-between gap-2 text-xs">
@@ -122,9 +119,7 @@ export function BillerSpendCard({
           <>
             <div className="border-t border-border" />
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Upstream providers
-              </p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{interfaceText("m_89ad52e9874c47")}</p>
               <div className="space-y-1.5">
                 {providerBreakdown.map((entry) => (
                   <div key={entry.provider} className="flex items-center justify-between gap-2 text-xs">

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo } from "react";
 import { useParams } from "@/lib/router";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
@@ -7,6 +8,7 @@ import { PluginSlotMount, usePluginSlots } from "@/plugins/slots";
 import { NotFoundPage } from "./NotFound";
 
 export function CompanySettingsPluginPage() {
+  const interfaceLanguage = useInterfaceLanguage();
   const params = useParams<{
     companyPrefix?: string;
     settingsRoutePath?: string;
@@ -42,32 +44,30 @@ export function CompanySettingsPluginPage() {
   useEffect(() => {
     if (!pageSlot) return;
     setBreadcrumbs([
-      { label: "Settings", href: "/company/settings" },
+      { label: interfaceText("m_74a883a037bc22"), href: "/company/settings" },
       { label: pageSlot.displayName },
     ]);
-  }, [pageSlot, setBreadcrumbs]);
+  }, [pageSlot, setBreadcrumbs, interfaceLanguage]);
 
   if (!resolvedCompanyId) {
     if (hasInvalidCompanyPrefix) {
       return <NotFoundPage scope="invalid_company_prefix" requestedPrefix={routeCompanyPrefix} />;
     }
-    return <div className="text-sm text-muted-foreground">Select an organization to view this page.</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_5a2b723efebce5")}</div>;
   }
 
   if (!settingsRoutePath || isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading...</div>;
+    return <div className="text-sm text-muted-foreground">{interfaceText("m_47d2a515ef2f05")}</div>;
   }
 
   // Only a real failure reaches here; an outage keeps `isLoading` true above.
   if (errorMessage) {
-    return <QueryErrorState error={error} action="load plugin extensions" onRetry={retry} className="max-w-xl" />;
+    return <QueryErrorState error={error} action={interfaceText("m_3029e659ed502a")} onRetry={retry} className="max-w-xl" />;
   }
 
   if (pageSlots.length > 1) {
     return (
-      <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-        Multiple plugins declare the company settings route <code>{settingsRoutePath}</code>. Disable one plugin or change its route.
-      </div>
+      <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">{interfaceText("m_ea93c62ba38b7b")}<code>{settingsRoutePath}</code>{interfaceText("m_c8204595835747")}</div>
     );
   }
 

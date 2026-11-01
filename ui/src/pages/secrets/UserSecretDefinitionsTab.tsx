@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { SecretStatus, UserSecretDefinition } from "@paperclipai/shared";
@@ -64,6 +65,7 @@ const emptyForm: DefinitionForm = {
  * only — never values — per the UX terminology decisions.
  */
 export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -123,7 +125,7 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
     onSuccess: (definition) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.secrets.userDefinitions(companyId) });
       pushToast({
-        title: editing ? "Definition updated" : "Definition created",
+        title: editing ? interfaceText("m_cec55bc9ec3845") : interfaceText("m_41e2dce300eaed"),
         body: definition.name,
         tone: "success",
       });
@@ -138,12 +140,12 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
       secretsApi.removeUserSecretDefinition(companyId, definition.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.secrets.userDefinitions(companyId) });
-      pushToast({ title: "Definition removed", tone: "info" });
+      pushToast({ title: interfaceText("m_b179e55e9c0cd3"), tone: "info" });
       setDeleteTarget(null);
     },
     onError: (err) =>
       pushToast({
-        title: "Could not remove definition",
+        title: interfaceText("m_e6de8f56aa692a"),
         body: err instanceof Error ? err.message : undefined,
         tone: "error",
       }),
@@ -155,33 +157,26 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
     <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
       <div className="flex items-start gap-2 rounded-md border border-violet-500/30 bg-violet-500/5 px-4 py-3 text-xs text-violet-800 dark:text-violet-200">
         <UserRound className="h-4 w-4 mt-0.5 shrink-0" />
-        <p>
-          Define credentials that <span className="font-medium">each member supplies for
-          themselves</span>. You set the shape here; every user enters their own value under My
-          secrets. Coverage shows how many members have set a value — never the values themselves.
-        </p>
+        <p>{interfaceText("m_01bd4c4a7f3799")}<span className="font-medium">{interfaceText("m_752fb01165a673")}</span>{interfaceText("m_d3e24cb74e318d")}</p>
       </div>
 
       <div className="flex items-center justify-end">
         <Button size="sm" onClick={openCreate}>
-          <Plus className="mr-1 h-3.5 w-3.5" /> New user secret
-        </Button>
+          <Plus className="mr-1 h-3.5 w-3.5" />{interfaceText("m_69e31b1401c4c2")}</Button>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         {definitionsQuery.isError ? (
           <div className="flex items-center gap-2 py-4 text-sm text-destructive">
-            <AlertCircle className="h-4 w-4" /> Failed to load definitions:{" "}
+            <AlertCircle className="h-4 w-4" />{interfaceText("m_fad4b9dc3d7713")}{" "}
             {(definitionsQuery.error as Error).message}
-            <Button variant="ghost" size="sm" onClick={() => definitionsQuery.refetch()}>
-              Retry
-            </Button>
+            <Button variant="ghost" size="sm" onClick={() => definitionsQuery.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button>
           </div>
         ) : definitions.length === 0 && !definitionsQuery.isPending ? (
           <EmptyState
             icon={UserRound}
-            message="No user secret definitions yet. Create one to require each member to supply their own credential."
-            action="New user secret"
+            message={interfaceText("m_ccda3b146359ff")}
+            action={interfaceText("m_a67839ad4faf65")}
             onAction={openCreate}
           />
         ) : (
@@ -234,17 +229,15 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              {editing ? "Edit user secret" : "New user secret"}
+              {editing ? interfaceText("m_299bb0882f58de") : interfaceText("m_a67839ad4faf65")}
               <UserSecretChip />
             </DialogTitle>
-            <DialogDescription>
-              Members supply their own value for this credential. No value is entered here.
-            </DialogDescription>
+            <DialogDescription>{interfaceText("m_a42859e1a63170")}</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">Name</label>
+              <label className="text-xs font-medium text-foreground">{interfaceText("m_dcd1d5223f73b3")}</label>
               <Input
                 value={form.name}
                 onChange={(event) => {
@@ -255,12 +248,12 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
                     key: keyDirty ? current.key : keyFromName(name),
                   }));
                 }}
-                placeholder="Personal GitHub token"
+                placeholder={interfaceText("m_92e189a99f3ed8")}
                 autoFocus
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">Key</label>
+              <label className="text-xs font-medium text-foreground">{interfaceText("m_99a52df3ff3d49")}</label>
               <Input
                 value={form.key}
                 onChange={(event) => {
@@ -271,36 +264,34 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
                 className="font-mono text-sm"
                 disabled={Boolean(editing)}
               />
-              <p className="text-(length:--text-micro) text-muted-foreground">
-                Stable identifier referenced by env bindings. {editing ? "Cannot be changed." : ""}
+              <p className="text-(length:--text-micro) text-muted-foreground">{interfaceText("m_3817b4bfc79187")}{editing ? interfaceText("m_6eef4993935c3a") : ""}
               </p>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">Description</label>
+              <label className="text-xs font-medium text-foreground">{interfaceText("m_526e0087cc3f25")}</label>
               <Input
                 value={form.description}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, description: event.target.value }))
                 }
-                placeholder="What this credential is for"
+                placeholder={interfaceText("m_ecdde2fb6fedda")}
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">
-                Usage guidance <span className="text-muted-foreground">(optional)</span>
+              <label className="text-xs font-medium text-foreground">{interfaceText("m_d40115e512426f")}<span className="text-muted-foreground">{interfaceText("m_0059798b7f7023")}</span>
               </label>
               <Textarea
                 value={form.usageGuidance}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, usageGuidance: event.target.value }))
                 }
-                placeholder="Tell members how to create their token, required scopes, etc."
+                placeholder={interfaceText("m_2eecaea0c85e08")}
                 className="min-h-(--sz-70px) text-sm"
               />
             </div>
             {editing ? (
               <div className="space-y-1">
-                <label className="text-xs font-medium text-foreground">Status</label>
+                <label className="text-xs font-medium text-foreground">{interfaceText("m_920e413c7d411b")}</label>
                 <Select
                   value={form.status}
                   onValueChange={(status) =>
@@ -311,9 +302,9 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="disabled">Disabled</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
+                    <SelectItem value="active">{interfaceText("m_92340695899bd2")}</SelectItem>
+                    <SelectItem value="disabled">{interfaceText("m_75081b593d15cf")}</SelectItem>
+                    <SelectItem value="archived">{interfaceText("m_bdb86505f8062d")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -322,11 +313,9 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
           </div>
 
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setDialogOpen(false)} disabled={save.isPending}>
-              Cancel
-            </Button>
+            <Button variant="ghost" onClick={() => setDialogOpen(false)} disabled={save.isPending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button onClick={() => save.mutate()} disabled={!canSave || save.isPending}>
-              {save.isPending ? "Saving…" : editing ? "Save changes" : "Create"}
+              {save.isPending ? interfaceText("m_23e39291d61358") : editing ? interfaceText("m_dd0ae7a5cbcf23") : interfaceText("m_4759498ac2a719")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -336,22 +325,17 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
       <Dialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove user secret?</DialogTitle>
-            <DialogDescription>
-              This removes the definition <span className="font-mono">{deleteTarget?.key}</span> for
-              the whole company. Existing member values become unreferenced. This cannot be undone.
-            </DialogDescription>
+            <DialogTitle>{interfaceText("m_c34b555e2b5023")}</DialogTitle>
+            <DialogDescription>{interfaceText("m_275cb317ba0da9")}<span className="font-mono">{deleteTarget?.key}</span>{interfaceText("m_b1f86f7890e626")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setDeleteTarget(null)} disabled={remove.isPending}>
-              Cancel
-            </Button>
+            <Button variant="ghost" onClick={() => setDeleteTarget(null)} disabled={remove.isPending}>{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button
               variant="destructive"
               onClick={() => deleteTarget && remove.mutate(deleteTarget)}
               disabled={remove.isPending}
             >
-              {remove.isPending ? "Removing…" : "Remove"}
+              {remove.isPending ? interfaceText("m_d4b09919ec929f") : interfaceText("m_c3812fc4acb861")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -367,6 +351,7 @@ function CoverageBadge({
   companyId: string;
   definitionId: string;
 }) {
+  useInterfaceLanguage();
   const coverageQuery = useQuery({
     queryKey: queryKeys.secrets.userDefinitionCoverage(companyId, definitionId),
     queryFn: () => secretsApi.userSecretDefinitionCoverage(companyId, definitionId),
@@ -376,10 +361,9 @@ function CoverageBadge({
   const missing = summary ? summary.missingCount : 0;
   return (
     <p className="mt-1 inline-flex items-center gap-1 text-(length:--text-micro) text-muted-foreground">
-      <Users className="h-3 w-3" />
-      Coverage: {coverageSummaryLabel(summary)}
+      <Users className="h-3 w-3" />{interfaceText("m_a583c51f29d52d")}{coverageSummaryLabel(summary)}
       {summary && missing > 0 ? (
-        <span className="text-amber-600 dark:text-amber-400">· {missing} not set</span>
+        <span className="text-amber-600 dark:text-amber-400">· {missing}{interfaceText("m_26ccffbf6f5449")}</span>
       ) : null}
     </p>
   );

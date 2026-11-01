@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 /**
  * Work Timeline page (PAP-12424 / Phase C of PAP-12405).
  *
@@ -245,27 +246,20 @@ function Segmented<T extends string>({
 
 /** Encoding key for the "Signal" timeline: colour = how each run started. */
 function TimelineLegend() {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-3.5 py-2 text-xs text-muted-foreground">
       <span className="flex items-center gap-1.5">
-        <span className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: TIMELINE_COLORS.delegated }} />
-        Delegated
-      </span>
+        <span className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: TIMELINE_COLORS.delegated }} />{interfaceText("m_dd341e5d100e66")}</span>
       <span className="flex items-center gap-1.5">
-        <span className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: TIMELINE_COLORS.automation }} />
-        Automation
-      </span>
+        <span className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: TIMELINE_COLORS.automation }} />{interfaceText("m_d909750b1bbb71")}</span>
       <span className="flex items-center gap-1.5">
         <span
           className="h-2.5 w-4 rounded-sm border border-dashed bg-transparent"
           style={{ borderColor: TIMELINE_COLORS.cancelled }}
-        />
-        Cancelled
-      </span>
+        />{interfaceText("m_d353a99eb45568")}</span>
       <span className="flex items-center gap-1.5">
-        <span className="h-3.5 w-0.5" style={{ backgroundColor: TIMELINE_COLORS.now }} />
-        Now
-      </span>
+        <span className="h-3.5 w-0.5" style={{ backgroundColor: TIMELINE_COLORS.now }} />{interfaceText("m_fe18013d93d22f")}</span>
     </div>
   );
 }
@@ -275,12 +269,13 @@ function TimelineSummaryStats({
 }: {
   summary: ReturnType<typeof timelineSummary>;
 }) {
+  useInterfaceLanguage();
   const stats: { label: string; value: string; icon: LucideIcon }[] = [
-    { label: "Runs", value: formatInteger(summary.runs), icon: GanttChartSquare },
-    { label: "Agents", value: formatInteger(summary.agents), icon: Bot },
-    { label: "Run time", value: formatDuration(0, summary.activeMs), icon: Clock3 },
+    { label: interfaceText("m_848f54e89660ce"), value: formatInteger(summary.runs), icon: GanttChartSquare },
+    { label: interfaceText("m_279b44d2ab4b40"), value: formatInteger(summary.agents), icon: Bot },
+    { label: interfaceText("m_40349abbfc6051"), value: formatDuration(0, summary.activeMs), icon: Clock3 },
     {
-      label: "Tokens used",
+      label: interfaceText("m_d2252f5a23d70f"),
       value: summary.totalTokens > 0 ? formatCompactInteger(summary.totalTokens) : "Not tracked",
       icon: Coins,
     },
@@ -305,6 +300,7 @@ function TimelineSummaryStats({
 }
 
 export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const location = useLocation();
@@ -362,7 +358,7 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
     return (
       <>
         {!embedded && <RequestCollapsedSidebar />}
-        <EmptyState icon={GanttChartSquare} message="Select an organization to view its work timeline." />
+        <EmptyState icon={GanttChartSquare} message={interfaceText("m_fc69c718661608")} />
       </>
     );
   }
@@ -371,7 +367,7 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
     <div className="flex items-center gap-2">
       <GanttChartSquare className="h-6 w-6 text-muted-foreground" />
       <h1 className="text-3xl font-semibold tracking-tight">
-        {scopedProjectId ? "Project Timeline" : "Work Timeline"}
+        {scopedProjectId ? interfaceText("m_da2fd084302a98") : interfaceText("m_38973f05292895")}
       </h1>
     </div>
   );
@@ -396,9 +392,7 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
   const summary = data ? timelineSummary(data, visibleWindow ?? dataWindow(data)) : null;
 
   const rangeControls = (
-    <label className="flex min-w-0 flex-wrap items-center gap-2 text-xs text-muted-foreground">
-      Range
-      <Segmented
+    <label className="flex min-w-0 flex-wrap items-center gap-2 text-xs text-muted-foreground">{interfaceText("m_5de74a81b19230")}<Segmented
         value={rangePreset}
         onChange={(preset) => {
           if (preset === "custom") return;
@@ -406,9 +400,9 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
           setDateRange(presetRange(preset));
         }}
         options={[
-          { value: "today", label: "Today" },
-          { value: "7d", label: "7 days" },
-          { value: "30d", label: "30 days" },
+          { value: "today", label: interfaceText("m_2b065c7c9ce466") },
+          { value: "7d", label: interfaceText("m_7f920bb639c930") },
+          { value: "30d", label: interfaceText("m_ffd7280513ce28") },
         ]}
       />
       <Input
@@ -419,9 +413,9 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
           setDateRange((prev) => ({ ...prev, fromDate: event.target.value }));
         }}
         className="h-8 w-(--sz-150px) text-xs"
-        aria-label="Timeline start date"
+        aria-label={interfaceText("m_881e6415c6458c")}
       />
-      <span>to</span>
+      <span>{interfaceText("m_663ea1bfffe503")}</span>
       <Input
         type="date"
         value={dateRange.toDate}
@@ -430,7 +424,7 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
           setDateRange((prev) => ({ ...prev, toDate: event.target.value }));
         }}
         className="h-8 w-(--sz-150px) text-xs"
-        aria-label="Timeline end date"
+        aria-label={interfaceText("m_0f612621007ec6")}
       />
     </label>
   );
@@ -438,14 +432,14 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
   const toolbar = (
     <div className="flex flex-wrap items-start gap-3">
       {summary && <TimelineSummaryStats summary={summary} />}
-      <div className="ml-auto flex items-center gap-1 pt-3" aria-label="Timeline zoom controls">
+      <div className="ml-auto flex items-center gap-1 pt-3" aria-label={interfaceText("m_4c7cc9e98c01f7")}>
         <Button
           type="button"
           variant="outline"
           size="icon-xs"
           onClick={() => adjustZoom(0.8)}
-          aria-label="Zoom out"
-          title="Zoom out"
+          aria-label={interfaceText("m_bc7b631a689b45")}
+          title={interfaceText("m_bc7b631a689b45")}
         >
           <Minus className="h-3 w-3" />
         </Button>
@@ -454,8 +448,8 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
           variant="outline"
           size="icon-xs"
           onClick={() => adjustZoom(1.25)}
-          aria-label="Zoom in"
-          title="Zoom in"
+          aria-label={interfaceText("m_0e47f09a748fa1")}
+          title={interfaceText("m_0e47f09a748fa1")}
         >
           <Plus className="h-3 w-3" />
         </Button>
@@ -464,8 +458,8 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
           variant="outline"
           size="icon-xs"
           onClick={resetZoom}
-          aria-label="Reset zoom"
-          title="Reset zoom"
+          aria-label={interfaceText("m_91a661b24f1bc2")}
+          title={interfaceText("m_91a661b24f1bc2")}
         >
           <RotateCcw className="h-3 w-3" />
         </Button>
@@ -496,7 +490,7 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
       {error && (
         <EmptyState
           icon={GanttChartSquare}
-          message="Couldn't load the timeline. The aggregation endpoint may be unavailable."
+          message={interfaceText("m_fa69220aaf9db6")}
         />
       )}
 
@@ -505,7 +499,7 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
           <div className="space-y-3">
             <EmptyState
               icon={GanttChartSquare}
-              message={scopedProjectId ? "No project activity in this window." : "No activity in this window."}
+              message={scopedProjectId ? interfaceText("m_536e6b637ecb24") : interfaceText("m_885e0c5769e98b")}
             />
             <div className="flex flex-wrap items-center justify-end gap-3">
               {rangeControls}
@@ -529,9 +523,9 @@ export function Timeline({ embedded = false }: { embedded?: boolean } = {}) {
             </Card>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">
-                {data.spans.length} run{data.spans.length === 1 ? "" : "s"} ·{" "}
-                {new Date(data.window.from).toLocaleString()} to {new Date(data.window.to).toLocaleString()}
-                {data.window.capped ? " · window capped" : ""}
+                {data.spans.length}{interfaceText("m_5e9c88062df8df")}{data.spans.length === 1 ? "" : interfaceText("m_043a718774c572")} ·{" "}
+                {new Date(data.window.from).toLocaleString()}{interfaceText("m_87721689ee42f4")}{new Date(data.window.to).toLocaleString()}
+                {data.window.capped ? interfaceText("m_2c5990d371ee61") : ""}
               </p>
               {rangeControls}
             </div>

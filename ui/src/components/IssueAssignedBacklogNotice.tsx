@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Flag } from "lucide-react";
 import type { Agent } from "@paperclipai/shared";
 import { Button } from "@/components/ui/button";
@@ -17,10 +18,11 @@ export function IssueAssignedBacklogNotice({
   onResume,
   resuming,
 }: IssueAssignedBacklogNoticeProps) {
+  useInterfaceLanguage();
   if (issueStatus !== "backlog") return null;
   if (!assigneeAgent && !assigneeUserId) return null;
 
-  const assigneeLabel = assigneeAgent?.name ?? "the assignee";
+  const assigneeLabel = assigneeAgent?.name ?? interfaceText("m_f584ae3a02bdc5");
 
   return (
     <div
@@ -32,13 +34,10 @@ export function IssueAssignedBacklogNotice({
         <Flag className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-300" />
         <div className="min-w-0 flex-1 space-y-1.5">
           <p className="leading-5">
-            <span className="font-medium">Parked</span> —{" "}
-            <span className="font-medium">{assigneeLabel}</span> will not be asked to work on this until status changes to To do or In progress.
-          </p>
+            <span className="font-medium">{interfaceText("m_f32a2c334c3b22")}</span> —{" "}
+            <span className="font-medium">{assigneeLabel}</span>{interfaceText("m_0da8c2ddeb8bc8")}</p>
           {assigneeAgent ? (
-            <p className="text-xs leading-5 text-amber-800 dark:text-amber-200">
-              Comments still notify the assignee for questions or triage. Leave this parked only if the work is intentionally on hold.
-            </p>
+            <p className="text-xs leading-5 text-amber-800 dark:text-amber-200">{interfaceText("m_e9afc81592ee4c")}</p>
           ) : null}
           {onResume ? (
             <div className="pt-0.5">
@@ -50,7 +49,7 @@ export function IssueAssignedBacklogNotice({
                 disabled={resuming}
                 data-testid="issue-assigned-backlog-resume"
               >
-                {resuming ? "Resuming…" : "Resume now"}
+                {resuming ? interfaceText("m_c494e3ca3e3b04") : interfaceText("m_6eddb459af90e1")}
               </Button>
             </div>
           ) : null}

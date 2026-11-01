@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import { User, UserX } from "lucide-react";
 import {
@@ -90,7 +91,7 @@ export function buildSearchFilterOptions({
   if (currentUserId) {
     assignee.push({
       value: "me",
-      label: "Me",
+      label: interfaceText("m_d30af076b0dc85"),
       icon: <User className="h-3.5 w-3.5 text-muted-foreground" />,
       count: count(counts?.assigneeUserId, currentUserId),
       searchText: "me mine",
@@ -98,7 +99,7 @@ export function buildSearchFilterOptions({
   }
   assignee.push({
     value: "none",
-    label: "Unassigned",
+    label: interfaceText("m_14d33bd014e6b4"),
     icon: <UserX className="h-3.5 w-3.5 text-muted-foreground" />,
     searchText: "unassigned none nobody",
   });
@@ -148,6 +149,7 @@ export function SearchFilterBar({
   onSortChange: (next: CompanySearchSort) => void;
   data: SearchFilterDataProps;
 }) {
+  useInterfaceLanguage();
   const options = useMemo(() => buildSearchFilterOptions(data), [data]);
 
   function toggleMulti(dimension: "status" | "priority", value: string) {
@@ -163,45 +165,45 @@ export function SearchFilterBar({
   return (
     <div className="flex flex-wrap items-center gap-1.5" data-testid="search-filter-bar">
       <SearchFilterMenu
-        label="Status"
+        label={interfaceText("m_920e413c7d411b")}
         multi
         options={options.status}
         selected={filters.status ?? []}
         onToggle={(value) => toggleMulti("status", value)}
         onClear={() => onChange({ ...filters, status: [] })}
-        presets={[{ label: "Open items", values: OPEN_STATUS_PRESET }]}
+        presets={[{ label: interfaceText("m_161e4d503fd39a"), values: OPEN_STATUS_PRESET }]}
       />
       <SearchFilterMenu
-        label="Assignee"
+        label={interfaceText("m_5e20d20e3978dc")}
         options={options.assignee}
         selected={selectedAssignee ? [selectedAssignee] : []}
         onSelect={(value) => onChange(applyAssigneeToken(filters, value, data.currentUserId))}
         searchable
-        searchPlaceholder="Search assignees…"
-        emptyMessage="No assignees"
+        searchPlaceholder={interfaceText("m_12019555b7b48d")}
+        emptyMessage={interfaceText("m_27980ffd6927d8")}
       />
       <SearchFilterMenu
-        label="Project"
+        label={interfaceText("m_98595978531974")}
         options={options.project}
         selected={filters.projectId ? [filters.projectId] : []}
         onSelect={(value) => onChange({ ...filters, projectId: value })}
         searchable
-        searchPlaceholder="Search projects…"
-        emptyMessage="No projects"
+        searchPlaceholder={interfaceText("m_b0c5facf521794")}
+        emptyMessage={interfaceText("m_97353c7b3acbf8")}
       />
       <SearchFilterMenu
-        label="Label"
+        label={interfaceText("m_0e66373f45dcf3")}
         options={options.label}
         selected={filters.labelId ? [filters.labelId] : []}
         onSelect={(value) => onChange({ ...filters, labelId: value })}
         searchable
-        searchPlaceholder="Search labels…"
-        emptyMessage="No labels"
+        searchPlaceholder={interfaceText("m_6baf3082a4a719")}
+        emptyMessage={interfaceText("m_3ffc3b71db2ef9")}
       />
       {/* PAP-411: Priority filter menu hidden behind SHOW_TASK_PRIORITY_UI (search DSL stays intact). */}
       {SHOW_TASK_PRIORITY_UI && (
       <SearchFilterMenu
-        label="Priority"
+        label={interfaceText("m_d60dbba0792232")}
         multi
         options={options.priority}
         selected={filters.priority ?? []}
@@ -210,7 +212,7 @@ export function SearchFilterBar({
       />
       )}
       <SearchFilterMenu
-        label="Updated"
+        label={interfaceText("m_3a5ecca188c057")}
         options={options.updated}
         selected={filters.updatedWithin ? [filters.updatedWithin] : []}
         onSelect={(value) => onChange({ ...filters, updatedWithin: value })}

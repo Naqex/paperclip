@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * Single source of truth for adapter display metadata.
  *
@@ -66,7 +67,7 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
   copilot_runtime: { label: "GitHub Copilot", description: "Copilot through Paperclip Runner", icon: Code, hideFromVisualSelection: true },
   kimi_runtime: { label: "Kimi Code (Runner)", description: "Kimi Code through Paperclip Runner", icon: Moon, hideFromVisualSelection: true },
   acpx_local: {
-    label: "ACPX (retired)",
+    get label() { return interfaceText("m_8b657a5385e370"); },
     description: "Retired standalone ACPX adapter",
     icon: Bot,
     comingSoon: true,
@@ -141,7 +142,7 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     experimental: true,
   },
   muse: {
-    label: "Muse — Personal agent",
+    get label() { return interfaceText("m_36b7c21c77b5e8"); },
     description: "Your personal Muse at muse.ai",
     icon: Bot,
     experimental: true,
@@ -160,7 +161,7 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     hideFromVisualSelection: true,
   },
   process: {
-    label: "Process",
+    get label() { return interfaceText("m_e083bd83e9d3e9"); },
     description: "Internal process adapter",
     icon: Cpu,
     comingSoon: true,

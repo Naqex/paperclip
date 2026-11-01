@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "./AgentAvatar";
 import {
   Component,
@@ -249,7 +250,7 @@ function isSafeMarkdownLinkUrl(url: string): boolean {
 function richEditorErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
   if (typeof error === "string") return error;
-  return "Rich editor failed to render";
+  return interfaceText("m_afcf5396261044");
 }
 
 /**
@@ -744,6 +745,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
   onSubmit,
   readOnly = false,
 }: MarkdownEditorProps, forwardedRef) {
+  const interfaceLanguage = useInterfaceLanguage();
   const editorValue = useMemo(() => prepareMarkdownForEditor(value), [value]);
   const { slashCommands: sharedSlashCommands } = useEditorAutocomplete();
   const slashCommands = useMemo(
@@ -980,7 +982,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
             }, 100);
             return src;
           } catch (err) {
-            const message = err instanceof Error ? err.message : "Image upload failed";
+            const message = err instanceof Error ? err.message : interfaceText("m_3c5479c9819d93");
             setUploadError(message);
             throw err;
           }
@@ -1009,7 +1011,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
       all.push(imagePlugin({ imageUploadHandler: imageHandler, disableImageSettingsButton: true }));
     }
     return all;
-  }, [hasImageUpload]);
+  }, [hasImageUpload, interfaceLanguage]);
 
   useEffect(() => {
     if (editorValue !== latestValueRef.current) {
@@ -1340,8 +1342,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
         )}
       >
         <div className="flex items-start justify-between gap-3 px-3 pt-2 text-xs text-muted-foreground">
-          <p>
-            Rich editor unavailable for this markdown. Showing raw source instead.{" "}
+          <p>{interfaceText("m_8207a3f8cd3a05")}{" "}
             <span data-testid="markdown-editor-fallback-code" className="font-mono">
               {richEditorError.code}
             </span>
@@ -1356,9 +1357,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
               initialChildOnChangeRef.current = true;
               setRichEditorError(null);
             }}
-          >
-            Retry rich editor
-          </button>
+          >{interfaceText("m_a4cbab20343b71")}</button>
         </div>
         <textarea
           ref={fallbackTextareaRef}
@@ -1679,29 +1678,19 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
                   </span>
                 )}
                 {option.kind === "issue" && (
-                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">
-                    Task
-                  </span>
+                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">{interfaceText("m_4bc74b21357c6c")}</span>
                 )}
                 {option.kind === "project" && option.projectId && (
-                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">
-                    Project
-                  </span>
+                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">{interfaceText("m_98595978531974")}</span>
                 )}
                 {option.kind === "user" && (
-                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">
-                    User
-                  </span>
+                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">{interfaceText("m_b512d97e7cbf97")}</span>
                 )}
                 {option.kind === "skill" && (
-                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">
-                    Skill
-                  </span>
+                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">{interfaceText("m_6df1bb18a59ab9")}</span>
                 )}
                 {option.kind === "routine" && (
-                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">
-                    Routine
-                  </span>
+                  <span className="ml-auto text-(length:--text-nano) uppercase tracking-wide text-muted-foreground">{interfaceText("m_0b5baf309897ec")}</span>
                 )}
                 {option.kind === "action" && (
                   <span className="ml-auto max-w-28 truncate text-(length:--text-nano) text-muted-foreground">
@@ -1720,9 +1709,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
             "pointer-events-none absolute inset-1 z-40 flex items-center justify-center rounded-md border border-dashed border-primary/80 bg-primary/10 text-xs font-medium text-primary",
             !bordered && "inset-0 rounded-sm",
           )}
-        >
-          Drop {onDropFile ? "file" : "image"} to upload
-        </div>
+        >{interfaceText("m_6ae066ae37bead")}{onDropFile ? interfaceText("m_3b9c358f36f0a3") : interfaceText("m_6105d6cc76af40")}{interfaceText("m_ab0573973bfcd6")}</div>
       )}
       {uploadError && (
         <p className="px-3 pb-2 text-xs text-destructive">{uploadError}</p>

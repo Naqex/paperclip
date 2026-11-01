@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type {
   Issue,
   IssueBlockedInboxAttention,
@@ -75,7 +76,7 @@ export function blockedReasonVariant(reason: IssueBlockedInboxReason): BlockedRe
 }
 
 export function blockedReasonLabel(reason: IssueBlockedInboxReason): string {
-  return REASON_LABELS[reason] ?? "Stopped";
+  return REASON_LABELS[reason] ?? interfaceText("m_1a4f630ac1b69f");
 }
 
 export function blockedVariantLabel(variant: BlockedReasonVariant): string {

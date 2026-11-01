@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { Brain, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,14 +22,15 @@ export function TaskChatThinking({
   /** Whether this reasoning block is the runner's current activity. */
   active?: boolean;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(defaultOpen ?? false);
   const shimmer = useTaskChatShimmer(item.id);
   const body = item.lines.join("\n").trim();
   const preview = flattenSelfTalk(body);
-  const baseLabel = item.channel === "detail" ? "Reasoning detail" : "Reasoning";
+  const baseLabel = item.channel === "detail" ? interfaceText("m_2090f4896bca01") : interfaceText("m_d8211e24e83d16");
   const label = active
-    ? body ? `${baseLabel}…` : "Thinking…"
-    : item.summaryLabel ?? (body ? baseLabel : "Thought");
+    ? body ? `${baseLabel}…` : interfaceText("m_a02f1cea3c1d6c")
+    : item.summaryLabel ?? (body ? baseLabel : interfaceText("m_deb04a0d670107"));
 
   if (body && !active) {
     return (

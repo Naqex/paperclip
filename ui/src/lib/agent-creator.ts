@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { CompanyUserDirectoryEntry } from "../api/access";
 
 const LOCAL_BOARD_USER_ID = "local-board";
@@ -15,6 +16,6 @@ export function resolveAgentCreatorLabel(
   const humans = users.filter((entry) => entry.principalId !== LOCAL_BOARD_USER_ID);
   if (humans.length < 2) return null;
   const creator = humans.find((entry) => entry.principalId === creatorUserId);
-  if (!creator) return "Former member";
-  return creator.user?.name?.trim() || creator.user?.email || "Unknown user";
+  if (!creator) return interfaceText("m_1ef1541722cf66");
+  return creator.user?.name?.trim() || creator.user?.email || interfaceText("m_0bca69475fcfb2");
 }

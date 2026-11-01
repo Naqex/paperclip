@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { quotaUnavailableMessage } from "@/lib/quota-refresh";
 import type { QuotaWindow } from "@paperclipai/shared";
 import { cn, quotaSourceDisplayName } from "@/lib/utils";
@@ -32,7 +33,7 @@ function detailText(window: QuotaWindow): string | null {
       minute: "2-digit",
       timeZoneName: "short",
     });
-    return `Resets ${formatted}`;
+    return interfaceText("m_53d9d2d42f6449", { value0: (formatted) });
   }
   return null;
 }
@@ -57,18 +58,15 @@ export function ClaudeSubscriptionPanel({
   source = null,
   error = null,
 }: ClaudeSubscriptionPanelProps) {
+  useInterfaceLanguage();
   const ordered = orderedWindows(windows);
 
   return (
     <div className="border border-border px-4 py-4">
       <div className="flex items-start justify-between gap-3 border-b border-border pb-3">
         <div className="min-w-0">
-          <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">
-            Anthropic subscription
-          </div>
-          <div className="mt-1 text-sm text-muted-foreground">
-            Quota from the Claude subscription connected to this server.
-          </div>
+          <div className="text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_62da3e89de6b3b")}</div>
+          <div className="mt-1 text-sm text-muted-foreground">{interfaceText("m_29f74a67b483d0")}</div>
         </div>
         {source ? (
           <span className="shrink-0 border border-border px-2.5 py-1 text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
@@ -121,8 +119,7 @@ export function ClaudeSubscriptionPanel({
                 </div>
                 {window.usedPercent != null ? (
                   <div className="shrink-0 text-sm font-semibold tabular-nums text-foreground">
-                    {window.usedPercent}% used
-                  </div>
+                    {window.usedPercent}{interfaceText("m_19e8fbbc0d7bbb")}</div>
                 ) : null}
               </div>
 

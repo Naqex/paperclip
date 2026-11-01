@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -70,6 +71,7 @@ export function AiConnectionField({
   preferAdvanced?: boolean;
   routerAdapterType?: string;
 }) {
+  useInterfaceLanguage();
   const provider = aiProviderForAdapter(adapterType);
   const returnFocus = useRef<HTMLElement | null>(null);
   const restoreFocus = (event: Event) => { event.preventDefault(); returnFocus.current?.focus(); };
@@ -133,22 +135,17 @@ export function AiConnectionField({
   return (
     <div className="space-y-4">
       {value && value.mode !== "router" && (!["opencode_local", "pi_local"].includes(adapterType) || Boolean(model)) && !isAiConnectionCompatible(value, adapterType, model) && (
-        <p role="alert" className="text-sm text-destructive">
-          This connection does not support the current harness and model. Choose
-          a compatible connection before saving.
-        </p>
+        <p role="alert" className="text-sm text-destructive">{interfaceText("m_f964a9148111ba")}</p>
       )}
-      {(compatiblePools.length > 0 || value?.mode === "router") && <label className="block space-y-1 text-sm">
-        AI connection
-        <select className="block w-full rounded-md border bg-background px-3 py-2" disabled={readOnly} value={value?.mode === "router" ? value.connectionId : ""} onChange={event => {
+      {(compatiblePools.length > 0 || value?.mode === "router") && <label className="block space-y-1 text-sm">{interfaceText("m_a991b2272b0c52")}<select className="block w-full rounded-md border bg-background px-3 py-2" disabled={readOnly} value={value?.mode === "router" ? value.connectionId : ""} onChange={event => {
           if (event.target.value) changeBinding({ mode: "router", connectionId: event.target.value });
           else changeBinding({ mode: "responsible_user", provider, method });
         }}>
-          <option value="">Individual account</option>
-          {compatiblePools.map(pool => <option key={pool.id} value={pool.id}>{pool.name} · Experimental pool</option>)}
-          {value?.mode === "router" && !compatiblePools.some(pool => pool.id === value.connectionId) && <option value={value.connectionId}>Pool unavailable — enable routing and the pool</option>}
+          <option value="">{interfaceText("m_911d8eb1382957")}</option>
+          {compatiblePools.map(pool => <option key={pool.id} value={pool.id}>{pool.name}{interfaceText("m_91dcd0da708bdd")}</option>)}
+          {value?.mode === "router" && !compatiblePools.some(pool => pool.id === value.connectionId) && <option value={value.connectionId}>{interfaceText("m_bff15b9c85c7f9")}</option>}
         </select>
-        {value?.mode === "router" && <span className="text-muted-foreground">New tasks rotate. Existing tasks keep their account.</span>}
+        {value?.mode === "router" && <span className="text-muted-foreground">{interfaceText("m_e293f245a127bc")}</span>}
       </label>}
       {value?.mode !== "router" && <AiConnectionSelect
         adapterType={adapterType}
@@ -177,34 +174,29 @@ export function AiConnectionField({
       >
         <DialogContent className="max-h-(--sz-85vh) overflow-y-auto sm:max-w-2xl" onCloseAutoFocus={restoreFocus}>
           <DialogHeader>
-            <DialogTitle>{pendingAdoption?.mode === "router" ? `Use ${accounts.data?.pools?.find(pool => pool.id === pendingAdoption.connectionId)?.name ?? "this pool"}?` : `Adopt Connections for ${agentName}`}</DialogTitle>
+            <DialogTitle>{pendingAdoption?.mode === "router" ? interfaceText("m_8f4a652e3306e9", { value0: (accounts.data?.pools?.find(pool => pool.id === pendingAdoption.connectionId)?.name ?? "this pool") }) : interfaceText("m_94d5f546864916", { value0: (agentName) })}</DialogTitle>
             <DialogDescription>
-              {pendingAdoption?.mode === "router" ? "Reset existing sessions that use an account outside this pool." : "Saving validates access to the selected connection. Existing sessions keep their account or require an explicit reset before adoption."}
+              {pendingAdoption?.mode === "router" ? interfaceText("m_92b304848313b8") : interfaceText("m_817695f8292e17")}
             </DialogDescription>
           </DialogHeader>
           {pendingAdoption?.mode !== "router" && <p className="text-sm">
             {pendingAdoption?.mode === "responsible_user"
-              ? `Responsible user’s default. For you: ${pendingAccount ? aiConnectionDisplayLabel(pendingAccount) : "Not connected"}. Other users use their own default.`
+              ? interfaceText("m_5ccf70314707e0", { value0: (pendingAccount ? aiConnectionDisplayLabel(pendingAccount) : "Not connected") })
               : pendingAccount && aiConnectionDisplayLabel(pendingAccount)}
           </p>}
-          {pendingAdoption?.mode !== "router" && <p className="text-xs text-muted-foreground">
-            After adoption, missing credentials block execution. Previous
-            authentication will not be used as a fallback.
-          </p>}
+          {pendingAdoption?.mode !== "router" && <p className="text-xs text-muted-foreground">{interfaceText("m_f32239bbb475df")}</p>}
           <DialogFooter>
             <Button
               variant="ghost"
               onClick={() => setPendingAdoption(undefined)}
-            >
-              Cancel
-            </Button>
+            >{interfaceText("m_19766ed6ccb2f4")}</Button>
             <Button
               onClick={() => {
                 if (pendingAdoption) onChange(pendingAdoption);
                 setPendingAdoption(undefined);
               }}
             >
-              {pendingAdoption?.mode === "router" ? "Use pool" : "Use this binding when saved"}
+              {pendingAdoption?.mode === "router" ? interfaceText("m_1c7dec0cf34161") : interfaceText("m_3a51030edbf8f9")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -212,9 +204,9 @@ export function AiConnectionField({
       <Dialog open={connecting} onOpenChange={(open) => { if (!selectDefault.isPending) setConnecting(open); }}>
         <DialogContent className="max-h-(--sz-85vh) overflow-y-auto sm:max-w-2xl" onCloseAutoFocus={restoreFocus}>
           <DialogHeader>
-            <DialogTitle>{reconnecting ? "Reconnect account" : "Connect account"}</DialogTitle>
+            <DialogTitle>{reconnecting ? interfaceText("m_8e44ffb1e3130d") : interfaceText("m_f7d845186faa7a")}</DialogTitle>
             <DialogDescription>
-              {advancedSetup ? "Choose a provider connection for this agent." : reconnecting ? "Sign in again to repair your current default account. Its agent access stays the same." : "This account will become your default for this provider. Your tasks will use it; other users keep their own default."}
+              {advancedSetup ? interfaceText("m_e1594231b271d3") : reconnecting ? interfaceText("m_42e7931cf8da8f") : interfaceText("m_57a9c208feefd0")}
             </DialogDescription>
           </DialogHeader>
           {advancedSetup ? <AiProviderSetup
@@ -229,14 +221,12 @@ export function AiConnectionField({
             }}
           /> : <>
           {!reconnecting && !savedAccount && <label className="flex items-center gap-2 text-sm">
-            <Checkbox checked={allAgents} disabled={!accounts.data?.canManageConnections} onCheckedChange={(checked) => setAllAgents(checked === true)} />
-            Allow all agents in this company to use this account for my tasks
-          </label>}
+            <Checkbox checked={allAgents} disabled={!accounts.data?.canManageConnections} onCheckedChange={(checked) => setAllAgents(checked === true)} />{interfaceText("m_56090f4bc6b74c")}</label>}
           {savedAccount ? <div className="space-y-4">
             {selectDefault.error ? <>
               <p role="alert" className="text-sm text-destructive">{selectDefault.error.message}</p>
-              <Button onClick={() => selectDefault.mutate(savedAccount)}>Retry default selection</Button>
-            </> : <p role="status" className="text-sm text-muted-foreground">Selecting your default account…</p>}
+              <Button onClick={() => selectDefault.mutate(savedAccount)}>{interfaceText("m_e26adc9f4b667f")}</Button>
+            </> : <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_5af76ee0165695")}</p>}
           </div> :
           <AiConnectionCredentialStep
             companyId={companyId}
@@ -256,8 +246,8 @@ export function AiConnectionField({
             }}
           />}
           {!reconnecting && !savedAccount && <details>
-            <summary className="cursor-pointer text-sm text-muted-foreground">Advanced providers</summary>
-            <Button type="button" variant="ghost" onClick={() => setAdvancedSetup(true)}>Choose another provider or gateway</Button>
+            <summary className="cursor-pointer text-sm text-muted-foreground">{interfaceText("m_2eafb29b251e96")}</summary>
+            <Button type="button" variant="ghost" onClick={() => setAdvancedSetup(true)}>{interfaceText("m_89999001e9e59a")}</Button>
           </details>}
           </>}
         </DialogContent>

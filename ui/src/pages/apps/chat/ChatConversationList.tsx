@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { MessageSquare } from "lucide-react";
 import type { ChatConversation, ChatProvider } from "@/api/chatEndpoints";
 import { EmptyState } from "@/components/EmptyState";
@@ -34,23 +35,24 @@ export function ChatConversationList({
   rows: ChatConversation[];
   provider: ChatProvider;
 }) {
+  useInterfaceLanguage();
   if (!rows.length)
     return (
       <EmptyState
         icon={MessageSquare}
-        message="No conversations yet"
+        message={interfaceText("m_0d60084f056eb4")}
         description={
           provider === "speko"
-            ? "Open an assigned task and choose Talk to agent."
+            ? interfaceText("m_ebcdc4b016cc02")
             : provider === "agentmail"
-            ? "Send an email to this agent’s address to start one."
-            : "Mention the agent in an enabled destination to start one."
+            ? interfaceText("m_11765ce5202d88")
+            : interfaceText("m_54fb005632445c")
         }
       />
     );
   return (
     <ul
-      aria-label="Conversations"
+      aria-label={interfaceText("m_1d432f58690c2b")}
       className="divide-y divide-border border-y border-border"
     >
       {rows.map((row) => (
@@ -73,11 +75,11 @@ export function ChatConversationList({
                   className="break-words font-medium hover:underline"
                   to={`/issues/${row.issueId}`}
                 >
-                  {row.issueTitle ?? row.issueIdentifier ?? "Paperclip task"}
+                  {row.issueTitle ?? row.issueIdentifier ?? interfaceText("m_ff44b378e15c1f")}
                 </Link>
               ) : (
                 <span className="font-medium">
-                  {row.issueTitle ?? "Waiting for task"}
+                  {row.issueTitle ?? interfaceText("m_2d3edb9384ceca")}
                 </span>
               )}
             </div>
@@ -99,7 +101,7 @@ export function ChatConversationList({
                   {formatDateTime(row.updatedAt)}
                 </time>
               )}
-              {row.state === "completed" && <span>Completed</span>}
+              {row.state === "completed" && <span>{interfaceText("m_22a970d2e5b1cc")}</span>}
             </div>
           </div>
           {row.state !== "active" && row.state !== "completed" && (

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { MouseEvent, ReactNode } from "react";
 import { FileCode2, FolderOpen } from "lucide-react";
 import { useLocation } from "@/lib/router";
@@ -29,6 +30,7 @@ export function WorkspaceFileLink({
   showIcon = true,
   title,
 }: WorkspaceFileLinkProps) {
+  useInterfaceLanguage();
   const viewer = useFileViewer();
   const location = useLocation();
   const display = typeof label !== "undefined" ? label : formatWorkspaceFileRefDisplay(workspaceFileRef);
@@ -38,8 +40,8 @@ export function WorkspaceFileLink({
     ? ` line ${workspaceFileRef.line}${workspaceFileRef.column ? ` column ${workspaceFileRef.column}` : ""}`
     : "";
   const ariaLabel = canOpen
-    ? `Open ${workspaceFileRef.path}${lineSuffix} in the ${isDirectory ? "workspace browser" : "file viewer"}`
-    : `Workspace ${isDirectory ? "folder" : "file"} ${workspaceFileRef.path}${lineSuffix}`;
+    ? interfaceText("m_6f42ecb5e21548", { value0: (workspaceFileRef.path), value1: (lineSuffix), value2: (isDirectory ? "workspace browser" : "file viewer") })
+    : interfaceText("m_147bf2634613e0", { value0: (isDirectory ? "folder" : "file"), value1: (workspaceFileRef.path), value2: (lineSuffix) });
   const tooltip = title ?? (canOpen
     ? `Open ${workspaceFileRef.path}${lineSuffix} in the ${isDirectory ? "workspace browser" : "file viewer"}`
     : `Workspace ${isDirectory ? "folder" : "file"} ${workspaceFileRef.path}${lineSuffix}`);

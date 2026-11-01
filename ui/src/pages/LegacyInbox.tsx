@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { describeError } from "../api/errors";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "@/lib/router";
@@ -220,7 +221,7 @@ function firstNonEmptyLine(value: string | null | undefined): string | null {
 }
 
 function runFailureMessage(run: HeartbeatRun): string {
-  return firstNonEmptyLine(run.error) ?? firstNonEmptyLine(run.stderrExcerpt) ?? "Run exited with an error.";
+  return firstNonEmptyLine(run.error) ?? firstNonEmptyLine(run.stderrExcerpt) ?? interfaceText("m_b19756d60e95ef");
 }
 
 function approvalStatusLabel(status: Approval["status"]): string {
@@ -257,7 +258,7 @@ export function formatJoinRequestInboxLabel(
   },
 ) {
   if (joinRequest.requestType !== "human") {
-    return `Agent join request${joinRequest.agentName ? `: ${joinRequest.agentName}` : ""}`;
+    return interfaceText("m_af680260292f50", { value0: (joinRequest.agentName ? `: ${joinRequest.agentName}` : "") });
   }
 
   const requesterName = nonEmptyLabel(joinRequest.requesterUser?.name);
@@ -270,7 +271,7 @@ export function formatJoinRequestInboxLabel(
   if (requesterEmail) return requesterEmail;
   if (requesterName) return requesterName;
   if (requesterId) return requesterId;
-  return "Human join request";
+  return interfaceText("m_2a0199c3fa7d35");
 }
 
 
@@ -311,6 +312,7 @@ export function FailedRunInboxRow({
   selected?: boolean;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const issueId = readIssueIdFromRun(run);
   const issue = issueId ? issueById.get(issueId) ?? null : null;
   const displayError = runFailureMessage(run);
@@ -333,7 +335,7 @@ export function FailedRunInboxRow({
                   "inline-flex h-4 w-4 items-center justify-center rounded-full transition-colors",
                   "hover:bg-(--status-task-in_progress)/20",
                 )}
-                aria-label="Mark as read"
+                aria-label={interfaceText("m_50c8b81faf51e7")}
               >
                 <span className={cn(
                   "block h-2 w-2 rounded-full transition-opacity duration-300",
@@ -368,7 +370,7 @@ export function FailedRunInboxRow({
                   {issue.title}
                 </>
               ) : (
-                <>Failed run{linkedAgentName ? ` — ${linkedAgentName}` : ""}</>
+                <>{interfaceText("m_3f23cd69ecb80f")}{linkedAgentName ? ` — ${linkedAgentName}` : ""}</>
               )}
             </span>
             <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
@@ -392,14 +394,14 @@ export function FailedRunInboxRow({
             disabled={isRetrying}
           >
             <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-            {isRetrying ? "Retrying…" : "Retry"}
+            {isRetrying ? interfaceText("m_a16c8b1c95956f") : interfaceText("m_942087cc2d41e0")}
           </Button>
           {!showUnreadSlot && (
             <button
               type="button"
               onClick={onDismiss}
               className="rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover:opacity-100"
-              aria-label="Dismiss"
+              aria-label={interfaceText("m_48845bff334a50")}
             >
               <X className="h-4 w-4" />
             </button>
@@ -416,14 +418,14 @@ export function FailedRunInboxRow({
           disabled={isRetrying}
         >
           <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-          {isRetrying ? "Retrying…" : "Retry"}
+          {isRetrying ? interfaceText("m_a16c8b1c95956f") : interfaceText("m_942087cc2d41e0")}
         </Button>
         {!showUnreadSlot && (
           <button
             type="button"
             onClick={onDismiss}
             className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Dismiss"
+            aria-label={interfaceText("m_48845bff334a50")}
           >
             <X className="h-4 w-4" />
           </button>
@@ -458,6 +460,7 @@ function ApprovalInboxRow({
   selected?: boolean;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const Icon = typeIcon[approval.type] ?? defaultTypeIcon;
   const label = approvalLabel(approval.type, approval.payload as Record<string, unknown> | null);
   const showResolutionButtons =
@@ -482,7 +485,7 @@ function ApprovalInboxRow({
                   "inline-flex h-4 w-4 items-center justify-center rounded-full transition-colors",
                   "hover:bg-(--status-task-in_progress)/20",
                 )}
-                aria-label="Mark as read"
+                aria-label={interfaceText("m_50c8b81faf51e7")}
               >
                 <span className={cn(
                   "block h-2 w-2 rounded-full transition-opacity duration-300",
@@ -513,8 +516,8 @@ function ApprovalInboxRow({
             </span>
             <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
               <span className="capitalize">{approvalStatusLabel(approval.status)}</span>
-              {requesterName ? <span>requested by {requesterName}</span> : null}
-              <span>updated {timeAgo(approval.updatedAt)}</span>
+              {requesterName ? <span>{interfaceText("m_0d6dc5bf61f1ff")}{requesterName}</span> : null}
+              <span>{interfaceText("m_53961930ab4482")}{timeAgo(approval.updatedAt)}</span>
             </span>
           </span>
         </Link>
@@ -530,18 +533,14 @@ function ApprovalInboxRow({
                   className="h-8 bg-(--status-task-icon-done) px-3 text-white hover:bg-(--status-task-done)"
                   onClick={onApprove}
                   disabled={isPending}
-                >
-                  Approve
-                </Button>
+                >{interfaceText("m_6007acbe30b2cd")}</Button>
                 <Button
                   variant="destructive"
                   size="sm"
                   className="h-8 px-3"
                   onClick={onReject}
                   disabled={isPending}
-                >
-                  Reject
-                </Button>
+                >{interfaceText("m_ab604a36077773")}</Button>
               </>
             ) : null}
           </div>
@@ -554,18 +553,14 @@ function ApprovalInboxRow({
             className="h-8 bg-(--status-task-icon-done) px-3 text-white hover:bg-(--status-task-done)"
             onClick={onApprove}
             disabled={isPending}
-          >
-            Approve
-          </Button>
+          >{interfaceText("m_6007acbe30b2cd")}</Button>
           <Button
             variant="destructive"
             size="sm"
             className="h-8 px-3"
             onClick={onReject}
             disabled={isPending}
-          >
-            Reject
-          </Button>
+          >{interfaceText("m_ab604a36077773")}</Button>
         </div>
       ) : null}
     </div>
@@ -595,6 +590,7 @@ function JoinRequestInboxRow({
   selected?: boolean;
   className?: string;
 }) {
+  useInterfaceLanguage();
   const label = formatJoinRequestInboxLabel(joinRequest);
   const showUnreadSlot = unreadState !== null;
   const showUnreadDot = unreadState === "visible" || unreadState === "fading";
@@ -615,7 +611,7 @@ function JoinRequestInboxRow({
                   "inline-flex h-4 w-4 items-center justify-center rounded-full transition-colors",
                   "hover:bg-(--status-task-in_progress)/20",
                 )}
-                aria-label="Mark as read"
+                aria-label={interfaceText("m_50c8b81faf51e7")}
               >
                 <span className={cn(
                   "block h-2 w-2 rounded-full transition-opacity duration-300",
@@ -639,8 +635,8 @@ function JoinRequestInboxRow({
               {label}
             </span>
             <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-              <span>requested {timeAgo(joinRequest.createdAt)} from IP {joinRequest.requestIp}</span>
-              {joinRequest.adapterType && <span>adapter: {joinRequest.adapterType}</span>}
+              <span>{interfaceText("m_f900c716f8e509")}{timeAgo(joinRequest.createdAt)}{interfaceText("m_170e1c2fc69a46")}{joinRequest.requestIp}</span>
+              {joinRequest.adapterType && <span>{interfaceText("m_60e28bf8067391")}{joinRequest.adapterType}</span>}
             </span>
           </span>
         </div>
@@ -653,18 +649,14 @@ function JoinRequestInboxRow({
             className="h-8 bg-(--status-task-icon-done) px-3 text-white hover:bg-(--status-task-done)"
             onClick={onApprove}
             disabled={isPending}
-          >
-            Approve
-          </Button>
+          >{interfaceText("m_6007acbe30b2cd")}</Button>
           <Button
             variant="destructive"
             size="sm"
             className="h-8 px-3"
             onClick={onReject}
             disabled={isPending}
-          >
-            Reject
-          </Button>
+          >{interfaceText("m_ab604a36077773")}</Button>
         </div>
       </div>
       <div className="mt-3 flex gap-2 sm:hidden">
@@ -673,24 +665,21 @@ function JoinRequestInboxRow({
           className="h-8 bg-(--status-task-icon-done) px-3 text-white hover:bg-(--status-task-done)"
           onClick={onApprove}
           disabled={isPending}
-        >
-          Approve
-        </Button>
+        >{interfaceText("m_6007acbe30b2cd")}</Button>
         <Button
           variant="destructive"
           size="sm"
           className="h-8 px-3"
           onClick={onReject}
           disabled={isPending}
-        >
-          Reject
-        </Button>
+        >{interfaceText("m_ab604a36077773")}</Button>
       </div>
     </div>
   );
 }
 
 export function Inbox() {
+  const interfaceLanguage = useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { openNewIssue } = useDialogActions();
@@ -772,8 +761,8 @@ export function Inbox() {
   });
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Inbox" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: interfaceText("m_94835ea2fcf775") }]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   useEffect(() => {
     saveLastInboxTab(tab);
@@ -1691,8 +1680,8 @@ export function Inbox() {
     },
     onError: (error) => {
       pushToast({
-        title: "Run retry failed",
-        body: error instanceof Error ? error.message : "Unable to retry run",
+        title: interfaceText("m_243efbc1d68c51"),
+        body: error instanceof Error ? error.message : interfaceText("m_537d0b3e655958"),
         tone: "error",
       });
     },
@@ -2210,7 +2199,7 @@ export function Inbox() {
   }, [selectedIndex]);
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={InboxIcon} message="Select a company to view inbox." />;
+    return <EmptyState icon={InboxIcon} message={interfaceText("m_593895d9d78198")} />;
   }
 
   const hasRunFailures = failedRuns.length > 0;
@@ -2268,7 +2257,7 @@ export function Inbox() {
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search inbox…"
+            placeholder={interfaceText("m_d684b9b792bde6")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -2298,15 +2287,15 @@ export function Inbox() {
             items={[
               {
                 value: "mine",
-                label: "Mine",
+                label: interfaceText("m_f57afb7d275a26"),
               },
               {
                 value: "recent",
-                label: "Recent",
+                label: interfaceText("m_690dbe9dc0993c"),
               },
-              { value: "unread", label: "Unread" },
-              { value: "blocked", label: "Blocked" },
-              { value: "all", label: "All" },
+              { value: "unread", label: interfaceText("m_1b9f384c1436f6") },
+              { value: "blocked", label: interfaceText("m_18f2a0947f9d65") },
+              { value: "all", label: interfaceText("m_a52ace420f2175") },
             ]}
           />
         </Tabs>
@@ -2316,7 +2305,7 @@ export function Inbox() {
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search inbox…"
+              placeholder={interfaceText("m_d684b9b792bde6")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -2364,7 +2353,7 @@ export function Inbox() {
                     variant="outline"
                     size="icon"
                     className={cn("h-8 w-8 shrink-0", blockedGroupBy !== "none" && "bg-accent")}
-                    title="Group"
+                    title={interfaceText("m_34ca0e76608842")}
                   >
                     <Layers className="h-3.5 w-3.5" />
                   </Button>
@@ -2393,7 +2382,7 @@ export function Inbox() {
                 visibleColumnSet={visibleIssueColumnSet}
                 onToggleColumn={toggleIssueColumn}
                 onResetColumns={() => setIssueColumns(DEFAULT_INBOX_ISSUE_COLUMNS)}
-                title="Choose which inbox columns stay visible"
+                title={interfaceText("m_ad899478db8b91")}
                 iconOnly
               />
               <Popover>
@@ -2403,7 +2392,7 @@ export function Inbox() {
                     variant="outline"
                     size="icon"
                     className="h-8 w-8 shrink-0"
-                    title="Sort"
+                    title={interfaceText("m_bec69036aa27e7")}
                   >
                     <ArrowUpDown className="h-3.5 w-3.5" />
                   </Button>
@@ -2436,7 +2425,7 @@ export function Inbox() {
                 size="icon"
                 className={cn("hidden h-8 w-8 shrink-0 sm:inline-flex", nestingEnabled && "bg-accent")}
                 onClick={toggleNesting}
-                title={nestingEnabled ? "Disable parent-child nesting" : "Enable parent-child nesting"}
+                title={nestingEnabled ? interfaceText("m_8c5a4b177b78f1") : interfaceText("m_18cf6dba765685")}
               >
                 <ListTree className="h-3.5 w-3.5" />
               </Button>
@@ -2462,7 +2451,7 @@ export function Inbox() {
                     variant="outline"
                     size="icon"
                     className={cn("h-8 w-8 shrink-0", groupBy !== "none" && "bg-accent")}
-                    title="Group"
+                    title={interfaceText("m_34ca0e76608842")}
                   >
                     <Layers className="h-3.5 w-3.5" />
                   </Button>
@@ -2497,7 +2486,7 @@ export function Inbox() {
                 visibleColumnSet={visibleIssueColumnSet}
                 onToggleColumn={toggleIssueColumn}
                 onResetColumns={() => setIssueColumns(DEFAULT_INBOX_ISSUE_COLUMNS)}
-                title="Choose which inbox columns stay visible"
+                title={interfaceText("m_ad899478db8b91")}
                 iconOnly
               />
               {canMarkAllRead && (
@@ -2510,28 +2499,22 @@ export function Inbox() {
                     onClick={() => setShowMarkAllReadConfirm(true)}
                     disabled={markAllReadMutation.isPending}
                   >
-                    {markAllReadMutation.isPending ? "Marking…" : "Mark all as read"}
+                    {markAllReadMutation.isPending ? interfaceText("m_98a436e57b71dd") : interfaceText("m_d7592650e1c90a")}
                   </Button>
                   <Dialog open={showMarkAllReadConfirm} onOpenChange={setShowMarkAllReadConfirm}>
                     <DialogContent className="sm:max-w-md">
                       <DialogHeader>
-                        <DialogTitle>Mark all as read?</DialogTitle>
-                        <DialogDescription>
-                          This will mark {unreadIssueIds.length} unread {unreadIssueIds.length === 1 ? "item" : "items"} as read.
-                        </DialogDescription>
+                        <DialogTitle>{interfaceText("m_0bf166e2960865")}</DialogTitle>
+                        <DialogDescription>{interfaceText("m_cd172eb57960a6")}{unreadIssueIds.length}{interfaceText("m_7207a77f4ab0b1")}{unreadIssueIds.length === 1 ? interfaceText("m_4a33eacd5fa65f") : interfaceText("m_5f3c4f8580d392")}{interfaceText("m_3c0884aa0ab404")}</DialogDescription>
                       </DialogHeader>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowMarkAllReadConfirm(false)}>
-                          Cancel
-                        </Button>
+                        <Button variant="outline" onClick={() => setShowMarkAllReadConfirm(false)}>{interfaceText("m_19766ed6ccb2f4")}</Button>
                         <Button
                           onClick={() => {
                             setShowMarkAllReadConfirm(false);
                             markAllReadMutation.mutate(unreadIssueIds);
                           }}
-                        >
-                          Mark all as read
-                        </Button>
+                        >{interfaceText("m_d7592650e1c90a")}</Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
@@ -2550,15 +2533,15 @@ export function Inbox() {
             onValueChange={(value) => updateAllCategoryFilter(value as InboxCategoryFilter)}
           >
             <SelectTrigger className="h-8 w-(--sz-170px) text-xs">
-              <SelectValue placeholder="Category" />
+              <SelectValue placeholder={interfaceText("m_292c06f0045a45")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="everything">All categories</SelectItem>
-              <SelectItem value="issues_i_touched">My recent tasks</SelectItem>
-              <SelectItem value="join_requests">Join requests</SelectItem>
-              <SelectItem value="approvals">Approvals</SelectItem>
-              <SelectItem value="failed_runs">Failed runs</SelectItem>
-              <SelectItem value="alerts">Alerts</SelectItem>
+              <SelectItem value="everything">{interfaceText("m_9d5097a837102a")}</SelectItem>
+              <SelectItem value="issues_i_touched">{interfaceText("m_0b598c2cf848fc")}</SelectItem>
+              <SelectItem value="join_requests">{interfaceText("m_a1321fc27dc597")}</SelectItem>
+              <SelectItem value="approvals">{interfaceText("m_2bfc3471571e5c")}</SelectItem>
+              <SelectItem value="failed_runs">{interfaceText("m_24afc952b6cc94")}</SelectItem>
+              <SelectItem value="alerts">{interfaceText("m_f62e9267d196c7")}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -2568,12 +2551,12 @@ export function Inbox() {
               onValueChange={(value) => updateAllApprovalFilter(value as InboxApprovalFilter)}
             >
               <SelectTrigger className="h-8 w-(--sz-170px) text-xs">
-                <SelectValue placeholder="Approval status" />
+                <SelectValue placeholder={interfaceText("m_5a66175a2ba393")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All approval statuses</SelectItem>
-                <SelectItem value="actionable">Needs action</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
+                <SelectItem value="all">{interfaceText("m_eadb0e28eb2711")}</SelectItem>
+                <SelectItem value="actionable">{interfaceText("m_e382d466c25613")}</SelectItem>
+                <SelectItem value="resolved">{interfaceText("m_5be3c2c8354e1e")}</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -2613,14 +2596,14 @@ export function Inbox() {
           icon={searchQuery.trim() ? Search : InboxIcon}
           message={
             searchQuery.trim()
-              ? "No inbox items match your search."
+              ? interfaceText("m_035ac018f0edb5")
               : tab === "mine"
-              ? "Inbox zero."
+              ? interfaceText("m_9399b9e57bfb84")
               : tab === "unread"
-              ? "No new inbox items."
+              ? interfaceText("m_d2b837d7882a78")
               : tab === "recent"
-                ? "No recent inbox items."
-                : "No inbox items match these filters."
+                ? interfaceText("m_7a612a8906f17e")
+                : interfaceText("m_6215f5f864700f")
           }
         />
       )}
@@ -2732,7 +2715,7 @@ export function Inbox() {
                       }
                       titleSuffix={hasChildren && !isExpanded && depth === 0 ? (
                         <span className="ml-1.5 text-xs text-muted-foreground">
-                          ({childCount} sub-task{childCount !== 1 ? "s" : ""})
+                          ({childCount}{interfaceText("m_ed32e44713f3e9")}{childCount !== 1 ? interfaceText("m_043a718774c572") : ""})
                         </span>
                       ) : undefined}
                       mobileMeta={issueActivityText(issue).toLowerCase()}
@@ -2807,7 +2790,7 @@ export function Inbox() {
                       >
                         <div className="h-px flex-1 bg-border/80" />
                         <span className="shrink-0 text-(length:--text-micro) font-semibold uppercase tracking-wide text-muted-foreground">
-                          {group.searchSection === "archived" ? "Archived" : "Other results"}
+                          {group.searchSection === "archived" ? interfaceText("m_bdb86505f8062d") : interfaceText("m_d2fcaa7d025063")}
                         </span>
                         <div className="h-px flex-1 bg-border/80" />
                       </div>,
@@ -2844,8 +2827,8 @@ export function Inbox() {
                               variant="ghost"
                               size="icon-xs"
                               className="-mr-2 text-muted-foreground"
-                              title={`New task in ${group.label}`}
-                              aria-label={`New task in ${group.label}`}
+                              title={interfaceText("m_f74efa870ad19f", { value0: (group.label) })}
+                              aria-label={interfaceText("m_f74efa870ad19f", { value0: (group.label) })}
                               onClick={(event) => {
                                 event.stopPropagation();
                                 openCreateIssueForGroup(group);
@@ -2886,9 +2869,7 @@ export function Inbox() {
                       elements.push(
                         <div key={`today-divider-${group.key}-${index}`} className="my-2 flex items-center gap-3 px-4">
                           <div className="flex-1 border-t border-zinc-600" />
-                          <span className="shrink-0 text-(length:--text-micro) font-medium uppercase tracking-wider text-zinc-500">
-                            Earlier
-                          </span>
+                          <span className="shrink-0 text-(length:--text-micro) font-medium uppercase tracking-wider text-zinc-500">{interfaceText("m_e10ae990740118")}</span>
                         </div>,
                       );
                     }
@@ -3101,9 +3082,7 @@ export function Inbox() {
         <>
           {showSeparatorBefore("alerts") && <Separator />}
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Alerts
-            </h3>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_f62e9267d196c7")}</h3>
             <div className="divide-y divide-border border border-border">
               {showAggregateAgentError && (
                 <div className="group/alert relative flex items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/50">
@@ -3114,14 +3093,13 @@ export function Inbox() {
                     <AlertTriangle className="h-4 w-4 shrink-0 text-red-600 dark:text-red-400" />
                     <span className="text-sm">
                       <span className="font-medium">{dashboard!.agents.error}</span>{" "}
-                      {dashboard!.agents.error === 1 ? "agent has" : "agents have"} errors
-                    </span>
+                      {dashboard!.agents.error === 1 ? interfaceText("m_73772d753cc541") : interfaceText("m_9e7c478e2a684d")}{interfaceText("m_ffb2f0afdfc4ed")}</span>
                   </Link>
                   <button
                     type="button"
                     onClick={() => dismissAlert("alert:agent-errors")}
                     className="rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/alert:opacity-100"
-                    aria-label="Dismiss"
+                    aria-label={interfaceText("m_48845bff334a50")}
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -3134,17 +3112,14 @@ export function Inbox() {
                     className="flex flex-1 cursor-pointer items-center gap-3 no-underline text-inherit"
                   >
                     <AlertTriangle className="h-4 w-4 shrink-0 text-yellow-400" />
-                    <span className="text-sm">
-                      Budget at{" "}
-                      <span className="font-medium">{dashboard!.costs.monthUtilizationPercent}%</span>{" "}
-                      utilization this month
-                    </span>
+                    <span className="text-sm">{interfaceText("m_42ed7a2d3f40d4")}{" "}
+                      <span className="font-medium">{dashboard!.costs.monthUtilizationPercent}%</span>{" "}{interfaceText("m_be7a25a60059aa")}</span>
                   </Link>
                   <button
                     type="button"
                     onClick={() => dismissAlert("alert:budget")}
                     className="rounded-md p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/alert:opacity-100"
-                    aria-label="Dismiss"
+                    aria-label={interfaceText("m_48845bff334a50")}
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>

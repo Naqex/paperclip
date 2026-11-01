@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ScrollingHistory } from "@/components/task-chat/TaskMessageScroller";
 import { TaskChatShimmerScope } from "@/components/task-chat/TaskChatShimmer";
 import { useRunnerSubmission } from "@/hooks/useRunnerSubmission";
@@ -460,26 +461,26 @@ function durableInputLabel(
   interaction: TaskChatInteractionItem["interaction"],
 ): string {
   if (interaction.kind === "ask_user_questions")
-    return interaction.title ?? "Questions";
+    return interaction.title ?? interfaceText("m_9a72221a27476f");
   if (interaction.kind === "suggest_tasks")
-    return interaction.title ?? "Suggested tasks";
+    return interaction.title ?? interfaceText("m_5addd6fff8dd79");
   if (interaction.kind === "request_checkbox_confirmation")
-    return interaction.title ?? "Choose options";
+    return interaction.title ?? interfaceText("m_cf2a66cc0c539d");
   if (interaction.kind === "request_item_verdicts")
-    return interaction.title ?? "Review items";
+    return interaction.title ?? interfaceText("m_e6bc867f7622d4");
   if (interaction.kind === "connection_intent")
-    return interaction.title ?? "Connect service";
+    return interaction.title ?? interfaceText("m_369ad1bea74558");
   if (
     interaction.payload.target?.type === "issue_document" &&
     interaction.payload.target.key === "plan"
   ) {
-    return interaction.title ?? "Review plan";
+    return interaction.title ?? interfaceText("m_71146ca693e010");
   }
   if (interaction.payload.toolAction)
-    return interaction.title ?? "Approve tool action";
+    return interaction.title ?? interfaceText("m_7e6dc435ca8996");
   if (interaction.payload.secretProposal)
-    return interaction.title ?? "Review secret proposal";
-  return interaction.title ?? "Confirmation";
+    return interaction.title ?? interfaceText("m_2779924799ffff");
+  return interaction.title ?? interfaceText("m_d743070540a126");
 }
 
 /**
@@ -505,6 +506,8 @@ function durableInputLabel(
  * folded row. flag-OFF remains byte-for-byte IssueChatThread.
  */
 export function TaskChatThread(props: TaskChatThreadProps) {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const coordinatorEnabled = useCoordinatorPresentation();
   const { enabled: streamlinedPreference } = useStreamlinedUiEnabled();
   const streamlinedUiEnabled = coordinatorEnabled || streamlinedPreference;
@@ -534,7 +537,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
     showComposer = true,
     composerPause,
     composerDisabledReason,
-    emptyMessage = "No messages yet.",
+    emptyMessage = interfaceText("m_f0d5968f615ed7"),
     companyId,
     linkedRuns,
     liveRuns,
@@ -1652,7 +1655,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
             id,
             item: {
               id, kind: "marker", variant: "interrupted", tone: "neutral",
-              label: "Waiting to resume",
+              label: interfaceText("m_16e29a3401c351"),
               detail: "The previous execution needs to be checked before work can continue. See the task’s execution hold for the next action. Individual checks remain in the run history.",
             },
           });
@@ -1741,20 +1744,20 @@ export function TaskChatThread(props: TaskChatThreadProps) {
             : "native_runner_process_exited");
         const label =
           code === "native_provider_runtime_missing" && source.status === "failed"
-            ? "Runtime missing"
+            ? interfaceText("m_7649ce73549988")
             : code === "native_provider_model_rejected" && source.status === "failed"
-            ? "Model unavailable"
+            ? interfaceText("m_10bf737619e5e1")
             : code === "native_provider_approval_required" && source.status === "failed"
-            ? "Approval required"
+            ? interfaceText("m_ef677f59f01b2a")
             : code === "native_provider_usage_limit" && source.status === "failed"
-            ? "Usage limit reached"
+            ? interfaceText("m_0e17661d8ed130")
             : source.status === "cancelled"
-              ? "Run cancelled"
+              ? interfaceText("m_2d34c9f19f5402")
               : source.status === "interrupted"
-                ? "Run interrupted"
+                ? interfaceText("m_6d527bebbeb51b")
                 : source.status === "timed_out"
-                  ? "Run timed out"
-                  : "Run failed";
+                  ? interfaceText("m_7b73d2f741cdb3")
+                  : interfaceText("m_97fddf2d43e8df");
         const responseBoundary = sourceHasNativeResponse
           ? " after returning a final response"
           : "";
@@ -1975,7 +1978,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
             id,
             kind: "marker",
             variant: "turn_boundary",
-            label: "Run completed",
+            label: interfaceText("m_93429628fa8ddc"),
             detail: "The runner returned no user-facing response.",
           },
         });
@@ -2293,7 +2296,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
     agentMap,
     currentUserId,
     userLabelMap,
-  ]);
+  interfaceLanguage]);
 
   // Hand off once the settled turn or its reply comment is in the thread; a
   // stopped run that yields neither is released by the backstop timeout so the
@@ -2847,11 +2850,11 @@ export function TaskChatThread(props: TaskChatThreadProps) {
           disabled={isInterrupting}
           onClick={() => void onInterruptQueued(runId)}
         >
-          {isInterrupting ? "Interrupting…" : "Interrupt"}
+          {isInterrupting ? interfaceText("m_3b4ddf08b8056b") : interfaceText("m_b62523141249e0")}
         </Button>
       );
     },
-    [composerPause, interruptingQueuedRunId, onInterruptQueued],
+    [composerPause, interruptingQueuedRunId, onInterruptQueued, interfaceLanguage],
   );
 
   const reopenToolReview = useCallback((interactionId: string) => {
@@ -2914,7 +2917,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
   const historyControl = props.historyControl ?? (
     props.compactHistory && props.onExpandHistory
     && logRuns.some((run) => truncatedRunIds?.has(run.id))
-      ? <Button type="button" variant="ghost" size="sm" onClick={props.onExpandHistory}>More run output</Button>
+      ? <Button type="button" variant="ghost" size="sm" onClick={props.onExpandHistory}>{interfaceText("m_0404cb36df19a8")}</Button>
       : null
   );
   const renderBrief = useCallback(
@@ -3169,11 +3172,9 @@ export function TaskChatThread(props: TaskChatThreadProps) {
                   role="status"
                   className="absolute inset-x-0 top-0 z-20 mx-auto flex w-full max-w-(--tc-shell-max-w) items-center gap-2 border border-border bg-background px-4 py-2 text-sm text-muted-foreground"
                 >
-                  {historyError ? "Some task history could not be loaded." : "Some task history is still loading."}
+                  {historyError ? interfaceText("m_5ab49573544e53") : interfaceText("m_c5d6fd360ebed3")}
                   {historyError ? (
-                    <Button variant="ghost" size="sm" onClick={retryHistory}>
-                      Retry
-                    </Button>
+                    <Button variant="ghost" size="sm" onClick={retryHistory}>{interfaceText("m_942087cc2d41e0")}</Button>
                   ) : null}
                 </div>
               ) : null}
@@ -3182,7 +3183,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
                   className="absolute inset-0 z-10 overflow-hidden bg-background"
                   data-testid="task-chat-history-loading"
                   role="status"
-                  aria-label="Loading conversation"
+                  aria-label={interfaceText("m_9deef600048b62")}
                 >
                   <div className="mx-auto flex w-full max-w-(--tc-shell-max-w) flex-col gap-4 px-4 py-3">
                     {threadHeader}
@@ -3329,15 +3330,15 @@ export function TaskChatThread(props: TaskChatThreadProps) {
                                         items={tailItems}
                                         emptyMessage={
                                           tailStatus === "queued"
-                                            ? "Waiting to start..."
+                                            ? interfaceText("m_46efd2ea384348")
                                             : (liveRun && liveRun.id === tailRunId
                                                 ? liveRun.currentStatusMessage
                                                 : null) ||
                                               (tailStatus === "failed"
                                                 ? linkedRunMetaById.get(tailRunId ?? "")?.errorCode?.startsWith("workspace_git_scan_")
-                                                  ? "Workspace setup failed before the agent started."
-                                                  : "This run stopped before a response was available. Review the task’s connection or recovery action below."
-                                                : "Waiting for transcript...")
+                                                  ? interfaceText("m_619a14c668b1b1")
+                                                  : interfaceText("m_e432c4b12d83a8")
+                                                : interfaceText("m_8f7d4ad6562d88"))
                                         }
                                       />
                                     </TaskChatShimmerScope>

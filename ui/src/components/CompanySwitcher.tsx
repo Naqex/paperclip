@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ChevronsUpDown, Plus, RefreshCw, Settings } from "lucide-react";
 import { Link } from "@/lib/router";
 import { useCompany } from "../context/CompanyContext";
@@ -31,6 +32,7 @@ interface CompanySwitcherProps {
 }
 
 export function CompanySwitcher({ open: controlledOpen, onOpenChange }: CompanySwitcherProps = {}) {
+  useInterfaceLanguage();
   const [internalOpen, setInternalOpen] = useState(false);
   const { companies, selectedCompany, setSelectedCompanyId, companyListUnavailable, retryCompanies } =
     useCompany();
@@ -50,14 +52,14 @@ export function CompanySwitcher({ open: controlledOpen, onOpenChange }: CompanyS
               <span className={`h-2 w-2 rounded-full shrink-0 ${statusDotColor(selectedCompany.status)}`} />
             )}
             <span className="text-sm font-medium truncate">
-              {selectedCompany?.name ?? "Select organization"}
+              {selectedCompany?.name ?? interfaceText("m_99e5009d4746e2")}
             </span>
           </div>
           <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-(--sz-220px)">
-        <DropdownMenuLabel>Organizations</DropdownMenuLabel>
+        <DropdownMenuLabel>{interfaceText("m_2730183d6b776b")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {sidebarCompanies.map((company) => (
           <DropdownMenuItem
@@ -75,7 +77,7 @@ export function CompanySwitcher({ open: controlledOpen, onOpenChange }: CompanyS
           // give the customer the way out, since nothing else in the app does.
           companyListUnavailable ? (
             <>
-              <DropdownMenuItem disabled>Couldn't load organizations</DropdownMenuItem>
+              <DropdownMenuItem disabled>{interfaceText("m_85d97564a8cdcf")}</DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={(event) => {
                   // Keep the menu open so the result of the retry is visible.
@@ -83,26 +85,20 @@ export function CompanySwitcher({ open: controlledOpen, onOpenChange }: CompanyS
                   void retryCompanies?.();
                 }}
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Try again
-              </DropdownMenuItem>
+                <RefreshCw className="h-4 w-4 mr-2" />{interfaceText("m_d8b8392e2c5429")}</DropdownMenuItem>
             </>
           ) : (
-            <DropdownMenuItem disabled>No organizations</DropdownMenuItem>
+            <DropdownMenuItem disabled>{interfaceText("m_c256efdc5810ef")}</DropdownMenuItem>
           )
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link to="/company/settings" className="no-underline text-inherit">
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </Link>
+            <Settings className="h-4 w-4 mr-2" />{interfaceText("m_74a883a037bc22")}</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/companies" className="no-underline text-inherit">
-            <Plus className="h-4 w-4 mr-2" />
-            Manage Organizations
-          </Link>
+            <Plus className="h-4 w-4 mr-2" />{interfaceText("m_be0fe4c3bfd3f8")}</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

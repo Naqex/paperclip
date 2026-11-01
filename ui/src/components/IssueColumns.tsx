@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentIdentity } from "@/components/AgentIdentity";
 import type { AvatarAgent } from "./AgentAvatar";
 import type { ReactNode } from "react";
@@ -54,10 +55,10 @@ export function issueColumnDescription(
   presentation: "legacy" | "task" = "legacy",
 ): string {
   if (column === "id" && presentation === "task") {
-    return "Task identifier like PAP-1009 on the trailing edge.";
+    return interfaceText("m_8a525f1ebf7392");
   }
   if (column === "status" && presentation === "task") {
-    return "Task state icon on the leading edge.";
+    return interfaceText("m_460d683bdc0b63");
   }
   return issueColumnDescriptions[column];
 }
@@ -67,7 +68,7 @@ export function issueActivityTimestamp(issue: Issue): string {
 }
 
 export function issueActivityText(issue: Issue): string {
-  return `Updated ${issueActivityTimestamp(issue)}`;
+  return interfaceText("m_8f124f40e9bee7", { value0: (issueActivityTimestamp(issue)) });
 }
 
 function issueTrailingGridTemplate(columns: InboxIssueColumn[]): string {
@@ -105,6 +106,7 @@ export function IssueColumnPicker({
   iconOnly?: boolean;
   rowPresentation?: "legacy" | "task";
 }) {
+  useInterfaceLanguage();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -113,18 +115,16 @@ export function IssueColumnPicker({
           variant={iconOnly ? "outline" : "ghost"}
           size={iconOnly ? "icon" : "sm"}
           className={iconOnly ? "h-8 w-8 shrink-0" : "hidden h-8 shrink-0 px-2 text-xs sm:inline-flex"}
-          title="Columns"
+          title={interfaceText("m_53aade77cd69a7")}
         >
           <Columns3 className={iconOnly ? "h-3.5 w-3.5" : "mr-1 h-3.5 w-3.5"} />
-          {!iconOnly && "Columns"}
+          {!iconOnly && interfaceText("m_53aade77cd69a7")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-(--sz-300px) rounded-xl border-border/70 p-1.5 shadow-xl shadow-black/10">
         <DropdownMenuLabel className="px-2 pb-1 pt-1.5">
           <div className="space-y-1">
-            <div className="text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">
-              Desktop task rows
-            </div>
+            <div className="text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">{interfaceText("m_9ead53dfc53b75")}</div>
             <div className="text-sm font-medium text-foreground">
               {title}
             </div>
@@ -157,12 +157,8 @@ export function IssueColumnPicker({
             className="items-start rounded-lg px-3 py-2.5 pl-8"
           >
             <span className="flex flex-col gap-0.5">
-              <span className="text-sm font-medium text-foreground">
-                Date group separators
-              </span>
-              <span className="text-xs leading-relaxed text-muted-foreground">
-                Show Today, Yesterday, and Earlier rules on newest-first task lists.
-              </span>
+              <span className="text-sm font-medium text-foreground">{interfaceText("m_738875ead75bf1")}</span>
+              <span className="text-xs leading-relaxed text-muted-foreground">{interfaceText("m_2c8dbf56bfbf4a")}</span>
             </span>
           </DropdownMenuCheckboxItem>
         ) : null}
@@ -170,9 +166,7 @@ export function IssueColumnPicker({
         <DropdownMenuItem
           onSelect={onResetColumns}
           className="rounded-lg px-3 py-2 text-sm"
-        >
-          Reset defaults
-          <span className="ml-auto text-xs text-muted-foreground">status, id, updated</span>
+        >{interfaceText("m_4542d49a520543")}<span className="ml-auto text-xs text-muted-foreground">{interfaceText("m_5fd9f7e236a0f8")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -198,6 +192,7 @@ export function InboxIssueMetaLeading({
   statusSlot?: ReactNode;
   checklistStepNumber?: number | string | null;
 }) {
+  useInterfaceLanguage();
   return (
     <>
       {showStatus ? (
@@ -236,9 +231,7 @@ export function InboxIssueMetaLeading({
               "hidden text-(length:--text-micro) font-medium sm:inline",
               "text-blue-600 dark:text-blue-400",
             )}
-          >
-            Live
-          </span>
+          >{interfaceText("m_b64ac05f17e64d")}</span>
         </Badge>
       )}
       {showSubtreeLiveChip && !isLive && subtreeLiveCount > 0 && (
@@ -247,7 +240,7 @@ export function InboxIssueMetaLeading({
             "px-1.5 sm:gap-1.5 sm:px-2",
             "border-border bg-transparent",
           )}
-          title={`${subtreeLiveCount} sub-task${subtreeLiveCount === 1 ? "" : "s"} running below`}
+          title={interfaceText("m_93bd2fe03c6091", { value0: (subtreeLiveCount), value1: (subtreeLiveCount === 1 ? "" : interfaceText("m_043a718774c572")) })}
         >
           <span
             className={cn(
@@ -257,8 +250,7 @@ export function InboxIssueMetaLeading({
             aria-hidden="true"
           />
           <span className="hidden text-(length:--text-micro) font-medium text-muted-foreground sm:inline">
-            {subtreeLiveCount} live below
-          </span>
+            {subtreeLiveCount}{interfaceText("m_5618c53e03a04b")}</span>
         </Badge>
       )}
     </>
@@ -308,11 +300,12 @@ export function InboxIssueTrailingColumns({
   assigneeContent?: ReactNode;
   onFilterWorkspace?: (workspaceId: string) => void;
 }) {
+  useInterfaceLanguage();
   const activityText = issueActivityTimestamp(issue);
-  const userLabel = assigneeUserName ?? formatAssigneeUserLabel(issue.assigneeUserId, currentUserId) ?? "User";
+  const userLabel = assigneeUserName ?? formatAssigneeUserLabel(issue.assigneeUserId, currentUserId) ?? interfaceText("m_b512d97e7cbf97");
   const originatingActor = deriveOriginatingActor(issue);
   const originatingUserId = originatingActor?.kind === "user" ? originatingActor.id : null;
-  const creatorUserLabel = creatorUserName ?? formatAssigneeUserLabel(originatingUserId, currentUserId) ?? "User";
+  const creatorUserLabel = creatorUserName ?? formatAssigneeUserLabel(originatingUserId, currentUserId) ?? interfaceText("m_b512d97e7cbf97");
 
   return (
     <span
@@ -351,9 +344,7 @@ export function InboxIssueTrailingColumns({
           }
 
           return (
-            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">
-              Unassigned
-            </span>
+            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">{interfaceText("m_14d33bd014e6b4")}</span>
           );
         }
 
@@ -377,7 +368,7 @@ export function InboxIssueTrailingColumns({
           }
 
           if (originatingActor?.kind === "user") {
-            const tooltipText = viaAgentName ? `${creatorUserLabel} · via ${viaAgentName}` : creatorUserLabel;
+            const tooltipText = viaAgentName ? interfaceText("m_855c22fd30b6c6", { value0: (creatorUserLabel), value1: (viaAgentName) }) : creatorUserLabel;
             return (
               <Tooltip key={column}>
                 <TooltipTrigger asChild>
@@ -396,9 +387,7 @@ export function InboxIssueTrailingColumns({
           }
 
           return (
-            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">
-              Unknown
-            </span>
+            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">{interfaceText("m_b764cdc0eab713")}</span>
           );
         }
 
@@ -422,9 +411,7 @@ export function InboxIssueTrailingColumns({
           }
 
           return (
-            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">
-              No project
-            </span>
+            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">{interfaceText("m_f34c2be0d1c5f5")}</span>
           );
         }
 
@@ -479,9 +466,7 @@ export function InboxIssueTrailingColumns({
                       {workspaceName}
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="top" sideOffset={6}>
-                    Filter by workspace
-                  </TooltipContent>
+                  <TooltipContent side="top" sideOffset={6}>{interfaceText("m_7e5aae00f559b3")}</TooltipContent>
                 </Tooltip>
               ) : (
                 workspaceName
@@ -500,7 +485,7 @@ export function InboxIssueTrailingColumns({
               {parentIdentifier ? (
                 <span className="font-mono">{parentIdentifier}</span>
               ) : (
-                <span className="italic">Sub-task</span>
+                <span className="italic">{interfaceText("m_17aa97a09b7fbc")}</span>
               )}
             </span>
           );

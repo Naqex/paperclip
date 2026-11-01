@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useId, useState } from "react";
 import { completedActivitySummary } from "./completed-activity-summary";
 import {
@@ -211,6 +212,7 @@ function RollingActivity({
 }
 
 function ActivityDetails({ item }: { item: Activity }) {
+  useInterfaceLanguage();
   if (item.kind === "thinking")
     return <div data-conversation-text="progress"><MarkdownBody softBreaks>{item.lines.join("\n")}</MarkdownBody></div>;
   if (item.kind === "usage") return <TaskChatUsageReadout item={item} />;
@@ -232,7 +234,7 @@ function ActivityDetails({ item }: { item: Activity }) {
           {item.detail}
         </pre>
       ) : null}
-      {item.decision ? <p>Permission {item.decision}</p> : null}
+      {item.decision ? <p>{interfaceText("m_c0a479d66f8201")}{item.decision}</p> : null}
       {item.diff ? (
         <p className="break-all font-mono">
           {item.diff.path} · +{item.diff.added} −{item.diff.removed}
@@ -315,6 +317,7 @@ export function TaskChatRunnerActivityGroup({
   item: TaskChatActivityPhaseItem;
   defaultExpanded?: boolean;
 }) {
+  useInterfaceLanguage();
   const [expanded, setExpanded] = useTaskChatExpansion(
     item.id,
     defaultExpanded,
@@ -390,7 +393,7 @@ export function TaskChatRunnerActivityGroup({
             <ol
               id={historyId}
               className="flex min-w-0 flex-col gap-1"
-              aria-label="Activity history"
+              aria-label={interfaceText("m_e46875181b6eb3")}
               data-testid="task-chat-runner-activity-list"
             >
               {activities.map((activity, index) => (

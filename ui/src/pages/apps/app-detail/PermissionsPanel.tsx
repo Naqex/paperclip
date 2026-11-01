@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Ban, Check, FlaskConical, Loader2, RefreshCw, Search, ShieldQuestion } from "lucide-react";
@@ -114,6 +115,7 @@ function AgentAccessSection({
   disabled: boolean;
   onSave: (next: AccessDraft) => void;
 }) {
+  useInterfaceLanguage();
   const liveAgents = agents.filter((agent) => agent.status !== "terminated");
   const canManage = capabilities?.canConfigure ?? false;
   const editableAgentIds = capabilities?.editableAgentIds;
@@ -126,8 +128,8 @@ function AgentAccessSection({
   return (
     <section className="space-y-4 border-t border-border pt-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-foreground">Which agents can use this connection?</h2>
-        {disabled ? <span className="text-xs text-muted-foreground">Saving…</span> : null}
+        <h2 className="text-sm font-semibold text-foreground">{interfaceText("m_a315e64c5835cd")}</h2>
+        {disabled ? <span className="text-xs text-muted-foreground">{interfaceText("m_23e39291d61358")}</span> : null}
       </div>
 
       {canManage ? (
@@ -169,7 +171,7 @@ function AgentAccessSection({
               triggerLabel={access.agentIds.size === 0
                 ? "Choose agents"
                 : `${access.agentIds.size} ${access.agentIds.size === 1 ? "agent" : "agents"} selected`}
-              emptyMessage="You cannot edit any agents yet."
+              emptyMessage={interfaceText("m_1fe14169977e0a")}
               isAgentDisabled={(agent) => requiredAgentIds.has(agent.id)}
               getDescription={(agent) => requiredAgentIds.has(agent.id) ? "Required by this connection's install setting" : agent.title}
               onChange={(agentIds) => onSave({
@@ -180,9 +182,9 @@ function AgentAccessSection({
           ) : null}
         </div>
       ) : access.mode === "all" ? (
-        <p className="text-sm text-muted-foreground">Any agent can use this connection.</p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_8f6ff97fb71ed9")}</p>
       ) : selectedAgents.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No agents can use this connection.</p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_de5ab3d99cf0f4")}</p>
       ) : (
         <div className="space-y-0.5">
           {selectedAgents.map((agent) => (
@@ -230,6 +232,7 @@ export function ActionsSection({
   onReviewQuarantined: (enabledIds: string[]) => void;
   onRefreshActions: () => void;
 }) {
+  useInterfaceLanguage();
   const [query, setQuery] = useState("");
   const [kindFilter, setKindFilter] = useState<ActionKindFilter>("all");
   const [showPermissionChangeWarning, setShowPermissionChangeWarning] = useState(false);
@@ -250,10 +253,10 @@ export function ActionsSection({
   return (
     <section className="space-y-6 border-t border-border pt-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold text-foreground">Actions</h2>
+        <h2 className="text-lg font-semibold text-foreground">{interfaceText("m_ff8059dc6752af")}</h2>
         {canConfigure ? (
           <div className="flex items-center gap-2">
-            {disabled ? <span className="text-xs text-muted-foreground">Saving…</span> : null}
+            {disabled ? <span className="text-xs text-muted-foreground">{interfaceText("m_23e39291d61358")}</span> : null}
             <Button
               variant="outline"
               size="sm"
@@ -264,9 +267,7 @@ export function ActionsSection({
                 <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
               ) : (
                 <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
-              )}
-              Refresh actions
-            </Button>
+              )}{interfaceText("m_ee8e81d5c16a42")}</Button>
           </div>
         ) : null}
       </div>
@@ -290,28 +291,26 @@ export function ActionsSection({
           <div className="relative min-w-(--sz-12rem) flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              aria-label="Find an action"
-              placeholder="Find an action…"
+              aria-label={interfaceText("m_efd383494381e7")}
+              placeholder={interfaceText("m_f0eba3ca1e970f")}
               className="pl-9"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
           </div>
-          <FilterChip label={`All ${readOnly.length + canChange.length}`} active={kindFilter === "all"} onClick={() => setKindFilter("all")} />
-          <FilterChip label={`Read ${readOnly.length}`} active={kindFilter === "read"} onClick={() => setKindFilter("read")} />
-          <FilterChip label={`Write ${canChange.length}`} active={kindFilter === "write"} onClick={() => setKindFilter("write")} />
+          <FilterChip label={interfaceText("m_b2899a619eb1f4", { value0: (readOnly.length + canChange.length) })} active={kindFilter === "all"} onClick={() => setKindFilter("all")} />
+          <FilterChip label={interfaceText("m_c148405e0363bf", { value0: (readOnly.length) })} active={kindFilter === "read"} onClick={() => setKindFilter("read")} />
+          <FilterChip label={interfaceText("m_74538b4b8a6fec", { value0: (canChange.length) })} active={kindFilter === "write"} onClick={() => setKindFilter("write")} />
         </div>
-        <p className="text-xs text-muted-foreground">{visibleCount} matches · sorted A–Z</p>
+        <p className="text-xs text-muted-foreground">{visibleCount}{interfaceText("m_9fe970919804d2")}</p>
       </div>
 
       {visibleCount === 0 ? (
-        <div className="py-6 text-center text-sm text-muted-foreground">
-          No actions match “{query}”. Clear the search to see them all.
-        </div>
+        <div className="py-6 text-center text-sm text-muted-foreground">{interfaceText("m_e67480ba520144")}{query}{interfaceText("m_b115a059f7d3c9")}</div>
       ) : (
         <div className="space-y-6">
           <ActionGroup
-            title={`Read (${visibleRead.length})`}
+            title={interfaceText("m_90d30bbb705ccb", { value0: (visibleRead.length) })}
             actions={visibleRead}
             connectionId={connectionId}
             appName={appName}
@@ -326,7 +325,7 @@ export function ActionsSection({
             }}
           />
           <ActionGroup
-            title={`Write (${visibleWrite.length})`}
+            title={interfaceText("m_7a1b8664eba364", { value0: (visibleWrite.length) })}
             actions={visibleWrite}
             connectionId={connectionId}
             appName={appName}
@@ -387,6 +386,7 @@ function ActionGroup({
   canConfigure: boolean;
   onSetPermission: (ids: string[], next: ActionPermission) => void;
 }) {
+  useInterfaceLanguage();
   if (actions.length === 0) return null;
   const groupValue = (() => {
     const first = actionPermission(actions[0]!.id, enabledIds, askFirstIds);
@@ -403,9 +403,9 @@ function ActionGroup({
           // connection's writes is one choice rather than one per action;
           // per-row overrides stay underneath.
           <label className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="sr-only">{`Set every action in ${title}`}</span>
+            <span className="sr-only">{interfaceText("m_3d99ecf8ecf748", { value0: (title) })}</span>
             <select
-              aria-label={`Set every action in ${title}`}
+              aria-label={interfaceText("m_3d99ecf8ecf748", { value0: (title) })}
               value={groupValue}
               disabled={disabled}
               onChange={(event) => {
@@ -416,9 +416,9 @@ function ActionGroup({
               }}
               className="h-7 rounded-md border border-input bg-background px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30"
             >
-              {groupValue === "" ? <option value="">Mixed</option> : null}
+              {groupValue === "" ? <option value="">{interfaceText("m_f340b6d6edeff4")}</option> : null}
               {PERMISSION_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>{`Set all: ${option.label}`}</option>
+                <option key={option.value} value={option.value}>{interfaceText("m_7bbdf91e68351f", { value0: (option.label) })}</option>
               ))}
             </select>
           </label>
@@ -449,9 +449,9 @@ const PERMISSION_OPTIONS: Array<{
   description: string;
   icon: typeof Ban;
 }> = [
-  { value: "off", label: "Off", description: "Agents cannot run this action.", icon: Ban },
-  { value: "ask", label: "Ask first", description: "A human must approve each call.", icon: ShieldQuestion },
-  { value: "allowed", label: "Allowed", description: "Runs without approval.", icon: Check },
+  { value: "off", get label() { return interfaceText("m_ca7981b46ecf2c"); }, description: "Agents cannot run this action.", icon: Ban },
+  { value: "ask", get label() { return interfaceText("m_4a9e8cf39abb59"); }, description: "A human must approve each call.", icon: ShieldQuestion },
+  { value: "allowed", get label() { return interfaceText("m_1bb201d188352e"); }, description: "Runs without approval.", icon: Check },
 ];
 
 function ActionRow({
@@ -473,6 +473,7 @@ function ActionRow({
   canConfigure: boolean;
   onSetPermission: (ids: string[], next: ActionPermission) => void;
 }) {
+  useInterfaceLanguage();
   const rowRef = useRef<HTMLDivElement | null>(null);
   const [testOpen, setTestOpen] = useState(false);
   const title = action.title ?? action.toolName;
@@ -499,7 +500,7 @@ function ActionRow({
                 glance to spot and one click to move. */}
             <span
               className="rounded-full border border-border px-1.5 py-px text-xs font-medium uppercase tracking-wide text-muted-foreground"
-              title={`Paperclip classified this action as ${action.riskLevel}`}
+              title={interfaceText("m_07a4541bcd572b", { value0: (action.riskLevel) })}
             >
               {action.riskLevel}
             </span>
@@ -513,7 +514,7 @@ function ActionRow({
             <TooltipProvider>
               <div
                 role="radiogroup"
-                aria-label={`${title} permission`}
+                aria-label={interfaceText("m_b3f3ad496d0393", { value0: (title) })}
                 className="inline-flex rounded-md border border-border bg-muted/40 p-0.5"
               >
               {PERMISSION_OPTIONS.map((option) => {
@@ -553,9 +554,7 @@ function ActionRow({
             </span>
           )}
           <Button type="button" size="sm" variant="outline" onClick={() => setTestOpen(true)}>
-            <FlaskConical className="mr-1.5 h-3.5 w-3.5" />
-            Test
-          </Button>
+            <FlaskConical className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_532eaabd957488")}</Button>
         </div>
       </div>
       <ActionTestDialog

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronRight, Loader2, ShieldQuestion, OctagonX, Ban, Scissors } from "lucide-react";
@@ -9,16 +10,16 @@ import { parseCssTimeMs } from "./motion-tokens";
 function elapsedLabel(ms?: number): string | null {
   if (ms == null) return null;
   const s = Math.round(ms / 1000);
-  if (s < 60) return `${s}s`;
-  return `${Math.floor(s / 60)}m ${s % 60}s`;
+  if (s < 60) return interfaceText("m_852fe3718c6cfd", { value0: (s) });
+  return interfaceText("m_bb409db730adb8", { value0: (Math.floor(s / 60)), value1: (s % 60) });
 }
 
 /** Tenths-precision elapsed ("24.3s", "1m 24.3s") so the readout visibly moves. */
 function liveElapsedLabel(ms?: number): string | null {
   if (ms == null) return null;
   const s = Math.max(0, ms) / 1000;
-  if (s < 60) return `${s.toFixed(1)}s`;
-  return `${Math.floor(s / 60)}m ${(s % 60).toFixed(1)}s`;
+  if (s < 60) return interfaceText("m_852fe3718c6cfd", { value0: (s.toFixed(1)) });
+  return interfaceText("m_bb409db730adb8", { value0: (Math.floor(s / 60)), value1: ((s % 60).toFixed(1)) });
 }
 
 /** Elapsed ms since `startedAtMs`, ticking ten times a second while `live`. */
@@ -289,6 +290,7 @@ export function TaskChatStatusPill({
   chevronOpen,
   onToggle,
 }: TaskChatStatusPillProps) {
+  useInterfaceLanguage();
   const { Icon, spin, tone } = CONFIG[item.status];
   const awaiting = item.status === "awaiting_approval";
   const live = item.status === "running" || item.status === "working";
@@ -356,8 +358,7 @@ export function TaskChatStatusPill({
           ) : null}
           {item.tokens ? (
             <span className="ml-auto shrink-0 font-mono text-(length:--text-micro)">
-              {item.tokens.used.toLocaleString()}/{item.tokens.size.toLocaleString()} ctx
-            </span>
+              {item.tokens.used.toLocaleString()}/{item.tokens.size.toLocaleString()}{interfaceText("m_03a7e27dff530c")}</span>
           ) : null}
         </span>
       </div>
@@ -422,8 +423,7 @@ export function TaskChatStatusPill({
           {elapsed ? <span>{elapsed}</span> : null}
           {item.tokens ? (
             <span>
-              {item.tokens.used.toLocaleString()}/{item.tokens.size.toLocaleString()} ctx
-            </span>
+              {item.tokens.used.toLocaleString()}/{item.tokens.size.toLocaleString()}{interfaceText("m_03a7e27dff530c")}</span>
           ) : null}
         </span>
       </div>

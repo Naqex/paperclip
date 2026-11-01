@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AGENT_ADAPTER_TYPES } from "@paperclipai/shared";
@@ -78,7 +79,7 @@ function mapInviteAuthFeedback(
 ): AuthFeedback {
   const code = getAuthErrorCode(error);
   const message = getAuthErrorMessage(error);
-  const emailLabel = email.trim().length > 0 ? email.trim() : "that email";
+  const emailLabel = email.trim().length > 0 ? email.trim() : interfaceText("m_48ecd99bad977f");
 
   if (code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
     return {
@@ -166,7 +167,8 @@ function AwaitingJoinApprovalPanel({
   claimApiKeyPath = null,
   onboardingTextUrl = null,
 }: AwaitingJoinApprovalPanelProps) {
-  const approverLabel = invitedByUserName ?? "An organization admin";
+  useInterfaceLanguage();
+  const approverLabel = invitedByUserName ?? interfaceText("m_b2097a9e6deae4");
 
   return (
     <div className="min-h-screen bg-zinc-950 px-6 py-12 text-zinc-100">
@@ -177,33 +179,26 @@ function AwaitingJoinApprovalPanel({
             companyLogoUrl={companyLogoUrl}
             className="h-12 w-12 border border-zinc-800 rounded-none"
           />
-          <h1 className="text-lg font-semibold">Request to join {companyDisplayName}</h1>
+          <h1 className="text-lg font-semibold">{interfaceText("m_386b2c311631f7")}{companyDisplayName}</h1>
         </div>
         <div className="mt-4 space-y-3">
-          <p className="text-sm text-zinc-400">
-            Your request is still awaiting approval. {approverLabel} must approve your request to join.
-          </p>
+          <p className="text-sm text-zinc-400">{interfaceText("m_525801aa795a52")}{approverLabel}{interfaceText("m_c9a60c0da9d873")}</p>
           <div className="border border-zinc-800 p-3">
-            <p className="text-xs text-zinc-500 mb-1">Approval page</p>
-            <p className="text-sm text-zinc-200">Settings → Members</p>
+            <p className="text-xs text-zinc-500 mb-1">{interfaceText("m_ea630b31336603")}</p>
+            <p className="text-sm text-zinc-200">{interfaceText("m_790e2ba9f13bc6")}</p>
           </div>
-          <p className="text-sm text-zinc-400">
-            Ask them to visit <span className="text-zinc-200">Settings → Members</span> to approve your request.
-          </p>
-          <p className="text-xs text-zinc-500">
-            Refresh this page after you've been approved — you'll be redirected automatically.
-          </p>
+          <p className="text-sm text-zinc-400">{interfaceText("m_784bb9f1a77569")}<span className="text-zinc-200">{interfaceText("m_790e2ba9f13bc6")}</span>{interfaceText("m_34b41308a8e3ff")}</p>
+          <p className="text-xs text-zinc-500">{interfaceText("m_202163eb35319b")}</p>
         </div>
         {claimSecret && claimApiKeyPath ? (
           <div className="mt-4 space-y-1 border border-zinc-800 p-3 text-xs text-zinc-400">
-            <div className="text-zinc-200">Claim secret</div>
+            <div className="text-zinc-200">{interfaceText("m_97a5b1cdc7ff2e")}</div>
             <div className="font-mono break-all">{claimSecret}</div>
             <div className="font-mono break-all">POST {claimApiKeyPath}</div>
           </div>
         ) : null}
         {onboardingTextUrl ? (
-          <div className="mt-4 text-xs text-zinc-400">
-            Onboarding: <span className="font-mono break-all">{onboardingTextUrl}</span>
+          <div className="mt-4 text-xs text-zinc-400">{interfaceText("m_17afb982142eb6")}<span className="font-mono break-all">{onboardingTextUrl}</span>
           </div>
         ) : null}
       </div>
@@ -212,6 +207,7 @@ function AwaitingJoinApprovalPanel({
 }
 
 export function InviteLandingPage() {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { setSelectedCompanyId } = useCompany();
@@ -326,7 +322,7 @@ export function InviteLandingPage() {
   const sessionLabel =
     sessionQuery.data?.user.name?.trim() ||
     sessionQuery.data?.user.email?.trim() ||
-    "this account";
+    interfaceText("m_2faca96de47e02");
 
   const authCanSubmit =
     email.trim().length > 0 &&
@@ -441,25 +437,23 @@ export function InviteLandingPage() {
   }, [invite, isCurrentMember, sessionQuery.data, showsAgentForm]);
 
   if (!token) {
-    return <div className="mx-auto max-w-xl py-10 text-sm text-destructive">Invalid invite token.</div>;
+    return <div className="mx-auto max-w-xl py-10 text-sm text-destructive">{interfaceText("m_693f63a66da580")}</div>;
   }
 
   if (inviteQuery.isLoading || healthQuery.isLoading || sessionQuery.isLoading) {
-    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Loading invite...</div>;
+    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">{interfaceText("m_49b650f67e0d76")}</div>;
   }
 
   if (isCheckingExistingMembership) {
-    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Checking your access...</div>;
+    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">{interfaceText("m_1cc593f956ab5a")}</div>;
   }
 
   if (inviteQuery.error || !invite) {
     return (
       <div className="mx-auto max-w-xl py-10">
         <div className="border border-border bg-card p-6" data-testid="invite-error">
-          <h1 className="text-lg font-semibold">Invite not available</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            This invite may be expired, revoked, or already used.
-          </p>
+          <h1 className="text-lg font-semibold">{interfaceText("m_87b8d3c003f515")}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{interfaceText("m_0ef14430024c39")}</p>
         </div>
       </div>
     );
@@ -470,7 +464,7 @@ export function InviteLandingPage() {
     inviteJoinRequestType === "human" &&
     isCurrentMember
   ) {
-    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">Opening organization...</div>;
+    return <div className="mx-auto max-w-xl py-10 text-sm text-muted-foreground">{interfaceText("m_3a2a1b16005358")}</div>;
   }
 
   if (inviteJoinRequestStatus === "pending_approval" && !canCompleteAcceptedHumanInvite) {
@@ -487,11 +481,11 @@ export function InviteLandingPage() {
     return (
       <div className="mx-auto max-w-xl py-10">
         <div className="border border-border bg-card p-6" data-testid="invite-error">
-          <h1 className="text-lg font-semibold">Invite not available</h1>
+          <h1 className="text-lg font-semibold">{interfaceText("m_87b8d3c003f515")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {inviteJoinRequestStatus === "rejected"
-              ? "This join request was not approved."
-              : "This invite has already been used."}
+              ? interfaceText("m_8e9d16f27b42e6")
+              : interfaceText("m_27a740b21206de")}
           </p>
         </div>
       </div>
@@ -502,10 +496,10 @@ export function InviteLandingPage() {
     return (
       <div className="min-h-screen bg-zinc-950 px-6 py-12 text-zinc-100">
         <div className="mx-auto max-w-md border border-zinc-800 bg-zinc-950 p-6">
-          <h1 className="text-lg font-semibold">Bootstrap complete</h1>
+          <h1 className="text-lg font-semibold">{interfaceText("m_51f233e3235185")}</h1>
           <div className="mt-4">
             <Button asChild className="rounded-none">
-              <Link to="/">Open board</Link>
+              <Link to="/">{interfaceText("m_673ae8242de169")}</Link>
             </Button>
           </div>
         </div>
@@ -534,11 +528,11 @@ export function InviteLandingPage() {
                 companyLogoUrl={companyLogoUrl}
                 className="h-12 w-12 border border-zinc-800 rounded-none"
               />
-              <h1 className="text-lg font-semibold">You joined the organization</h1>
+              <h1 className="text-lg font-semibold">{interfaceText("m_f7f8d22c132844")}</h1>
             </div>
             <div className="mt-4">
               <Button asChild className="w-full rounded-none">
-                <Link to="/">Open board</Link>
+                <Link to="/">{interfaceText("m_673ae8242de169")}</Link>
               </Button>
             </div>
           </div>
@@ -568,53 +562,50 @@ export function InviteLandingPage() {
                 className="h-16 w-16 rounded-none border border-zinc-800"
               />
               <div className="min-w-0">
-                <p className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">
-                  You&apos;ve been invited to join Paperclip
-                </p>
+                <p className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">{interfaceText("m_4ec1c2d37128b0")}</p>
                 <h1 className="mt-2 text-2xl font-semibold">
-                  {invite.inviteType === "bootstrap_ceo" ? "Set up Paperclip" : `Join ${companyDisplayName}`}
+                  {invite.inviteType === "bootstrap_ceo" ? interfaceText("m_dda1351351fc9e") : interfaceText("m_0b8eeac9013670", { value0: (companyDisplayName) })}
                 </h1>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-300">
                   {showsAgentForm
-                    ? "Review the invite details, then submit the agent information below to start the join request."
+                    ? interfaceText("m_98fb0b9bb4d847")
                     : requiresHumanAccount
-                      ? "Create your Paperclip account first. If you already have one, switch to sign in and continue the invite with the same email."
-                      : "Your account is ready. Review the invite details, then accept it to continue."}
+                      ? interfaceText("m_9a84bdf60e5cad")
+                      : interfaceText("m_08185f115fa7f7")}
                 </p>
               </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="border border-zinc-800 p-3">
-                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">Organization</div>
+                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">{interfaceText("m_d764d42592fc96")}</div>
                 <div className="mt-1 text-sm text-zinc-100">{companyDisplayName}</div>
               </div>
               <div className="border border-zinc-800 p-3">
-                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">Invited by</div>
-                <div className="mt-1 text-sm text-zinc-100">{invitedByUserName ?? "Paperclip board"}</div>
+                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">{interfaceText("m_c7a6f15607da63")}</div>
+                <div className="mt-1 text-sm text-zinc-100">{invitedByUserName ?? interfaceText("m_b3b4656b56bd52")}</div>
               </div>
               <div className="border border-zinc-800 p-3">
-                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">Requested access</div>
+                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">{interfaceText("m_823034752058e9")}</div>
                 <div className="mt-1 text-sm text-zinc-100">
-                  {showsAgentForm ? "Agent join request" : requestedHumanRole ?? "Organization access"}
+                  {showsAgentForm ? interfaceText("m_b6d6c8b81ec7dc") : requestedHumanRole ?? interfaceText("m_0c44df0fc5e78c")}
                 </div>
               </div>
               <div className="border border-zinc-800 p-3">
-                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">Invite expires</div>
+                <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">{interfaceText("m_2a91147eb97459")}</div>
                 <div className="mt-1 text-sm text-zinc-100">{formatDate(invite.expiresAt)}</div>
               </div>
             </div>
 
             {inviteMessage ? (
               <div className="border border-amber-500/40 bg-amber-500/10 p-4">
-                <div className="text-xs uppercase tracking-(--tracking-caps) text-amber-200/80">Message from inviter</div>
+                <div className="text-xs uppercase tracking-(--tracking-caps) text-amber-200/80">{interfaceText("m_7a1ef6877a4c73")}</div>
                 <p className="mt-2 text-sm leading-6 text-amber-50">{inviteMessage}</p>
               </div>
             ) : null}
 
             {sessionQuery.data ? (
-              <div className="border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-50">
-                Signed in as <span className="font-medium">{sessionLabel}</span>.
+              <div className="border border-emerald-500/40 bg-emerald-500/10 p-4 text-sm text-emerald-50">{interfaceText("m_d293f00044ede7")}<span className="font-medium">{sessionLabel}</span>.
               </div>
             ) : null}
           </section>
@@ -623,13 +614,12 @@ export function InviteLandingPage() {
             {showsAgentForm ? (
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-lg font-semibold">Submit agent details</h2>
-                  <p className="mt-1 text-sm text-zinc-400">
-                    This invite will create an approval request for a new agent in {companyDisplayName}.
+                  <h2 className="text-lg font-semibold">{interfaceText("m_aeeee10bc6c4cd")}</h2>
+                  <p className="mt-1 text-sm text-zinc-400">{interfaceText("m_360126254d6a9b")}{companyDisplayName}.
                   </p>
                 </div>
                 <label className="block text-sm">
-                  <span className="mb-1 block text-zinc-400">Agent name</span>
+                  <span className="mb-1 block text-zinc-400">{interfaceText("m_1cfb21871a0357")}</span>
                   <input
                     className={fieldClassName}
                     value={agentName}
@@ -637,7 +627,7 @@ export function InviteLandingPage() {
                   />
                 </label>
                 <label className="block text-sm">
-                  <span className="mb-1 block text-zinc-400">Adapter type</span>
+                  <span className="mb-1 block text-zinc-400">{interfaceText("m_03298f6641cee8")}</span>
                   <select
                     className={fieldClassName}
                     value={adapterType}
@@ -645,13 +635,13 @@ export function InviteLandingPage() {
                   >
                     {joinAdapterOptions.map((type) => (
                       <option key={type} value={type} disabled={!ENABLED_INVITE_ADAPTERS.has(type)}>
-                        {getAdapterLabel(type)}{!ENABLED_INVITE_ADAPTERS.has(type) ? " (Coming soon)" : ""}
+                        {getAdapterLabel(type)}{!ENABLED_INVITE_ADAPTERS.has(type) ? interfaceText("m_4b4cc047ae7514") : ""}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="block text-sm">
-                  <span className="mb-1 block text-zinc-400">Capabilities</span>
+                  <span className="mb-1 block text-zinc-400">{interfaceText("m_9460f16ac9b517")}</span>
                   <textarea
                     className={fieldClassName}
                     rows={4}
@@ -665,19 +655,19 @@ export function InviteLandingPage() {
                   disabled={acceptMutation.isPending || agentName.trim().length === 0}
                   onClick={() => acceptMutation.mutate()}
                 >
-                  {acceptMutation.isPending ? "Working..." : joinButtonLabel}
+                  {acceptMutation.isPending ? interfaceText("m_b93900bded315d") : joinButtonLabel}
                 </Button>
               </div>
             ) : requiresHumanAccount ? (
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-semibold">
-                    {authMode === "sign_up" ? "Create your account" : "Sign in to continue"}
+                    {authMode === "sign_up" ? interfaceText("m_9e709348f582d4") : interfaceText("m_607a80121c6556")}
                   </h2>
                   <p className="mt-1 text-sm text-zinc-400">
                     {authMode === "sign_up"
-                      ? `Start with a Paperclip account. After that, you'll come right back here to accept the invite for ${companyDisplayName}.`
-                      : "Use the Paperclip account that already matches this invite. If you do not have one yet, switch back to create account."}
+                      ? interfaceText("m_4d953bdd547fe9", { value0: (companyDisplayName) })
+                      : interfaceText("m_9e2910576d25b2")}
                   </p>
                 </div>
 
@@ -693,9 +683,7 @@ export function InviteLandingPage() {
                       setAuthFeedback(null);
                       setAuthMode("sign_up");
                     }}
-                  >
-                    Create account
-                  </button>
+                  >{interfaceText("m_798ca2ce18bf20")}</button>
                   <button
                     type="button"
                     className={`${modeButtonBaseClassName} ${
@@ -707,9 +695,7 @@ export function InviteLandingPage() {
                       setAuthFeedback(null);
                       setAuthMode("sign_in");
                     }}
-                  >
-                    I already have an account
-                  </button>
+                  >{interfaceText("m_869751325dc800")}</button>
                 </div>
 
                 <form
@@ -729,7 +715,7 @@ export function InviteLandingPage() {
                 >
                   {authMode === "sign_up" ? (
                     <label className="block text-sm" htmlFor="invite-name">
-                      <span className="mb-1 block text-zinc-400">Name</span>
+                      <span className="mb-1 block text-zinc-400">{interfaceText("m_dcd1d5223f73b3")}</span>
                       <input
                         id="invite-name"
                         name="name"
@@ -769,7 +755,7 @@ export function InviteLandingPage() {
                     />
                   </label>
                   <label className="block text-sm" htmlFor="invite-password">
-                    <span className="mb-1 block text-zinc-400">Password</span>
+                    <span className="mb-1 block text-zinc-400">{interfaceText("m_e7cf3ef4f17c39")}</span>
                     <input
                       id="invite-password"
                       name="password"
@@ -805,17 +791,17 @@ export function InviteLandingPage() {
                     aria-disabled={!authCanSubmit || authMutation.isPending}
                   >
                     {authMutation.isPending
-                      ? "Working..."
+                      ? interfaceText("m_b93900bded315d")
                       : authMode === "sign_in"
-                        ? "Sign in and continue"
-                        : "Create account and continue"}
+                        ? interfaceText("m_a3f73fb56ffe4a")
+                        : interfaceText("m_b0864af3c20109")}
                   </Button>
                 </form>
 
                 <p className="text-xs leading-5 text-zinc-500">
                   {authMode === "sign_up"
-                    ? "Already signed up before? Use the existing-account option instead so the invite lands on the right Paperclip user."
-                    : "No account yet? Switch back to create account so you can accept the invite with a new login."}
+                    ? interfaceText("m_7dca18c04a14dc")
+                    : interfaceText("m_de9f79965cce5f")}
                 </p>
               </div>
             ) : (
@@ -823,27 +809,25 @@ export function InviteLandingPage() {
                 <div>
                   <h2 className="text-lg font-semibold">
                     {isCurrentMember
-                      ? "Already in this organization"
+                      ? interfaceText("m_686ae20cd745de")
                       : shouldAutoAcceptHumanInvite
-                      ? "Completing organization access"
+                      ? interfaceText("m_7b13260b2404b8")
                       : invite.inviteType === "bootstrap_ceo"
-                        ? "Accept bootstrap invite"
-                        : "Accept organization invite"}
+                        ? interfaceText("m_fc68c8fe8484c4")
+                        : interfaceText("m_6bc71342194eff")}
                   </h2>
                   <p className="mt-1 text-sm text-zinc-400">
                     {shouldAutoAcceptHumanInvite
-                      ? `Granting your access to ${companyDisplayName}.`
+                      ? interfaceText("m_26374c4eac09d5", { value0: (companyDisplayName) })
                       : isCurrentMember
-                      ? `This account already belongs to ${companyDisplayName}.`
-                      : `This will ${
-                          invite.inviteType === "bootstrap_ceo" ? "finish setting up Paperclip" : `grant or complete your access to ${companyDisplayName}`
-                        }.`}
+                      ? interfaceText("m_7dcde1a3c00e0e", { value0: (companyDisplayName) })
+                      : interfaceText("m_fda227e8d7f6ae", { value0: (invite.inviteType === "bootstrap_ceo" ? "finish setting up Paperclip" : `grant or complete your access to ${companyDisplayName}`) })}
                   </p>
                 </div>
                 {error ? <p className="text-xs text-red-400">{error}</p> : null}
                 {shouldAutoAcceptHumanInvite ? (
                   <div className="text-sm text-zinc-400">
-                    {acceptMutation.isPending ? "Submitting request..." : "Finishing sign-in..."}
+                    {acceptMutation.isPending ? interfaceText("m_20eef59e4d34bc") : interfaceText("m_16c16b0dd1d773")}
                   </div>
                 ) : (
                   <Button
@@ -859,7 +843,7 @@ export function InviteLandingPage() {
                       acceptMutation.mutate();
                     }}
                   >
-                    {acceptMutation.isPending ? "Working..." : joinButtonLabel}
+                    {acceptMutation.isPending ? interfaceText("m_b93900bded315d") : joinButtonLabel}
                   </Button>
                 )}
               </div>

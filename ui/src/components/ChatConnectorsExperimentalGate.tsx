@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { chatEndpointsApi } from "@/api/chatEndpoints";
@@ -16,6 +17,7 @@ function ProviderEndpointGate({
   endpointId: string;
   children: ReactNode;
 }) {
+  useInterfaceLanguage();
   const endpoint = useQuery({
     queryKey: queryKeys.chatEndpoints.detail(endpointId),
     queryFn: () => chatEndpointsApi.get(endpointId),
@@ -27,9 +29,7 @@ function ProviderEndpointGate({
         <p role="alert" className="text-sm text-destructive">
           {endpoint.error.message}
         </p>
-        <Button variant="outline" onClick={() => void endpoint.refetch()}>
-          Retry
-        </Button>
+        <Button variant="outline" onClick={() => void endpoint.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button>
       </div>
     );
   if (!endpoint.data) return null;

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { KeyRound, Save } from "lucide-react";
 import type { CompanySecret, RoutineEnvConfig } from "@paperclipai/shared";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,7 @@ export function StageSecretsPanel({
   saving,
   dirty,
 }: StageSecretsPanelProps) {
+  useInterfaceLanguage();
   // No backing automation/assignee → nothing can receive secrets at runtime.
   // Point the user at Automation instead of creating a hidden routine just
   // because the Secrets tab was opened.
@@ -54,8 +56,8 @@ export function StageSecretsPanel({
     return (
       <EmptyState
         icon={KeyRound}
-        message="Secrets are available only to step automation. Pick an agent to run this step, then add the secrets it needs."
-        action="Set up automation"
+        message={interfaceText("m_e45aba82541176")}
+        action={interfaceText("m_3ebbfd8b5afb79")}
         onAction={onSetupAutomation}
       />
     );
@@ -71,16 +73,12 @@ export function StageSecretsPanel({
         ) : (
           <KeyRound className="h-3.5 w-3.5 mt-0.5 shrink-0" />
         )}
-        <p>
-          These env vars are injected when{" "}
-          <span className="font-medium text-foreground">{displayName}</span> runs this step. They override
-          matching project and agent env on collisions. <span className="font-mono">PAPERCLIP_*</span> names
-          are reserved.
-        </p>
+        <p>{interfaceText("m_ec634ff63a07a1")}{" "}
+          <span className="font-medium text-foreground">{displayName}</span>{interfaceText("m_0c93118cade4df")}<span className="font-mono">PAPERCLIP_*</span>{interfaceText("m_5d2b591daba040")}</p>
       </div>
 
       {secretsLoading ? (
-        <p className="text-sm text-muted-foreground">Loading secrets…</p>
+        <p className="text-sm text-muted-foreground">{interfaceText("m_3775fb66c3558c")}</p>
       ) : (
         <EnvironmentVariablesEditor
           value={value}
@@ -93,9 +91,9 @@ export function StageSecretsPanel({
       <div className="flex items-center gap-3">
         <Button type="button" onClick={onSave} disabled={!dirty || saving}>
           <Save className="h-4 w-4 mr-1.5" />
-          {saving ? "Saving…" : "Save secrets"}
+          {saving ? interfaceText("m_23e39291d61358") : interfaceText("m_a84c957d98b79c")}
         </Button>
-        {dirty && !saving ? <span className="text-xs text-muted-foreground">Unsaved changes</span> : null}
+        {dirty && !saving ? <span className="text-xs text-muted-foreground">{interfaceText("m_a710c2b90913b5")}</span> : null}
       </div>
     </div>
   );

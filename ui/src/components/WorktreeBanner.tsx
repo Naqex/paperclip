@@ -1,8 +1,10 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useCallback } from "react";
 import { getWorktreeUiBranding } from "../lib/worktree-branding";
 import { useCopyAction } from "../lib/use-copy-action";
 
 export function WorktreeBanner() {
+  useInterfaceLanguage();
   const branding = getWorktreeUiBranding();
   const { copied, failed, copy } = useCopyAction();
 
@@ -30,10 +32,10 @@ export function WorktreeBanner() {
         <button
           type="button"
           onClick={handleCopyName}
-          title="Click to copy worktree name"
+          title={interfaceText("m_d75060fcbb4262")}
           className="truncate font-semibold tracking-(--tracking-eyebrow) cursor-pointer hover:opacity-80 transition-opacity bg-transparent border-none p-0 text-current uppercase text-(length:--text-micro)"
         >
-          {copied ? "Copied!" : failed ? "Copy failed" : branding.name}
+          {copied ? interfaceText("m_ea61bc15688d1e") : failed ? interfaceText("m_5b50e7a693fee9") : branding.name}
         </button>
       </div>
     </div>

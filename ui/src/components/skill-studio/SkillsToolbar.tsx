@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { ToolbarSearch } from "@/components/ToolbarSearch";
 import type { ReactNode } from "react";
 import { ChevronDown, Compass, FolderSearch, Globe, Pencil, Plus, RefreshCw } from "lucide-react";
@@ -45,8 +46,9 @@ export interface SkillsToolbarProps {
 
 /** Shared shipped Skills controls. Canonical proposal: Components / Toolbars / Skills. */
 export function SkillsToolbar({ viewTitle, viewDescription, searchLabel, search, onSearchChange, sort, onSortChange, availableSources, sourceBadgeFilter, setSourceBadgeFilter, onScan, scanPending, onCreate, onBrowseDiscover, onImport, onImportFromProject, folderControl, onCreateFolder, selectMode, onToggleSelectMode, navigation }: SkillsToolbarProps) {
+  useInterfaceLanguage();
   return (
-    <div data-canonical-toolbar="skills" role="toolbar" aria-label="Skills controls" className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
+    <div data-canonical-toolbar="skills" role="toolbar" aria-label={interfaceText("m_3dbb80b837a6ac")} className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
       <div className="w-full">
         <h1 className="text-lg font-semibold text-foreground">{viewTitle}</h1>
         <p className="text-xs text-muted-foreground">{viewDescription}</p>
@@ -55,7 +57,7 @@ export function SkillsToolbar({ viewTitle, viewDescription, searchLabel, search,
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm">
-            <span className="text-muted-foreground">Sort</span>
+            <span className="text-muted-foreground">{interfaceText("m_bec69036aa27e7")}</span>
             <span>{DISCOVERY_SORT_LABELS[sort]}</span>
             <ChevronDown className="ml-1 h-3.5 w-3.5" />
           </Button>
@@ -74,18 +76,18 @@ export function SkillsToolbar({ viewTitle, viewDescription, searchLabel, search,
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
-              <span className="text-muted-foreground">Source</span>
+              <span className="text-muted-foreground">{interfaceText("m_0e570ca6fabe24")}</span>
               <span>
                 {sourceBadgeFilter === "all"
-                  ? "All"
-                  : availableSources.find((source) => source.value === sourceBadgeFilter)?.label ?? "All"}
+                  ? interfaceText("m_a52ace420f2175")
+                  : availableSources.find((source) => source.value === sourceBadgeFilter)?.label ?? interfaceText("m_a52ace420f2175")}
               </span>
               <ChevronDown className="ml-1 h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuRadioGroup value={sourceBadgeFilter} onValueChange={setSourceBadgeFilter}>
-              <DropdownMenuRadioItem value="all">All sources</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="all">{interfaceText("m_08e774c5bacc36")}</DropdownMenuRadioItem>
               {availableSources.map((source) => (
                 <DropdownMenuRadioItem key={source.value} value={source.value}>
                   {source.label}
@@ -100,50 +102,38 @@ export function SkillsToolbar({ viewTitle, viewDescription, searchLabel, search,
         size="icon-sm"
         onClick={() => onScan()}
         disabled={scanPending}
-        aria-label="Scan project workspaces for skills"
-        title="Scan project workspaces for skills"
+        aria-label={interfaceText("m_84e548b74f8087")}
+        title={interfaceText("m_84e548b74f8087")}
       >
         <RefreshCw className={cn("h-4 w-4", scanPending && "animate-spin")} />
       </Button>
       {folderControl}
       {onCreateFolder ? (
         <Button variant="outline" size="sm" onClick={onCreateFolder}>
-          <Plus className="mr-1 h-3.5 w-3.5" />
-          New folder
-        </Button>
+          <Plus className="mr-1 h-3.5 w-3.5" />{interfaceText("m_cf28f49ec597a6")}</Button>
       ) : null}
       {onToggleSelectMode ? (
         <Button variant="outline" size="sm" aria-pressed={selectMode} onClick={onToggleSelectMode}>
-          {selectMode ? "Done" : "Select"}
+          {selectMode ? interfaceText("m_11a6767d5674c7") : interfaceText("m_2a78025de6aae5")}
         </Button>
       ) : null}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button size="sm" variant="default" data-toolbar-primary>
-            <Plus className="mr-1 h-3.5 w-3.5" />
-            New
-            <ChevronDown className="ml-1 h-3.5 w-3.5" />
+            <Plus className="mr-1 h-3.5 w-3.5" />{interfaceText("m_18fdd549b2ed36")}<ChevronDown className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onSelect={onCreate}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Create new skill
-          </DropdownMenuItem>
+            <Pencil className="mr-2 h-4 w-4" />{interfaceText("m_7d7d4a1ad70f7b")}</DropdownMenuItem>
           <DropdownMenuItem onSelect={onBrowseDiscover}>
-            <Compass className="mr-2 h-4 w-4" />
-            Discover skills
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild><Link to="/skills/sources/new"><GithubIcon className="mr-2 h-4 w-4" />Import from GitHub</Link></DropdownMenuItem>
-          <DropdownMenuItem asChild><Link to="/skills/sources">Manage sources</Link></DropdownMenuItem>
+            <Compass className="mr-2 h-4 w-4" />{interfaceText("m_70464b503b1403")}</DropdownMenuItem>
+          <DropdownMenuItem asChild><Link to="/skills/sources/new"><GithubIcon className="mr-2 h-4 w-4" />{interfaceText("m_383efa96431be7")}</Link></DropdownMenuItem>
+          <DropdownMenuItem asChild><Link to="/skills/sources">{interfaceText("m_b00d1920b29427")}</Link></DropdownMenuItem>
           <DropdownMenuItem onSelect={onImport}>
-            <Globe className="mr-2 h-4 w-4" />
-            Import from path or URL
-          </DropdownMenuItem>
+            <Globe className="mr-2 h-4 w-4" />{interfaceText("m_abed2dfba3bf7b")}</DropdownMenuItem>
           <DropdownMenuItem onSelect={onImportFromProject}>
-            <FolderSearch className="mr-2 h-4 w-4" />
-            Import skills from project
-          </DropdownMenuItem>
+            <FolderSearch className="mr-2 h-4 w-4" />{interfaceText("m_364c89b0f1b44d")}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {navigation ? <div className="w-full">{navigation}</div> : null}

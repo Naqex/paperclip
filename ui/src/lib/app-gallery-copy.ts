@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 /**
  * Prosumer copy for the Apps surface (PAP-10856).
  *
@@ -180,7 +181,7 @@ export function credentialFieldLabel(
   fieldCount: number,
 ): string {
   if (/^Paste your\b/.test(rawLabel)) return sanitizeProsumerCopy(rawLabel);
-  if (fieldCount <= 1) return `Your ${appName} key`;
+  if (fieldCount <= 1) return interfaceText("m_1622806d190a31", { value0: (appName) });
   const cleaned = sanitizeProsumerCopy(rawLabel);
-  return cleaned || `Your ${appName} key`;
+  return cleaned || interfaceText("m_1622806d190a31", { value0: (appName) });
 }

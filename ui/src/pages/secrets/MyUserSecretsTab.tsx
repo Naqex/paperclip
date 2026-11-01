@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CompanySecret } from "@paperclipai/shared";
@@ -24,6 +25,7 @@ import {
  * "User secret definitions" tab.
  */
 export function MyUserSecretsTab({ companyId }: { companyId: string }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const [dialogFor, setDialogFor] = useState<MyUserSecretEntry | null>(null);
@@ -38,11 +40,11 @@ export function MyUserSecretsTab({ companyId }: { companyId: string }) {
     mutationFn: (secret: CompanySecret) => secretsApi.removeMyUserSecret(companyId, secret.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.secrets.myUserSecrets(companyId) });
-      pushToast({ title: "Value cleared", tone: "info" });
+      pushToast({ title: interfaceText("m_d0a44ff363af45"), tone: "info" });
     },
     onError: (err) =>
       pushToast({
-        title: "Could not clear value",
+        title: interfaceText("m_bd9d21613ce007"),
         body: err instanceof Error ? err.message : undefined,
         tone: "error",
       }),
@@ -56,15 +58,10 @@ export function MyUserSecretsTab({ companyId }: { companyId: string }) {
     <div className="flex flex-col gap-3">
       <div className="flex items-start gap-2 rounded-md border border-violet-500/30 bg-violet-500/5 px-4 py-3 text-xs text-violet-800 dark:text-violet-200">
         <UserRound className="h-4 w-4 mt-0.5 shrink-0" />
-        <p>
-          These are credentials only you provide. Each value is yours alone — used when you are the
-          user responsible for a run — and is never shown back to anyone, including admins.
-          {missingCount > 0 ? (
+        <p>{interfaceText("m_26667656482dfb")}{missingCount > 0 ? (
             <span className="font-medium">
               {" "}
-              {missingCount} required secret{missingCount === 1 ? " still needs" : "s still need"} your
-              value.
-            </span>
+              {missingCount}{interfaceText("m_a56e9712dc1253")}{missingCount === 1 ? interfaceText("m_d2dbaee13443a2") : interfaceText("m_26015f79ee80fc")}{interfaceText("m_2ec2bbaa3d2986")}</span>
           ) : null}
         </p>
       </div>
@@ -72,16 +69,14 @@ export function MyUserSecretsTab({ companyId }: { companyId: string }) {
       <div>
         {mySecretsQuery.isError ? (
           <div className="flex items-center gap-2 py-4 text-sm text-destructive">
-            <AlertCircle className="h-4 w-4" /> Failed to load your secrets:{" "}
+            <AlertCircle className="h-4 w-4" />{interfaceText("m_29c7ca8e917490")}{" "}
             {(mySecretsQuery.error as Error).message}
-            <Button variant="ghost" size="sm" onClick={() => mySecretsQuery.refetch()}>
-              Retry
-            </Button>
+            <Button variant="ghost" size="sm" onClick={() => mySecretsQuery.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button>
           </div>
         ) : entries.length === 0 && !mySecretsQuery.isPending ? (
           <EmptyState
             icon={KeyRound}
-            message="No user secrets are defined for this organization yet. An admin defines which credentials each member supplies."
+            message={interfaceText("m_9fc4b58dc0e615")}
           />
         ) : (
           <ul className="space-y-2">
@@ -122,6 +117,7 @@ function MyUserSecretRow({
   onClear: () => void;
   clearing: boolean;
 }) {
+  useInterfaceLanguage();
   const { definition, secret } = entry;
   const state = myValueState(definition, secret);
   const disabledDefinition = definition.status !== "active";
@@ -161,7 +157,7 @@ function MyUserSecretRow({
         </Badge>
         {!disabledDefinition ? (
           <Button size="sm" variant={secret ? "outline" : "default"} onClick={onSet}>
-            {secret ? "Update" : "Set value"}
+            {secret ? interfaceText("m_c1c1009d3f37ec") : interfaceText("m_58bf3410b028e7")}
           </Button>
         ) : null}
         {secret ? (
@@ -171,7 +167,7 @@ function MyUserSecretRow({
             className="text-muted-foreground hover:text-destructive"
             onClick={onClear}
             disabled={clearing}
-            title="Clear my value"
+            title={interfaceText("m_0b19ca41555134")}
           >
             <Trash2 className="h-3.5 w-3.5" />
           </Button>

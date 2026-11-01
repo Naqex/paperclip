@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@/lib/router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -59,6 +60,7 @@ function pinsFromEntries(entries: AgentDesiredSkillEntry[] | undefined): Record<
 }
 
 export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?: string }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [skillDraft, setSkillDraft] = useState<string[]>([]);
   const [lastSavedSkills, setLastSavedSkills] = useState<string[]>([]);
@@ -400,8 +402,7 @@ export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?:
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm font-medium text-foreground">
-            {enabledRows.length} of {libraryRows.length} enabled
-          </span>
+            {enabledRows.length}{interfaceText("m_a4282e4b2298b9")}{libraryRows.length}{interfaceText("m_6639d358a1c55b")}</span>
           {applicationLabel ? (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -425,23 +426,21 @@ export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?:
               <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search skills"
+                placeholder={interfaceText("m_76c02b7eddcaa3")}
                 className="h-8 w-full pl-8 sm:w-56"
-                aria-label="Search skills"
+                aria-label={interfaceText("m_76c02b7eddcaa3")}
               />
             </div>
             <Button asChild variant="outline" size="sm" className="shrink-0">
               <Link to="/skills" className="no-underline">
-                <Store className="h-3.5 w-3.5" />
-                Browse skills store
-              </Link>
+                <Store className="h-3.5 w-3.5" />{interfaceText("m_0b01a8a31bb47b")}</Link>
             </Button>
           </div>
         </div>
 
         {syncSkills.isError ? (
           <p className="text-xs text-destructive">
-            {syncSkills.error instanceof Error ? syncSkills.error.message : "Failed to update skills"}
+            {syncSkills.error instanceof Error ? syncSkills.error.message : interfaceText("m_6de194e3d70084")}
           </p>
         ) : null}
       </div>
@@ -462,16 +461,13 @@ export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?:
               className="flex items-center justify-between gap-3 border-b border-amber-300/40 bg-amber-50/60 px-3 py-2 text-xs text-amber-800 last:border-b-0 dark:border-amber-500/20 dark:bg-amber-950/20 dark:text-amber-200"
             >
               <span className="min-w-0 truncate">
-                <span className="font-medium">{key}</span> is enabled but missing from the organization library.
-              </span>
+                <span className="font-medium">{key}</span>{interfaceText("m_c5f96455f0ee4c")}</span>
               <button
                 type="button"
                 onClick={() => toggleSkill(key, false)}
                 className="inline-flex shrink-0 items-center gap-1 rounded-md border border-amber-400/50 px-2 py-0.5 font-medium transition-colors hover:bg-amber-100/60 dark:hover:bg-amber-900/30"
               >
-                <X className="h-3 w-3" />
-                Remove
-              </button>
+                <X className="h-3 w-3" />{interfaceText("m_c3812fc4acb861")}</button>
             </div>
           ))}
         </div>
@@ -483,26 +479,26 @@ export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?:
         <EmptyLibraryCard />
       ) : (
         <div className="space-y-4">
-          <SkillSection title="Enabled on this agent" count={filteredEnabled.length}>
+          <SkillSection title={interfaceText("m_ec0548ebf27ef1")} count={filteredEnabled.length}>
             {filteredEnabled.length > 0 ? (
               filteredEnabled.map((row) => renderRow(row, "enabled"))
             ) : (
               <SectionEmpty>
-                {search ? "No enabled skills match your search." : "No skills enabled on this agent yet."}
+                {search ? interfaceText("m_2c5631d3bddd36") : interfaceText("m_de2fcde4b5b650")}
               </SectionEmpty>
             )}
           </SkillSection>
 
-          <SkillSection title="Available from the library" count={filteredAvailable.length}>
+          <SkillSection title={interfaceText("m_e90e50ff31d629")} count={filteredAvailable.length}>
             {filteredAvailable.length > 0 ? (
               filteredAvailable.map((row) => renderRow(row, "available"))
             ) : (
               <SectionEmpty>
                 {search
-                  ? "No available skills match your search."
+                  ? interfaceText("m_7bef998d766a22")
                   : libraryEmpty
-                    ? "Import skills into the organization library to enable them here."
-                    : "Every library skill is enabled on this agent."}
+                    ? interfaceText("m_0a6dc3a575a778")
+                    : interfaceText("m_ad4ce52ee99503")}
               </SectionEmpty>
             )}
           </SkillSection>
@@ -517,9 +513,7 @@ export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?:
                       detectedOpen ? "" : "-rotate-90",
                     )}
                   />
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Automatic and detected skills (read-only)
-                  </span>
+                  <span className="text-xs font-medium text-muted-foreground">{interfaceText("m_1f07f74bfe0f76")}</span>
                   <span className="text-xs text-muted-foreground/70">{filteredDetected.length}</span>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -528,15 +522,14 @@ export function AgentSkillsTab({ agent, companyId }: { agent: Agent; companyId?:
                       <AgentSkillRow key={row.key} variant="readonly" data={row} />
                     ))
                   ) : (
-                    <SectionEmpty>No detected skills match your search.</SectionEmpty>
+                    <SectionEmpty>{interfaceText("m_cb9b55e289e80d")}</SectionEmpty>
                   )}
                 </CollapsibleContent>
               </div>
             </Collapsible>
           ) : null}
 
-          <div className="text-xs text-muted-foreground">
-            Adapter: {adapterLabels[agent.adapterType] ?? agent.adapterType}
+          <div className="text-xs text-muted-foreground">{interfaceText("m_75b6086f92dbd5")}{adapterLabels[agent.adapterType] ?? agent.adapterType}
           </div>
         </div>
       )}
@@ -553,35 +546,28 @@ function SaveStatusChip({
   unsaved: boolean;
   error: boolean;
 }) {
+  useInterfaceLanguage();
   if (pending) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        Saving…
-      </span>
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />{interfaceText("m_23e39291d61358")}</span>
     );
   }
   if (error) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs text-destructive">
-        <AlertCircle className="h-3.5 w-3.5" />
-        Couldn’t save
-      </span>
+        <AlertCircle className="h-3.5 w-3.5" />{interfaceText("m_a018b7a8a18886")}</span>
     );
   }
   if (unsaved) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        Saving soon…
-      </span>
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />{interfaceText("m_b9673b37a67776")}</span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1.5 text-xs text-(--status-task-done)">
-      <CheckCircle2 className="h-3.5 w-3.5" />
-      Saved
-    </span>
+      <CheckCircle2 className="h-3.5 w-3.5" />{interfaceText("m_b5c120b316c237")}</span>
   );
 }
 
@@ -610,20 +596,17 @@ function SectionEmpty({ children }: { children: React.ReactNode }) {
 }
 
 function EmptyLibraryCard() {
+  useInterfaceLanguage();
   return (
     <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border px-6 py-10 text-center">
       <Store className="h-8 w-8 text-muted-foreground/60" />
       <div className="space-y-1">
-        <p className="text-sm font-medium text-foreground">No skills in the organization library</p>
-        <p className="text-xs text-muted-foreground">
-          Install skills to the organization, then enable them on this agent.
-        </p>
+        <p className="text-sm font-medium text-foreground">{interfaceText("m_fe9778c7f1312d")}</p>
+        <p className="text-xs text-muted-foreground">{interfaceText("m_20cac58dcb6ab2")}</p>
       </div>
       <Button asChild variant="outline" size="sm">
         <Link to="/skills" className="no-underline">
-          <Store className="h-3.5 w-3.5" />
-          Browse skills store
-        </Link>
+          <Store className="h-3.5 w-3.5" />{interfaceText("m_0b01a8a31bb47b")}</Link>
       </Button>
     </div>
   );

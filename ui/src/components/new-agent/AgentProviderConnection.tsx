@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { healthApi } from "@/api/health";
 import { aiConnectionsApi } from "@/api/ai-connections";
 import { useLocalAiLogin } from "../ai-connections/useLocalAiLogin";
@@ -69,6 +70,7 @@ export function AgentProviderConnection({
     onComplete: (result: { connectionId: string; grantId: string; method: "subscription" | "api_key" }) => void;
   };
 }) {
+  useInterfaceLanguage();
   const health = useQuery({ queryKey: queryKeys.health, queryFn: healthApi.get, enabled: localEnvironment });
   const canUseLocalLogin = localEnvironment && (health.data?.localAiLoginSupported ?? health.data?.deploymentMode === "local_trusted");
   const epoch = useRef(0);
@@ -251,11 +253,11 @@ export function AgentProviderConnection({
   return (
     <div className="min-w-0 max-w-full">
       <ModelSourceTiles
-        label={advancedConnection ? "Connection type" : "Connect your model provider"}
+        label={advancedConnection ? interfaceText("m_a2cfeb2898b25b") : interfaceText("m_763f7fb688ff5e")}
         sources={advancedConnection ? [
           { id: "subscription", label: provider, icon: <AdapterMark type={adapterType} />, credentialMode: "subscription" },
           { id: "api", label: provider, icon: <AdapterMark type={adapterType} />, credentialMode: "api" },
-          { id: "advanced", label: "Advanced", icon: <Cable className="size-6 text-muted-foreground" />, credentialMode: "advanced" },
+          { id: "advanced", label: interfaceText("m_9f088dbebd6c3c"), icon: <Cable className="size-6 text-muted-foreground" />, credentialMode: "advanced" },
         ] : [
           {
             id: adapterType,
@@ -290,8 +292,8 @@ export function AgentProviderConnection({
       </> : <>
       {!opened && savedKeys.options.length > 0 && (
         <p className="mt-2 text-sm text-muted-foreground">
-          {savedKeys.options.length} saved API{" "}
-          {savedKeys.options.length === 1 ? "key available" : "keys available"}.
+          {savedKeys.options.length}{interfaceText("m_05c66d5547fe01")}{" "}
+          {savedKeys.options.length === 1 ? interfaceText("m_39a65ba3f1ca1d") : interfaceText("m_2f1061052827f7")}.
         </p>
       )}
       {method === "subscription" &&
@@ -338,14 +340,14 @@ export function AgentProviderConnection({
                 />
                 {!selectedKey && (
                   <OnboardingCardField
-                    label="API key"
+                    label={interfaceText("m_16f0ee47f993d6")}
                     masked
                     autoFocus
                     value={apiKey}
                     placeholder={
                       storedConnection
-                        ? "Key entered. Retry the connection."
-                        : "Enter API key here"
+                        ? interfaceText("m_43912a0d7bab5c")
+                        : interfaceText("m_c80c3ac9799dc1")
                     }
                     onChange={(value) => {
                       onDraftChanged?.();
@@ -402,19 +404,17 @@ export function AgentProviderConnection({
             ) : (
               <p className="text-sm text-muted-foreground">
                 {storedLogin.data
-                  ? "Use your saved Claude subscription for this agent."
+                  ? interfaceText("m_bb2c110688d831")
                   : canLogin
-                    ? "Use the existing provider connection for this environment."
-                    : "This environment does not support browser sign-in. Choose a sign-in environment or connect with an API key."}
+                    ? interfaceText("m_c910c4a898f08c")
+                    : interfaceText("m_b62e1e2f4b5976")}
               </p>
             )}
           </div>
         )}
       </motion.div>
       {method === "subscription" && storedLogin.isError && (
-        <p role="alert" className="mt-4 text-sm text-destructive">
-          Could not check your saved Claude subscription. Try again.
-        </p>
+        <p role="alert" className="mt-4 text-sm text-destructive">{interfaceText("m_c8c6c2beb441b1")}</p>
       )}
       {error && (
         <p role="alert" className="mt-4 text-sm text-destructive">
@@ -422,7 +422,7 @@ export function AgentProviderConnection({
         </p>
       )}
       {localEnvironment && health.isError && (
-        <p role="alert" className="mt-4 text-sm text-destructive">Could not prepare sign-in. Reload this page to try again.</p>
+        <p role="alert" className="mt-4 text-sm text-destructive">{interfaceText("m_f89460cd304504")}</p>
       )}
       <FooterNav
         onBack={() => {

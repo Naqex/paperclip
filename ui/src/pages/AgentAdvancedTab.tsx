@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { basicSetup } from "codemirror";
@@ -33,6 +34,7 @@ export interface AgentAdvancedTabProps {
 }
 
 export function AgentAdvancedTab(props: AgentAdvancedTabProps) {
+  useInterfaceLanguage();
   const [initial, setInitial] = useState<AgentConfigurationSnapshot | null>(null);
   const query = useQuery({
     queryKey: ["agent-configuration-yaml", props.agent.companyId, props.agent.id],
@@ -45,14 +47,15 @@ export function AgentAdvancedTab(props: AgentAdvancedTabProps) {
   if (!initial) {
     if (query.error) return <div role="alert" className="space-y-3 text-sm">
       <p>{query.error.message}</p>
-      <Button variant="outline" onClick={() => query.refetch()}>Retry</Button>
+      <Button variant="outline" onClick={() => query.refetch()}>{interfaceText("m_942087cc2d41e0")}</Button>
     </div>;
-    return <p role="status" className="text-sm text-muted-foreground">Loading configuration…</p>;
+    return <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_bc8fd86dcffdd9")}</p>;
   }
   return <ConfigurationEditor key={props.agent.id} {...props} initial={initial} />;
 }
 
 function ConfigurationEditor({ agent, initial, onDirtyChange, onSaved, onSavingChange }: AgentAdvancedTabProps & { initial: AgentConfigurationSnapshot }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const [saved, setSaved] = useState(initial);
@@ -97,7 +100,7 @@ function ConfigurationEditor({ agent, initial, onDirtyChange, onSaved, onSavingC
       setReloadRequired(false);
       onSaved(configuration.agent);
       const warnings = configuration.agent.configurationWarnings;
-      pushToast({ title: "Agent saved", tone: warnings?.length ? "warn" : "success", body: warnings?.map(warning => warning.message).join("\n") });
+      pushToast({ title: interfaceText("m_8ed40b78471d95"), tone: warnings?.length ? "warn" : "success", body: warnings?.map(warning => warning.message).join("\n") });
     },
     onSettled: () => {
       operationPending.current = false;
@@ -125,28 +128,28 @@ function ConfigurationEditor({ agent, initial, onDirtyChange, onSaved, onSavingC
   useEffect(() => { onSavingChange?.(busy); }, [busy, onSavingChange]);
   useEffect(() => () => onSavingChange?.(false), [onSavingChange]);
   return <div className="space-y-4">
-    <p className="text-sm text-muted-foreground">Omitted settings stay unchanged. Instruction file contents, inherited access, and history are available in their settings tabs.</p>
-    {receipts.length > 0 && <div className="space-y-3 rounded-md border border-border p-4" aria-label="Created credentials">
+    <p className="text-sm text-muted-foreground">{interfaceText("m_ad3820f3587432")}</p>
+    {receipts.length > 0 && <div className="space-y-3 rounded-md border border-border p-4" aria-label={interfaceText("m_90401171902dc4")}>
       {receipts.map((receipt, index) => <div key={`${receipt.id}-${index}`} className="space-y-2 text-sm">
         <p className="font-medium">{receipt.label}</p>
         {receipt.token ? <>
-          <p className="text-muted-foreground">Copy this key now. It won’t be shown again after leaving this page.</p>
+          <p className="text-muted-foreground">{interfaceText("m_27f03edf1da01b")}</p>
           <input readOnly aria-label={`${receipt.label} token`} value={receipt.token} className="w-full rounded-md border border-border bg-muted p-2 font-mono text-sm" />
         </> : <p className="font-mono text-muted-foreground">{receipt.id}</p>}
       </div>)}
     </div>}
     <AgentYamlEditor value={source} onChange={value => { setSource(value); if (!reloadRequired) setError(null); }} readOnly={busy} />
     {dirty && validation.changes.length > 0 && <details className="rounded-md border border-border p-3 text-sm">
-      <summary className="cursor-pointer font-medium">{validation.changes.length} {validation.changes.length === 1 ? "change" : "changes"} to apply</summary>
+      <summary className="cursor-pointer font-medium">{validation.changes.length} {validation.changes.length === 1 ? interfaceText("m_12ea12eace7d65") : interfaceText("m_d0b4ba2311b3e8")}{interfaceText("m_841402a00516cb")}</summary>
       <ul className="mt-2 list-inside list-disc space-y-1">{validation.changes.map((label, index) => <li key={index}>{label}</li>)}</ul>
-      <p className="mt-2 text-muted-foreground">Changes save in this order. If one fails, earlier changes remain saved.</p>
+      <p className="mt-2 text-muted-foreground">{interfaceText("m_e830952646cd24")}</p>
     </details>}
     {(validation.error || error) && <p role="alert" className="whitespace-pre-wrap text-sm text-destructive">{validation.error || error}</p>}
     <footer className="sticky bottom-0 z-10 flex items-center justify-between gap-3 border-t border-border bg-background py-4">
-      <Button variant="ghost" disabled={busy} onClick={() => { if (!operationPending.current) { operationPending.current = true; reload.mutate(); } }}>Reload saved</Button>
+      <Button variant="ghost" disabled={busy} onClick={() => { if (!operationPending.current) { operationPending.current = true; reload.mutate(); } }}>{interfaceText("m_0348fff1a53bc1")}</Button>
       <div className="flex items-center gap-3">
-        <span role="status" className="text-xs text-muted-foreground">{save.isPending ? `Saving: ${progress || "configuration"}…` : reload.isPending ? "Loading configuration…" : dirty ? validation.document && !validation.changes.length ? "No configuration changes" : "Unsaved changes" : ""}</span>
-        <Button disabled={!dirty || busy || reloadRequired || !validation.document || !validation.changes.length} onClick={() => { if (!operationPending.current) { operationPending.current = true; save.mutate(); } }}>{save.isPending ? "Saving…" : "Save changes"}</Button>
+        <span role="status" className="text-xs text-muted-foreground">{save.isPending ? interfaceText("m_f45319ad69aa42", { value0: (progress || "configuration") }) : reload.isPending ? interfaceText("m_bc8fd86dcffdd9") : dirty ? validation.document && !validation.changes.length ? interfaceText("m_f90760149aeaa1") : interfaceText("m_a710c2b90913b5") : ""}</span>
+        <Button disabled={!dirty || busy || reloadRequired || !validation.document || !validation.changes.length} onClick={() => { if (!operationPending.current) { operationPending.current = true; save.mutate(); } }}>{save.isPending ? interfaceText("m_23e39291d61358") : interfaceText("m_dd0ae7a5cbcf23")}</Button>
       </div>
     </footer>
   </div>;

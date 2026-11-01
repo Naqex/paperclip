@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -75,15 +76,13 @@ vi.mock("@/components/AgentConfigForm", () => ({
     onChange: (value: string) => void;
   }) => (
     <input
-      aria-label="Model"
+      aria-label={interfaceText("m_5e2c614c23f022")}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
   ),
   AdapterLoginPanel: ({ onConnected }: { onConnected: (id: string) => void }) => (
-    <button onClick={() => onConnected("login-session")}>
-      Complete subscription login
-    </button>
+    <button onClick={() => onConnected("login-session")}>{interfaceText("m_9c54d297a68573")}</button>
   ),
 }));
 vi.mock("@/components/onboarding/PillGuy", () => ({ PillGuy: () => null }));

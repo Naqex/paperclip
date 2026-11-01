@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from 'react';
 import type { SkillSourceCandidate } from '@paperclipai/shared';
 import { FileTree, buildFileTree, collectAllPaths, type FileTreeNode } from '@/components/FileTree';
@@ -58,6 +59,7 @@ export function SkillSourceTree({ candidates, selected, excludedFolders, onChang
   onPreview?: (skill: SkillTreeCandidate, filePath?: string) => void; disabled?: boolean;
   packageMode?: 'skills' | 'repository';
 }) {
+  useInterfaceLanguage();
   const [search, setSearch] = useState('');
   const [expansion, setExpansion] = useState(new Map<string, boolean>());
   const { nodes, included } = useMemo(() => buildSkillPackageTree(candidates), [candidates]);
@@ -98,17 +100,17 @@ export function SkillSourceTree({ candidates, selected, excludedFolders, onChang
   return <div className="flex min-h-0 flex-col overflow-hidden rounded-md border border-border">
     <div className="flex items-center gap-2 px-3">
       <Search className="size-4 shrink-0 text-muted-foreground" />
-      <Input className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 dark:bg-transparent" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search skills or files…" aria-label="Search discovered skills" />
+      <Input className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 dark:bg-transparent" value={search} onChange={event => setSearch(event.target.value)} placeholder={interfaceText("m_bb739e87fc0e4d")} aria-label={interfaceText("m_5777aeadd74cac")} />
     </div>
     <div className="flex items-center justify-between gap-2 border-y border-border bg-muted/30 px-3 py-1.5">
       <label className="flex items-center gap-2 text-xs text-muted-foreground">
-        <input type="checkbox" className="size-3.5 accent-foreground" aria-label="Import folder Repository"
+        <input type="checkbox" className="size-3.5 accent-foreground" aria-label={interfaceText("m_d34bb9d3e348b7")}
           checked={candidates.length > 0 && selectedCount === candidates.length}
           ref={element => { if (element) element.indeterminate = selectedCount > 0 && selectedCount < candidates.length; }}
           disabled={disabled || candidates.length === 0} onChange={() => toggleCheck('')} />
-        <span>{selectedCount} of {candidates.length} selected</span>
+        <span>{selectedCount}{interfaceText("m_a4282e4b2298b9")}{candidates.length}{interfaceText("m_97a2e8815acd21")}</span>
       </label>
-      <Button type="button" variant="ghost" size="xs" className="font-normal text-muted-foreground" disabled={disabled || Boolean(search) || allDirs.size === 0} onClick={() => setExpansion(new Map([...allDirs].map(path => [path, allCollapsed])))}>{allCollapsed ? 'Expand all' : 'Collapse all'}</Button>
+      <Button type="button" variant="ghost" size="xs" className="font-normal text-muted-foreground" disabled={disabled || Boolean(search) || allDirs.size === 0} onClick={() => setExpansion(new Map([...allDirs].map(path => [path, allCollapsed])))}>{allCollapsed ? interfaceText("m_a3e586be3eff5f") : interfaceText("m_25f7b3721119f1")}</Button>
     </div>
     <div className="min-h-0 max-h-(--sz-480px) overflow-auto py-1">
       <FileTree layout="explorer" wrapLabels={false}
@@ -137,17 +139,17 @@ export function SkillSourceTree({ candidates, selected, excludedFolders, onChang
         }}
         renderNodeExtra={node => {
           const skill = skillsByPath.get(node.path);
-          if (!skill) return node.kind === 'file' ? <span className="text-xs text-muted-foreground">Included</span> : null;
-          const label = skill.error ? 'Needs setup' : skill.note === 'New skill' ? 'New' : skill.note === 'Already imported' ? 'Installed' : skill.note?.startsWith('Removed from source') ? 'Removed' : skill.note;
+          if (!skill) return node.kind === 'file' ? <span className="text-xs text-muted-foreground">{interfaceText("m_ba829a98b79940")}</span> : null;
+          const label = skill.error ? interfaceText("m_b6df2441064f14") : skill.note === 'New skill' ? interfaceText("m_18fdd549b2ed36") : skill.note === 'Already imported' ? interfaceText("m_f8b32f4e92bd84") : skill.note?.startsWith('Removed from source') ? interfaceText("m_4118fb4fed0ece") : skill.note;
           const count = skill.inspection?.files.length ?? skill.fileCount;
           return <>
             {label && <Badge variant="outline" className="hidden font-normal text-muted-foreground sm:inline-flex" title={skill.error ?? skill.note}>{label}</Badge>}
-            {count !== undefined && <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{count} {count === 1 ? 'file' : 'files'}</span>}
-            {onPreview && <Button type="button" size="icon-xs" variant="ghost" disabled={disabled} aria-label={`Inspect ${skill.name}`} onKeyDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); onPreview(skill); }}>{skill.inspection?.references.length ? <AlertTriangle className="size-3.5" /> : <Info className="size-3.5" />}</Button>}
+            {count !== undefined && <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{count} {count === 1 ? interfaceText("m_3b9c358f36f0a3") : interfaceText("m_3d7db37d08f914")}</span>}
+            {onPreview && <Button type="button" size="icon-xs" variant="ghost" disabled={disabled} aria-label={interfaceText("m_1af041a5e23e8c", { value0: (skill.name) })} onKeyDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); onPreview(skill); }}>{skill.inspection?.references.length ? <AlertTriangle className="size-3.5" /> : <Info className="size-3.5" />}</Button>}
           </>;
         }}
       />
     </div>
-    {packageMode === 'skills' && <p className="border-t border-border px-3 py-2 text-xs text-muted-foreground">Select whole skill packages. Expand a skill to see its included files. Nested skills are selected separately.</p>}
+    {packageMode === 'skills' && <p className="border-t border-border px-3 py-2 text-xs text-muted-foreground">{interfaceText("m_c1cbfaf4f09f15")}</p>}
   </div>;
 }

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText } from "lucide-react";
@@ -15,6 +16,7 @@ export function CaseDocumentPreview({ caseIdentifier, document: documentRef }: {
   caseIdentifier: string;
   document: CaseDocumentRef | CaseTaskDocumentRef;
 }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const taskRef = "sourceKind" in documentRef ? documentRef : null;
@@ -30,22 +32,22 @@ export function CaseDocumentPreview({ caseIdentifier, document: documentRef }: {
       <Button variant="ghost" aria-label={documentRef.document.title ?? documentRef.key} className="h-auto w-full justify-start gap-3 rounded-none px-0 py-3 text-left font-normal whitespace-normal">
         <FileText aria-hidden className="size-4 shrink-0 text-muted-foreground" />
         <span className="min-w-0 flex-1">{documentRef.document.title ?? documentRef.key}</span>
-        {taskRef && <span className="shrink-0 font-mono text-xs text-muted-foreground">{taskRef.taskIdentifier ?? "Task"}</span>}
+        {taskRef && <span className="shrink-0 font-mono text-xs text-muted-foreground">{taskRef.taskIdentifier ?? interfaceText("m_4bc74b21357c6c")}</span>}
       </Button>
     </DialogTrigger>
     <DialogContent className="max-h-(--pct-80) overflow-y-auto sm:max-w-3xl">
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>
-          {taskRef ? <Link to={`/issues/${taskRef.taskIdentifier ?? taskRef.taskId}#document-${encodeURIComponent(taskRef.key)}`} className="hover:underline">{taskRef.taskIdentifier ?? "Task document"}</Link> : `${caseIdentifier} · Saved on case`}
-          {document?.latestRevisionNumber != null ? ` · Revision ${document.latestRevisionNumber}` : ""}
+          {taskRef ? <Link to={`/issues/${taskRef.taskIdentifier ?? taskRef.taskId}#document-${encodeURIComponent(taskRef.key)}`} className="hover:underline">{taskRef.taskIdentifier ?? interfaceText("m_6eb8d304cb82f3")}</Link> : interfaceText("m_7f53588dc095f4", { value0: (caseIdentifier) })}
+          {document?.latestRevisionNumber != null ? interfaceText("m_a52ffff6417fb3", { value0: (document.latestRevisionNumber) }) : ""}
         </DialogDescription>
       </DialogHeader>
-      {current.isLoading ? <p className="text-sm text-muted-foreground">Loading document…</p> : current.isError ? <p role="alert" className="text-sm text-destructive">This document couldn’t be loaded.</p> : document ? <div className="space-y-6">
+      {current.isLoading ? <p className="text-sm text-muted-foreground">{interfaceText("m_d71a0adaa59e49")}</p> : current.isError ? <p role="alert" className="text-sm text-destructive">{interfaceText("m_ff5e5ecaecab5f")}</p> : document ? <div className="space-y-6">
         <SourceTrustBadge sourceTrust={document.sourceTrust} artifactLabel="document" />
-        {document.body ? <MarkdownBody linkIssueReferences linkCaseReferences>{document.body}</MarkdownBody> : <p className="text-sm text-muted-foreground">This document is empty.</p>}
+        {document.body ? <MarkdownBody linkIssueReferences linkCaseReferences>{document.body}</MarkdownBody> : <p className="text-sm text-muted-foreground">{interfaceText("m_2d00c32d90683c")}</p>}
         <details open={historyOpen} onToggle={event => setHistoryOpen(event.currentTarget.open)} className="space-y-3">
-          <summary className="w-fit cursor-pointer text-sm text-muted-foreground hover:text-foreground">Revision history</summary>
+          <summary className="w-fit cursor-pointer text-sm text-muted-foreground hover:text-foreground">{interfaceText("m_5ae0d3d186c734")}</summary>
           {historyOpen && <CaseRevisionRail caseIdentifier={caseIdentifier} documentKey={documentRef.key} taskId={taskRef?.taskId} />}
         </details>
       </div> : null}

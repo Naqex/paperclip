@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Loader2, ShieldQuestion, X } from "lucide-react";
@@ -35,6 +36,7 @@ export function ReviewQueueCard({
   heading?: string;
   plain?: boolean;
 }) {
+  useInterfaceLanguage();
   const { selectedCompanyId } = useCompany();
 
   const query = useQuery({
@@ -51,14 +53,12 @@ export function ReviewQueueCard({
 
   if (!selectedCompanyId) return null;
   if (query.isLoading) return null;
-  if (query.isError) return <p role="alert" className="text-sm text-destructive">Could not load connection reviews. Please refresh to try again.</p>;
+  if (query.isError) return <p role="alert" className="text-sm text-destructive">{interfaceText("m_c6c01a33012cd1")}</p>;
 
   if (items.length === 0) {
     if (emptyState === "hidden") return null;
     return (
-      <div className={plain ? "py-5 text-sm text-muted-foreground" : "rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground"}>
-        Nothing is waiting for your OK right now.
-      </div>
+      <div className={plain ? "py-5 text-sm text-muted-foreground" : "rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground"}>{interfaceText("m_635a902962e2e0")}</div>
     );
   }
 
@@ -89,6 +89,7 @@ function ReviewRow({
   item: ToolActionRequestListItem;
   plain: boolean;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
   const [resolving, setResolving] = useState<null | "allow" | "always" | "decline">(null);
@@ -111,7 +112,7 @@ function ReviewRow({
     mutationFn: () => toolsApi.approveActionRequest(companyId, item.request.id),
     onMutate: () => setResolving("allow"),
     onSuccess: () => {
-      pushToast({ title: "Allowed once", body: `${actionLabel(item)} can run this time.`, tone: "success" });
+      pushToast({ title: interfaceText("m_c9b7022361744c"), body: interfaceText("m_0b9374fd18141c", { value0: (actionLabel(item)) }), tone: "success" });
       invalidate();
     },
     onError: (error) => {
@@ -128,8 +129,8 @@ function ReviewRow({
     onMutate: () => setResolving("always"),
     onSuccess: () => {
       pushToast({
-        title: "Always allowed",
-        body: `${actionLabel(item)} won’t ask again.`,
+        title: interfaceText("m_94387772bc12e3"),
+        body: interfaceText("m_bb68abbdef5262", { value0: (actionLabel(item)) }),
         tone: "success",
       });
       invalidate();
@@ -146,7 +147,7 @@ function ReviewRow({
     mutationFn: () => toolsApi.declineActionRequest(companyId, item.request.id),
     onMutate: () => setResolving("decline"),
     onSuccess: () => {
-      pushToast({ title: "Declined", body: `${actionLabel(item)} won’t run.`, tone: "info" });
+      pushToast({ title: interfaceText("m_dce083a2c47ffd"), body: interfaceText("m_5c47700d297f8d", { value0: (actionLabel(item)) }), tone: "info" });
       invalidate();
     },
     onError: (error) => {
@@ -176,11 +177,10 @@ function ReviewRow({
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm">
         <span className="font-bold text-foreground">{actionLabel(item)}</span>
         {item.applicationName && (
-          <span className="text-muted-foreground">
-            in {humanizeConnectionDisplayName(item.applicationName)}
+          <span className="text-muted-foreground">{interfaceText("m_74241f65e5ac9f")}{humanizeConnectionDisplayName(item.applicationName)}
           </span>
         )}
-        <span className="text-xs text-muted-foreground">· asked {timeAgo(item.request.createdAt)}</span>
+        <span className="text-xs text-muted-foreground">{interfaceText("m_9b1544da06d5eb")}{timeAgo(item.request.createdAt)}</span>
       </div>
 
       {preview ? (
@@ -188,32 +188,24 @@ function ReviewRow({
           <MarkdownBody>{preview}</MarkdownBody>
         </div>
       ) : (
-        <p className="mt-1 text-sm text-muted-foreground">
-          An agent wants to run this action. Your connection policy requires approval first.
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">{interfaceText("m_397162eb511a90")}</p>
       )}
 
-      {item.requestedByAgentId && item.connectionId && !item.request.approvalId ? <p className="mt-2 text-xs text-muted-foreground">Always allow lets this agent use this action with different arguments on this connection, within the current project when present.</p> : null}
+      {item.requestedByAgentId && item.connectionId && !item.request.approvalId ? <p className="mt-2 text-xs text-muted-foreground">{interfaceText("m_5976077f4f8f7c")}</p> : null}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <Button size="sm" onClick={() => allowOnce.mutate()} disabled={busy}>
-          {resolving === "allow" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Check className="mr-1.5 h-3.5 w-3.5" />}
-          Allow once
-        </Button>
+          {resolving === "allow" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Check className="mr-1.5 h-3.5 w-3.5" />}{interfaceText("m_168511d24d9ee0")}</Button>
         {item.requestedByAgentId && item.connectionId && !item.request.approvalId ? <Button size="sm" variant="outline" onClick={() => alwaysAllow.mutate()} disabled={busy}>
-          {resolving === "always" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}
-          Always allow
-        </Button> : null}
+          {resolving === "always" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}{interfaceText("m_977618bd8bc7ee")}</Button> : null}
         <Button size="sm" variant="ghost" onClick={() => decline.mutate()} disabled={busy}>
-          {resolving === "decline" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <X className="mr-1.5 h-3.5 w-3.5" />}
-          Decline
-        </Button>
+          {resolving === "decline" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <X className="mr-1.5 h-3.5 w-3.5" />}{interfaceText("m_a2d285b3528734")}</Button>
       </div>
     </div>
   );
 }
 
 function actionLabel(item: ToolActionRequestListItem): string {
-  if (!item.toolTitle && !item.toolName) return "This action";
+  if (!item.toolTitle && !item.toolName) return interfaceText("m_0df9a15574c48e");
   return humanizeConnectionDisplayName(item.toolName ?? "", { title: item.toolTitle });
 }
 
@@ -222,8 +214,8 @@ function failToast(
   error: unknown,
 ) {
   pushToast({
-    title: "Couldn’t save that",
-    body: error instanceof Error ? error.message : "Please try again.",
+    title: interfaceText("m_a735a23cbb70b7"),
+    body: error instanceof Error ? error.message : interfaceText("m_eea4fb33efd382"),
     tone: "error",
   });
 }

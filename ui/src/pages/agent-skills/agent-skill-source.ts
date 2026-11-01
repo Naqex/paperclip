@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { Boxes, Folder, Link2, Paperclip, type LucideIcon } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
 import type { CompanySkillListItem } from "@paperclipai/shared";
@@ -78,13 +79,13 @@ function isFilesystemLikeLabel(value: string) {
 
 function displayLocalSourceLabel(label: string | null | undefined) {
   const trimmed = label?.trim();
-  if (!trimmed || isFilesystemLikeLabel(trimmed)) return "Local folder";
+  if (!trimmed || isFilesystemLikeLabel(trimmed)) return interfaceText("m_b53e4dccdfe92f");
   return trimmed;
 }
 
 function displayCatalogSourceLabel(label: string | null | undefined) {
   const trimmed = label?.trim();
-  if (!trimmed || isFilesystemLikeLabel(trimmed)) return "Catalog";
+  if (!trimmed || isFilesystemLikeLabel(trimmed)) return interfaceText("m_3877d14889a990");
   return trimmed;
 }
 

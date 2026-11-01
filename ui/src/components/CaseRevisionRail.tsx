@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@/lib/router";
@@ -17,6 +18,7 @@ import { Diff } from "lucide-react";
 
 /** Author + via-issue attribution line for a revision. */
 function RevisionByline({ revision }: { revision: CaseDocumentRevision }) {
+  useInterfaceLanguage();
   const author = revision.actorAgentName ?? (revision.createdByAgentId ? "Agent" : revision.createdByUserId ? "User" : "System");
   return (
     <span className="flex flex-wrap items-center gap-x-1 text-(length:--text-micro) text-muted-foreground">
@@ -24,7 +26,7 @@ function RevisionByline({ revision }: { revision: CaseDocumentRevision }) {
       {revision.issue && (
         <>
           <span aria-hidden>·</span>
-          <span>via</span>
+          <span>{interfaceText("m_4d327af41f96c2")}</span>
           <Link
             to={`/issues/${revision.issue.identifier}`}
             className="font-mono text-foreground/80 hover:underline"
@@ -41,7 +43,7 @@ function RevisionByline({ revision }: { revision: CaseDocumentRevision }) {
 
 function getRevisionLabel(revision: CaseDocumentRevision) {
   const actor = revision.actorAgentName ?? (revision.createdByAgentId ? "agent" : revision.createdByUserId ? "board" : "system");
-  return `rev ${revision.revisionNumber} - ${relativeTime(revision.createdAt)} - ${actor}`;
+  return interfaceText("m_95d999e4e23a0c", { value0: (revision.revisionNumber), value1: (relativeTime(revision.createdAt)), value2: (actor) });
 }
 
 function CaseDocumentDiffModal({
@@ -57,6 +59,7 @@ function CaseDocumentDiffModal({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  useInterfaceLanguage();
   const [leftRevisionId, setLeftRevisionId] = useState<string | null>(null);
   const [rightRevisionId, setRightRevisionId] = useState<string | null>(null);
 
@@ -85,16 +88,15 @@ function CaseDocumentDiffModal({
       <DialogContent className="!max-w-(--pct-90) flex max-h-(--sz-85vh) w-full flex-col overflow-hidden">
         <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <DialogHeader className="min-w-0">
-            <DialogTitle className="break-words pr-6">
-              Diff - <span className="font-mono text-sm">{documentKey}</span>
+            <DialogTitle className="break-words pr-6">{interfaceText("m_d53ecad69c6a0d")}<span className="font-mono text-sm">{documentKey}</span>
             </DialogTitle>
           </DialogHeader>
           <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:gap-4">
             <div className="flex min-w-0 items-center gap-2">
-              <span className="shrink-0 rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-caps) text-red-400">Old</span>
+              <span className="shrink-0 rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-caps) text-red-400">{interfaceText("m_bca97160f4e121")}</span>
               <Select value={effectiveLeftId ?? ""} onValueChange={setLeftRevisionId}>
-                <SelectTrigger aria-label="Old revision" className="min-w-0 w-full border-border/60 data-[size=default]:h-11 md:w-60 md:text-xs md:data-[size=default]:h-9">
-                  <SelectValue className="min-w-0 truncate" placeholder="Select revision" />
+                <SelectTrigger aria-label={interfaceText("m_6d17d8df87aa2b")} className="min-w-0 w-full border-border/60 data-[size=default]:h-11 md:w-60 md:text-xs md:data-[size=default]:h-9">
+                  <SelectValue className="min-w-0 truncate" placeholder={interfaceText("m_4c84315133f7f4")} />
                 </SelectTrigger>
                 <SelectContent>
                   {revisions.map((revision) => (
@@ -106,10 +108,10 @@ function CaseDocumentDiffModal({
               </Select>
             </div>
             <div className="flex min-w-0 items-center gap-2">
-              <span className="shrink-0 rounded-full border border-green-500/30 bg-green-500/10 px-2 py-0.5 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-caps) text-green-400">New</span>
+              <span className="shrink-0 rounded-full border border-green-500/30 bg-green-500/10 px-2 py-0.5 text-(length:--text-nano) font-medium uppercase tracking-(--tracking-caps) text-green-400">{interfaceText("m_18fdd549b2ed36")}</span>
               <Select value={effectiveRightId ?? ""} onValueChange={setRightRevisionId}>
-                <SelectTrigger aria-label="New revision" className="min-w-0 w-full border-border/60 data-[size=default]:h-11 md:w-60 md:text-xs md:data-[size=default]:h-9">
-                  <SelectValue className="min-w-0 truncate" placeholder="Select revision" />
+                <SelectTrigger aria-label={interfaceText("m_2ef58f8ae346e4")} className="min-w-0 w-full border-border/60 data-[size=default]:h-11 md:w-60 md:text-xs md:data-[size=default]:h-9">
+                  <SelectValue className="min-w-0 truncate" placeholder={interfaceText("m_4c84315133f7f4")} />
                 </SelectTrigger>
                 <SelectContent>
                   {revisions.map((revision) => (
@@ -125,16 +127,16 @@ function CaseDocumentDiffModal({
 
         <div className="min-h-0 flex-1 overflow-auto rounded-md border border-border text-xs">
           {!leftRevision || !rightRevision ? (
-            <div className="p-6 text-center text-sm text-muted-foreground">Select two revisions to compare.</div>
+            <div className="p-6 text-center text-sm text-muted-foreground">{interfaceText("m_e64fab56b5c2d8")}</div>
           ) : leftRevision.id === rightRevision.id ? (
-            <div className="p-6 text-center text-sm text-muted-foreground">Both sides are the same revision.</div>
+            <div className="p-6 text-center text-sm text-muted-foreground">{interfaceText("m_5c3e0d3775b294")}</div>
           ) : (
             <div className="font-mono text-xs leading-6">
               <div className="grid grid-cols-(--gtc-1) border-b border-border/60 bg-muted/30 px-3 py-2 text-(length:--text-micro) uppercase tracking-(--tracking-caps) text-muted-foreground">
-                <span>Old</span>
-                <span>New</span>
+                <span>{interfaceText("m_bca97160f4e121")}</span>
+                <span>{interfaceText("m_18fdd549b2ed36")}</span>
                 <span />
-                <span>Content</span>
+                <span>{interfaceText("m_47bd29075f8b80")}</span>
               </div>
               {diffRows.map((row, index) => (
                 <div
@@ -177,6 +179,7 @@ export function CaseRevisionRail({
   documentKey?: string;
   taskId?: string;
 }) {
+  useInterfaceLanguage();
   const revisionsQuery = useQuery<CaseDocumentRevisions | DocumentRevision[]>({
     queryKey: taskId ? queryKeys.issues.documentRevisions(taskId, documentKey) : queryKeys.cases.revisions(caseIdentifier, documentKey),
     queryFn: () => taskId ? issuesApi.listDocumentRevisions(taskId, documentKey) : casesApi.listRevisions(caseIdentifier, documentKey),
@@ -200,7 +203,7 @@ export function CaseRevisionRail({
   }, [revisions, selectedId]);
 
   if (revisionsQuery.isLoading || revisionsView.kind === "reconnecting") {
-    return <p className="py-6 text-center text-sm text-muted-foreground">Loading revisions…</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">{interfaceText("m_c5c85196599295")}</p>;
   }
   if (revisionsView.kind === "error") {
     return (
@@ -208,7 +211,7 @@ export function CaseRevisionRail({
         <QueryErrorState
           size="inline"
           error={revisionsQuery.error}
-          action="load revisions"
+          action={interfaceText("m_bd302df55a8d82")}
           onRetry={revisionsView.retry}
           retrying={revisionsView.isFetching}
         />
@@ -216,7 +219,7 @@ export function CaseRevisionRail({
     );
   }
   if (revisions.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">No revisions yet.</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">{interfaceText("m_db4f9639355981")}</p>;
   }
 
   const selected = revisions.find((r) => r.id === selectedId) ?? revisions[0]!;
@@ -226,9 +229,7 @@ export function CaseRevisionRail({
     <div className="grid gap-4 md:grid-cols-(--gtc-case-revisions)">
       <aside className="min-w-0 space-y-1">
         <div className="flex items-center justify-between gap-2 px-1">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Revisions
-          </h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{interfaceText("m_da80b1d5740caa")}</h3>
           {revisions.length > 1 ? (
             <Button
               type="button"
@@ -237,9 +238,7 @@ export function CaseRevisionRail({
               className="h-7 gap-1 px-2 text-xs"
               onClick={() => setDiffOpen(true)}
             >
-              <Diff className="h-3.5 w-3.5" />
-              Diff
-            </Button>
+              <Diff className="h-3.5 w-3.5" />{interfaceText("m_7ecf46284588f3")}</Button>
           ) : null}
         </div>
         <ol className="space-y-1">
@@ -257,12 +256,9 @@ export function CaseRevisionRail({
                 )}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-medium">
-                    rev {rev.revisionNumber}
+                  <span className="text-xs font-medium">{interfaceText("m_efd46cd7c40429")}{rev.revisionNumber}
                     {index === 0 && (
-                      <span className="ml-1.5 rounded bg-muted px-1 py-0.5 text-(length:--text-nano) text-muted-foreground">
-                        latest
-                      </span>
+                      <span className="ml-1.5 rounded bg-muted px-1 py-0.5 text-(length:--text-nano) text-muted-foreground">{interfaceText("m_5e1e2bcac30595")}</span>
                     )}
                   </span>
                   <span className="text-(length:--text-micro) text-muted-foreground">{relativeTime(rev.createdAt)}</span>
@@ -281,7 +277,7 @@ export function CaseRevisionRail({
 
       <Card className="min-w-0 px-4 py-3">
         <div className="mb-2 flex items-baseline justify-between border-b border-border pb-2">
-          <span className="text-sm font-medium">rev {selected.revisionNumber}</span>
+          <span className="text-sm font-medium">{interfaceText("m_efd46cd7c40429")}{selected.revisionNumber}</span>
           <RevisionByline revision={selected} />
         </div>
         {selected.body ? (
@@ -289,7 +285,7 @@ export function CaseRevisionRail({
             {selected.body}
           </MarkdownBody>
         ) : (
-          <p className="text-sm text-muted-foreground">This revision has no body.</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_73e89038a2a866")}</p>
         )}
       </Card>
       {revisions.length > 1 ? (

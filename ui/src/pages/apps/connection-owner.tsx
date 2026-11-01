@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { McpConnection, ToolConnection } from "@paperclipai/shared";
 import { humanizeConnectionDisplayName } from "@paperclipai/shared";
 import { Identity } from "@/components/Identity";
@@ -60,7 +61,8 @@ export function assistantConnectionDisplayName(connection: McpConnection): strin
 }
 
 export function ConnectionOwnerIdentity({ owner }: { owner: ConnectionOwnerProfile | null }) {
-  if (!owner) return <span className="text-xs text-muted-foreground">Unknown</span>;
+  useInterfaceLanguage();
+  if (!owner) return <span className="text-xs text-muted-foreground">{interfaceText("m_b764cdc0eab713")}</span>;
   return (
     <Identity
       name={owner.label}

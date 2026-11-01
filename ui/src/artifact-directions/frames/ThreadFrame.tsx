@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 import { StatusIcon } from "@/components/StatusIcon";
@@ -19,6 +20,7 @@ import { AgentIdentity, ComposerShell, Mention, MessageFooter, Prose, ProseLink,
 
 /** BreadcrumbBar.tsx:128-189 with `taskDetailLayout`; crumbs from IssueDetail.tsx:5530-5540. */
 function TaskTopBar({ panelOpen }: { panelOpen: boolean }) {
+  useInterfaceLanguage();
   const Toggle = panelOpen ? PanelRightClose : PanelRightOpen;
   return (
     <div className="relative h-(--sz-60px) shrink-0 flex items-center border-b border-border px-4 md:px-6">
@@ -26,7 +28,7 @@ function TaskTopBar({ panelOpen }: { panelOpen: boolean }) {
         <Breadcrumb className="min-w-0 overflow-hidden">
           <BreadcrumbList className="flex-nowrap">
             <BreadcrumbItem className="shrink-0">
-              <span className="min-w-0 truncate font-semibold uppercase tracking-wider text-muted-foreground">Tasks</span>
+              <span className="min-w-0 truncate font-semibold uppercase tracking-wider text-muted-foreground">{interfaceText("m_b3a60e61a5233d")}</span>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem className="min-w-0">
@@ -70,6 +72,7 @@ function Row({ kit, artifact }: { kit: DirectionKit; artifact: LabArtifact }) {
 }
 
 export function ThreadFrame({ kit, panelOpen }: { kit: DirectionKit; panelOpen: boolean }) {
+  useInterfaceLanguage();
   const [critique, guide, pptx, pdf, image, source] = THREAD_WORK_PRODUCTS;
   const attachments = (
     <Slot kit={kit} className="flex w-full flex-col gap-1">
@@ -88,31 +91,19 @@ export function ThreadFrame({ kit, panelOpen }: { kit: DirectionKit; panelOpen: 
             <Bubble>
               <AgentIdentity name={DESIGNER} />
               <Prose>
-                <p>Interface Craft revision complete.</p>
+                <p>{interfaceText("m_1ff9facf9833e2")}</p>
                 <ul>
+                  <li>{interfaceText("m_10af7fbfb0f34e")}{" "}
+                    <ProseLink to="document-interface-craft-critique">{interfaceText("m_50690a54873bd2")}</ProseLink>{interfaceText("m_30471d9a55eb05")}</li>
+                  <li>{interfaceText("m_8d01081200a3e9")}<ProseLink to="work-product-ic-pptx">{interfaceText("m_4e801d206a0056")}</ProseLink>,{" "}
+                    <ProseLink to="work-product-ic-pdf">{interfaceText("m_16f7e18f011d7d")}</ProseLink>,{" "}
+                    <ProseLink to="work-product-ic-image">{interfaceText("m_dc7479c7314403")}</ProseLink>,{" "}
+                    <ProseLink to="work-product-ic-guide">{interfaceText("m_83ca68be6227af")}</ProseLink>{interfaceText("m_2e5f769687c773")}{" "}
+                    <ProseLink to="work-product-ic-zip">{interfaceText("m_c9257a8ad24398")}</ProseLink>{interfaceText("m_8ebfcad0b15c41")}</li>
                   <li>
-                    Applied Josh Puckett’s saved critique method and recorded{" "}
-                    <ProseLink to="document-interface-craft-critique">findings and before/after changes</ProseLink>. Added a cap-led cover,
-                    simplified strategy hierarchy, matched A/B comparison fields and applications, and separated founder decisions.
-                    Retained the supplied logo, Paperclip reference, proposed audience and claim labels.
-                  </li>
-                  <li>
-                    Uploaded and registered <ProseLink to="work-product-ic-pptx">editable PowerPoint</ProseLink>,{" "}
-                    <ProseLink to="work-product-ic-pdf">matching PDF</ProseLink>,{" "}
-                    <ProseLink to="work-product-ic-image">slide overview</ProseLink>,{" "}
-                    <ProseLink to="work-product-ic-guide">guide</ProseLink> and{" "}
-                    <ProseLink to="work-product-ic-zip">editing source</ProseLink>. Prior revisions preserved.
-                  </li>
-                  <li>
-                    <ProseLink to="document-interface-craft-deck-guide">Checks</ProseLink>: both files reopen with 12 slides/pages; visible
-                    text matches; all PDF pages visually inspected with no clipping or unintended overlap. Text and shapes are editable;
-                    supplied logo remains raster. Native PowerPoint rendering remains untested; PDF is the inspected reference.
-                  </li>
-                  <li>
-                    Next: <Mention name={CEO} /> checks coherence and claims, then presents this pass for founder acceptance through{" "}
-                    <TaskRef identifier="ACM-1" status="in_review" />. Production completion does not imply founder approval or permission
-                    to publish.
-                  </li>
+                    <ProseLink to="document-interface-craft-deck-guide">{interfaceText("m_de07d07209556c")}</ProseLink>{interfaceText("m_bb525d0973c370")}</li>
+                  <li>{interfaceText("m_1ee8f7531e33f8")}<Mention name={CEO} />{interfaceText("m_86cc20732109ef")}{" "}
+                    <TaskRef identifier="ACM-1" status="in_review" />{interfaceText("m_7aa1d2bec6abbc")}</li>
                 </ul>
               </Prose>
               {/* TaskChatBubble.tsx:264-352 — flush with the column edge, no px-1. */}
@@ -126,14 +117,9 @@ export function ThreadFrame({ kit, panelOpen }: { kit: DirectionKit; panelOpen: 
             <Bubble>
               <AgentIdentity name={CEO} />
               <Prose>
-                <p>
-                  The revised <ProseLink to="work-product-ic-pdf">deck PDF</ProseLink> is saved.{" "}
-                  <TaskRef identifier="ACM-3" status="done" /> remains complete.
-                </p>
-                <p>
-                  An ownership conflict prevented my review there. I’ve routed it to <TaskRef identifier="ACM-1" status="in_review" />;
-                  CEO review and founder acceptance remain pending.
-                </p>
+                <p>{interfaceText("m_ceef96e4286c5f")}<ProseLink to="work-product-ic-pdf">{interfaceText("m_436b81adc9dbfb")}</ProseLink>{interfaceText("m_a8f6fd282fa5c0")}{" "}
+                  <TaskRef identifier="ACM-3" status="done" />{interfaceText("m_14ba746d193f59")}</p>
+                <p>{interfaceText("m_f3105c89b5d6df")}<TaskRef identifier="ACM-1" status="in_review" />{interfaceText("m_178ec072bddf26")}</p>
               </Prose>
               <MessageFooter timestamp="11:12 AM" />
             </Bubble>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useWorkspaceBaseRefRecovery, useWorkspaceRetry } from "@/components/WorkspaceBaseRefRecovery";
 import { WorkspaceBaseRefRecoveryNotice } from "@/components/WorkspaceBaseRefRecoveryNotice";
 import { DispositionRecoveryNotice, useDispositionRecoverySnapshot } from "@/components/DispositionRecoveryNotice";
@@ -58,6 +59,7 @@ export function TaskChatSystemNotice({
   onTryAgainNoLiveExecutionPath?: () => Promise<void> | void;
   tryAgainNoLiveExecutionPathPending?: boolean;
 }) {
+  useInterfaceLanguage();
   const recoverySnapshot = useDispositionRecoverySnapshot(item.metadata);
   const branchRecovery = useWorkspaceBaseRefRecovery(item.metadata);
   const workspaceRetry = useWorkspaceRetry(item.metadata);
@@ -101,7 +103,7 @@ export function TaskChatSystemNotice({
       data-testid="task-chat-system-notice"
       data-tone={streamlined ? tone : undefined}
       role={streamlined ? "group" : undefined}
-      aria-label={streamlined ? `System update: ${title}` : undefined}
+      aria-label={streamlined ? interfaceText("m_07f542a65d8ce2", { value0: (title) }) : undefined}
     >
       <div className="flex max-w-(--pct-85) items-center gap-1.5">
         <button
@@ -133,7 +135,7 @@ export function TaskChatSystemNotice({
             disabled={tryAgainNoLiveExecutionPathPending}
             data-testid="task-chat-no-live-path-try-again"
           >
-            {tryAgainNoLiveExecutionPathPending ? "Trying again..." : "Try again"}
+            {tryAgainNoLiveExecutionPathPending ? interfaceText("m_808041416fbdba") : interfaceText("m_d8b8392e2c5429")}
           </Button>
         ) : null}
       </div>
@@ -169,7 +171,7 @@ export function TaskChatSystemNotice({
                 disabled={tryAgainNoLiveExecutionPathPending}
                 data-testid="task-chat-no-live-path-try-again"
               >
-                {tryAgainNoLiveExecutionPathPending ? "Trying again..." : "Try again"}
+                {tryAgainNoLiveExecutionPathPending ? interfaceText("m_808041416fbdba") : interfaceText("m_d8b8392e2c5429")}
               </Button>
             </div>
           ) : null}

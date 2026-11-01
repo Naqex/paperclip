@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import type {
   ExternalObjectLivenessState,
@@ -40,7 +41,7 @@ function githubObjectLabel(url: string | null | undefined): string | null {
     const [, owner, repo, kind, number] = parsed.pathname.split("/");
     if (!owner || !repo || !number) return null;
     if (kind === "pull") return `PR ${number}`;
-    if (kind === "issues") return `Issue ${number}`;
+    if (kind === "issues") return interfaceText("m_a28ea733240c00", { value0: (number) });
     return null;
   } catch {
     return null;

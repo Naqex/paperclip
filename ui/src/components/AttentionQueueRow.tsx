@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { memo, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -71,10 +72,10 @@ function tomorrowMorningIso(): string {
 
 /** Snooze presets, resolved to a future ISO timestamp at click time. */
 const SNOOZE_PRESETS: ReadonlyArray<{ label: string; resolve: () => string }> = [
-  { label: "1 hour", resolve: () => new Date(Date.now() + HOUR_MS).toISOString() },
-  { label: "4 hours", resolve: () => new Date(Date.now() + 4 * HOUR_MS).toISOString() },
-  { label: "Tomorrow morning", resolve: tomorrowMorningIso },
-  { label: "Next week", resolve: () => new Date(Date.now() + 7 * DAY_MS).toISOString() },
+  { get label() { return interfaceText("m_f8b8883f0c9d8d"); }, resolve: () => new Date(Date.now() + HOUR_MS).toISOString() },
+  { get label() { return interfaceText("m_e5bc9927884951"); }, resolve: () => new Date(Date.now() + 4 * HOUR_MS).toISOString() },
+  { get label() { return interfaceText("m_ea64c9f1aa4e0c"); }, resolve: tomorrowMorningIso },
+  { get label() { return interfaceText("m_21fbde19cfb095"); }, resolve: () => new Date(Date.now() + 7 * DAY_MS).toISOString() },
 ];
 
 interface AttentionQueueRowProps {
@@ -122,6 +123,7 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
   userLabelMap,
   selected = false,
 }: AttentionQueueRowProps) {
+  useInterfaceLanguage();
   const meta = sourceMeta(item.sourceKind);
   // Colour + glyph are borrowed wholesale from the task status system, so a
   // blocking decision reads exactly like a blocked task (DESIGN.md principle 5).
@@ -179,12 +181,12 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
     <button
       type="button"
       className="inline-flex shrink-0 items-center gap-1 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:ring-ring focus-visible:ring-(length:--rad-3) focus-visible:outline-none"
-      aria-label={expanded ? "Collapse decision" : "Expand decision"}
+      aria-label={expanded ? interfaceText("m_efeaeedadc710e") : interfaceText("m_81b1c87f8419cd")}
       aria-expanded={expanded}
       onClick={activate}
     >
       {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-      {expanded ? "See less" : "See more"}
+      {expanded ? interfaceText("m_d1cee48d0de28c") : interfaceText("m_bab37d62472990")}
     </button>
   ) : null;
 
@@ -214,18 +216,14 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
 
           {showOpen && (
             <Button asChild variant="default" size="xs" className={ACTION_BTN}>
-              <Link to={href!}>
-                Open
-                <ExternalLink className="h-3 w-3" />
+              <Link to={href!}>{interfaceText("m_ed077f3d8125d6")}<ExternalLink className="h-3 w-3" />
               </Link>
             </Button>
           )}
 
           {showRestore && (
             <Button type="button" variant="outline" size="xs" className={ACTION_BTN} onClick={() => onRestore(item)}>
-              <RotateCcw className="h-3 w-3" />
-              Restore
-            </Button>
+              <RotateCcw className="h-3 w-3" />{interfaceText("m_a76e13b9839270")}</Button>
           )}
         </div>
       </div>
@@ -277,12 +275,12 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
               <span
                 className="inline-flex items-center gap-1 text-(length:--text-nano) text-muted-foreground"
                 data-attention-decide-by={item.decideBy}
-                title={decideByProvenance(item) ? `Set by ${decideByProvenance(item)}` : undefined}
+                title={decideByProvenance(item) ? interfaceText("m_4977180f719d2c", { value0: (decideByProvenance(item)) }) : undefined}
               >
                 <CalendarClock className="h-3 w-3" />
                 {decideByLabel(item.decideBy)}
                 {decideByProvenance(item) && (
-                  <span className="text-muted-foreground/80">· set by {decideByProvenance(item)}</span>
+                  <span className="text-muted-foreground/80">{interfaceText("m_785a5345ab865c")}{decideByProvenance(item)}</span>
                 )}
               </span>
             </>
@@ -293,9 +291,8 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
           {isHidden && snoozedUntil ? (
             <span
               className="text-(length:--text-nano) text-muted-foreground"
-              title={`Reappears ${new Date(snoozedUntil).toLocaleString()}`}
-            >
-              Reappears {reappearLabel(snoozedUntil)}
+              title={interfaceText("m_390d094be26c54", { value0: (new Date(snoozedUntil).toLocaleString()) })}
+            >{interfaceText("m_4b77e9b0d51364")}{reappearLabel(snoozedUntil)}
             </span>
           ) : (
             <span className="text-(length:--text-nano) text-muted-foreground">{relativeTime(item.activityAt)}</span>
@@ -307,7 +304,7 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
                   variant="ghost"
                   size="icon-xs"
                   className="text-muted-foreground"
-                  aria-label="Row actions"
+                  aria-label={interfaceText("m_67a1892f792aa8")}
                 >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -315,14 +312,12 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
               <DropdownMenuContent align="end">
                 {onSnooze && <SnoozeSubmenu onSnooze={(iso) => onSnooze(item, iso)} />}
                 <DropdownMenuItem onClick={() => onDismiss(item)}>
-                  <X className="h-4 w-4" />
-                  Dismiss
-                </DropdownMenuItem>
+                  <X className="h-4 w-4" />{interfaceText("m_48845bff334a50")}</DropdownMenuItem>
                 {href && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link to={href}>Open source</Link>
+                      <Link to={href}>{interfaceText("m_67a0d2e0dab41f")}</Link>
                     </DropdownMenuItem>
                   </>
                 )}
@@ -484,6 +479,7 @@ function CompactDecisionActions({
   audience: InteractionAudienceDescription | null;
   onOpen: () => void;
 }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const actions = collectCompactActions(item);
@@ -524,7 +520,7 @@ function CompactDecisionActions({
       // A policy denial is permanent, so it keeps the server's reason and names
       // the real responder instead of asking for a retry that will fail again.
       pushToast({
-        title: `Could not ${decisionLabel(action)}`,
+        title: interfaceText("m_4ce1cf6e3e9d6d", { value0: (decisionLabel(action)) }),
         body: interactionResolutionErrorMessage(error, audience),
         tone: "error",
       });
@@ -534,7 +530,7 @@ function CompactDecisionActions({
   if (actions.length === 0) return null;
 
   return (
-    <div className="flex w-full flex-wrap items-center gap-2 @xl:w-auto @xl:justify-end @xl:gap-1" aria-label="Decision actions">
+    <div className="flex w-full flex-wrap items-center gap-2 @xl:w-auto @xl:justify-end @xl:gap-1" aria-label={interfaceText("m_645f42496f3ce3")}>
       {actions.map(({ action, id, label, description }) => (
         <Button
           key={id}
@@ -561,15 +557,15 @@ function CompactDecisionActions({
 }
 
 function decisionLabel(action: CompactDecisionAction): string {
-  if (action === "request_revision") return "sent for revision";
-  if (action === "accept" || action === "approve") return "approved";
-  return "rejected";
+  if (action === "request_revision") return interfaceText("m_5b8236bdb1c268");
+  if (action === "accept" || action === "approve") return interfaceText("m_2687f86ed6784b");
+  return interfaceText("m_20cd938a2ea64f");
 }
 
 function compactDecisionSuccessLabel(sourceKind: AttentionItem["sourceKind"], action: CompactDecisionAction): string {
-  if (sourceKind === "approval") return `Approval ${decisionLabel(action)}`;
-  if (sourceKind === "join_request") return `Join request ${decisionLabel(action)}`;
-  return action === "accept" ? "Confirmation accepted" : "Confirmation declined";
+  if (sourceKind === "approval") return interfaceText("m_0bf8d1fa8c8915", { value0: (decisionLabel(action)) });
+  if (sourceKind === "join_request") return interfaceText("m_a6e1aba97ed1fc", { value0: (decisionLabel(action)) });
+  return action === "accept" ? interfaceText("m_94f8dc4f3b2938") : interfaceText("m_e9ec5e2de2f28c");
 }
 
 function decisionVerbVariant(verb: AttentionItem["decisionVerbs"][number]): "default" | "outline" | "destructive" {
@@ -612,6 +608,7 @@ function ThumbnailStack({ images }: { images: AttentionDetailImage[] }) {
  * links through to the issue where the full set lives.
  */
 function ExpandedImages({ images, issueHref }: { images: AttentionDetailImage[]; issueHref: string | null }) {
+  useInterfaceLanguage();
   const visible = images.slice(0, 3);
   const extra = images.length - visible.length;
   return (
@@ -656,16 +653,13 @@ function ExpandedImages({ images, issueHref }: { images: AttentionDetailImage[];
           onClick={(e) => e.stopPropagation()}
           className="flex h-32 w-24 flex-col items-center justify-center rounded-md border border-dashed border-border bg-muted/40 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-ring focus-visible:ring-(length:--rad-3) focus-visible:outline-none"
         >
-          <span className="text-base font-semibold">{extra} more</span>
-          <span className="mt-0.5 inline-flex items-center gap-1 text-(length:--text-nano)">
-            View issue
-            <ExternalLink className="h-3 w-3" />
+          <span className="text-base font-semibold">{extra}{interfaceText("m_226ba18bbcdb75")}</span>
+          <span className="mt-0.5 inline-flex items-center gap-1 text-(length:--text-nano)">{interfaceText("m_870173579cf575")}<ExternalLink className="h-3 w-3" />
           </span>
         </Link>
       ) : (
         <span className="flex h-32 w-24 items-center justify-center rounded-md border border-dashed border-border bg-muted/40 text-sm font-semibold text-muted-foreground">
-          {extra} more
-        </span>
+          {extra}{interfaceText("m_226ba18bbcdb75")}</span>
       ))}
     </div>
   );
@@ -673,6 +667,7 @@ function ExpandedImages({ images, issueHref }: { images: AttentionDetailImage[];
 
 /** Snooze submenu: presets + a custom date-time (plan §6). */
 function SnoozeSubmenu({ onSnooze }: { onSnooze: (snoozedUntil: string) => void }) {
+  useInterfaceLanguage();
   const [customValue, setCustomValue] = useState("");
   const applyCustom = () => {
     if (!customValue) return;
@@ -683,9 +678,7 @@ function SnoozeSubmenu({ onSnooze }: { onSnooze: (snoozedUntil: string) => void 
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>
-        <AlarmClock className="h-4 w-4" />
-        Snooze
-      </DropdownMenuSubTrigger>
+        <AlarmClock className="h-4 w-4" />{interfaceText("m_52102940fe58e0")}</DropdownMenuSubTrigger>
       <DropdownMenuSubContent>
         {SNOOZE_PRESETS.map((preset) => (
           <DropdownMenuItem key={preset.label} onClick={() => onSnooze(preset.resolve())}>
@@ -700,18 +693,14 @@ function SnoozeSubmenu({ onSnooze }: { onSnooze: (snoozedUntil: string) => void 
           onKeyDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">
-            Custom
-          </span>
+          <span className="text-(length:--text-nano) font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{interfaceText("m_494ca78f7374e4")}</span>
           <input
             type="datetime-local"
             value={customValue}
             onChange={(e) => setCustomValue(e.target.value)}
             className="w-full rounded-sm border border-border bg-background px-2 py-1 text-xs"
           />
-          <Button type="button" size="xs" disabled={!customValue} onClick={applyCustom}>
-            Snooze until…
-          </Button>
+          <Button type="button" size="xs" disabled={!customValue} onClick={applyCustom}>{interfaceText("m_2462850b55d586")}</Button>
         </div>
       </DropdownMenuSubContent>
     </DropdownMenuSub>
@@ -733,13 +722,13 @@ function decideByProvenance(item: AttentionItem): string | null {
 /** Compact "when does this snooze end" label, e.g. `in 2h`, `in 3d`. */
 function reappearLabel(snoozedUntil: string): string {
   const diffMs = new Date(snoozedUntil).getTime() - Date.now();
-  if (!Number.isFinite(diffMs) || diffMs <= 0) return "soon";
+  if (!Number.isFinite(diffMs) || diffMs <= 0) return interfaceText("m_4a754148b88a68");
   const diffMin = Math.round(diffMs / 60000);
-  if (diffMin < 60) return `in ${diffMin}m`;
+  if (diffMin < 60) return interfaceText("m_c2651851f8d287", { value0: (diffMin) });
   const diffHr = Math.round(diffMin / 60);
-  if (diffHr < 24) return `in ${diffHr}h`;
+  if (diffHr < 24) return interfaceText("m_dfdb4c354927d2", { value0: (diffHr) });
   const diffDay = Math.round(diffHr / 24);
-  return `in ${diffDay}d`;
+  return interfaceText("m_5215e6b4692580", { value0: (diffDay) });
 }
 
 /**
@@ -763,6 +752,7 @@ function InlineResolver({
   userLabelMap?: ReadonlyMap<string, string> | null;
   toggle: ReactNode;
 }) {
+  useInterfaceLanguage();
   if (item.sourceKind === "decision") {
     return (
       <DecisionResolver
@@ -777,7 +767,7 @@ function InlineResolver({
   if (item.sourceKind === "issue_thread_interaction") {
     const issueId = (item.subject.metadata?.issueId as string | undefined) ?? item.relatedIssue?.id;
     if (!issueId) {
-      return <p className="text-xs text-muted-foreground">Missing issue reference for this decision.</p>;
+      return <p className="text-xs text-muted-foreground">{interfaceText("m_1f2b96d39308b9")}</p>;
     }
     return (
       <>
@@ -829,6 +819,7 @@ function ResolverFooter({ toggle, children }: { toggle: ReactNode; children: Rea
 }
 
 function ApprovalResolver({ item, companyId, toggle }: { item: AttentionItem; companyId: string; toggle: ReactNode }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const [note, setNote] = useState("");
   const invalidate = () => {
@@ -856,28 +847,23 @@ function ApprovalResolver({ item, companyId, toggle }: { item: AttentionItem; co
       <Textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="Optional decision note…"
+        placeholder={interfaceText("m_17872ddbd6e985")}
         className="min-h-16 text-sm"
       />
       <ResolverFooter toggle={toggle}>
         <Button size="sm" variant="outline" onClick={() => revise.mutate()} disabled={pending}>
-          {revise.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-          Request revision
-        </Button>
+          {revise.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}{interfaceText("m_0bf92c49028dd5")}</Button>
         <Button size="sm" variant="destructive" onClick={() => reject.mutate()} disabled={pending}>
-          {reject.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-          Reject
-        </Button>
+          {reject.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}{interfaceText("m_ab604a36077773")}</Button>
         <Button size="sm" onClick={() => approve.mutate()} disabled={pending}>
-          {approve.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-          Approve
-        </Button>
+          {approve.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}{interfaceText("m_6007acbe30b2cd")}</Button>
       </ResolverFooter>
     </>
   );
 }
 
 function JoinRequestResolver({ item, companyId, toggle }: { item: AttentionItem; companyId: string; toggle: ReactNode }) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.attention(companyId) });
@@ -896,13 +882,9 @@ function JoinRequestResolver({ item, companyId, toggle }: { item: AttentionItem;
   return (
     <ResolverFooter toggle={toggle}>
       <Button size="sm" variant="destructive" onClick={() => reject.mutate()} disabled={pending}>
-        {reject.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-        Reject
-      </Button>
+        {reject.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}{interfaceText("m_ab604a36077773")}</Button>
       <Button size="sm" onClick={() => approve.mutate()} disabled={pending}>
-        {approve.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-        Approve
-      </Button>
+        {approve.isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}{interfaceText("m_6007acbe30b2cd")}</Button>
     </ResolverFooter>
   );
 }

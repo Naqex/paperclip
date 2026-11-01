@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import type { DirectionKit, LabGroup } from "../kit";
 import { KIND_SPECIMENS, STACK_SPECIMENS } from "../fixtures";
@@ -40,17 +41,18 @@ function Unit({ title, slot, note, children }: { title: string; slot: string; no
 }
 
 export function KindsSheet({ kit }: { kit: DirectionKit }) {
+  useInterfaceLanguage();
   return (
     <div className="flex min-h-225 flex-col gap-12 bg-background p-6 text-foreground">
       <header className="flex flex-col gap-1">
-        <p className={LABEL}>Vocabulary sheet · {kit.id}</p>
+        <p className={LABEL}>{interfaceText("m_c1acb5c03c639b")}{kit.id}</p>
         <h1 className="text-lg font-semibold">{kit.name}</h1>
         <p className="text-sm text-muted-foreground">{kit.tagline}</p>
       </header>
 
       <div className="flex items-start gap-8">
         <div className="flex min-w-0 flex-col gap-12" style={{ width: THREAD_COLUMN_WIDTH }}>
-          <Unit title="Thread · work-product rows" slot="ThreadWorkProduct" note={`${THREAD_COLUMN_WIDTH}px column, one row per specimen`}>
+          <Unit title={interfaceText("m_54e93a5296a86e")} slot="ThreadWorkProduct" note={`${THREAD_COLUMN_WIDTH}px column, one row per specimen`}>
             <div className="flex flex-col gap-6">
               {KIND_SPECIMENS.map((artifact) => (
                 <div key={artifact.id} className="flex flex-col gap-1.5">
@@ -66,7 +68,7 @@ export function KindsSheet({ kit }: { kit: DirectionKit }) {
               ))}
             </div>
           </Unit>
-          <Unit title="Thread · attachments block" slot="ThreadAttachments" note="every specimen under one message">
+          <Unit title={interfaceText("m_d330f17cfb35c7")} slot="ThreadAttachments" note="every specimen under one message">
             {/* Same wrapper the thread frame gives the block (TaskChatBubble.tsx:217). */}
             <Slot kit={kit} className="flex w-full flex-col gap-1">
               <kit.ThreadAttachments artifacts={KIND_SPECIMENS} />
@@ -75,7 +77,7 @@ export function KindsSheet({ kit }: { kit: DirectionKit }) {
         </div>
 
         <div className="shrink-0" style={{ width: TASK_DETAIL_PANE_WIDTH }}>
-          <Unit title="Panel · Artifacts tab" slot="PanelBody" note={`${TASK_DETAIL_PANE_WIDTH}px pane, 16px body padding`}>
+          <Unit title={interfaceText("m_46d17399ac4b9a")} slot="PanelBody" note={`${TASK_DETAIL_PANE_WIDTH}px pane, 16px body padding`}>
             <div className="border-x border-border bg-card p-4">
               <Slot kit={kit}>
                 <kit.PanelBody artifacts={KIND_SPECIMENS} />
@@ -86,12 +88,12 @@ export function KindsSheet({ kit }: { kit: DirectionKit }) {
       </div>
 
       <div className="flex w-full max-w-6xl flex-col gap-12">
-        <Unit title="Gallery · opened stack" slot="GalleryStack" note="one tile per specimen, page width">
+        <Unit title={interfaceText("m_e48fd45c709cf8")} slot="GalleryStack" note="one tile per specimen, page width">
           <Slot kit={kit}>
             <kit.GalleryStack group={KIND_GROUP} />
           </Slot>
         </Unit>
-        <Unit title="Gallery · stacks" slot="GalleryStacks" note="1, 3 and 21 artifacts">
+        <Unit title={interfaceText("m_22304e13a1185a")} slot="GalleryStacks" note="1, 3 and 21 artifacts">
           <Slot kit={kit}>
             <kit.GalleryStacks groups={STACK_SPECIMENS} />
           </Slot>

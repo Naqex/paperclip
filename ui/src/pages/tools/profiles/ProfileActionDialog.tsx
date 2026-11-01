@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AlertTriangle } from "lucide-react";
 import type { ToolProfileWithDetails } from "@paperclipai/shared";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ export function ProfileActionDialog({
   onRestore: () => void;
   onDelete: () => void;
 }) {
+  useInterfaceLanguage();
   if (!kind || !profile) return null;
 
   const defaultDeleteBlocked = kind === "delete" && profile.summary.isCompanyDefault;
@@ -65,11 +67,11 @@ export function ProfileActionDialog({
         {defaultDeleteBlocked ? (
           <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-            <span>Choose another access profile and make it the organization default first.</span>
+            <span>{interfaceText("m_29f96b1eae2106")}</span>
           </div>
         ) : null}
         <DialogFooter>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button variant="ghost" onClick={onClose}>{interfaceText("m_19766ed6ccb2f4")}</Button>
           <Button
             variant={kind === "delete" ? "destructive" : "default"}
             disabled={pending || defaultDeleteBlocked}

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { Copy } from "lucide-react";
 import { CopyText } from "./CopyText";
 
@@ -9,6 +10,7 @@ export function RoutineSectionHeading({
   /** Description markdown to copy. Omit the button when this is null. */
   copyText?: string | null;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="mb-4 flex items-center gap-1">
       <h2 id="routine-section-title" className="text-lg font-semibold">
@@ -18,7 +20,7 @@ export function RoutineSectionHeading({
         <CopyText
           text={copyText}
           ariaLabel="Copy description"
-          title="Copy description"
+          title={interfaceText("m_4821fdb4cf47eb")}
           copiedLabel="Description copied"
           className="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
         >

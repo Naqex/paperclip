@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ReactNode } from "react";
 import type {
   ToolRiskLevel,
@@ -12,7 +13,8 @@ import { ApiError } from "@/api/client";
 
 /** Risk classification badge for a catalog tool. */
 export function RiskBadge({ risk }: { risk: ToolRiskLevel | null | undefined }) {
-  if (!risk) return <Badge variant="outline">unknown</Badge>;
+  useInterfaceLanguage();
+  if (!risk) return <Badge variant="outline">{interfaceText("m_b23a6a8439c0dd")}</Badge>;
   const variant =
     risk === "high" || risk === "critical"
       ? "destructive"
@@ -32,11 +34,12 @@ export function CapabilityBadges({
   isWrite?: boolean;
   isDestructive?: boolean;
 }) {
+  useInterfaceLanguage();
   return (
     <span className="inline-flex flex-wrap gap-1">
-      {isReadOnly ? <Badge variant="outline">read-only</Badge> : null}
-      {isWrite ? <Badge variant="secondary">write</Badge> : null}
-      {isDestructive ? <Badge variant="destructive">destructive</Badge> : null}
+      {isReadOnly ? <Badge variant="outline">{interfaceText("m_4fed3970dcc0d3")}</Badge> : null}
+      {isWrite ? <Badge variant="secondary">{interfaceText("m_10fd874b68dad0")}</Badge> : null}
+      {isDestructive ? <Badge variant="destructive">{interfaceText("m_1b933329d22a42")}</Badge> : null}
     </span>
   );
 }
@@ -83,25 +86,25 @@ function decisionToStatusKey(decision: string): { key: string; label: string } {
   switch (decision) {
     case "allow":
     case "allowed":
-      return { key: "allowed", label: "allowed" };
+      return { key: "allowed", label: interfaceText("m_eabc01f12ec3e7") };
     case "deny":
     case "denied":
-      return { key: "denied", label: "denied" };
+      return { key: "denied", label: interfaceText("m_62d6c2330036f6") };
     case "block":
-      return { key: "block", label: "block" };
+      return { key: "block", label: interfaceText("m_496aca80e4d8f2") };
     case "require_approval":
     case "requires_approval":
-      return { key: "require-approval", label: "require approval" };
+      return { key: "require-approval", label: interfaceText("m_ba46f298f18b1d") };
     case "redact":
     case "redacted":
-      return { key: "redacted", label: "redacted" };
+      return { key: "redacted", label: interfaceText("m_b68919aff001d8") };
     case "rate_limited":
-      return { key: "rate-limit", label: "rate limited" };
+      return { key: "rate-limit", label: interfaceText("m_d292012eb3769a") };
     case "defer":
     case "deferred":
-      return { key: "deferred", label: "deferred" };
+      return { key: "deferred", label: interfaceText("m_a706016085b216") };
     case "hidden":
-      return { key: "hidden", label: "hidden" };
+      return { key: "hidden", label: interfaceText("m_e564b4081d7a9e") };
     default:
       return { key: decision, label: decision };
   }
@@ -116,7 +119,8 @@ export function DecisionBadge({ decision }: { decision: ToolPolicyDecision | str
 
 /** Compact relative time, falling back to absolute. */
 export function RelativeTime({ value }: { value: Date | string | null | undefined }) {
-  if (!value) return <span className="text-muted-foreground">never</span>;
+  useInterfaceLanguage();
+  if (!value) return <span className="text-muted-foreground">{interfaceText("m_6497e4b3d7bed1")}</span>;
   const date = typeof value === "string" ? new Date(value) : value;
   if (Number.isNaN(date.getTime())) return <span className="text-muted-foreground">—</span>;
   const diffMs = Date.now() - date.getTime();
@@ -157,7 +161,8 @@ export function ToolsPageHeader({
   );
 }
 
-export function LoadingState({ label = "Loading…" }: { label?: string }) {
+export function LoadingState({ label = interfaceText("m_ba3bbbe10d8bef") }: { label?: string }) {
+  useInterfaceLanguage();
   return (
     <div className="flex items-center gap-2 py-10 text-sm text-muted-foreground">
       <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground" />
@@ -168,6 +173,7 @@ export function LoadingState({ label = "Loading…" }: { label?: string }) {
 
 /** Actionable error surface — surfaces the server message and HTTP status. */
 export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
+  useInterfaceLanguage();
   let message: string;
   if (error instanceof ApiError) {
     if (error.status === 403) {
@@ -189,7 +195,7 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
         <div className="flex items-start gap-2 text-sm text-destructive">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           <div>
-            <p className="font-medium">Could not load this view</p>
+            <p className="font-medium">{interfaceText("m_fa92f9261c042b")}</p>
             <p className="text-destructive/80">{message}</p>
           </div>
         </div>
@@ -198,9 +204,7 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
             type="button"
             onClick={onRetry}
             className="self-start rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-accent"
-          >
-            Retry
-          </button>
+          >{interfaceText("m_942087cc2d41e0")}</button>
         ) : null}
       </CardContent>
     </Card>
@@ -221,6 +225,7 @@ export function PendingBackendNotice({
   body: ReactNode;
   issue?: { identifier: string; href: string };
 }) {
+  useInterfaceLanguage();
   return (
     <Card className="border-dashed">
       <CardContent className="flex flex-col gap-2 py-8">
@@ -230,8 +235,7 @@ export function PendingBackendNotice({
         </div>
         <p className="max-w-2xl text-sm text-muted-foreground">{body}</p>
         {issue ? (
-          <a href={issue.href} className="text-sm font-medium text-primary hover:underline">
-            Tracked in {issue.identifier} →
+          <a href={issue.href} className="text-sm font-medium text-primary hover:underline">{interfaceText("m_0086af567eb7b7")}{issue.identifier} →
           </a>
         ) : null}
       </CardContent>

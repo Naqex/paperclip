@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import {
   AlertTriangle,
   BookOpen,
@@ -193,7 +194,7 @@ export function protocolActivityLabel(item: TaskChatProtocolItem, presentation: 
   if (item.surface !== "provider_activity") {
     return protocolActivityIsRunning(item) ? presentation.runningLabel : presentation.completedLabel;
   }
-  if (item.status === "failed") return presentation.failedLabel ?? `${presentation.completedLabel} · failed`;
-  if (item.status === "interrupted") return presentation.interruptedLabel ?? `${presentation.completedLabel} · interrupted`;
+  if (item.status === "failed") return presentation.failedLabel ?? interfaceText("m_75560182b39700", { value0: (presentation.completedLabel) });
+  if (item.status === "interrupted") return presentation.interruptedLabel ?? interfaceText("m_c9a3d597a929e7", { value0: (presentation.completedLabel) });
   return item.status === "running" ? presentation.runningLabel : presentation.completedLabel;
 }

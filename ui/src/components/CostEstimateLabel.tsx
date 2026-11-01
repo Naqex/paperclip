@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { CostByAgent } from "@paperclipai/shared";
 import { Badge } from "./ui/badge";
 
@@ -6,15 +7,16 @@ export function CostEstimateLabel({
   eventCount,
   estimatedEventCount,
 }: Partial<Pick<CostByAgent, "eventCount" | "estimatedEventCount">>) {
+  useInterfaceLanguage();
   if (!estimatedEventCount) return null;
   const allEstimated = estimatedEventCount === eventCount;
   return (
     <Badge
       variant="outline"
       className="font-normal text-muted-foreground"
-      title={`${estimatedEventCount} estimated ${estimatedEventCount === 1 ? "charge" : "charges"}. Calculated from token usage and published rates; provider bills may differ.`}
+      title={interfaceText("m_5c4721c5fd94ee", { value0: (estimatedEventCount), value1: (estimatedEventCount === 1 ? "charge" : "charges") })}
     >
-      {allEstimated ? "Estimated" : "Partially estimated"}
+      {allEstimated ? interfaceText("m_b774599a9cd1f9") : interfaceText("m_4178459d7eab9d")}
     </Badge>
   );
 }

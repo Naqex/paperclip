@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
@@ -14,6 +15,7 @@ export function ComposioAppSetup({ name, toolkit, connections, onClose, onBack, 
   name: string; toolkit: string; connections: ToolConnection[]; onClose: () => void;
   onBack?: () => void; onConnectNew: () => void;
 }) {
+  useInterfaceLanguage();
   const queries = useQueryClient();
   const { userId, settled } = useAccountIdentity();
   const { pushToast } = useToast();
@@ -35,7 +37,7 @@ export function ComposioAppSetup({ name, toolkit, connections, onClose, onBack, 
       await queries.invalidateQueries({ queryKey: queryKeys.tools.composioApps(connection.id), exact: true });
       await queries.invalidateQueries({ queryKey: queryKeys.tools.aggregatorApps(connection.id, userId), exact: true });
       if (next.status === "connected") {
-        pushToast({ title: `${name} is connected through Composio.`, tone: "success" });
+        pushToast({ title: interfaceText("m_ef3fc070cdeef5", { value0: (name) }), tone: "success" });
         onClose();
       }
     } catch (cause) {
@@ -45,28 +47,28 @@ export function ComposioAppSetup({ name, toolkit, connections, onClose, onBack, 
 
   return <div className="space-y-4">
     <div className="space-y-2">
-      <Label htmlFor="composio-app-account">Composio account</Label>
+      <Label htmlFor="composio-app-account">{interfaceText("m_c7d01d2a55ff25")}</Label>
       <select id="composio-app-account" value={connectionId} disabled={busy} onChange={event => {
         setConnectionId(event.target.value); setResult(null); setError(null);
       }} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         {connections.map(candidate => <option key={candidate.id} value={candidate.id}>{candidate.name}</option>)}
-        <option value="__new__">Connect a new account…</option>
+        <option value="__new__">{interfaceText("m_1e5517fb65e62f")}</option>
       </select>
     </div>
     {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
-    {result ? <p role="status" className="text-sm text-muted-foreground">Finish connecting {name} in Composio, then return here.</p> : null}
+    {result ? <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_addb9fd08b4df0")}{name}{interfaceText("m_9c072cefb8b089")}</p> : null}
     {result?.authorizationUrl ? <Button asChild variant="outline" className="w-full">
-      <a href={result.authorizationUrl} target="_blank" rel="noopener noreferrer">Connect {name} in Composio<ExternalLink className="size-4" /></a>
+      <a href={result.authorizationUrl} target="_blank" rel="noopener noreferrer">{interfaceText("m_3b887c9884f2c9")}{name}{interfaceText("m_e52da6796bc7bc")}<ExternalLink className="size-4" /></a>
     </Button> : null}
     <div className="flex items-center justify-between gap-2">
-      <Button variant="ghost" disabled={busy} onClick={onBack ?? onClose}>{onBack ? "Back" : "Cancel"}</Button>
+      <Button variant="ghost" disabled={busy} onClick={onBack ?? onClose}>{onBack ? interfaceText("m_76900f1bfd16c8") : interfaceText("m_19766ed6ccb2f4")}</Button>
       <div className="flex items-center gap-2">
-      {result && result.status !== "connected" ? <Button variant="ghost" disabled={busy} onClick={() => void submit({ action: "start" })}>Get a new link</Button> : null}
+      {result && result.status !== "connected" ? <Button variant="ghost" disabled={busy} onClick={() => void submit({ action: "start" })}>{interfaceText("m_a402dfe4818e46")}</Button> : null}
       <Button disabled={!settled || busy || (!connection && connectionId !== "__new__")} onClick={() => {
         if (connectionId === "__new__") onConnectNew();
         else void submit(result ? { action: "complete" } : { action: "start" });
       }}>
-        {busy ? "Checking…" : connectionId === "__new__" ? "Connect new account" : result ? "I’ve connected it" : "Continue"}
+        {busy ? interfaceText("m_ec963ffc911b84") : connectionId === "__new__" ? interfaceText("m_fcd079711c80f8") : result ? interfaceText("m_d245c7b12eb654") : interfaceText("m_31fbef162594de")}
       </Button>
       </div>
     </div>

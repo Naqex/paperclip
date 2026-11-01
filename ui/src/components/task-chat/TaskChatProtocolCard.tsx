@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useContext, useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -233,9 +234,10 @@ function CardShell({
 }
 
 function PlanSteps({ steps }: { steps: TaskChatProtocolStep[] }) {
+  useInterfaceLanguage();
   if (steps.length === 0) return null;
   return (
-    <ol className="flex flex-col gap-1.5" aria-label="Plan steps">
+    <ol className="flex flex-col gap-1.5" aria-label={interfaceText("m_3fa02f98189b83")}>
       {steps.map((step) => (
         <li key={step.id} className="flex items-start gap-2 text-sm">
           <StatusIcon status={step.status} className="mt-0.5 shrink-0" />
@@ -259,6 +261,7 @@ function ProviderActivityCard({
 }: {
   item: TaskChatProviderActivityItem;
 }) {
+  useInterfaceLanguage();
   const Icon = FAMILY_ICON[item.family];
   const hasDetails =
     item.details.length > 0 ||
@@ -275,7 +278,7 @@ function ProviderActivityCard({
     >
       {item.steps.length > 0 ? <PlanSteps steps={item.steps} /> : null}
       {item.children.length > 0 ? (
-        <ul className="flex flex-col gap-2" aria-label="Delegated agents">
+        <ul className="flex flex-col gap-2" aria-label={interfaceText("m_a3a4ad04fa0db2")}>
           {item.children.map((child) => (
             <li
               key={child.id}
@@ -308,7 +311,7 @@ function ProviderActivityCard({
         </ul>
       ) : null}
       {item.links.length > 0 ? (
-        <ul className="flex flex-col gap-2" aria-label="Research sources">
+        <ul className="flex flex-col gap-2" aria-label={interfaceText("m_6891cd2295ca83")}>
           {item.links.map((link) => (
             <li key={link.href}>
               <a
@@ -339,8 +342,7 @@ function ProviderActivityCard({
           )}
         >
           <summary className="flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground">
-            <ChevronDown aria-hidden className="h-3.5 w-3.5" /> Details
-          </summary>
+            <ChevronDown aria-hidden className="h-3.5 w-3.5" />{interfaceText("m_d205f5064e1c63")}</summary>
           {item.details.length > 0 ? (
             <dl className="mt-2 flex min-w-0 flex-col gap-1.5 text-xs">
               {item.details.map((detail) => (
@@ -367,9 +369,7 @@ function ProviderActivityCard({
             </pre>
           ) : null}
           {item.outputTruncated ? (
-            <p className="mt-1 text-xs text-muted-foreground">
-              Output truncated to 8 KiB.
-            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{interfaceText("m_71045c3c3bab4c")}</p>
           ) : null}
         </details>
       ) : null}
@@ -388,6 +388,7 @@ function diffStats(file: TaskChatWorkspaceChangeItem["files"][number]) {
 }
 
 function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
+  useInterfaceLanguage();
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const selected =
@@ -406,7 +407,7 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
     <>
       <CardShell
         icon={GitBranch}
-        title="Workspace changes"
+        title={interfaceText("m_1ac656d5ef1eac")}
         status={item.complete ? "completed" : "running"}
         summary={summary}
         testId="task-chat-workspace-change"
@@ -426,7 +427,7 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
                     : file.path}
                 </span>
                 <span className="text-xs capitalize text-muted-foreground">
-                  {file.binary ? "binary · " : ""}
+                  {file.binary ? interfaceText("m_229fde70e8cf82") : ""}
                   {file.operation.replaceAll("_", " ")}
                 </span>
               </span>
@@ -443,8 +444,8 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
               onClick={() => setExpanded((value) => !value)}
             >
               {expanded
-                ? "Show fewer files"
-                : `Show ${item.files.length - 3} more files`}
+                ? interfaceText("m_17fe4047db0bac")
+                : interfaceText("m_8c420cfaa8de3b", { value0: (item.files.length - 3) })}
             </Button>
           ) : null}
           {item.files.length > 0 ? (
@@ -453,9 +454,7 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
               size="sm"
               variant="outline"
               onClick={() => setSelectedPath(item.files[0].path)}
-            >
-              Review diff
-            </Button>
+            >{interfaceText("m_6146827609521d")}</Button>
           ) : null}
         </div>
       </CardShell>
@@ -468,13 +467,13 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
         <DialogContent className="w-full max-w-(--pct-90) overflow-hidden">
           <DialogHeader>
             <DialogTitle className="font-mono text-sm">
-              {selected?.path ?? "Workspace diff"}
+              {selected?.path ?? interfaceText("m_a4472b525ac9cc")}
             </DialogTitle>
           </DialogHeader>
           {item.files.length > 1 ? (
             <div
               className="flex max-w-full gap-1 overflow-x-auto pb-1"
-              aria-label="Changed files"
+              aria-label={interfaceText("m_5d4041aa7af3b4")}
             >
               {item.files.map((file) => (
                 <Button
@@ -490,17 +489,13 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
             </div>
           ) : null}
           {selected?.binary ? (
-            <p className="rounded-sm bg-muted/50 p-3 text-sm text-muted-foreground">
-              Binary file; text diff is unavailable.
-            </p>
+            <p className="rounded-sm bg-muted/50 p-3 text-sm text-muted-foreground">{interfaceText("m_98cd1b4b3a11b4")}</p>
           ) : selected?.diff ? (
             <pre className="max-h-(--sz-70vh) overflow-auto whitespace-pre rounded-sm bg-muted/50 p-3 font-mono text-xs">
               {selected.diff}
             </pre>
           ) : (
-            <p className="rounded-sm bg-muted/50 p-3 text-sm text-muted-foreground">
-              No inline patch was recorded for this file.
-            </p>
+            <p className="rounded-sm bg-muted/50 p-3 text-sm text-muted-foreground">{interfaceText("m_009e7b89c24676")}</p>
           )}
         </DialogContent>
       </Dialog>
@@ -509,12 +504,13 @@ function WorkspaceChangeCard({ item }: { item: TaskChatWorkspaceChangeItem }) {
 }
 
 function WorkspaceFileCard({ item }: { item: TaskChatWorkspaceFileItem }) {
+  useInterfaceLanguage();
   const [open, setOpen] = useState(false);
   const extension = item.displayName.includes(".")
     ? item.displayName.split(".").at(-1)?.toUpperCase()
     : "FILE";
   const label =
-    item.presentation === "generic" ? "File" : titleCaseKey(item.presentation);
+    item.presentation === "generic" ? interfaceText("m_50009ce1da4d15") : titleCaseKey(item.presentation);
   const workspaceFileRef = useMemo(
     () => ({
       path: item.path,
@@ -547,9 +543,7 @@ function WorkspaceFileCard({ item }: { item: TaskChatWorkspaceFileItem }) {
             size="sm"
             variant="outline"
             onClick={() => setOpen(true)}
-          >
-            Preview
-          </Button>
+          >{interfaceText("m_324b134f57c70c")}</Button>
         </div>
       </CardShell>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -559,10 +553,7 @@ function WorkspaceFileCard({ item }: { item: TaskChatWorkspaceFileItem }) {
           </DialogHeader>
           <p className="font-mono text-xs text-muted-foreground">{item.path}</p>
           {item.preview == null ? (
-            <p className="rounded-sm bg-muted/50 p-3 text-sm text-muted-foreground">
-              Preview unavailable. The verified workspace reference is still
-              available above.
-            </p>
+            <p className="rounded-sm bg-muted/50 p-3 text-sm text-muted-foreground">{interfaceText("m_adcad82d890159")}</p>
           ) : item.presentation === "document" ? (
             <div className="max-h-(--sz-70vh) overflow-auto rounded-sm bg-muted/30 p-3">
               <MarkdownBody>{item.preview}</MarkdownBody>
@@ -581,9 +572,7 @@ function WorkspaceFileCard({ item }: { item: TaskChatWorkspaceFileItem }) {
             </pre>
           )}
           {item.previewTruncated ? (
-            <p className="text-xs text-muted-foreground">
-              Preview truncated by the runner.
-            </p>
+            <p className="text-xs text-muted-foreground">{interfaceText("m_c8a44a1ed087a8")}</p>
           ) : null}
         </DialogContent>
       </Dialog>
@@ -602,6 +591,7 @@ function RuntimeQuestionHistory({
 }: {
   item: TaskChatRuntimeRequestItem;
 }) {
+  useInterfaceLanguage();
   const questionSet = item.questionSet;
   if (!questionSet) return null;
   return (
@@ -628,8 +618,8 @@ function RuntimeQuestionHistory({
           ))}
           <p className="text-xs text-muted-foreground">
             {item.status === "resolved"
-              ? "Answer details were not recorded by this older runtime."
-              : `No answers were submitted; this request was ${item.status}.`}
+              ? interfaceText("m_43dc6c77dafd63")
+              : interfaceText("m_d1be8ff00620d1", { value0: (item.status) })}
           </p>
         </div>
       )}
@@ -642,14 +632,15 @@ function RuntimeQuestionReceipt({
 }: {
   item: TaskChatRuntimeRequestItem;
 }) {
+  useInterfaceLanguage();
   const label =
     item.status === "resolved"
-      ? "Questions answered"
+      ? interfaceText("m_46141d002e547b")
       : item.status === "cancelled"
-        ? "Questions cancelled"
+        ? interfaceText("m_eb68371f5cbf07")
         : item.status === "expired"
-          ? "Questions expired"
-          : "Questions resolved";
+          ? interfaceText("m_405a359bdd975c")
+          : interfaceText("m_4741bfcd563b3e");
   return (
     <details className="group" data-testid="task-chat-runtime-request">
       <summary className="flex min-h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-1 py-1.5 text-sm leading-5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -673,7 +664,7 @@ function RuntimeQuestionReceipt({
       <div className="pb-3 pl-7 pr-1">
         <div className="mb-3">
           <p className="text-sm font-medium text-foreground">
-            {item.questionSet?.title ?? "Runtime input"}
+            {item.questionSet?.title ?? interfaceText("m_b73049f7628de9")}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">{item.prompt}</p>
         </div>
@@ -698,6 +689,7 @@ function RuntimeRequestCard({
   imageUploadHandler?: (file: File) => Promise<string>;
   mentions?: MentionOption[];
 }) {
+  useInterfaceLanguage();
   const historyIssueId = useContext(TaskChatRequestHistoryContext);
   const draftKey = requestedDraftKey ?? (historyIssueId
     ? `paperclip:task-input:${historyIssueId}:runtime:${item.runId}:${item.requestId}`
@@ -705,12 +697,12 @@ function RuntimeRequestCard({
   const title =
     item.questionSet?.title ??
     (item.requestType === "permission"
-      ? "Runtime permission"
-      : "Runtime input");
+      ? interfaceText("m_b2e85aec1fcf9d")
+      : interfaceText("m_b73049f7628de9"));
   const fields =
     item.fields.length > 0
       ? item.fields
-      : [{ name: "answer", label: "Response", placeholder: null }];
+      : [{ name: "answer", label: interfaceText("m_9061383b8e228e"), placeholder: null }];
   const [values, setValues] = useState<Record<string, string>>(() =>
     draftKey ? loadStructuredDraft(draftKey, {}) : {},
   );
@@ -846,7 +838,7 @@ function RuntimeRequestCard({
               size="sm"
               disabled={!onDecision || submitting || !canSubmitInput}
             >
-              {submitting ? "Submitting…" : "Submit response"}
+              {submitting ? interfaceText("m_49195f559e4a9f") : interfaceText("m_2b35561bb791fb")}
             </Button>
             {item.choices.some((choice) => choice.key === "decline") ? (
               <Button
@@ -855,9 +847,7 @@ function RuntimeRequestCard({
                 variant="outline"
                 disabled={!onDecision || submitting}
                 onClick={() => void submit({ action: "decline" })}
-              >
-                Deny
-              </Button>
+              >{interfaceText("m_05a2d7332eb9d8")}</Button>
             ) : null}
             {presentation === "timeline" ? (
               <Button
@@ -866,9 +856,7 @@ function RuntimeRequestCard({
                 variant="outline"
                 disabled={!onDecision || submitting}
                 onClick={() => void submit({ action: "cancel" })}
-              >
-                Cancel
-              </Button>
+              >{interfaceText("m_19766ed6ccb2f4")}</Button>
             ) : null}
           </div>
         </form>
@@ -899,15 +887,13 @@ function RuntimeRequestCard({
                   }
                 }}
               >
-                {submitting ? "Submitting…" : choice.label}
+                {submitting ? interfaceText("m_49195f559e4a9f") : choice.label}
               </Button>
             ))}
         </div>
       ) : null}
       {item.status === "pending" && !onDecision ? (
-        <p className="mt-2 text-xs text-muted-foreground">
-          Resolve this request in the active runtime session.
-        </p>
+        <p className="mt-2 text-xs text-muted-foreground">{interfaceText("m_a855c7a39e5f31")}</p>
       ) : null}
       {error ? (
         <p className="mt-2 text-xs text-destructive" role="alert">
@@ -940,6 +926,7 @@ function ResultCard({
 }: {
   item: Extract<TaskChatProtocolItem, { surface: "run_result" }>;
 }) {
+  useInterfaceLanguage();
   const hasDetails =
     item.verification.length > 0 ||
     item.remainingWork.length > 0 ||
@@ -948,7 +935,7 @@ function ResultCard({
   return (
     <CardShell
       icon={PackageCheck}
-      title="Run result"
+      title={interfaceText("m_916788b6b2b08f")}
       status={item.disposition}
       summary={item.summary}
       testId="task-chat-run-result"
@@ -957,7 +944,7 @@ function ResultCard({
         <div className="flex flex-col gap-3 text-sm">
           {item.blocker ? (
             <div className="rounded-sm bg-muted/50 p-2">
-              <strong>Blocked: {item.blocker.reasonCode}</strong>
+              <strong>{interfaceText("m_760c921c3cb781")}{item.blocker.reasonCode}</strong>
               <p className="mt-1 text-muted-foreground">
                 {item.blocker.unblockAction}
               </p>
@@ -966,7 +953,7 @@ function ResultCard({
           {item.verification.length > 0 ? (
             <ul
               className="flex flex-col gap-1"
-              aria-label="Verification results"
+              aria-label={interfaceText("m_14a01310ac6ab3")}
             >
               {item.verification.map((check, index) => (
                 <li
@@ -996,7 +983,7 @@ function ResultCard({
               {item.remainingWork.map((work, index) => (
                 <li key={`${work.description}:${index}`}>
                   {work.description}
-                  {work.blocksCompletion ? " · blocks completion" : ""}
+                  {work.blocksCompletion ? interfaceText("m_0eced86828bf2d") : ""}
                 </li>
               ))}
             </ul>
@@ -1024,10 +1011,11 @@ function TerminalCard({
 }: {
   item: Extract<TaskChatProtocolItem, { surface: "run_terminal" }>;
 }) {
+  useInterfaceLanguage();
   return (
     <CardShell
       icon={TerminalSquare}
-      title="Run ended"
+      title={interfaceText("m_65ad5d9043739b")}
       status={item.runState}
       summary={[item.disposition.replaceAll("_", " "), item.stopReason]
         .filter(Boolean)

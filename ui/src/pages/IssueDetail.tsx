@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useIssueIdBatches } from "@/hooks/useIssueIdBatches";
 import { useConversationHistoryPages, type ConversationHistoryPage } from "@/hooks/useConversationHistoryPages";
 import { taskChatHashAnchor } from "@/components/task-chat/scroll-navigation";
@@ -415,8 +416,8 @@ function createRunCancelledStatusUpdateError(
 ): StopAndFinalizeRunError {
   const message =
     err instanceof Error
-      ? `Run was stopped, but updating the task failed: ${describeError(err).body}`
-      : "Run was stopped, but updating the task failed. Retry the task status update.";
+      ? interfaceText("m_3fb0aa8bdda5b8", { value0: (describeError(err).body) })
+      : interfaceText("m_dd8c5913e5f02c");
   const error = new Error(message) as StopAndFinalizeRunError;
   error.runCancelledBeforeStatusUpdateFailed = true;
   return error;
@@ -466,9 +467,9 @@ function isPlanConfirmationInteraction(
 function buildPlanDecisionResponseText(
   interaction: RequestConfirmationInteraction,
 ) {
-  if (interaction.status === "accepted") return "Approved plan";
+  if (interaction.status === "accepted") return interfaceText("m_ca676168d46679");
   const reason = interaction.result?.reason?.trim();
-  return reason ? `Requested changes\n\n${reason}` : "Requested changes";
+  return reason ? interfaceText("m_70c99976c37f37", { value0: (reason) }) : interfaceText("m_ff8b3fedc9973b");
 }
 
 const FEEDBACK_TERMS_URL =
@@ -740,18 +741,20 @@ function attributionInitials(name: string): string {
 }
 
 function AttributionAvatar({
-  label,
+  kind,
   actor,
   via,
 }: {
-  label: "Assignee" | "Originating";
+  kind: "assignee" | "originating";
   actor: AttributionActor;
   via?: string | null;
 }) {
+  useInterfaceLanguage();
+  const displayLabel = kind === "assignee" ? interfaceText("m_5e20d20e3978dc") : interfaceText("m_28d9df90dd1d4d");
   const accessibleLabel = via
-    ? `${label}: ${actor.name} · via ${via}`
-    : `${label}: ${actor.name}`;
-  const testIdLabel = label.toLowerCase();
+    ? `${displayLabel}: ${actor.name} · ${interfaceText("m_c1035a0b39a76d")}${via}`
+    : `${displayLabel}: ${actor.name}`;
+  const testIdLabel = kind;
 
   return (
     <Tooltip>
@@ -778,14 +781,13 @@ function AttributionAvatar({
           )}
           <div className="min-w-0">
             <div className="text-(length:--text-nano) font-medium uppercase leading-none text-background/70">
-              {label}
+              {displayLabel}
             </div>
             <div className="max-w-48 truncate text-xs font-medium leading-4 text-background">
               {actor.name}
             </div>
             {via ? (
-              <div className="max-w-48 truncate text-(length:--text-nano) leading-3 text-background/60">
-                via {via}
+              <div className="max-w-48 truncate text-(length:--text-nano) leading-3 text-background/60">{interfaceText("m_c1035a0b39a76d")}{via}
               </div>
             ) : null}
           </div>
@@ -809,6 +811,7 @@ function IssueAttributionByline({
   >;
   userLabelMap: ReadonlyMap<string, string>;
 }) {
+  useInterfaceLanguage();
   const assignee: AttributionActor | null = issue.assigneeAgentId
     ? {
         kind: "agent",
@@ -861,15 +864,15 @@ function IssueAttributionByline({
     <TooltipProvider>
       <AvatarGroup
         className="-space-x-1.5"
-        aria-label="Task people"
+        aria-label={interfaceText("m_46ac7b2e5fe9a6")}
         data-testid="issue-attribution-avatar-stack"
       >
         {assignee ? (
-          <AttributionAvatar label="Assignee" actor={assignee} />
+          <AttributionAvatar kind="assignee" actor={assignee} />
         ) : null}
         {originator ? (
           <AttributionAvatar
-            label="Originating"
+            kind="originating"
             actor={originator}
             via={originatorVia}
           />
@@ -1006,6 +1009,7 @@ export function IssueDetailLoadingState({
   headerSeed: ReturnType<typeof readIssueDetailHeaderSeed>;
   titleEditor?: React.ReactNode;
 }) {
+  useInterfaceLanguage();
   const identifier =
     headerSeed?.identifier ?? headerSeed?.id.slice(0, 8) ?? null;
   const { taskChatShellEnabled } = useTaskDetailInterfaceMode();
@@ -1042,11 +1046,9 @@ export function IssueDetailLoadingState({
                 <Badge
                   variant="outline"
                   className="border-violet-500/30 bg-violet-500/10 text-(length:--text-nano) text-violet-600 dark:text-violet-400"
-                  title={`Routine execution from routine ${headerSeed.originId}`}
+                  title={interfaceText("m_c55fe8515f7d35", { value0: (headerSeed.originId) })}
                 >
-                  <Repeat className="h-3 w-3" />
-                  Routine
-                </Badge>
+                  <Repeat className="h-3 w-3" />{interfaceText("m_0b5baf309897ec")}</Badge>
               ) : null}
               {/* Seeded header — same anatomy as the resolved one below, so the
                   eyebrow does not change shape when the real issue arrives. */}
@@ -1059,9 +1061,7 @@ export function IssueDetailLoadingState({
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 text-xs text-muted-foreground opacity-50 px-1 -mx-1 py-0.5">
-                  <ProjectTile size="xs" />
-                  No project
-                </span>
+                  <ProjectTile size="xs" />{interfaceText("m_f34c2be0d1c5f5")}</span>
               )}
             </>
           ) : (
@@ -1142,6 +1142,7 @@ function InboxMobileToolbar({
   onProperties,
   onHide,
 }: InboxMobileToolbarProps) {
+  useInterfaceLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -1160,7 +1161,7 @@ function InboxMobileToolbar({
             navigate(backHref);
           }
         }}
-        aria-label="Back to inbox"
+        aria-label={interfaceText("m_97555c45940cc4")}
       >
         <ArrowLeft className="h-5 w-5" />
       </Button>
@@ -1172,7 +1173,7 @@ function InboxMobileToolbar({
             size="icon-sm"
             onClick={onArchive}
             disabled={archivePending}
-            aria-label="Archive from inbox"
+            aria-label={interfaceText("m_67c88421778ecd")}
           >
             <Archive className="h-5 w-5" />
           </Button>
@@ -1180,7 +1181,7 @@ function InboxMobileToolbar({
 
         <Popover open={menuOpen} onOpenChange={setMenuOpen}>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon-sm" aria-label="More actions">
+            <Button variant="ghost" size="icon-sm" aria-label={interfaceText("m_f8d46c2570e707")}>
               <MoreVertical className="h-5 w-5" />
             </Button>
           </PopoverTrigger>
@@ -1192,9 +1193,7 @@ function InboxMobileToolbar({
                 setMenuOpen(false);
               }}
             >
-              <Copy className="h-3 w-3" />
-              Copy as markdown
-            </button>
+              <Copy className="h-3 w-3" />{interfaceText("m_fec6709d0f0a77")}</button>
             <button
               className="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-accent/50"
               onClick={() => {
@@ -1202,9 +1201,7 @@ function InboxMobileToolbar({
                 setMenuOpen(false);
               }}
             >
-              <SlidersHorizontal className="h-3 w-3" />
-              Properties
-            </button>
+              <SlidersHorizontal className="h-3 w-3" />{interfaceText("m_ae43692b2a310b")}</button>
             {issueIdProp && (
               <button
                 className="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-accent/50 text-destructive"
@@ -1213,9 +1210,7 @@ function InboxMobileToolbar({
                   setMenuOpen(false);
                 }}
               >
-                <EyeOff className="h-3 w-3" />
-                Hide this task
-              </button>
+                <EyeOff className="h-3 w-3" />{interfaceText("m_429dbcbd26baf3")}</button>
             )}
           </PopoverContent>
         </Popover>
@@ -1507,6 +1502,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
   externalReferences,
   linkCaseReferences,
 }: IssueDetailChatTabProps) {
+  const interfaceLanguage = useInterfaceLanguage();
   // Preserve master's Classic Task Interface seam: Streamlined UI changes the
   // TaskChatThread presentation but never swaps it for IssueChatThread.
   const { classicTaskInterfaceEnabled, streamlinedTaskDetailEnabled } =
@@ -1723,8 +1719,8 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
     onSuccess: (result) => {
       if (!result.runId) {
         pushToast({
-          title: "Retry queued",
-          body: "The exact request will retry when this task is ready.",
+          title: interfaceText("m_06fd42bb076013"),
+          body: interfaceText("m_c6d7f52e5b945a"),
           tone: "success",
         });
       }
@@ -1742,8 +1738,8 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
     },
     onError: (error) => {
       pushToast({
-        title: "Run retry failed",
-        body: error instanceof Error ? error.message : "Unable to retry run",
+        title: interfaceText("m_243efbc1d68c51"),
+        body: error instanceof Error ? error.message : interfaceText("m_537d0b3e655958"),
         tone: "error",
       });
     },
@@ -2568,8 +2564,8 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
               : null;
         if (code === "queued_comment_already_dispatching") {
           pushToast({
-            title: "Message is already being sent",
-            body: "The continuation started before the discard was confirmed, so Paperclip could not unsend it.",
+            title: interfaceText("m_fecf0744dcf1c9"),
+            body: interfaceText("m_be6edcee307807"),
             tone: "error",
             ttlMs: 15_000,
             dedupeKey: `queued-comment-already-dispatching:${issueId}:${commentId}`,
@@ -2586,7 +2582,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
       queryClient,
       refreshQueueAfterConflict,
       storeQueuedCommentQueue,
-    ],
+    interfaceLanguage],
   );
 
   const timelineEvents = useMemo(
@@ -2614,8 +2610,8 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
         onClick={onLoadOlderComments}
       >
         {commentsLoadingOlder
-          ? "Loading earlier comments..."
-          : "Load earlier comments"}
+          ? interfaceText("m_aa9192a11cb5f2")
+          : interfaceText("m_a41f98dd82a150")}
       </Button>
     </div>
   ) : null;
@@ -2650,9 +2646,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
               onExpandHistory: conversationMode ? undefined : onExpandHistory,
               scrollingHistory,
               historyControl: conversationMode ? null : !historyExpanded && (hasEarlierMessages || hasEarlierRuns) ? (
-                <Button type="button" variant="ghost" size="sm" onClick={onExpandHistory}>
-                  More messages
-                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={onExpandHistory}>{interfaceText("m_9b4a407a035424")}</Button>
               ) : null,
             } : {})}
             executionBlocked={executionBlocked}
@@ -2836,7 +2830,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
               tryAgainNoLiveExecutionPathPending
             }
             footer={grokWork || stopGrokWork.error || classicQueuedDeliveryError ? <>
-              {grokWork && <p className="text-xs text-muted-foreground">Runs in Grok Bot · Usage not reported. Stop Paperclip work revokes this session’s authority; remote execution may continue. Open the Grok Bot desktop app to inspect it.</p>}
+              {grokWork && <p className="text-xs text-muted-foreground">{interfaceText("m_735645cf4c4018")}</p>}
               {stopGrokWork.error && <p role="alert" className="text-sm text-destructive">{describeError(stopGrokWork.error).body}</p>}
               {classicQueuedDeliveryError && <p role="status" className="text-sm text-destructive">{classicQueuedDeliveryError}</p>}
               {footer}
@@ -2903,6 +2897,7 @@ function IssueDetailActivityTab({
   handoffFocusSignal = 0,
   externalReferences,
 }: IssueDetailActivityTabProps) {
+  useInterfaceLanguage();
   const { data: activity, isLoading: activityLoading } = useQuery({
     queryKey: queryKeys.issues.activity(issueId),
     queryFn: () => activityApi.forIssue(issueId),
@@ -3035,48 +3030,41 @@ function IssueDetailActivityTab({
     <>
       {shouldShowCostSummary && (
         <div className="mb-3 px-3 py-2 rounded-lg border border-border">
-          <div className="text-sm font-medium text-muted-foreground mb-1">
-            Cost Summary
-          </div>
+          <div className="text-sm font-medium text-muted-foreground mb-1">{interfaceText("m_3ae4392d484097")}</div>
           {!issueCostSummary.hasCost &&
           !issueCostSummary.hasTokens &&
           !hasIssueTreeCost ? (
-            <div className="text-xs text-muted-foreground">
-              No cost data yet.
-            </div>
+            <div className="text-xs text-muted-foreground">{interfaceText("m_b13184a88b1483")}</div>
           ) : (
             <div className="space-y-1 text-xs text-muted-foreground tabular-nums">
               <div className="flex flex-wrap gap-3">
-                <span className="font-medium text-foreground">This task</span>
+                <span className="font-medium text-foreground">{interfaceText("m_4f5b1b5d5083bf")}</span>
                 {issueCostSummary.hasCost ? (
                   <span className="font-medium text-foreground">
                     ${issueCostSummary.cost.toFixed(4)}
                   </span>
                 ) : null}
                 {issueCostSummary.hasTokens ? (
-                  <span>
-                    Tokens {formatTokens(issueCostSummary.totalTokens)}
+                  <span>{interfaceText("m_4c1286c23cb763")}{formatTokens(issueCostSummary.totalTokens)}
                     {issueCostSummary.cached > 0
-                      ? ` (in ${formatTokens(issueCostSummary.input)}, out ${formatTokens(issueCostSummary.output)}, cached ${formatTokens(issueCostSummary.cached)})`
-                      : ` (in ${formatTokens(issueCostSummary.input)}, out ${formatTokens(issueCostSummary.output)})`}
+                      ? interfaceText("m_3712688d5f9130", { value0: (formatTokens(issueCostSummary.input)), value1: (formatTokens(issueCostSummary.output)), value2: (formatTokens(issueCostSummary.cached)) })
+                      : interfaceText("m_487424ee4e5673", { value0: (formatTokens(issueCostSummary.input)), value1: (formatTokens(issueCostSummary.output)) })}
                   </span>
                 ) : null}
                 {issueCostSummary.hasRuntime ? (
-                  <span>
-                    Runtime {formatDurationMs(issueCostSummary.runtimeMs)}
-                    {` (${issueCostSummary.runCount} run${issueCostSummary.runCount === 1 ? "" : "s"})`}
+                  <span>{interfaceText("m_69800e644316bb")}{formatDurationMs(issueCostSummary.runtimeMs)}
+                    {interfaceText("m_9c0aab53c64774", { value0: (issueCostSummary.runCount), value1: (issueCostSummary.runCount === 1 ? "" : interfaceText("m_043a718774c572")) })}
                   </span>
                 ) : null}
                 {!issueCostSummary.hasCost &&
                 !issueCostSummary.hasTokens &&
                 !issueCostSummary.hasRuntime ? (
-                  <span>No direct cost data.</span>
+                  <span>{interfaceText("m_5a04bc3854361a")}</span>
                 ) : null}
               </div>
               {hasIssueTreeCost && issueTreeCostSummary ? (
                 <div className="flex flex-wrap gap-3">
-                  <span className="font-medium text-foreground">
-                    Including sub-tasks{" "}
+                  <span className="font-medium text-foreground">{interfaceText("m_7a7698025216bc")}{" "}
                     {(issueTreeCostSummary.costCents / 100).toLocaleString(
                       undefined,
                       {
@@ -3087,21 +3075,18 @@ function IssueDetailActivityTab({
                       },
                     )}
                   </span>
-                  <span>
-                    Tokens {formatTokens(issueTreeCostTokens)}
+                  <span>{interfaceText("m_4c1286c23cb763")}{formatTokens(issueTreeCostTokens)}
                     {issueTreeCostSummary.cachedInputTokens > 0
-                      ? ` (in ${formatTokens(issueTreeCostSummary.inputTokens)}, out ${formatTokens(issueTreeCostSummary.outputTokens)}, cached ${formatTokens(issueTreeCostSummary.cachedInputTokens)})`
-                      : ` (in ${formatTokens(issueTreeCostSummary.inputTokens)}, out ${formatTokens(issueTreeCostSummary.outputTokens)})`}
+                      ? interfaceText("m_3712688d5f9130", { value0: (formatTokens(issueTreeCostSummary.inputTokens)), value1: (formatTokens(issueTreeCostSummary.outputTokens)), value2: (formatTokens(issueTreeCostSummary.cachedInputTokens)) })
+                      : interfaceText("m_487424ee4e5673", { value0: (formatTokens(issueTreeCostSummary.inputTokens)), value1: (formatTokens(issueTreeCostSummary.outputTokens)) })}
                   </span>
                   {issueTreeCostSummary.runCount > 0 ? (
-                    <span>
-                      Runtime {formatDurationMs(issueTreeCostSummary.runtimeMs)}
-                      {` (${issueTreeCostSummary.runCount} run${issueTreeCostSummary.runCount === 1 ? "" : "s"})`}
+                    <span>{interfaceText("m_69800e644316bb")}{formatDurationMs(issueTreeCostSummary.runtimeMs)}
+                      {interfaceText("m_9c0aab53c64774", { value0: (issueTreeCostSummary.runCount), value1: (issueTreeCostSummary.runCount === 1 ? "" : interfaceText("m_043a718774c572")) })}
                     </span>
                   ) : null}
                   <span>
-                    {issueTreeCostSummary.issueCount} task
-                    {issueTreeCostSummary.issueCount === 1 ? "" : "s"}
+                    {issueTreeCostSummary.issueCount}{interfaceText("m_3e7a7664eec2fc")}{issueTreeCostSummary.issueCount === 1 ? "" : interfaceText("m_043a718774c572")}
                   </span>
                 </div>
               ) : null}
@@ -3237,6 +3222,8 @@ export function IssueDetail({ tasksTab }: { tasksTab?: TaskSidePanelProps["tasks
 export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskSidePanelProps["tasksTab"]; conversation?: {
   agent: Agent; issue: Issue | null; ensureIssue: () => Promise<Issue>;
 } }) {
+  useInterfaceLanguage();
+  const interfaceLanguage = useInterfaceLanguage();
   const { issueId: routeIssueId, companyPrefix } = useParams<{ issueId: string; companyPrefix: string }>();
   const issueId = conversation ? conversation.issue?.id : routeIssueId;
   const [draftWorkMode, setDraftWorkMode] = useState<IssueWorkMode>("standard");
@@ -3648,10 +3635,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const sourceBreadcrumb = useMemo(
     () =>
       readIssueDetailBreadcrumb(issueId, location.state, location.search) ?? {
-        label: "Tasks",
+        label: interfaceText("m_b3a60e61a5233d"),
         href: "/issues",
       },
-    [issueId, location.state, location.search],
+    [issueId, location.state, location.search, interfaceLanguage],
   );
 
   const {
@@ -4211,10 +4198,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       options.push({ id: `agent:${agent.id}`, label: agent.name });
     }
     if (currentUserId) {
-      options.push({ id: `user:${currentUserId}`, label: "Me" });
+      options.push({ id: `user:${currentUserId}`, label: interfaceText("m_d30af076b0dc85") });
     }
     return options;
-  }, [agents, companyMembers?.users, currentUserId]);
+  }, [agents, companyMembers?.users, currentUserId, interfaceLanguage]);
 
   const actualAssigneeValue = useMemo(
     () => assigneeValueFromSelection(issue ?? {}),
@@ -4251,7 +4238,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       }),
     [comments, optimisticComments],
   );
-  const breadcrumbTitle = issue?.title ?? issueId ?? "Task";
+  const breadcrumbTitle = issue?.title ?? issueId ?? interfaceText("m_4bc74b21357c6c");
   const breadcrumbIdentifier =
     issue?.identifier ?? issueHeaderSeed?.identifier ?? undefined;
   const breadcrumbStatus = issue?.status;
@@ -4466,7 +4453,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
 
       try {
         await issuesApi.unarchiveFromInbox(id);
-        pushToast({ title: "Task restored to inbox", tone: "success" });
+        pushToast({ title: interfaceText("m_a17ff0d06b96ce"), tone: "success" });
       } catch (error) {
         if (companyId) {
           beginLocalInboxArchive(companyId, id);
@@ -4474,11 +4461,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           boundLocalInboxArchive(companyId, id);
         }
         pushToast({
-          title: "Undo failed",
+          title: interfaceText("m_c7abe568e96298"),
           body:
             error instanceof Error
               ? error.message
-              : "Unable to restore this task to the inbox",
+              : interfaceText("m_1e695f751cda55"),
           tone: "error",
         });
       } finally {
@@ -4487,7 +4474,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         }
       }
     },
-    [pushToast, queryClient],
+    [pushToast, queryClient, interfaceLanguage],
   );
   const upsertInteractionInCache = useCallback(
     (interaction: IssueThreadInteraction) => {
@@ -4607,11 +4594,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Recovery resolution failed",
+        title: interfaceText("m_f9244c725b820b"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to resolve recovery action",
+            : interfaceText("m_98c80218bddf2c"),
         tone: "error",
       });
     },
@@ -4821,8 +4808,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       pushToast({
         title:
           status === "done"
-            ? "Run stopped and task done"
-            : "Run stopped and task cancelled",
+            ? interfaceText("m_6116129545c3c0")
+            : interfaceText("m_18448b85874afb"),
         tone: "success",
       });
     },
@@ -4830,10 +4817,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       const runWasStopped = didRunCancelBeforeStatusUpdateFail(err);
       pushToast({
         title: runWasStopped
-          ? "Run stopped; task update failed"
+          ? interfaceText("m_5d6ff3151f4629")
           : status === "done"
-            ? "Stop and done failed"
-            : "Stop and cancel failed",
+            ? interfaceText("m_2f4e24e9f7ae0d")
+            : interfaceText("m_3b957b736d2357"),
         body:
           err instanceof Error
             ? err.message
@@ -4875,11 +4862,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Task update failed",
+        title: interfaceText("m_c182c1dba44b61"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to save sub-task changes",
+            : interfaceText("m_dfc9e1406a8afa"),
         tone: "error",
       });
     },
@@ -4966,17 +4953,17 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueRunState();
       invalidateIssueCollections();
       pushToast({
-        title: "Monitor check queued",
+        title: interfaceText("m_9cbc908e0226c5"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Monitor check failed",
+        title: interfaceText("m_bcd59e0aa70f37"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to trigger the monitor right now",
+            : interfaceText("m_a241d6bc95c79a"),
         tone: "error",
       });
     },
@@ -5015,8 +5002,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       pushToast({
         title:
           variables.action === "approve"
-            ? "Approval approved"
-            : "Approval rejected",
+            ? interfaceText("m_013f5619222bfc")
+            : interfaceText("m_64b0e7abe9cde1"),
         tone: "success",
       });
     },
@@ -5024,8 +5011,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       pushToast({
         title:
           variables.action === "approve"
-            ? "Approval failed"
-            : "Rejection failed",
+            ? interfaceText("m_8246891f03714c")
+            : interfaceText("m_a21eed92b03fbb"),
         body: err instanceof Error ? err.message : "Unable to update approval",
         tone: "error",
       });
@@ -5129,11 +5116,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           return;
         } catch (err) {
           pushToast({
-            title: "Cancel failed",
+            title: interfaceText("m_785ae808af53ec"),
             body:
               err instanceof Error
                 ? err.message
-                : "Unable to cancel the queued comment",
+                : interfaceText("m_297a99394ff808"),
             tone: "error",
           });
         }
@@ -5275,18 +5262,18 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       pushToast({
         title:
           interaction.kind === "request_confirmation"
-            ? "Request confirmed"
+            ? interfaceText("m_469bddd0980a3e")
             : interaction.kind === "request_checkbox_confirmation"
-              ? "Selection confirmed"
+              ? interfaceText("m_b16d1591db3a4c")
               : skippedCount > 0
-                ? `Accepted ${createdCount} draft${createdCount === 1 ? "" : "s"} and skipped ${skippedCount}`
-                : "Suggested tasks accepted",
+                ? interfaceText("m_e9281d55b9b535", { value0: (createdCount), value1: (createdCount === 1 ? "" : interfaceText("m_043a718774c572")), value2: (skippedCount) })
+                : interfaceText("m_1b2ba6ca6b4a55"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Accept failed",
+        title: interfaceText("m_d576f243b24d8d"),
         body: interactionResolutionErrorMessage(err),
         tone: "error",
       });
@@ -5309,13 +5296,13 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         title:
           interaction.kind === "request_confirmation"
             ? buildIssueThreadInteractionSummary(interaction)
-            : "Suggestion rejected",
+            : interfaceText("m_6750d6594fc55d"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Reject failed",
+        title: interfaceText("m_8b1d9fa46b3694"),
         body: interactionResolutionErrorMessage(err),
         tone: "error",
       });
@@ -5335,13 +5322,13 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueDetail();
       invalidateIssueCollections();
       pushToast({
-        title: "Answers submitted",
+        title: interfaceText("m_6908408b544108"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Submit failed",
+        title: interfaceText("m_a8bf099a3d3b93"),
         body: interactionResolutionErrorMessage(err),
         tone: "error",
       });
@@ -5372,16 +5359,16 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           : false;
       pushToast({
         title: complete
-          ? "All verdicts applied"
-          : `Applied ${applied} decision${applied === 1 ? "" : "s"}`,
+          ? interfaceText("m_7cacb3cdfaeb2a")
+          : interfaceText("m_4317ebc4d032ce", { value0: (applied), value1: (applied === 1 ? "" : interfaceText("m_043a718774c572")) }),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Apply failed",
+        title: interfaceText("m_cae4cf5ca2c95e"),
         body:
-          err instanceof Error ? err.message : "Unable to apply the verdicts",
+          err instanceof Error ? err.message : interfaceText("m_c94f1b1e728a1e"),
         tone: "error",
       });
     },
@@ -5398,15 +5385,15 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueDetail();
       invalidateIssueCollections();
       pushToast({
-        title: "Question cancelled",
+        title: interfaceText("m_e8960873b52bc7"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Cancel failed",
+        title: interfaceText("m_785ae808af53ec"),
         body:
-          err instanceof Error ? err.message : "Unable to cancel the question",
+          err instanceof Error ? err.message : interfaceText("m_3f254a42223fab"),
         tone: "error",
       });
     },
@@ -5431,9 +5418,9 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Skip failed",
+        title: interfaceText("m_491e45ae86076b"),
         body:
-          err instanceof Error ? err.message : "Unable to skip this request",
+          err instanceof Error ? err.message : interfaceText("m_685f7684f3860a"),
         tone: "error",
       });
     },
@@ -5555,11 +5542,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           return;
         } catch (err) {
           pushToast({
-            title: "Cancel failed",
+            title: interfaceText("m_785ae808af53ec"),
             body:
               err instanceof Error
                 ? err.message
-                : "Unable to cancel the queued comment",
+                : interfaceText("m_297a99394ff808"),
             tone: "error",
           });
         }
@@ -5671,18 +5658,18 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueThreadLazily();
       invalidateIssueCollections();
       pushToast({
-        title: "Queued comment canceled",
-        body: "The queued message was restored to the composer.",
+        title: interfaceText("m_33606e66b464ec"),
+        body: interfaceText("m_4b52deb060a521"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Cancel failed",
+        title: interfaceText("m_785ae808af53ec"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to cancel the queued comment",
+            : interfaceText("m_297a99394ff808"),
         tone: "error",
       });
     },
@@ -5699,16 +5686,16 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueCollections();
       invalidateIssueDocumentAnnotationState();
       pushToast({
-        title: "Comment deleted",
-        body: "The thread now shows a deleted-comment marker.",
+        title: interfaceText("m_7199a134a33912"),
+        body: interfaceText("m_c345076a67ec2e"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Delete failed",
+        title: interfaceText("m_8727e2ba364c2c"),
         body:
-          err instanceof Error ? err.message : "Unable to delete the comment",
+          err instanceof Error ? err.message : interfaceText("m_9c42969f5cf9e4"),
         tone: "error",
       });
     },
@@ -5727,8 +5714,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         if (cancelledCommentBody) {
           restoreQueuedCommentDraft(cancelledCommentBody);
           pushToast({
-            title: "Queued comment canceled",
-            body: "The queued message was restored to the composer.",
+            title: interfaceText("m_33606e66b464ec"),
+            body: interfaceText("m_4b52deb060a521"),
             tone: "success",
           });
         }
@@ -5737,7 +5724,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
 
       void cancelQueuedComment.mutateAsync({ commentId });
     },
-    [cancelQueuedComment, restoreQueuedCommentDraft, pushToast],
+    [cancelQueuedComment, restoreQueuedCommentDraft, pushToast, interfaceLanguage],
   );
 
   const feedbackVoteMutation = useMutation({
@@ -5791,11 +5778,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         title:
           variables.sharingPreferenceAtSubmit === "prompt"
             ? variables.allowSharing
-              ? "Feedback saved. Future votes will share"
-              : "Feedback saved. Future votes will stay local"
+              ? interfaceText("m_510bbe8f61127a")
+              : interfaceText("m_1fc74647e16293")
             : variables.allowSharing
-              ? "Feedback saved and sharing enabled"
-              : "Feedback saved",
+              ? interfaceText("m_3ef000edf98f1b")
+              : interfaceText("m_e812e0b80090d9"),
         tone: "success",
       });
     },
@@ -5807,8 +5794,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         );
       }
       pushToast({
-        title: "Failed to save feedback",
-        body: err instanceof Error ? err.message : "Unknown error",
+        title: interfaceText("m_ad0dfc664cec55"),
+        body: err instanceof Error ? err.message : interfaceText("m_27c2ccd962c2b8"),
         tone: "error",
       });
     },
@@ -5912,10 +5899,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         { replace: true },
       );
       pushToast({
-        title: "Task archived from inbox",
+        title: interfaceText("m_ca9374d16da7e4"),
         tone: "success",
         action: {
-          label: "Undo",
+          label: interfaceText("m_a8283ade31856f"),
           onClick: () => {
             void undoInboxArchive(
               id,
@@ -5932,11 +5919,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         restoreIssueToInboxCaches(queryClient, context.previousData, id);
       }
       pushToast({
-        title: "Archive failed",
+        title: interfaceText("m_a0d5f584981a8b"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to archive this task from the inbox",
+            : interfaceText("m_86bc2d32925b6a"),
         tone: "error",
       });
     },
@@ -5963,7 +5950,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         label: conversationAgent.name,
         leading: <AgentAvatar agent={conversationAgent} size={24} />,
         leadingKey: `agent:${conversationAgent.id}:${JSON.stringify(conversationAgent.appearance)}`,
-        trailing: coordinatorWorkspaceEnabled ? <CoordinatorAgentSwitcher agent={conversationAgent} /> : <Button variant="ghost" size="icon-xs" asChild aria-label={`Configure ${conversationAgent.name}`}><Link to={agentDetailHref(conversationAgent.id, "runtime")}><ChatSettings /></Link></Button>,
+        trailing: coordinatorWorkspaceEnabled ? <CoordinatorAgentSwitcher agent={conversationAgent} /> : <Button variant="ghost" size="icon-xs" asChild aria-label={interfaceText("m_6698cf14c2e4dc", { value0: (conversationAgent.name) })}><Link to={agentDetailHref(conversationAgent.id, "runtime")}><ChatSettings /></Link></Button>,
         trailingKey: `${coordinatorWorkspaceEnabled ? "switch" : "configure"}:${conversationAgent.id}`,
       }]);
       return;
@@ -5990,7 +5977,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     sourceBreadcrumb.label,
     breadcrumbStatusLeading,
     breadcrumbStatusKey,
-  ]);
+  interfaceLanguage]);
 
   useEffect(() => {
     if (!streamlinedTaskDetailEnabled || !taskChatShellEnabled || !issue?.id) {
@@ -6698,15 +6685,15 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     try {
       await copyTextToClipboard(md);
       setCopied(true);
-      pushToast({ title: "Copied to clipboard", tone: "success" });
+      pushToast({ title: interfaceText("m_d37078fe6a1faa"), tone: "success" });
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       pushToast({
-        title: "Copy failed",
+        title: interfaceText("m_5b50e7a693fee9"),
         body:
           error instanceof Error
             ? error.message
-            : "Unable to copy task markdown",
+            : interfaceText("m_57705a28247b64"),
         tone: "error",
       });
     }
@@ -6903,7 +6890,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     () => [
       {
         id: "cancel",
-        label: "Stop and cancel",
+        label: interfaceText("m_d1fcb8822c6fd3"),
         pendingLabel: "Stopping and cancelling...",
         isPending:
           stopAndFinalizeRun.isPending &&
@@ -6917,7 +6904,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       },
       {
         id: "done",
-        label: "Stop and done",
+        label: interfaceText("m_787e84f68bb49d"),
         pendingLabel: "Stopping and marking done...",
         isPending:
           stopAndFinalizeRun.isPending &&
@@ -6934,7 +6921,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       stopAndFinalizeRun.isPending,
       stopAndFinalizeRun.mutateAsync,
       stopAndFinalizeRun.variables?.status,
-    ],
+    interfaceLanguage],
   );
   const handleAcceptInteraction = useCallback(
     async (
@@ -7109,7 +7096,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       request: import("../components/IssueRecoveryActionCard").RecoveryReissueRequest,
     ) => {
       if (!issue) throw new Error("Task is not loaded yet.");
-      const sourceLabel = issue.identifier ?? "the stalled task";
+      const sourceLabel = issue.identifier ?? interfaceText("m_701f1d79cdc054");
       const descriptionLines = [
         `Re-issued from ${sourceLabel} on an isolated git worktree after a workspace branch divergence.`,
         "",
@@ -7143,10 +7130,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     onSuccess: (created) => {
       invalidateIssueCollections();
       pushToast({
-        title: "Isolated re-issue created",
+        title: interfaceText("m_6d11286299c745"),
         body: created.identifier
-          ? `${created.identifier} will run on a fresh isolated workspace.`
-          : "A fresh isolated re-issue was created.",
+          ? interfaceText("m_d95a0eb1160cad", { value0: (created.identifier) })
+          : interfaceText("m_f8e1a20e81a862"),
         tone: "success",
       });
       if (created.identifier) {
@@ -7155,11 +7142,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Re-issue failed",
+        title: interfaceText("m_d2f4dc96997e51"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to create an isolated re-issue.",
+            : interfaceText("m_36df82b6e5ee2e"),
         tone: "error",
       });
     },
@@ -7212,11 +7199,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Reconcile failed",
+        title: interfaceText("m_45e781836d8737"),
         body:
           err instanceof Error
             ? err.message
-            : "Unable to reconcile the workspace branch.",
+            : interfaceText("m_f5dd81121d3443"),
         tone: "error",
       });
     },
@@ -7234,8 +7221,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const handleReconcileForwardRecoveryAction = useCallback(() => {
     if (!reconcileExecutionWorkspaceId) {
       pushToast({
-        title: "Reconcile failed",
-        body: "This task has no execution workspace to reconcile.",
+        title: interfaceText("m_45e781836d8737"),
+        body: interfaceText("m_7df2a6252dc409"),
         tone: "error",
       });
       return;
@@ -7248,13 +7235,13 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     reconcileExecutionWorkspaceId,
     reconcileRecoveryAction.mutateAsync,
     pushToast,
-  ]);
+  interfaceLanguage]);
   const handleBreakGlassOverrideRecoveryAction = useCallback(
     (reason: string) => {
       if (!reconcileExecutionWorkspaceId) {
         pushToast({
-          title: "Reconcile failed",
-          body: "This task has no execution workspace to reconcile.",
+          title: interfaceText("m_45e781836d8737"),
+          body: interfaceText("m_7df2a6252dc409"),
           tone: "error",
         });
         return;
@@ -7269,15 +7256,15 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       reconcileExecutionWorkspaceId,
       reconcileRecoveryAction.mutateAsync,
       pushToast,
-    ],
+    interfaceLanguage],
   );
   // Repair action (workspace_validation, dirty divergence): quarantine the dirty worktree onto a
   // rescue branch and restore the recorded branch. Lossless — no reason required.
   const handleQuarantineRestoreRecoveryAction = useCallback(() => {
     if (!reconcileExecutionWorkspaceId) {
       pushToast({
-        title: "Repair failed",
-        body: "This task has no execution workspace to repair.",
+        title: interfaceText("m_9445b1425fef90"),
+        body: interfaceText("m_562a0ccd4b70be"),
         tone: "error",
       });
       return;
@@ -7290,7 +7277,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     reconcileExecutionWorkspaceId,
     reconcileRecoveryAction.mutateAsync,
     pushToast,
-  ]);
+  interfaceLanguage]);
 
   const treePreviewAffectedIssues = useMemo(
     () =>
@@ -7354,7 +7341,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         <QueryErrorState
           size="page"
           error={pageError}
-          action="load this task"
+          action={interfaceText("m_52f2c203f5d34e")}
           onRetry={coreIssueQuery.error ? coreIssueView.retry : issueView.retry}
           retrying={issueView.isFetching || coreIssueView.isFetching}
         />
@@ -7495,11 +7482,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       >
         <Paperclip className="h-3.5 w-3.5 mr-1.5" />
         {uploadAttachment.isPending || importMarkdownDocument.isPending ? (
-          "Uploading..."
+          interfaceText("m_72cb29c90ccd83")
         ) : (
           <>
-            <span className="hidden sm:inline">Upload attachment</span>
-            <span className="sm:hidden">Upload</span>
+            <span className="hidden sm:inline">{interfaceText("m_dacea186cf5b68")}</span>
+            <span className="sm:hidden">{interfaceText("m_865e89de78d94c")}</span>
           </>
         )}
       </Button>
@@ -7649,31 +7636,25 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500" />
-            </span>
-            Live
-          </Badge>
+            </span>{interfaceText("m_b64ac05f17e64d")}</Badge>
         )}
 
         {issue.originKind === "routine_execution" && issue.originId && (
           <Link
             to={`/routines/${issue.originId}`}
             className="inline-flex items-center gap-1 rounded-full bg-violet-500/10 border border-violet-500/30 px-2 py-0.5 text-(length:--text-nano) font-medium text-violet-600 dark:text-violet-400 shrink-0 hover:bg-violet-500/20 transition-colors"
-            title={`Routine execution from routine ${issue.originId}`}
+            title={interfaceText("m_c55fe8515f7d35", { value0: (issue.originId) })}
           >
-            <Repeat className="h-3 w-3" />
-            Routine
-          </Link>
+            <Repeat className="h-3 w-3" />{interfaceText("m_0b5baf309897ec")}</Link>
         )}
 
         {issue.originKind === "task_watchdog" ? (
           <Badge
             variant="outline"
             className="border-sky-500/40 bg-sky-500/10 text-(length:--text-nano) text-sky-700 dark:text-sky-300"
-            title="This task is a generated watchdog task. It verifies whether stopped work in the watched task tree is legitimate."
+            title={interfaceText("m_2aeca021e90223")}
           >
-            <ScanEye className="h-3 w-3" />
-            Watchdog
-          </Badge>
+            <ScanEye className="h-3 w-3" />{interfaceText("m_da0ccfeab090c5")}</Badge>
         ) : null}
 
         {/* Task Chat Redesign: no mode chip in the header — mode is a
@@ -7692,7 +7673,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                     "text-(length:--text-nano)",
                     workModeMeta.classes.badge,
                   )}
-                  title={`This task is in ${workModeMeta.label.toLowerCase()}.`}
+                  title={interfaceText("m_41d4b7d410202b", { value0: (workModeMeta.label.toLowerCase()) })}
                 >
                   <WorkModeIcon className="h-3 w-3" aria-hidden />
                   {workModeMeta.label}
@@ -7706,11 +7687,9 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
             variant="outline"
             data-testid="issue-detail-parked-blocker"
             className="border-amber-500/60 bg-amber-500/15 text-(length:--text-nano) text-amber-700 dark:text-amber-300"
-            title="Blocked by parked work — at least one assigned blocker is in backlog and will not wake its assignee."
+            title={interfaceText("m_36e80d73a63844")}
           >
-            <Flag className="h-3 w-3" />
-            Blocked by parked work
-          </Badge>
+            <Flag className="h-3 w-3" />{interfaceText("m_8b239473a30cf8")}</Badge>
         ) : null}
 
         {/* Project reads as a tile plus a name, matching the project rows in
@@ -7737,9 +7716,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           </Link>
         ) : (
           <span className="inline-flex items-center gap-1 text-xs text-muted-foreground opacity-50 px-1 -mx-1 py-0.5">
-            <ProjectTile size="xs" />
-            No project
-          </span>
+            <ProjectTile size="xs" />{interfaceText("m_f34c2be0d1c5f5")}</span>
         )}
 
         <IssueAttributionByline
@@ -7779,7 +7756,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={copyIssueToClipboard}
-              title="Copy task as markdown"
+              title={interfaceText("m_a6e95a422aa766")}
             >
               {copied ? (
                 <Check className="h-4 w-4 text-green-500" />
@@ -7791,7 +7768,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={() => setMobilePropsOpen(true)}
-              title="Properties"
+              title={interfaceText("m_ae43692b2a310b")}
             >
               <SlidersHorizontal className="h-4 w-4" />
             </Button>
@@ -7808,8 +7785,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   archiveFromInbox.mutate(issue.id);
               }}
               disabled={archivePending}
-              title="Archive from inbox"
-              aria-label="Archive from inbox"
+              title={interfaceText("m_67c88421778ecd")}
+              aria-label={interfaceText("m_67c88421778ecd")}
             >
               <Archive className="h-4 w-4" />
             </Button>
@@ -7819,8 +7796,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={() => setFileViewerPromptOpen(true)}
-              title="Open file... (g f)"
-              aria-label="Open file in this issue"
+              title={interfaceText("m_ac25d0b74213ed")}
+              aria-label={interfaceText("m_9ac0bbc6936cf6")}
             >
               <FileCode2 className="h-4 w-4" />
             </Button>
@@ -7830,7 +7807,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={copyIssueToClipboard}
-              title="Copy task as markdown"
+              title={interfaceText("m_a6e95a422aa766")}
             >
               {copied ? (
                 <Check className="h-4 w-4 text-green-500" />
@@ -7872,8 +7849,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   variant="ghost"
                   size="icon-xs"
                   className="shrink-0"
-                  aria-label="More task actions"
-                  title="More task actions"
+                  aria-label={interfaceText("m_4fbf1e4ca386da")}
+                  title={interfaceText("m_4fbf1e4ca386da")}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
@@ -7893,9 +7870,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                       setMoreOpen(false);
                     }}
                   >
-                    <ActivityIcon className="h-3 w-3" />
-                    Show task activity
-                  </button>
+                    <ActivityIcon className="h-3 w-3" />{interfaceText("m_ba901d24b7597e")}</button>
                 ) : null}
                 {streamlinedTaskDetailEnabled ? (
                   <>
@@ -7906,9 +7881,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                         setMoreOpen(false);
                       }}
                     >
-                      <Plus className="h-3 w-3" />
-                      Add subtask
-                    </button>
+                      <Plus className="h-3 w-3" />{interfaceText("m_65db0c29ba4fff")}</button>
                     <button
                       className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs hover:bg-accent/50"
                       onClick={() => {
@@ -7920,9 +7893,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                         <Check className="h-3 w-3" />
                       ) : (
                         <Copy className="h-3 w-3" />
-                      )}
-                      Copy as markdown
-                    </button>
+                      )}{interfaceText("m_fec6709d0f0a77")}</button>
                     {canArchiveFromInbox ? (
                       <button
                         className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs hover:bg-accent/50 disabled:opacity-50"
@@ -7933,9 +7904,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                           setMoreOpen(false);
                         }}
                       >
-                        <Archive className="h-3 w-3" />
-                        Archive from inbox
-                      </button>
+                        <Archive className="h-3 w-3" />{interfaceText("m_67c88421778ecd")}</button>
                     ) : null}
                   </>
                 ) : null}
@@ -7992,9 +7961,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                     setMoreOpen(false);
                   }}
                 >
-                  <EyeOff className="h-3 w-3" />
-                  Hide this task
-                </button>
+                  <EyeOff className="h-3 w-3" />{interfaceText("m_429dbcbd26baf3")}</button>
               </PopoverContent>
             </Popover>
                 )}
@@ -8038,7 +8005,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           draftKey={`issue:${issue.id}:description`}
           as="p"
           className="text-sm leading-7 text-foreground"
-          placeholder="Add a description..."
+          placeholder={interfaceText("m_eed0f05bd94207")}
           multiline
           foldable
           mentions={mentionOptions}
@@ -8132,9 +8099,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           }
         >
           {error && coreIssueQuery.data && !isTransientError(error) ? (
-            <div role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
-              Some task details could not be loaded.
-              <Button type="button" variant="ghost" size="sm" onClick={() => void refetchIssueDetail()}>Retry</Button>
+            <div role="status" className="flex items-center gap-2 text-sm text-muted-foreground">{interfaceText("m_74ed90b0cab6c9")}<Button type="button" variant="ghost" size="sm" onClick={() => void refetchIssueDetail()}>{interfaceText("m_942087cc2d41e0")}</Button>
             </div>
           ) : null}
           {/* Parent chain breadcrumb (redesign: rendered inside the thread viewport) */}
@@ -8164,7 +8129,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           )}
 
           {issue.status === "in_review" && issue.externalConversationState === "waiting" && (
-            <p role="status" className="text-sm text-muted-foreground">Reply sent. Send a message to continue.</p>
+            <p role="status" className="text-sm text-muted-foreground">{interfaceText("m_5b43d3527c9389")}</p>
           )}
 
           {issue.hiddenAt && (
@@ -8175,9 +8140,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                 taskChatShellEnabled && (isMobile ? "mt-4" : "mt-3"),
               )}
             >
-              <EyeOff className="h-4 w-4 shrink-0" />
-              This task is hidden
-            </div>
+              <EyeOff className="h-4 w-4 shrink-0" />{interfaceText("m_99c389715b813c")}</div>
           )}
           {treeControlWakeWarning ? (
             <p
@@ -8206,9 +8169,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           {taskChatShellEnabled ? null : showRichSubIssuesSection ? (
             <div className="space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Sub-tasks
-                </h3>
+                <h3 className="text-sm font-medium text-muted-foreground">{interfaceText("m_ede4f8886e7d35")}</h3>
               </div>
               <IssuesList
                 issues={childIssues}
@@ -8245,9 +8206,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                 onClick={openNewSubIssue}
                 className="shrink-0 shadow-none"
               >
-                <Plus className="mr-1.5 h-3.5 w-3.5" />
-                New Sub-task
-              </Button>
+                <Plus className="mr-1.5 h-3.5 w-3.5" />{interfaceText("m_2c89e3345cbe3b")}</Button>
             </div>
           )}
 
@@ -8367,9 +8326,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               return (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Artifacts
-                    </h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{interfaceText("m_314ae71b8c8dc9")}</h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {workProductsWithFileRefs.map(({ product, fileRef }) => (
@@ -8405,17 +8362,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                 className={cn("w-full justify-start gap-1", shellSectionClass)}
               >
                 <TabsTrigger value="chat" className="gap-1.5">
-                  <MessageSquare className="h-3.5 w-3.5" />
-                  Chat
-                </TabsTrigger>
+                  <MessageSquare className="h-3.5 w-3.5" />{interfaceText("m_460b3a7da007b7")}</TabsTrigger>
                 <TabsTrigger value="activity" className="gap-1.5">
-                  <ActivityIcon className="h-3.5 w-3.5" />
-                  Activity
-                </TabsTrigger>
+                  <ActivityIcon className="h-3.5 w-3.5" />{interfaceText("m_38da1505ca8373")}</TabsTrigger>
                 <TabsTrigger value="related-work" className="gap-1.5">
-                  <ListTree className="h-3.5 w-3.5" />
-                  Related work
-                </TabsTrigger>
+                  <ListTree className="h-3.5 w-3.5" />{interfaceText("m_f4f15799295a50")}</TabsTrigger>
                 {issuePluginTabItems.map((item) => (
                   <TabsTrigger key={item.value} value={item.value}>
                     {item.label}
@@ -8476,11 +8427,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   threadHeader={<>{taskChatThreadHeader}<EmailTaskActivity key={issue.id} companyId={issue.companyId} issueId={issue.id} />
                     {(childIssuesError || createdTasksQuery.isError) && (
                       <div role="alert" className="flex items-center gap-2 px-4 text-sm text-destructive">
-                        <span>Could not load created tasks.</span>
+                        <span>{interfaceText("m_ae6d1bf6d36309")}</span>
                         <Button variant="ghost" size="sm" onClick={() => {
                           void refetchChildIssues();
                           void createdTasksQuery.refetch();
-                        }}>Retry</Button>
+                        }}>{interfaceText("m_942087cc2d41e0")}</Button>
                       </div>
                     )}
                   </>}
@@ -8879,7 +8830,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               {taskChatShellEnabled ? (
                 <>
                   <SheetHeader className="sr-only">
-                    <SheetTitle>Task side panel</SheetTitle>
+                    <SheetTitle>{interfaceText("m_08f62aa5fae801")}</SheetTitle>
                   </SheetHeader>
                   <TaskSidePanel
                     documentEditor={taskDocumentEditor}
@@ -8951,7 +8902,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                     <SheetTitle className="text-sm">
                       {documentDeepLink?.documentKey === "plan"
                         ? "Plan"
-                        : "Properties"}
+                        : interfaceText("m_ae43692b2a310b")}
                     </SheetTitle>
                   </SheetHeader>
                   <ScrollArea className="flex-1 overflow-y-auto">

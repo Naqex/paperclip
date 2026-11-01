@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,7 @@ import { BUTTON, BUTTON_HOVER, COUNT_BUTTON, FOCUS, primaryRest, SLAB } from "./
 const FILE_KINDS = new Set<LabArtifact["kind"]>(["pdf", "slides", "sheet", "archive", "code", "file"]);
 
 export function PanelCard({ artifact, section }: { artifact: LabArtifact; section: PanelSection }) {
+  useInterfaceLanguage();
   const [pictureFailed, setPictureFailed] = useState(false);
   const { primary, more } = panelActions(artifact);
   const PrimaryIcon = primary.icon;
@@ -79,7 +81,7 @@ export function PanelCard({ artifact, section }: { artifact: LabArtifact; sectio
             <MetaLine artifact={artifact} wrap />
             {artifact.filename ? <span className={mono}>{artifact.filename}</span> : null}
             {FILE_KINDS.has(artifact.kind) && artifact.contentType ? <span className={mono}>{artifact.contentType}</span> : null}
-            {hasThumbnail(artifact) && pictureFailed ? <span className={mono}>No preview available</span> : null}
+            {hasThumbnail(artifact) && pictureFailed ? <span className={mono}>{interfaceText("m_e5c083cf41ff64")}</span> : null}
           </p>
         </div>
       </div>

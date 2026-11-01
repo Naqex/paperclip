@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { AGGREGATOR_NAMES, aggregatorManagementUrl, isAppAggregator, type AggregatorAppSnapshot, type AggregatorAppsResponse } from "@paperclipai/shared/aggregator-apps";
 import type { CatalogSource } from "./CatalogSourceFilters";
 import { ConnectorsToolbar } from "./ConnectorsToolbar";
@@ -206,26 +207,26 @@ function additionalConnectionHref(
 
 function connectionState(connection: ToolConnection): ConnectionState {
   if (isRetiredComposioConnection(connection)) {
-    return { kind: "attention", label: "Retired", message: RETIRED_COMPOSIO_MESSAGE };
+    return { kind: "attention", label: interfaceText("m_a9f71bc2404c91"), message: RETIRED_COMPOSIO_MESSAGE };
   }
   if (connection.status === "draft") {
     return {
       kind: "draft",
-      label: "Setup incomplete",
+      label: interfaceText("m_167fc0f362b761"),
       message: "Finish setup before agents can use this account.",
     };
   }
   if (connection.enabled === false || connection.status === "disabled") {
     return {
       kind: "paused",
-      label: "Paused",
+      label: interfaceText("m_e159b06187d369"),
       message: "Agents can’t use this account right now.",
     };
   }
   if ((connection.connectionPurpose === "ai" && (connection.healthStatus !== "ok" || aiSubscriptionNeedsIsolatedLogin(connection.config))) || isToolConnectionAttentionHealth(connection.healthStatus)) {
     return {
       kind: "attention",
-      label: "Needs attention",
+      label: interfaceText("m_c1ebc7817870e5"),
       message:
         connection.healthMessage ??
         connection.lastError ??
@@ -234,7 +235,7 @@ function connectionState(connection: ToolConnection): ConnectionState {
           : "Replace the credential to restore access."),
     };
   }
-  return { kind: "connected", label: "Connected", message: null };
+  return { kind: "connected", label: interfaceText("m_22965568d22a14"), message: null };
 }
 
 type UpstreamAppSnapshot = NonNullable<ConnectorRowModel["upstreamApps"]>[number];
@@ -248,11 +249,11 @@ function upstreamAccountState(connection: ToolConnection, snapshot: UpstreamAppS
   const gatewayState = connectionState(connection);
   return gatewayState.kind !== "connected" ? gatewayState
     : snapshot.freshness === "stale" || snapshot.errorAt || Date.now() - new Date(snapshot.checkedAt).getTime() > 5 * 60_000
-      ? { kind: "attention", label: "Not verified", message: "Last known account · Refresh to verify" }
-    : account.status === "UNVERIFIED" ? { kind: "attention", label: "Not verified", message: "Account found upstream · Authorization not verified" }
-    : account.status === "ACTIVE" ? { kind: "connected", label: "Connected", message: null }
-    : account.status === "INITIATED" ? { kind: "draft", label: "Waiting for sign-in", message: "Finish connecting this account." }
-    : { kind: "attention", label: "Needs sign-in", message: "Sign in again to restore access." };
+      ? { kind: "attention", label: interfaceText("m_15133907259330"), message: "Last known account · Refresh to verify" }
+    : account.status === "UNVERIFIED" ? { kind: "attention", label: interfaceText("m_15133907259330"), message: "Account found upstream · Authorization not verified" }
+    : account.status === "ACTIVE" ? { kind: "connected", label: interfaceText("m_22965568d22a14"), message: null }
+    : account.status === "INITIATED" ? { kind: "draft", label: interfaceText("m_749a343a3a25c1"), message: "Finish connecting this account." }
+    : { kind: "attention", label: interfaceText("m_1077f6b6e64aad"), message: "Sign in again to restore access." };
 }
 
 function connectionRank(connection: ToolConnection): number {
@@ -282,8 +283,8 @@ function connectorAction(
   href: string | null;
   title?: string;
 } {
-  if (row.entry?.aiConnectionRouter) return { label: "Add connection pool", href: row.entry.availability?.available === false ? null : connectHrefFor(row.entry), title: row.entry.availability?.reason };
-  if (row.aggregatorApp && isInstalled(row)) return { label: "Manage", href: null };
+  if (row.entry?.aiConnectionRouter) return { label: interfaceText("m_f45fe2287aab96"), href: row.entry.availability?.available === false ? null : connectHrefFor(row.entry), title: row.entry.availability?.reason };
+  if (row.aggregatorApp && isInstalled(row)) return { label: interfaceText("m_5a23444828db65"), href: null };
   const applicationId = row.applications[0]?.id ?? null;
   const chatHref = (row.slug === "agentmail" || chatConnectorsEnabled)
     ? chatConnectHref(
@@ -293,29 +294,29 @@ function connectorAction(
       )
     : null;
   if (row.connections.length > 0 || row.chatEndpoints.length > 0) {
-    if (chatHref) return { label: "Add connection", href: chatHref };
+    if (chatHref) return { label: interfaceText("m_685f88ae3db24e"), href: chatHref };
     if (row.entry && applicationId) {
       return {
-        label: "Add account",
+        label: interfaceText("m_ee7ee5830f0916"),
         href: additionalConnectionHref(row.entry, applicationId),
       };
     }
     return {
-      label: "Add account",
+      label: interfaceText("m_ee7ee5830f0916"),
       href: applicationId ? `/apps/app/${applicationId}/permissions` : null,
     };
   }
 
   if (row.entry?.availability?.available === false) {
     return {
-      label: "Unavailable",
+      label: interfaceText("m_ca184496974204"),
       href: null,
       title:
         row.entry.availability.reason ??
         "This connector is unavailable on this instance.",
     };
   }
-  if (chatHref) return { label: "Connect", href: chatHref };
+  if (chatHref) return { label: interfaceText("m_1a2303ede07493"), href: chatHref };
   // AI accounts share the Connect action across subscription and key methods.
   // Tool connectors retain their capability-specific setup verbs.
   if (row.entry) {
@@ -325,7 +326,7 @@ function connectorAction(
     };
   }
   return {
-    label: "Connect",
+    label: interfaceText("m_1a2303ede07493"),
     href: applicationId ? `/apps/app/${applicationId}/permissions` : null,
   };
 }
@@ -356,6 +357,7 @@ function accountActionHref(
  * account; unconnected providers retain the same catalog setup flows.
  */
 export function Browse({ renderAccountDetails = (connection) => connection.connectionPurpose === "ai" && !aiConnectionRouterPluginKey(connection) ? <ManagedAiConnectionRow connection={connection} /> : null }: { renderAccountDetails?: (connection: ToolConnection) => ReactNode } = {}) {
+  const interfaceLanguage = useInterfaceLanguage();
   const navigate = useNavigate();
   const preselectedChatAgentId =
     typeof window === "undefined"
@@ -384,9 +386,9 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
     useState<ConnectionRemovalTarget | null>(null);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Connectors" }]);
+    setBreadcrumbs([{ label: interfaceText("m_c3d2e79ebdd046") }]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, interfaceLanguage]);
 
   useEffect(() => { setQuery(""); setPage(1); setSource("paperclip"); setExpandedSearch(false); setArcadeToConfigure(null); setAggregatorToConnect(null); setAggregatorToManage(null); setInitialAggregatorProvider(undefined); setConnectionToRemove(null); }, [selectedCompanyId]);
   useEffect(() => {
@@ -489,21 +491,21 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
         queryKey: queryKeys.apps.attention(selectedCompanyId!),
       });
       pushToast({
-        title: "Connection removed",
+        title: interfaceText("m_2d806d0fa1a039"),
         body:
-          target.pool ? "The connections in the pool are kept." : target.kind === "chat"
-            ? `${target.providerName} is disconnected. Existing Paperclip tasks remain available.`
+          target.pool ? interfaceText("m_a5991072630003") : target.kind === "chat"
+            ? interfaceText("m_b927aaadd07a1c", { value0: (target.providerName) })
             : target.remainingConnectionCount > 0
-            ? `${target.providerName} still has ${target.remainingConnectionCount} active ${target.remainingConnectionCount === 1 ? "connection" : "connections"} available to agents.`
-            : `${target.providerName} is no longer available to agents through this connection. Its saved credentials were deleted.`,
+            ? interfaceText("m_4b9e080b64cf14", { value0: (target.providerName), value1: (target.remainingConnectionCount), value2: (target.remainingConnectionCount === 1 ? "connection" : "connections") })
+            : interfaceText("m_35c29b85442d95", { value0: (target.providerName) }),
         tone: "success",
       });
       setConnectionToRemove(null);
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't remove the connection",
-        body: error instanceof Error ? error.message : "Please try again.",
+        title: interfaceText("m_3999fa23e32b62"),
+        body: error instanceof Error ? error.message : interfaceText("m_eea4fb33efd382"),
         tone: "error",
       }),
   });
@@ -517,7 +519,7 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
       // it at submission time: concurrent edits must invalidate this consent.
       setConnectionToRemove({ ...target, accountName: pool.name, poolRevision: pool.revision });
     } catch (error) {
-      pushToast({ title: "Couldn't open the connection pool", body: error instanceof Error ? error.message : "Please try again.", tone: "error" });
+      pushToast({ title: interfaceText("m_8f52ab6e244818"), body: error instanceof Error ? error.message : interfaceText("m_eea4fb33efd382"), tone: "error" });
     }
   }
 
@@ -881,9 +883,7 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
 
   if (!selectedCompanyId) {
     return (
-      <div className="p-6 text-sm text-muted-foreground">
-        Select an organization to manage connectors.
-      </div>
+      <div className="p-6 text-sm text-muted-foreground">{interfaceText("m_85993a68ec7d9a")}</div>
     );
   }
 
@@ -910,10 +910,7 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
           role="alert"
         >
           <AlertTriangle className="h-4 w-4 shrink-0" />
-          <p className="min-w-0 flex-1">
-            Couldn’t load every connector. Existing accounts are shown where
-            available.
-          </p>
+          <p className="min-w-0 flex-1">{interfaceText("m_513ced6583932b")}</p>
           <Button
             type="button"
             size="sm"
@@ -924,27 +921,25 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
               void connectionsQuery.refetch();
               void chatEndpointsQuery.refetch();
             }}
-          >
-            Try again
-          </Button>
+          >{interfaceText("m_d8b8392e2c5429")}</Button>
         </div>
       ) : null}
 
-      {refreshAggregator.isError ? <p role="alert" className="text-sm text-destructive">Couldn’t refresh the gateway. Last known accounts are shown.</p> : null}
+      {refreshAggregator.isError ? <p role="alert" className="text-sm text-destructive">{interfaceText("m_91221fe51ae58a")}</p> : null}
 
       {loading ? (
-        <div className="space-y-3" aria-label="Loading connectors">
+        <div className="space-y-3" aria-label={interfaceText("m_2d1897ee96640b")}>
           {Array.from({ length: 6 }).map((_, index) => (
             <Skeleton key={index} className="h-24 w-full rounded-xl" />
           ))}
         </div>
       ) : nothingMatches ? (
         <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-border bg-card px-4 py-6 text-sm text-muted-foreground">
-          <p className="flex items-center gap-2"><Link2 className="h-4 w-4" />No connectors match “{query.trim()}”.</p>
-          <Button variant="outline" size="sm" onClick={() => changeQuery("")}>Clear search</Button>
+          <p className="flex items-center gap-2"><Link2 className="h-4 w-4" />{interfaceText("m_faad7a56176d18")}{query.trim()}”.</p>
+          <Button variant="outline" size="sm" onClick={() => changeQuery("")}>{interfaceText("m_3b7ea51793e9d9")}</Button>
         </div>
       ) : (
-        <div className="space-y-3" role="list" aria-label="Connector list">
+        <div className="space-y-3" role="list" aria-label={interfaceText("m_3bbef1f6f3df41")}>
           {showAssistantConnection && <AssistantConnectionCard onNavigate={navigate} />}
           {paginatedRows.map((row) => (
             <ConnectorCard
@@ -978,14 +973,14 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
         </div>
       )}
 
-      {accountLoadErrors.length ? <p role="alert" className="text-sm text-destructive">Couldn’t load {Array.from(new Set(accountLoadErrors)).join(" or ")} accounts. Use Refresh in the connection’s menu to try again.</p> : null}
+      {accountLoadErrors.length ? <p role="alert" className="text-sm text-destructive">{interfaceText("m_9c2a58a82f8a99")}{Array.from(new Set(accountLoadErrors)).join(" or ")}{interfaceText("m_90ee3465475f79")}</p> : null}
 
-      {!loading && catalogRows.length > 0 ? <nav aria-label="Connector catalog pages" className="flex flex-wrap items-center justify-between gap-3 text-sm">
-        <p className="text-muted-foreground" role="status">{pageStart + 1}–{Math.min(pageStart + CATALOG_PAGE_SIZE, catalogRows.length)} of {catalogRows.length.toLocaleString()} connectors</p>
+      {!loading && catalogRows.length > 0 ? <nav aria-label={interfaceText("m_a20787a41d26fb")} className="flex flex-wrap items-center justify-between gap-3 text-sm">
+        <p className="text-muted-foreground" role="status">{pageStart + 1}–{Math.min(pageStart + CATALOG_PAGE_SIZE, catalogRows.length)}{interfaceText("m_a4282e4b2298b9")}{catalogRows.length.toLocaleString()}{interfaceText("m_f4347557782b54")}</p>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => { setPage(currentPage - 1); catalogTop.current?.scrollIntoView?.({ block: "start" }); }}>Previous</Button>
-          <span className="text-xs text-muted-foreground">Page {currentPage} of {pageCount}</span>
-          <Button variant="outline" size="sm" disabled={currentPage === pageCount} onClick={() => { setPage(currentPage + 1); catalogTop.current?.scrollIntoView?.({ block: "start" }); }}>Next</Button>
+          <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => { setPage(currentPage - 1); catalogTop.current?.scrollIntoView?.({ block: "start" }); }}>{interfaceText("m_a57b08a480b822")}</Button>
+          <span className="text-xs text-muted-foreground">{interfaceText("m_6076934f99bd42")}{currentPage}{interfaceText("m_a4282e4b2298b9")}{pageCount}</span>
+          <Button variant="outline" size="sm" disabled={currentPage === pageCount} onClick={() => { setPage(currentPage + 1); catalogTop.current?.scrollIntoView?.({ block: "start" }); }}>{interfaceText("m_1ff57a29d7c9d1")}</Button>
         </div>
       </nav> : null}
 
@@ -1006,27 +1001,23 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Remove {connectionToRemove?.accountName ?? "this"} connection?
-            </AlertDialogTitle>
+            <AlertDialogTitle>{interfaceText("m_5948954e3b49be")}{connectionToRemove?.accountName ?? interfaceText("m_1eb79602411ef0")}{interfaceText("m_4849412e36f699")}</AlertDialogTitle>
             <AlertDialogDescription>
-              {connectionToRemove?.pool ? "The connections in this pool are kept." : connectionToRemove && Object.values(AGGREGATOR_NAMES).includes(connectionToRemove.providerName as "Composio")
-                ? `This removes the saved ${connectionToRemove.providerName} connection from Paperclip and agents lose access through it. Your apps and accounts remain connected in ${connectionToRemove.providerName}.`
+              {connectionToRemove?.pool ? interfaceText("m_107725f9bf089e") : connectionToRemove && Object.values(AGGREGATOR_NAMES).includes(connectionToRemove.providerName as "Composio")
+                ? interfaceText("m_cf595ddc2e595c", { value0: (connectionToRemove.providerName), value1: (connectionToRemove.providerName) })
                 : connectionToRemove?.kind === "chat"
-                ? `This connection will stop receiving new work from ${connectionToRemove.providerName}. Existing Paperclip tasks and conversation history remain available. This does not delete the app, bot, or account in ${connectionToRemove.providerName}.`
+                ? interfaceText("m_5480bbe3b64007", { value0: (connectionToRemove.providerName), value1: (connectionToRemove.providerName) })
                 : connectionToRemove &&
                     connectionToRemove.remainingConnectionCount > 0
-                  ? `This connection's saved credentials are deleted and agents lose access through it immediately. They can still use ${connectionToRemove.providerName} through ${connectionToRemove.remainingConnectionCount} other active ${connectionToRemove.remainingConnectionCount === 1 ? "connection" : "connections"}.`
-                  : "The saved credentials are deleted and agents lose access immediately. Connecting it again later requires a new sign-in or key."}
+                  ? interfaceText("m_40f314b230c1fd", { value0: (connectionToRemove.providerName), value1: (connectionToRemove.remainingConnectionCount), value2: (connectionToRemove.remainingConnectionCount === 1 ? "connection" : "connections") })
+                  : interfaceText("m_9c0b82dfa8b4aa")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           {removeConnection.isError ? <p role="alert" className="text-sm text-destructive">
-            {removeConnection.error instanceof Error ? removeConnection.error.message : "Couldn’t remove the connection. Please try again."}
+            {removeConnection.error instanceof Error ? removeConnection.error.message : interfaceText("m_5d1108448b029b")}
           </p> : null}
           <AlertDialogFooter className="sm:justify-between">
-            <AlertDialogCancel disabled={removeConnection.isPending}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={removeConnection.isPending}>{interfaceText("m_19766ed6ccb2f4")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={!connectionToRemove || removeConnection.isPending}
@@ -1041,7 +1032,7 @@ export function Browse({ renderAccountDetails = (connection) => connection.conne
               ) : (
                 <Trash2 />
               )}
-              {removeConnection.isPending ? "Removing…" : "Remove connection"}
+              {removeConnection.isPending ? interfaceText("m_d4b09919ec929f") : interfaceText("m_e9e9e26c6c2f83")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1098,6 +1089,7 @@ export function ConnectorCard({
   defaultExpanded?: boolean;
   searchQuery?: string;
 }) {
+  useInterfaceLanguage();
   // The user's toggle only applies while the default it overrode still holds, so a new search reopens the list.
   const [expandedOverride, setExpandedOverride] = useState<{ open: boolean; defaultExpanded: boolean } | null>(null);
   useEffect(() => {
@@ -1152,7 +1144,7 @@ export function ConnectorCard({
               const providerName = AGGREGATOR_NAMES[route.provider];
               const managedSnapshot = row.upstreamApps?.find(app => (app.provider ?? "composio") === route.provider && app.accounts.length > 0);
               const managed = Boolean(managedSnapshot);
-              const label = `${managed ? "Manage" : "Connect"} ${row.name} through ${providerName}, a third-party service`;
+              const label = interfaceText("m_f45a377de4343d", { value0: (managed ? "Manage" : "Connect"), value1: (row.name), value2: (providerName) });
               return <Tooltip key={route.provider}><TooltipTrigger asChild>
                 <button type="button" aria-label={label} onClick={() => managed ? onManageAggregator?.(row.aggregatorApp!, managedSnapshot?.connectionId) : onConnectAggregator?.(row.aggregatorApp!)} className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   <AppLogo name={providerName} brandKey={route.provider} size={16} compact />
@@ -1161,7 +1153,7 @@ export function ConnectorCard({
             })}
           </div>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            {row.aggregatorApp && row.upstreamApps?.some(app => app.accounts.length > 0) ? `Accounts managed in ${[...new Set(row.upstreamApps?.map(app => AGGREGATOR_NAMES[app.provider ?? "composio"]))].join(" and ")}.` : row.description}
+            {row.aggregatorApp && row.upstreamApps?.some(app => app.accounts.length > 0) ? interfaceText("m_f7e7bc48097de7", { value0: ([...new Set(row.upstreamApps?.map(app => AGGREGATOR_NAMES[app.provider ?? "composio"]))].join(" and ")) }) : row.description}
           </p>
         </div>
         {copilotMethod && <Button
@@ -1169,9 +1161,7 @@ export function ConnectorCard({
           size="sm"
           variant="outline"
           onClick={() => onNavigate(`/apps/connect?source=github&method=${encodeURIComponent(copilotMethod.key)}`)}
-        >
-          Connect Copilot
-        </Button>}
+        >{interfaceText("m_a9cc034bd6c452")}</Button>}
         {setupEnabled && <Button
           type="button"
           size="sm"
@@ -1194,8 +1184,8 @@ export function ConnectorCard({
         {collapsible ? (
           <CollapsibleTrigger className="flex w-full items-center gap-2 border-t border-border px-4 py-3 text-left text-sm text-muted-foreground hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring">
             <ChevronRight className={`h-4 w-4 shrink-0 transition-transform${expanded ? " rotate-90" : ""}`} aria-hidden="true" />
-            <span className="font-medium text-foreground">{connectionCount} connections</span>
-            {attentionCount > 0 ? <span className="text-destructive">· {attentionCount} {attentionCount === 1 ? "needs" : "need"} attention</span> : null}
+            <span className="font-medium text-foreground">{connectionCount}{interfaceText("m_0abb6ba2b89027")}</span>
+            {attentionCount > 0 ? <span className="text-destructive">· {attentionCount} {attentionCount === 1 ? interfaceText("m_266d1c70a4cbe7") : interfaceText("m_be8dff00b0d468")}{interfaceText("m_0e593b3ef7e900")}</span> : null}
           </CollapsibleTrigger>
         ) : null}
         <CollapsibleContent>
@@ -1247,12 +1237,12 @@ export function ConnectorCard({
               const managementUrl = aggregatorManagementUrl(provider, account.managementUrl ?? (typeof connection.config?.managementUrl === "string" ? connection.config?.managementUrl : null));
               const manage = () => onManageAggregator?.(row.upstreamCatalogApp!, connection.id);
               return <ConnectionAccountRowLayout key={`${connection.id}:${snapshot.toolkit}:${account.id}`} state={state} accountName={name}
-                source={<><AppLogo name={providerName} brandKey={provider} size={16} compact /><span>Managed by {providerName} ·</span><button type="button" className="max-w-full truncate hover:underline" onClick={() => onNavigate(`/apps/${connection.id}/permissions`)}>“{connection.name}”</button></>}
+                source={<><AppLogo name={providerName} brandKey={provider} size={16} compact /><span>{interfaceText("m_54b2da24a98f91")}{providerName} ·</span><button type="button" className="max-w-full truncate hover:underline" onClick={() => onNavigate(`/apps/${connection.id}/permissions`)}>“{connection.name}”</button></>}
                 onOpen={manage} openLabel={`Manage ${name}`}>
-                <DropdownMenu><DropdownMenuTrigger asChild><Button type="button" variant="ghost" size="icon-sm" aria-label={`Manage ${name} connection`}><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                <DropdownMenu><DropdownMenuTrigger asChild><Button type="button" variant="ghost" size="icon-sm" aria-label={interfaceText("m_0f8db6a986c239", { value0: (name) })}><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    {managementUrl ? <DropdownMenuItem asChild><a href={managementUrl} target="_blank" rel="noopener noreferrer">Open in {providerName}<ExternalLink className="size-4" /></a></DropdownMenuItem>
-                      : <DropdownMenuItem disabled title="Set the management URL on this gateway to open its console">Open in {providerName}<ExternalLink className="size-4" /></DropdownMenuItem>}
+                    {managementUrl ? <DropdownMenuItem asChild><a href={managementUrl} target="_blank" rel="noopener noreferrer">{interfaceText("m_f1d2860ac73134")}{providerName}<ExternalLink className="size-4" /></a></DropdownMenuItem>
+                      : <DropdownMenuItem disabled title={interfaceText("m_349e0c5753f075")}>{interfaceText("m_f1d2860ac73134")}{providerName}<ExternalLink className="size-4" /></DropdownMenuItem>}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </ConnectionAccountRowLayout>;
@@ -1267,7 +1257,7 @@ export function ConnectorCard({
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     <AgentAvatar agent={chatAgentById?.get(endpoint.assignedAgentId) ?? { id: endpoint.assignedAgentId, name: endpoint.assignedAgentName }}
-                      size={40} label={`${endpoint.assignedAgentName} avatar`} />
+                      size={40} label={interfaceText("m_2a8557470f6faf", { value0: (endpoint.assignedAgentName) })} />
                     <div className="min-w-0">
                       <button
                         type="button"
@@ -1276,12 +1266,12 @@ export function ConnectorCard({
                           onNavigate(`/apps/chat/${endpoint.id}/settings`)
                         }
                       >
-                        {endpoint.assignedAgentName} · {endpoint.provider === "agentmail" ? "Email" : endpoint.provider === "github" ? "Code review bot" : "Chat"}
+                        {endpoint.assignedAgentName} · {endpoint.provider === "agentmail" ? "Email" : endpoint.provider === "github" ? interfaceText("m_d193820cf2162b") : interfaceText("m_460b3a7da007b7")}
                       </button>
                       <p className="truncate text-xs text-muted-foreground">
                         {endpoint.providerAccountLabel ??
                           endpoint.botLabel ??
-                          "Provider identity"}
+                          interfaceText("m_656eefd90b9236")}
                       </p>
                     </div>
                   </div>
@@ -1290,16 +1280,14 @@ export function ConnectorCard({
                       { createdByUserId: (endpoint.connectionId ? connectionById?.get(endpoint.connectionId)?.createdByUserId : null) ?? endpoint.sponsorUserId ?? null }, userProfileById,
                     )} />
                     {["paused", "attention", "revoked"].includes(endpoint.status) && <span className="text-xs text-muted-foreground">
-                      {endpoint.status === "attention" ? "Needs attention" : endpoint.status === "revoked" ? "Access revoked" : "Paused"}
+                      {endpoint.status === "attention" ? interfaceText("m_c1ebc7817870e5") : endpoint.status === "revoked" ? interfaceText("m_42849e0bea5947") : interfaceText("m_e159b06187d369")}
                     </span>}
                     {chatEndpointNeedsSetup(endpoint) ? (
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => onNavigate(`/apps/chat/connect?provider=${endpoint.provider}&purpose=chat&resume=${endpoint.id}`)}
-                      >
-                        Finish setup
-                      </Button>
+                      >{interfaceText("m_bc01ae77f37cf3")}</Button>
                     ) : null}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -1307,15 +1295,13 @@ export function ConnectorCard({
                           type="button"
                           variant="ghost"
                           size="icon-sm"
-                          aria-label={`Manage ${endpoint.assignedAgentName} ${row.name} connection`}
+                          aria-label={interfaceText("m_dcf0ebf9daaefb", { value0: (endpoint.assignedAgentName), value1: (row.name) })}
                         >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onSelect={() => onNavigate(`/apps/chat/${endpoint.id}/settings`)}>
-                          Manage
-                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => onNavigate(`/apps/chat/${endpoint.id}/settings`)}>{interfaceText("m_5a23444828db65")}</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           variant="destructive"
@@ -1328,9 +1314,7 @@ export function ConnectorCard({
                             remainingConnectionCount: 0,
                           })}
                         >
-                          <Trash2 />
-                          Remove connection
-                        </DropdownMenuItem>
+                          <Trash2 />{interfaceText("m_e9e9e26c6c2f83")}</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -1371,6 +1355,7 @@ function ConnectionAccountRow({
   onConfigureExecutor?: () => void;
   setupEnabled?: boolean;
 }) {
+  useInterfaceLanguage();
   const state = connectionState(connection);
   const actionHref = accountActionHref(row, connection);
   const accountName = connectionDisplayNameForOwner(
@@ -1391,9 +1376,9 @@ function ConnectionAccountRow({
           >
             {state.kind === "attention"
               ? connection.requiresReauthorization === false
-                ? "Retry access"
-                : "Reconnect"
-              : "Finish setup"}
+                ? interfaceText("m_e5222230e095f6")
+                : interfaceText("m_bf8a9eab9e7e14")
+              : interfaceText("m_bc01ae77f37cf3")}
           </Button>
         ) : null}
         <DropdownMenu>
@@ -1402,7 +1387,7 @@ function ConnectionAccountRow({
               type="button"
               variant="ghost"
               size="icon-sm"
-              aria-label={`Manage ${accountName} connection`}
+              aria-label={interfaceText("m_0f8db6a986c239", { value0: (accountName) })}
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -1410,20 +1395,15 @@ function ConnectionAccountRow({
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onSelect={() => onNavigate(`/apps/${connection.id}/permissions`)}
-            >
-              Permissions
-            </DropdownMenuItem>
+            >{interfaceText("m_abccc78cc93c07")}</DropdownMenuItem>
             {onRefreshComposio ? <DropdownMenuItem disabled={refreshingComposio} onSelect={onRefreshComposio}>
-              {refreshingComposio ? <Loader2 className="animate-spin" /> : null}
-              Refresh {isAppAggregator(row.slug) ? AGGREGATOR_NAMES[row.slug] : "Composio"}
+              {refreshingComposio ? <Loader2 className="animate-spin" /> : null}{interfaceText("m_6230f7a0536bde")}{isAppAggregator(row.slug) ? AGGREGATOR_NAMES[row.slug] : "Composio"}
             </DropdownMenuItem> : null}
-            {row.slug === "arcade" && onConfigureArcade ? <DropdownMenuItem onSelect={onConfigureArcade}>{discovery?.discovery.availability === "setup_required" ? "Set up account sync" : "Account sync settings"}</DropdownMenuItem> : null}
-            {row.slug === "executor" && onConfigureExecutor ? <DropdownMenuItem onSelect={onConfigureExecutor}>Console URL</DropdownMenuItem> : null}
+            {row.slug === "arcade" && onConfigureArcade ? <DropdownMenuItem onSelect={onConfigureArcade}>{discovery?.discovery.availability === "setup_required" ? interfaceText("m_a621e051741148") : interfaceText("m_31edd4270168b0")}</DropdownMenuItem> : null}
+            {row.slug === "executor" && onConfigureExecutor ? <DropdownMenuItem onSelect={onConfigureExecutor}>{interfaceText("m_2550c53b32a5a0")}</DropdownMenuItem> : null}
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onSelect={onRemove}>
-              <Trash2 />
-              Remove connection
-            </DropdownMenuItem>
+              <Trash2 />{interfaceText("m_e9e9e26c6c2f83")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
     </ConnectionAccountRowLayout>
@@ -1517,6 +1497,7 @@ function CustomConnectorCard({
 }: {
   onNavigate: (href: string) => void;
 }) {
+  useInterfaceLanguage();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -1530,12 +1511,8 @@ function CustomConnectorCard({
           <Link2 className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-semibold text-foreground">
-            Connect your own tool
-          </h2>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Add a custom MCP server or paste an existing configuration.
-          </p>
+          <h2 className="text-sm font-semibold text-foreground">{interfaceText("m_89af50f9090840")}</h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">{interfaceText("m_b1e889797ceef5")}</p>
         </div>
         <Button
           type="button"
@@ -1545,7 +1522,7 @@ function CustomConnectorCard({
           aria-controls="custom-connector-options"
           onClick={() => setExpanded((open) => !open)}
         >
-          {expanded ? "Close" : "Connect"}
+          {expanded ? interfaceText("m_7d9eb7acb13e24") : interfaceText("m_1a2303ede07493")}
         </Button>
       </div>
 
@@ -1556,14 +1533,14 @@ function CustomConnectorCard({
         >
           <CustomConnectorOption
             icon={ServerCog}
-            title="Connect your own MCP server"
-            description="Enter the URL for a custom or self-hosted MCP server."
+            title={interfaceText("m_abb2409de6f9cc")}
+            description={interfaceText("m_a5d7497c1aedaf")}
             onClick={() => onNavigate("/apps/byo")}
           />
           <CustomConnectorOption
             icon={ClipboardPaste}
-            title="Paste a config"
-            description="Paste an existing setup snippet and connect it."
+            title={interfaceText("m_27261473ca2777")}
+            description={interfaceText("m_3c42052adf055e")}
             onClick={() => onNavigate("/apps/advanced/paste-config")}
           />
         </div>

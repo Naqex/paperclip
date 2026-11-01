@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { ActivityEvent } from "@paperclipai/shared";
 import { Plus, Minus } from "lucide-react";
 import { IssueReferencePill } from "./IssueReferencePill";
@@ -51,6 +52,7 @@ function Section({
 }
 
 export function IssueReferenceActivitySummary({ event }: { event: Pick<ActivityEvent, "details"> }) {
+  useInterfaceLanguage();
   const added = readIssueReferences(event.details, "addedReferencedIssues");
   const removed = readIssueReferences(event.details, "removedReferencedIssues");
   if (added.length === 0 && removed.length === 0) return null;
@@ -58,12 +60,12 @@ export function IssueReferenceActivitySummary({ event }: { event: Pick<ActivityE
   return (
     <div className="mt-2 space-y-1">
       <Section
-        label="Added references"
+        label={interfaceText("m_add693ab1d659a")}
         icon={<Plus className="h-3 w-3 text-green-600 dark:text-green-400" aria-hidden="true" />}
         items={added}
       />
       <Section
-        label="Removed references"
+        label={interfaceText("m_2a89fc590d3098")}
         icon={<Minus className="h-3 w-3 text-red-600 dark:text-red-400" aria-hidden="true" />}
         items={removed}
         strikethrough

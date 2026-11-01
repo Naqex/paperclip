@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import { legacyIssueThreadInteractionResolverPolicyAlias } from "@paperclipai/shared";
 import type { LiveRunForIssue } from "../api/heartbeats";
 import type {
@@ -184,12 +185,12 @@ function createAskUserQuestionsInteraction(
           options: [
             {
               id: "visible-root",
-              label: "Only collapse hidden descendants",
+              label: interfaceText("m_7c97c4cd6c011d"),
               description: "Keep top-level and visible child tasks expanded.",
             },
             {
               id: "collapse-all",
-              label: "Collapse all descendants by default",
+              label: interfaceText("m_ea06fc1b7fc9a8"),
               description: "Show only root tasks until the operator expands the tree.",
             },
           ],
@@ -203,17 +204,17 @@ function createAskUserQuestionsInteraction(
           options: [
             {
               id: "answers-inline",
-              label: "Inline answer pills",
+              label: interfaceText("m_de5e457f63479d"),
               description: "Keep the exact operator choices visible under each question.",
             },
             {
               id: "summary-note",
-              label: "Short markdown summary",
+              label: interfaceText("m_6b6cdce178bd65"),
               description: "Add a compact narrative summary at the bottom of the card.",
             },
             {
               id: "resolver-meta",
-              label: "Resolver metadata",
+              label: interfaceText("m_4fdfe913777ad6"),
               description: "Show who answered and when without opening the raw thread.",
             },
           ],
@@ -298,22 +299,22 @@ function createRequestCheckboxConfirmationInteraction(
       options: [
         {
           id: "draft-march-report",
-          label: "Old draft report",
+          label: interfaceText("m_59671064ed3464"),
           description: "Created by QA during the March test pass.",
         },
         {
           id: "draft-spec-v1",
-          label: "Spec v1 (superseded)",
+          label: interfaceText("m_21ebb51fe04b34"),
           description: "Replaced by the approved v2 specification.",
         },
         {
           id: "draft-scratch-notes",
-          label: "Scratch notes",
+          label: interfaceText("m_891db4ec5d7946"),
           description: "Unstructured notes from the kickoff call.",
         },
         {
           id: "draft-import-sample",
-          label: "Import sample fixture",
+          label: interfaceText("m_566b8313d5b388"),
           description: "Temporary fixture used while wiring the importer.",
         },
       ],
@@ -411,15 +412,15 @@ export const pendingAskUserQuestionsWithFreeTextOption = createAskUserQuestionsI
         options: [
           {
             id: "keep-tasks",
-            label: "Keep calling it Tasks",
+            get label() { return interfaceText("m_d42e94b2186e34"); },
           },
           {
             id: "rename-work",
-            label: "Rename it Work",
+            get label() { return interfaceText("m_50a49f77739912"); },
           },
           {
             id: "describe-it",
-            label: "I'll describe it",
+            get label() { return interfaceText("m_2502392d111cbe"); },
             description: "Tell us the exact name you have in mind.",
             freeText: true,
           },
@@ -850,7 +851,7 @@ function createConnectionAuthorizationInteraction(
       target: {
         type: "custom",
         key: "connection:gmail-abc:user:user-dotta",
-        label: "Connect Gmail",
+        label: interfaceText("m_aec1100fb18bc8"),
         href: "https://accounts.google.com/o/oauth2/v2/auth?client_id=paperclip",
       },
     },
@@ -1213,10 +1214,10 @@ export const boundedRequestCheckboxConfirmationInteraction =
       prompt: "Which regions should we deploy to initially?",
       detailsMarkdown: "Select at least 2 and at most 3 regions.",
       options: [
-        { id: "us-west", label: "US West (Oregon)", description: "Lowest latency for our primary user base." },
-        { id: "us-east", label: "US East (Virginia)", description: "Redundancy and east coast coverage." },
-        { id: "eu-west", label: "EU West (Ireland)", description: "GDPR compliance and European users." },
-        { id: "ap-southeast", label: "AP Southeast (Singapore)", description: "Asia-Pacific expansion." },
+        { id: "us-west", get label() { return interfaceText("m_99e8a737314b0a"); }, description: "Lowest latency for our primary user base." },
+        { id: "us-east", get label() { return interfaceText("m_0f1d47b2a1038e"); }, description: "Redundancy and east coast coverage." },
+        { id: "eu-west", get label() { return interfaceText("m_b044c25b22cd0f"); }, description: "GDPR compliance and European users." },
+        { id: "ap-southeast", get label() { return interfaceText("m_4b829a72640e5b"); }, description: "Asia-Pacific expansion." },
       ],
       defaultSelectedOptionIds: ["us-west", "us-east"],
       minSelected: 2,
@@ -1315,8 +1316,8 @@ export const staleTargetRequestCheckboxConfirmationInteraction =
       acceptLabel: "Delete selected",
       rejectLabel: "Reject",
       options: [
-        { id: "draft-march-report", label: "Old draft report" },
-        { id: "draft-spec-v1", label: "Spec v1 (superseded)" },
+        { id: "draft-march-report", get label() { return interfaceText("m_59671064ed3464"); } },
+        { id: "draft-spec-v1", get label() { return interfaceText("m_21ebb51fe04b34"); } },
       ],
       target: {
         type: "issue_document",
@@ -1369,35 +1370,35 @@ function createRequestItemVerdictsInteraction(
       items: [
         {
           id: "post-spring-recap",
-          label: "Spring launch recap",
+          label: interfaceText("m_8a8ae80141bbea"),
           description: "820 words · product marketing",
           previewMarkdown: "**Spring launch recap** — a warm retrospective on the Q1 launch and what shipped.",
           href: "/PAP/issues/PAP-9001",
         },
         {
           id: "post-changelog-digest",
-          label: "Monthly changelog digest",
+          label: interfaceText("m_4bca6aa81cbfb2"),
           description: "540 words · engineering",
           previewMarkdown: "A tidy digest of the month's shipped changes, grouped by area.",
           href: "/PAP/issues/PAP-9002",
         },
         {
           id: "post-founder-note",
-          label: "Founder's note on reliability",
+          label: interfaceText("m_6250084ba41c93"),
           description: "1,100 words · leadership",
           previewMarkdown: "A candid note on the reliability push and the road ahead.",
           href: "/PAP/issues/PAP-9003",
         },
         {
           id: "post-customer-story",
-          label: "Customer story: Northwind",
+          label: interfaceText("m_253c42d130e275"),
           description: "760 words · customer marketing",
           previewMarkdown: "How Northwind cut review time in half with the new workflow.",
           href: "/PAP/issues/PAP-9004",
         },
         {
           id: "post-hiring-push",
-          label: "We're hiring: platform engineers",
+          label: interfaceText("m_563be0884fb479"),
           description: "420 words · recruiting",
           previewMarkdown: "An open call for platform engineers to join the team.",
           href: "/PAP/issues/PAP-9005",

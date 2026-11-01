@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { ToolProfileStatus, ToolProfileSummary, ToolProfileWithDetails } from "@paperclipai/shared";
 
 /**
@@ -15,8 +16,8 @@ function plural(n: number, one: string, many = `${one}s`): string {
 export function allowsLabel(summary: ToolProfileSummary): string {
   if (summary.accessMode === "all_except") {
     return summary.excludedToolCount === 0
-      ? "All tools"
-      : `All except ${plural(summary.excludedToolCount, "tool")}`;
+      ? interfaceText("m_81c151f98a190d")
+      : interfaceText("m_d23a8aa1bcda4f", { value0: (plural(summary.excludedToolCount, "tool")) });
   }
   const parts = [plural(summary.allowedToolCount, "tool")];
   if (summary.allowedApplicationCount > 0) {

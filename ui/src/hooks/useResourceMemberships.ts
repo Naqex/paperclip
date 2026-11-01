@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   ResourceMembershipResourceType,
@@ -145,6 +146,7 @@ export function useResourceMemberships(companyId: string | null | undefined) {
 }
 
 export function useResourceMembershipMutation(companyId: string | null | undefined) {
+  useInterfaceLanguage();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
   const queryKey = queryKeys.resourceMemberships.mine(companyId ?? "__none__");
@@ -177,7 +179,7 @@ export function useResourceMembershipMutation(companyId: string | null | undefin
         ? variables.starred ? "star" : "unstar"
         : variables.state === "left" ? "leave" : "join";
       pushToast({
-        title: `Couldn't ${verb} ${variables.resourceName}.`,
+        title: interfaceText("m_34386df98dd531", { value0: (verb), value1: (variables.resourceName) }),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       });

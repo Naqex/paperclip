@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type { DashboardRunActivityDay, HeartbeatRun } from "@paperclipai/shared";
 
 /* ---- Utilities ---- */
@@ -119,6 +120,7 @@ function resolveRunActivity(props: RunChartProps): DashboardRunActivityDay[] {
 }
 
 export function RunActivityChart(props: RunChartProps) {
+  useInterfaceLanguage();
   const activity = resolveRunActivity(props);
   const days = activity.length > 0 ? activity.map((day) => day.date) : getLast14Days();
   const grouped = new Map(activity.map((day) => [day.date, day]));
@@ -127,13 +129,13 @@ export function RunActivityChart(props: RunChartProps) {
   const hasData = activity.some(v => v.total > 0);
   const hasRecovered = activity.some(v => v.recovered > 0);
 
-  if (!hasData) return <p className="text-xs text-muted-foreground">No runs yet</p>;
+  if (!hasData) return <p className="text-xs text-muted-foreground">{interfaceText("m_306b45db201634")}</p>;
 
   const legendItems = [
-    { color: runSegmentColors.succeeded, label: "Succeeded" },
-    ...(hasRecovered ? [{ color: runSegmentColors.recovered, label: "Recovered" }] : []),
-    { color: runSegmentColors.failed, label: "Failed" },
-    { color: runSegmentColors.other, label: "Other" },
+    { color: runSegmentColors.succeeded, label: interfaceText("m_6d9a6f97a5fdaf") },
+    ...(hasRecovered ? [{ color: runSegmentColors.recovered, label: interfaceText("m_37ce0a91ee27ce") }] : []),
+    { color: runSegmentColors.failed, label: interfaceText("m_031a8f0f659df8") },
+    { color: runSegmentColors.other, label: interfaceText("m_f97e9da0e3b879") },
   ];
 
   return (
@@ -175,6 +177,7 @@ const priorityColors: Record<string, string> = {
 const priorityOrder = ["critical", "high", "medium", "low"] as const;
 
 export function PriorityChart({ issues }: { issues: { priority: string; createdAt: Date }[] }) {
+  useInterfaceLanguage();
   const days = getLast14Days();
   const grouped = new Map<string, Record<string, number>>();
   for (const day of days) grouped.set(day, { critical: 0, high: 0, medium: 0, low: 0 });
@@ -188,7 +191,7 @@ export function PriorityChart({ issues }: { issues: { priority: string; createdA
   const maxValue = Math.max(...Array.from(grouped.values()).map(v => Object.values(v).reduce((a, b) => a + b, 0)), 1);
   const hasData = Array.from(grouped.values()).some(v => Object.values(v).reduce((a, b) => a + b, 0) > 0);
 
-  if (!hasData) return <p className="text-xs text-muted-foreground">No tasks</p>;
+  if (!hasData) return <p className="text-xs text-muted-foreground">{interfaceText("m_9c2f4744b6f0b0")}</p>;
 
   return (
     <div>
@@ -198,7 +201,7 @@ export function PriorityChart({ issues }: { issues: { priority: string; createdA
           const total = Object.values(entry).reduce((a, b) => a + b, 0);
           const heightPct = (total / maxValue) * 100;
           return (
-            <div key={day} className="flex-1 h-full flex flex-col justify-end" title={`${day}: ${total} issues`}>
+            <div key={day} className="flex-1 h-full flex flex-col justify-end" title={interfaceText("m_8bed0298dacdcf", { value0: (day), value1: (total) })}>
               {total > 0 ? (
                 <div className="flex flex-col-reverse gap-px overflow-hidden" style={{ height: `${heightPct}%`, minHeight: 2 }}>
                   {priorityOrder.map(p => entry[p] > 0 ? (
@@ -247,6 +250,7 @@ const statusLabels: Record<string, string> = {
 };
 
 export function IssueStatusChart({ issues }: { issues: { status: string; createdAt: Date }[] }) {
+  useInterfaceLanguage();
   const days = getLast14Days();
   const allStatuses = new Set<string>();
   const grouped = new Map<string, Record<string, number>>();
@@ -263,7 +267,7 @@ export function IssueStatusChart({ issues }: { issues: { status: string; created
   const maxValue = Math.max(...Array.from(grouped.values()).map(v => Object.values(v).reduce((a, b) => a + b, 0)), 1);
   const hasData = allStatuses.size > 0;
 
-  if (!hasData) return <p className="text-xs text-muted-foreground">No tasks</p>;
+  if (!hasData) return <p className="text-xs text-muted-foreground">{interfaceText("m_9c2f4744b6f0b0")}</p>;
 
   return (
     <div>
@@ -273,7 +277,7 @@ export function IssueStatusChart({ issues }: { issues: { status: string; created
           const total = Object.values(entry).reduce((a, b) => a + b, 0);
           const heightPct = (total / maxValue) * 100;
           return (
-            <div key={day} className="flex-1 h-full flex flex-col justify-end" title={`${day}: ${total} issues`}>
+            <div key={day} className="flex-1 h-full flex flex-col justify-end" title={interfaceText("m_8bed0298dacdcf", { value0: (day), value1: (total) })}>
               {total > 0 ? (
                 <div className="flex flex-col-reverse gap-px overflow-hidden" style={{ height: `${heightPct}%`, minHeight: 2 }}>
                   {statusOrder.map(s => (entry[s] ?? 0) > 0 ? (
@@ -294,12 +298,13 @@ export function IssueStatusChart({ issues }: { issues: { status: string; created
 }
 
 export function SuccessRateChart(props: RunChartProps) {
+  useInterfaceLanguage();
   const activity = resolveRunActivity(props);
   const days = activity.length > 0 ? activity.map((day) => day.date) : getLast14Days();
   const grouped = new Map(activity.map((day) => [day.date, day]));
 
   const hasData = activity.some(v => v.total > 0);
-  if (!hasData) return <p className="text-xs text-muted-foreground">No runs yet</p>;
+  if (!hasData) return <p className="text-xs text-muted-foreground">{interfaceText("m_306b45db201634")}</p>;
 
   return (
     <div>

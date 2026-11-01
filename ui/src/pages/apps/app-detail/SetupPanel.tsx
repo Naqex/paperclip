@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useState, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import type { ToolCatalogEntry, ToolConnection } from "@paperclipai/shared";
@@ -34,12 +35,13 @@ export function SetupPanel({
   permissionsLoading: boolean;
   onOpenPermissions: () => void;
 }) {
+  useInterfaceLanguage();
   return (
     <div className="space-y-10">
       {identities}
-      <SetupLinkSection title="Agents" summary={agentsSummary} onClick={onOpenPermissions} />
+      <SetupLinkSection title={interfaceText("m_279b44d2ab4b40")} summary={agentsSummary} onClick={onOpenPermissions} />
       <SetupLinkSection
-        title="Actions"
+        title={interfaceText("m_ff8059dc6752af")}
         summary={permissionsLoading ? "Loading permissions…" : permissionsSummary ?? "Manage permissions"}
         onClick={onOpenPermissions}
       />
@@ -104,6 +106,7 @@ export function connectionProviderName(
 }
 
 function PostHogConfigurationSection({ connection }: { connection: ToolConnection }) {
+  useInterfaceLanguage();
   const raw = connection.config?.methodConfig;
   const config = raw && typeof raw === "object" && !Array.isArray(raw)
     ? raw as Record<string, unknown>
@@ -121,10 +124,8 @@ function PostHogConfigurationSection({ connection }: { connection: ToolConnectio
   ];
   return (
     <section>
-      <h2 className="text-sm font-bold text-foreground">PostHog access scope</h2>
-      <p className="mt-0.5 text-sm text-muted-foreground">
-        PostHog uses its normal account defaults unless you narrow the optional controls below.
-      </p>
+      <h2 className="text-sm font-bold text-foreground">{interfaceText("m_8b34d1f1c52bff")}</h2>
+      <p className="mt-0.5 text-sm text-muted-foreground">{interfaceText("m_84a948202f4381")}</p>
       <dl className="mt-4 divide-y divide-border">
         {rows.map(([label, value]) => (
           <div key={label} className="grid gap-1 py-2 sm:grid-cols-3 sm:gap-4">
@@ -155,6 +156,7 @@ function GoogleSheetsAllowlistSection({
   disabled: boolean;
   onUpdateConfig: (config: Record<string, unknown>) => void;
 }) {
+  useInterfaceLanguage();
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const ids = currentSpreadsheetIds(connection);
@@ -164,15 +166,13 @@ function GoogleSheetsAllowlistSection({
   return (
     <section>
       <div>
-        <h2 className="text-sm font-bold text-foreground">Sheets agents can use</h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          Agents can only use the sheets listed here.
-        </p>
+        <h2 className="text-sm font-bold text-foreground">{interfaceText("m_38b73bee338877")}</h2>
+        <p className="mt-0.5 text-sm text-muted-foreground">{interfaceText("m_17ba1daf3a11cf")}</p>
       </div>
 
       <div className="mt-4 space-y-2">
         {ids.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No sheets are connected yet.</div>
+          <div className="text-sm text-muted-foreground">{interfaceText("m_ee54c8d9967185")}</div>
         ) : (
           ids.map((id) => {
             const sheetUrl = googleSheetsUrlForId(id);
@@ -184,7 +184,7 @@ function GoogleSheetsAllowlistSection({
                   rel="noreferrer"
                   className="min-w-0 flex-1 text-sm font-medium text-foreground underline-offset-2 hover:underline"
                 >
-                  <span className="block truncate">Open sheet</span>
+                  <span className="block truncate">{interfaceText("m_f2df2497ff599b")}</span>
                   <span className="block truncate font-mono text-xs font-normal text-muted-foreground">
                     {sheetUrl}
                   </span>
@@ -197,11 +197,9 @@ function GoogleSheetsAllowlistSection({
                   size="sm"
                   variant="outline"
                   disabled={disabled || ids.length <= 1}
-                  title={ids.length <= 1 ? "Add another sheet before removing this one." : undefined}
+                  title={ids.length <= 1 ? interfaceText("m_a9ae307c4c0d30") : undefined}
                   onClick={() => saveIds(ids.filter((current) => current !== id))}
-                >
-                  Remove
-                </Button>
+                >{interfaceText("m_c3812fc4acb861")}</Button>
               </div>
             );
           })
@@ -235,9 +233,7 @@ function GoogleSheetsAllowlistSection({
             saveIds(Array.from(new Set([...ids, ...parsed.ids])));
             setDraft("");
           }}
-        >
-          Add sheet
-        </Button>
+        >{interfaceText("m_e05a0e967b4ce3")}</Button>
       </div>
       {error && <div className="mt-2 text-xs text-destructive">{error}</div>}
     </section>
@@ -253,6 +249,7 @@ export function QuarantinedActionsReview({
   disabled: boolean;
   onSubmit: (enabledIds: string[]) => void;
 }) {
+  useInterfaceLanguage();
   const [enabledIds, setEnabledIds] = useState<Set<string>>(new Set());
   const count = entries.length;
   const selectedIds = entries.filter((entry) => enabledIds.has(entry.id)).map((entry) => entry.id);
@@ -260,12 +257,9 @@ export function QuarantinedActionsReview({
     <section className="space-y-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-sm font-semibold text-amber-800 dark:text-amber-200">
-            Review {count} new {count === 1 ? "action" : "actions"}
+          <div className="text-sm font-semibold text-amber-800 dark:text-amber-200">{interfaceText("m_70786ccffcb091")}{count}{interfaceText("m_5f438d452b1a91")}{count === 1 ? interfaceText("m_bd938c688f49b7") : interfaceText("m_2b0dcdd4001609")}
           </div>
-          <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
-            Turn on the actions agents may use. Anything left off stays blocked when you save.
-          </p>
+          <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">{interfaceText("m_6a8de879543faa")}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -273,17 +267,13 @@ export function QuarantinedActionsReview({
             className="text-xs font-medium text-amber-800 hover:text-amber-950 dark:text-amber-200 dark:hover:text-amber-50"
             disabled={disabled}
             onClick={() => setEnabledIds(new Set(entries.map((entry) => entry.id)))}
-          >
-            Turn all on
-          </button>
+          >{interfaceText("m_08f6d3f555b7c1")}</button>
           <button
             type="button"
             className="text-xs font-medium text-amber-800 hover:text-amber-950 dark:text-amber-200 dark:hover:text-amber-50"
             disabled={disabled}
             onClick={() => setEnabledIds(new Set())}
-          >
-            Turn all off
-          </button>
+          >{interfaceText("m_59d74fd7dc6c76")}</button>
         </div>
       </div>
       <div className="divide-y divide-border">
@@ -299,7 +289,7 @@ export function QuarantinedActionsReview({
                 )}
               </div>
               <ToggleSwitch
-                aria-label={`${label} allowed`}
+                aria-label={interfaceText("m_0c301c28c211f0", { value0: (label) })}
                 checked={enabled}
                 disabled={disabled}
                 onCheckedChange={(next) => {
@@ -317,10 +307,9 @@ export function QuarantinedActionsReview({
       </div>
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs text-amber-700 dark:text-amber-300">
-          {selectedIds.length} of {count} will be on
-        </span>
+          {selectedIds.length}{interfaceText("m_a4282e4b2298b9")}{count}{interfaceText("m_864ab2b66ed34c")}</span>
         <Button size="sm" disabled={disabled} onClick={() => onSubmit(selectedIds)}>
-          {disabled ? "Saving…" : "Save choices"}
+          {disabled ? interfaceText("m_23e39291d61358") : interfaceText("m_035882f1a56b9d")}
         </Button>
       </div>
     </section>

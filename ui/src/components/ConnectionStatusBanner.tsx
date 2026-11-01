@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useConnectivity, type ConnectivityStatus } from "@/lib/connectivity";
 
@@ -110,12 +111,13 @@ export function ConnectionStatusMessage({
   view: Exclude<ConnectionBannerView, "hidden">;
   pendingWrites?: number;
 }) {
+  useInterfaceLanguage();
   const pending = view === "back_online" ? null : pendingWritesCopy(pendingWrites);
   const message = view === "back_online"
-    ? "Back online."
+    ? interfaceText("m_47bfa636e9a3b4")
     : view === "offline"
-      ? "You’re offline. Reconnecting when your network is back…"
-      : "Connection interrupted. Reconnecting automatically…";
+      ? interfaceText("m_8f8f4ecaf6abc9")
+      : interfaceText("m_725cbac59377b1");
 
   // Fixed, not in flow: the desktop shell is exactly `h-dvh` with clipped
   // overflow, so an in-flow banner would push the board's bottom off screen.

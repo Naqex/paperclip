@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import type { HeartbeatRunEvent } from "@paperclipai/shared";
 import type { TranscriptEntry } from "@/adapters";
 import { isRunLogOnlyProviderEvent } from "./run-log-only-events";
@@ -201,7 +202,7 @@ function runtimeRequestEntry(input: {
     .map(record)
     .flatMap((field, index) => {
       const name = text(field?.name) ?? `answer_${index + 1}`;
-      const label = text(field?.label) ?? text(field?.name) ?? `Answer ${index + 1}`;
+      const label = text(field?.label) ?? text(field?.name) ?? interfaceText("m_7fcfb57312a602", { value0: (index + 1) });
       return name && label
         ? [{ name: name.slice(0, 160), label: label.slice(0, 240), placeholder: text(field?.placeholder)?.slice(0, 500) ?? null }]
         : [];

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Activity as ActivityIcon } from "lucide-react";
@@ -13,6 +14,7 @@ import { RoutineActivityRow } from "../RoutineActivityRow";
 import { useRoutineDetail } from "./context";
 
 export function RunsSection() {
+  useInterfaceLanguage();
   const { routine, companyId, agents, projects, hasLiveRun, activeIssueId } = useRoutineDetail();
   const queryClient = useQueryClient();
   const { pushToast } = useToastActions();
@@ -29,7 +31,7 @@ export function RunsSection() {
       void queryClient.invalidateQueries({ queryKey: queryKeys.routines.detail(routine.id) });
       void queryClient.invalidateQueries({ queryKey: queryKeys.routines.runs(routine.id) });
     },
-    onError: (updateError) => pushToast({ title: "Failed to update task", body: updateError.message, tone: "error" }),
+    onError: (updateError) => pushToast({ title: interfaceText("m_be6f0c0f980b45"), body: updateError.message, tone: "error" }),
   });
 
   return (
@@ -51,6 +53,7 @@ export function RunsSection() {
 }
 
 export function ActivitySection({ isLoading = false, error }: { isLoading?: boolean; error?: Error | null } = {}) {
+  const interfaceLanguage = useInterfaceLanguage();
   const ctx = useRoutineDetail();
   const { activity } = ctx;
   const events = activity ?? [];
@@ -58,7 +61,7 @@ export function ActivitySection({ isLoading = false, error }: { isLoading?: bool
   const groups = useMemo(() => {
     const byDay = new Map<string, typeof events>();
     for (const event of events) {
-      let label = "Earlier";
+      let label = interfaceText("m_e10ae990740118");
       try {
         label = new Date(event.createdAt).toLocaleDateString(undefined, {
           weekday: "short",
@@ -73,13 +76,13 @@ export function ActivitySection({ isLoading = false, error }: { isLoading?: bool
       byDay.set(label, bucket);
     }
     return Array.from(byDay.entries());
-  }, [events]);
+  }, [events, interfaceLanguage]);
 
-  if (isLoading) return <p className="text-sm text-muted-foreground">Loading activity…</p>;
+  if (isLoading) return <p className="text-sm text-muted-foreground">{interfaceText("m_a389c395010ec4")}</p>;
   if (error) return <p role="alert" className="text-sm text-destructive">{error.message}</p>;
 
   if (events.length === 0) {
-    return <EmptyState icon={ActivityIcon} message="No activity yet." />;
+    return <EmptyState icon={ActivityIcon} message={interfaceText("m_a288d2d0a21eed")} />;
   }
 
   return (

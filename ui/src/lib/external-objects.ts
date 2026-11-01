@@ -1,3 +1,4 @@
+import { interfaceText } from "@/i18n/interface-copy";
 import {
   AlertCircle,
   AlertOctagon,
@@ -120,7 +121,7 @@ export function externalObjectDisplayStatusLabel(input: {
   const isGenericUrl = input.providerKey === "url" && input.objectType === "link";
   const hasKnownObjectType = Boolean(input.providerKey && input.objectType);
   if (input.statusCategory === "unknown" && hasKnownObjectType && !isGenericUrl) {
-    if (input.liveness === "fresh") return "Status unavailable";
+    if (input.liveness === "fresh") return interfaceText("m_7eb5af92e49c32");
     return externalObjectLivenessLabel(input.liveness);
   }
   return externalObjectCategoryLabel(input.statusCategory);
@@ -177,7 +178,7 @@ const PROVIDER_LABELS: Record<string, string> = {
 };
 
 export function externalObjectProviderLabel(providerKey: string | null | undefined): string {
-  if (!providerKey) return "External";
+  if (!providerKey) return interfaceText("m_68c114ea9c8c66");
   const lookup = PROVIDER_LABELS[providerKey];
   if (lookup) return lookup;
   return providerKey
@@ -197,7 +198,7 @@ const OBJECT_TYPE_LABELS: Record<string, string> = {
 };
 
 export function externalObjectTypeLabel(objectType: string | null | undefined): string {
-  if (!objectType) return "object";
+  if (!objectType) return interfaceText("m_2958d416d08aa5");
   return OBJECT_TYPE_LABELS[objectType] ?? objectType.replace(/_/g, " ");
 }
 

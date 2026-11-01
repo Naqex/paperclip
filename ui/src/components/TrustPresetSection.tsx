@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { AgentPermissions, TrustPreset } from "@paperclipai/shared";
 import { Lock, ShieldAlert } from "lucide-react";
@@ -71,6 +72,7 @@ export function TrustPresetSection({
   allowSingleIssue?: boolean;
   projectAccessEditor?: ReactNode;
 }) {
+  useInterfaceLanguage();
   const [policyOpen, setPolicyOpen] = useState(false);
   const preset = getTrustPreset(permissions);
   const boundary = getLowTrustBoundary(permissions);
@@ -108,9 +110,9 @@ export function TrustPresetSection({
 
   return (
     <div>
-      <h3 className="mb-3 text-sm font-medium">Trust</h3>
+      <h3 className="mb-3 text-sm font-medium">{interfaceText("m_ade9248e0132b4")}</h3>
       <div className="rounded-lg border border-border p-4 space-y-3">
-        <Field label="Trust preset" hint="Choose how broadly this agent can read and act on Paperclip work objects.">
+        <Field label={interfaceText("m_d41e165d4e0265")} hint={interfaceText("m_24bf54bdedffa0")}>
           <select
             className={inputClass}
             value={preset}
@@ -142,27 +144,27 @@ export function TrustPresetSection({
             <div className="min-w-0 flex-1 space-y-2">
               <div>
                 <p className="font-medium">
-                  {hasScope ? "Containment active" : "Containment not configured"}
+                  {hasScope ? interfaceText("m_116032b7916e7f") : interfaceText("m_b5c07df63b2bfb")}
                 </p>
                 <p className="mt-1 text-xs leading-5">
                   {hasScope
-                    ? "This agent can only read and mutate work inside its assigned review boundary. Raw output is quarantined from higher-trust agents until a trusted reviewer promotes it."
-                    : "This agent is set to low-trust review, but no project, root issue, or issue scope is set in the core policy. Add a scope before this agent can run without denial."}
+                    ? interfaceText("m_56237f23ae761c")
+                    : interfaceText("m_271713474e9a14")}
                 </p>
               </div>
               {projectAccessEditor && (boundary?.projectIds?.length ?? 0) > 1 ? null : boundaryEditable ? (
                 <div className="rounded-md border border-border/70 bg-background/70 p-3 text-foreground space-y-3">
                   <div className="grid gap-3 sm:grid-cols-(--gtc-12)">
-                    <Field label="Boundary type">
+                    <Field label={interfaceText("m_61a3e610df4978")}>
                       <select
                         className={inputClass}
                         value={targetType}
                         onChange={(event) => setTargetType(event.target.value as LowTrustBoundaryTargetType)}
                         disabled={disabled}
                       >
-                        <option value="project">Project</option>
-                        <option value="root_issue">Root issue</option>
-                        {allowSingleIssue && <option value="issue">Issue</option>}
+                        <option value="project">{interfaceText("m_98595978531974")}</option>
+                        <option value="root_issue">{interfaceText("m_9cfea50f623a4b")}</option>
+                        {allowSingleIssue && <option value="issue">{interfaceText("m_48dc76dfa23ae0")}</option>}
                       </select>
                     </Field>
                     <Field label={BOUNDARY_TARGET_LABELS[targetType]}>
@@ -174,10 +176,10 @@ export function TrustPresetSection({
                       >
                         <option value="">
                           {candidatesLoading
-                            ? "Loading…"
+                            ? interfaceText("m_ba3bbbe10d8bef")
                             : targetCandidates.length === 0
-                              ? `No ${targetType === "project" ? "projects" : "issues"} available`
-                              : "Select boundary"}
+                              ? interfaceText("m_a787f8ed7e1d4d", { value0: (targetType === "project" ? "projects" : "issues") })
+                              : interfaceText("m_5009d4136aa5b5")}
                         </option>
                         {targetCandidates.map((candidate) => (
                           <option key={candidate.id} value={candidate.id}>
@@ -188,9 +190,7 @@ export function TrustPresetSection({
                     </Field>
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-xs text-muted-foreground">
-                      CE saves one containment boundary at a time. Saved policies include this organization id.
-                    </p>
+                    <p className="text-xs text-muted-foreground">{interfaceText("m_76927e0a620f1d")}</p>
                     {boundaryTarget ? (
                       <Button
                         type="button"
@@ -199,48 +199,41 @@ export function TrustPresetSection({
                         className="h-7 px-2.5 text-xs"
                         onClick={handleClearBoundary}
                         disabled={disabled}
-                      >
-                        Clear boundary
-                      </Button>
+                      >{interfaceText("m_ebcd71191783d8")}</Button>
                     ) : null}
                   </div>
                 </div>
               ) : (
                 <div className="rounded-md border border-border/70 bg-background/70 p-3 text-foreground">
-                  <p className="text-sm font-medium">Managed by EE/API</p>
-                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    This policy has {summarizeLowTrustBoundaryTarget(boundary).toLowerCase()} and cannot be edited by the CE single-boundary editor.
-                  </p>
+                  <p className="text-sm font-medium">{interfaceText("m_b028fcfe70c9d3")}</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">{interfaceText("m_384842a5fa1a0d")}{summarizeLowTrustBoundaryTarget(boundary).toLowerCase()}{interfaceText("m_52314fe045a730")}</p>
                 </div>
               )}
-              {!projectAccessEditor && <p className="text-xs text-muted-foreground">
-                Want to set more than one containment boundary?{" "}
+              {!projectAccessEditor && <p className="text-xs text-muted-foreground">{interfaceText("m_4a136265be190b")}{" "}
                 <a
                   className="underline underline-offset-2 hover:text-foreground"
                   href="https://paperclip.ing/ee"
                   target="_blank"
                   rel="noreferrer"
-                >
-                  Get Paperclip EE.
-                </a>
+                >{interfaceText("m_601f5e6e4a14fd")}</a>
               </p>}
               <CollapsibleSection
-                title="View policy"
+                title={interfaceText("m_faa39d94c56966")}
                 open={policyOpen}
                 onToggle={() => setPolicyOpen((open) => !open)}
               >
                 <div className="divide-y divide-border/60 text-foreground">
-                  <PolicyRow label="Preset" value="Low-trust review v1" />
-                  <PolicyRow label="Raw output" value="Quarantined from higher-trust agents" />
-                  <PolicyRow label="Projects" value={formatCount(boundary?.projectIds, "project", "projects")} />
-                  <PolicyRow label="Root issue" value={boundary?.rootIssueId ? boundary.rootIssueId.slice(0, 8) : "-"} />
-                  <PolicyRow label="Explicit issues" value={formatCount(boundary?.issueIds, "issue", "issues")} />
-                  <PolicyRow label="Allowed agents" value={formatCount(boundary?.allowedAgentIds, "agent", "agents")} />
-                  <PolicyRow label="Allowed tools" value={boundary?.allowedToolClasses?.join(" · ") || "-"} />
-                  <PolicyRow label="Allowed secrets" value={formatCount(boundary?.allowedSecretBindingIds, "binding", "bindings")} />
-                  <PolicyRow label="Promotion target" value={boundary?.outputPromotionTarget?.issueId?.slice(0, 8) ?? "-"} />
+                  <PolicyRow label={interfaceText("m_7252e7ce008587")} value="Low-trust review v1" />
+                  <PolicyRow label={interfaceText("m_f3dbf20a278c48")} value="Quarantined from higher-trust agents" />
+                  <PolicyRow label={interfaceText("m_04e2a9728af758")} value={formatCount(boundary?.projectIds, "project", "projects")} />
+                  <PolicyRow label={interfaceText("m_9cfea50f623a4b")} value={boundary?.rootIssueId ? boundary.rootIssueId.slice(0, 8) : "-"} />
+                  <PolicyRow label={interfaceText("m_5093b25dd010d1")} value={formatCount(boundary?.issueIds, "issue", "issues")} />
+                  <PolicyRow label={interfaceText("m_ab33e0e83e7999")} value={formatCount(boundary?.allowedAgentIds, "agent", "agents")} />
+                  <PolicyRow label={interfaceText("m_73f3619da32094")} value={boundary?.allowedToolClasses?.join(" · ") || "-"} />
+                  <PolicyRow label={interfaceText("m_29e561fcdaa6af")} value={formatCount(boundary?.allowedSecretBindingIds, "binding", "bindings")} />
+                  <PolicyRow label={interfaceText("m_ac1fff63592450")} value={boundary?.outputPromotionTarget?.issueId?.slice(0, 8) ?? "-"} />
                   <PolicyRow
-                    label="EE fields"
+                    label={interfaceText("m_5cf54800ffbaf5")}
                     value={Object.keys(policy ?? {}).some((key) => !["trustPreset", "reviewPreset", "trustBoundary"].includes(key))
                       ? "Custom advanced policy fields preserved"
                       : "-"}
@@ -254,9 +247,7 @@ export function TrustPresetSection({
         {lowTrust && projectAccessEditor}
 
         {managedPermissions.authorizationPolicy?.reviewPreset ? null : (
-          <p className="text-xs text-muted-foreground">
-            Advanced permissions remain editable through the EE permissions extension when installed.
-          </p>
+          <p className="text-xs text-muted-foreground">{interfaceText("m_fb6b4df48db719")}</p>
         )}
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { interfaceText, useInterfaceLanguage } from "@/i18n/interface-copy";
 import type {
   Issue,
   IssuePriority,
@@ -47,7 +48,7 @@ export function summarizeRoutineSchedule(triggers: RoutineTrigger[]): RoutineSch
         nextRunAt: null,
       };
     }
-    return { label: "No active schedule", detail: "Manual runs only", nextRunAt: null };
+    return { label: interfaceText("m_4624e546d7a67e"), detail: "Manual runs only", nextRunAt: null };
   }
 
   const first = schedules[0]!;
@@ -138,6 +139,7 @@ function OverviewFact({
 }
 
 export function RoutineOverview() {
+  useInterfaceLanguage();
   const { routine, routineRuns, currentAssignee, hasLiveRun } = useRoutineDetail();
   const schedule = summarizeRoutineSchedule(routine.triggers);
   const hasWebhook = routine.triggers.some((trigger) => trigger.kind === "webhook" && trigger.enabled);
@@ -162,32 +164,32 @@ export function RoutineOverview() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <OverviewFact
           icon={Repeat}
-          label="State"
+          label={interfaceText("m_a3b50c476732c7")}
           value={<StatusBadge status={automationState} />}
           detail={hasLiveRun ? "A run is active now" : "No active run"}
         />
         <OverviewFact
           icon={CalendarClock}
-          label="Triggers"
+          label={interfaceText("m_e62f2148a64d96")}
           value={schedule.label}
           detail={<span className="font-mono">{schedule.detail}</span>}
         />
         <OverviewFact
           icon={Clock3}
-          label="Next run"
+          label={interfaceText("m_b3c0ab96930c9e")}
           value={schedule.nextRunAt ? formatRoutineTimestamp(schedule.nextRunAt) : hasWebhook ? "On webhook delivery" : "Not scheduled"}
           detail={schedule.nextRunAt ? "Scheduled" : hasWebhook ? "Waiting for an incoming request" : "Add or enable a schedule"}
         />
         <OverviewFact
           icon={Play}
-          label="Last run"
+          label={interfaceText("m_512a48218ba217")}
           value={lastRun ? <StatusBadge status={lastRun.status} /> : "No runs yet"}
           detail={lastRun ? formatRoutineTimestamp(lastRun.triggeredAt) : "Run manually or wait for a trigger"}
         />
       </div>
 
       <section className="flex flex-col gap-2" aria-labelledby="routine-agent-heading">
-        <h2 id="routine-agent-heading" className="text-sm font-semibold">Default agent</h2>
+        <h2 id="routine-agent-heading" className="text-sm font-semibold">{interfaceText("m_94da52ecd6c5c3")}</h2>
         {currentAssignee ? (
           <Link
             to={`/agents/${currentAssignee.urlKey ?? currentAssignee.id}`}
@@ -197,32 +199,30 @@ export function RoutineOverview() {
             {currentAssignee.name}
           </Link>
         ) : (
-          <p className="text-sm text-muted-foreground">No default agent. Automatic triggers remain paused.</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_d047f6c7a3af88")}</p>
         )}
       </section>
 
       <section className="flex flex-col gap-2" aria-labelledby="routine-description-heading">
-        <h2 id="routine-description-heading" className="text-sm font-semibold">Description</h2>
+        <h2 id="routine-description-heading" className="text-sm font-semibold">{interfaceText("m_526e0087cc3f25")}</h2>
         {routine.description?.trim() ? (
           <MarkdownBody className="text-sm text-foreground" linkIssueReferences>
             {routine.description}
           </MarkdownBody>
         ) : (
-          <p className="text-sm text-muted-foreground">No description yet.</p>
+          <p className="text-sm text-muted-foreground">{interfaceText("m_6d962a3d4e519c")}</p>
         )}
       </section>
 
       <section className="flex flex-col gap-2" aria-labelledby="routine-recent-runs-heading">
         <div className="flex items-center justify-between gap-3">
-          <h2 id="routine-recent-runs-heading" className="text-sm font-semibold">Recent runs</h2>
+          <h2 id="routine-recent-runs-heading" className="text-sm font-semibold">{interfaceText("m_237112b89b77be")}</h2>
           <Button variant="ghost" size="sm" asChild>
-            <Link to={routineDetailHref(routine.id, "runs")}>View all runs</Link>
+            <Link to={routineDetailHref(routine.id, "runs")}>{interfaceText("m_346de5a03a7af5")}</Link>
           </Button>
         </div>
         {recentRuns.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            No runs yet. Run the routine now or wait for its schedule.
-          </p>
+          <p className="py-6 text-center text-sm text-muted-foreground">{interfaceText("m_1d0eb00e615cb5")}</p>
         ) : (
           <div className="flex flex-col gap-0.5">
             {recentRuns.map((run) => run.linkedIssue ? (
@@ -241,14 +241,14 @@ export function RoutineOverview() {
             ) : (
               <div key={run.id} className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-2 text-sm">
                 <StatusBadge status={run.status} />
-                <span className="min-w-0 flex-1 truncate">{run.trigger?.label ?? "Routine run"}</span>
+                <span className="min-w-0 flex-1 truncate">{run.trigger?.label ?? interfaceText("m_dda37a7a9c9f94")}</span>
                 <span className="shrink-0 font-mono text-xs text-muted-foreground">{formatRoutineTimestamp(run.triggeredAt)}</span>
               </div>
             ))}
           </div>
         )}
         <Button variant="link" size="sm" className="w-fit px-0" asChild>
-          <Link to={routineDetailHref(routine.id, "activity")}>View routine activity</Link>
+          <Link to={routineDetailHref(routine.id, "activity")}>{interfaceText("m_cd1bd79b590009")}</Link>
         </Button>
       </section>
     </div>
